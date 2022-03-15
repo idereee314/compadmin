@@ -79,22 +79,13 @@ class LoginController extends Controller
 
 			if ($foundUser != null) {
 
-				Auth::login($foundUser);
+				// Auth::login($foundUser);
 
 				Session::put('firstname', $foundUser->firstname);
 				Session::put('lastname', @$foundUser->lastname);
 
-				$roleMenus = $foundUser->roles->where('type', @Config::get('smart.role_type')['cms'])->load('menus');
-				foreach($roleMenus as $role)
-				{
-					foreach($role->menus as $menu)
-					{
-						$menuArr[$menu->menu] = $menu->operation;
-					}
-				}
-				Session::put('userMenus', @$menuArr);
-
-				return Redirect::intended('/admin/home');
+				//return Redirect::intended('/admin/home');
+				return view('dashboard');
 
 			} else {
 				Session::flash('message', trans('messages.error_login'));

@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Auth\LoginController;
+use dashboard\HomeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,3 +35,13 @@ Route::post('login', [LoginController::class, 'doLogin'])->name('do.login');
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::group([
+    'name' => 'admin.',
+    'prefix' => 'admin',
+    'middleware' => 'auth'
+], function(){
+    //Home
+    Route::get('/home', [HomeController::class, 'index'])->name('home.index');
+});
+
