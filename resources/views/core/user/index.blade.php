@@ -25,6 +25,10 @@
                         <!--begin::Card-->
                         <div class="card card-custom">
                             <div class="card-header flex-wrap py-5">
+                                <div class="card-title">
+                                    <h3 class="card-label">Хэрэглэгчийн жагсаалт 
+                                    <span class="d-block text-muted pt-2 font-size-sm">Системийн хэрэглэгчид</span></h3>
+                                </div>
                             </div>
                             <div class="card-body">
                                 <!--begin: Datatable-->
