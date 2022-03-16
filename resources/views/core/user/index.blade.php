@@ -95,9 +95,6 @@ $(document).ready(function() {
                 d.role = $('#user-search-form select[id="role"]').val();
             },
         },
-        "fnCreatedRow": function( nRow, aData, iDataIndex ) {
-            $(nRow).attr('id', aData[0]);
-        },
         columns: [
             {
                 data: null,
