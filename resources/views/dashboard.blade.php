@@ -31,7 +31,7 @@
                         </div>
 
                         <div class="d-flex align-items-center">
-                            <a class="btn btn-sm btn-light font-weight-bold mr-2" >
+                            <a href="#" class="btn btn-sm btn-light font-weight-bold mr-2" >
                                 <span class="text-muted font-size-base font-weight-bold mr-2">{{trans('display.general_you_are_here')}}:</span>
                                 <span class="text-primary font-size-base font-weight-bolder" id="kt_dashboard_daterangepicker_date">{{trans('menu.home')}}</span>
                             </a>

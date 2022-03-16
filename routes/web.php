@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Auth\LoginController;
 use dashboard\HomeController;
-
+use core\CompadUserController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -42,6 +42,11 @@ Route::group([
     'middleware' => 'auth'
 ], function(){
     //Home
-    Route::get('/home', [HomeController::class, 'index'])->name('home.index');
+    Route::get('/home', [HomeController::class, 'index']);
+
+    //User
+    Route::resource('/compaduser', 'core\CompadUserController', ['names' => 'compaduser']);
+    Route::any('/compaduser/data/list', [CompadUserController::class, 'getDatatableList'])->name('compaduser.data.list');
 });
 
+Route::get('/test', [HomeController::class, 'test'])->name('home.test');

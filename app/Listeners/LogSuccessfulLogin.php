@@ -28,7 +28,7 @@ class LogSuccessfulLogin
     public function handle(Login $event)
     {
         $arr = [
-            'user_id'       =>  $event->user->user_id,
+            'user_id'       =>  $event->user->id,
             'user_agent'    =>  \Illuminate\Support\Facades\Request::header('User-Agent'),
             'ip_address'    =>  \Illuminate\Support\Facades\Request::ip(),
             'last_activity'    =>  \Carbon\Carbon::now()->toDateTimeString()

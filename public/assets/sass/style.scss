@@ -7,13 +7,14 @@
 ///////////// DO NOT MODIFY BELOW INCLUDE ORDER ////////////////
 ////////////////////////////////////////////////////////////////
 
-// 1: Initialize
-@import "init";
+// // 1: Initialize
+ @import "init";
 
 // 2: Bootstrap framework includes
-@import "../../../tools/node_modules/bootstrap/scss/bootstrap.scss";
 
-// 3: Components
+@import "../node_modules/bootstrap/scss/bootstrap";
+
+//3: Components
 @import
     "components/utilities",
     "components/burger-icon",

@@ -9,13 +9,12 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Validator;
-
 use Session;
 use SmartHelper;
 use Config;
 
 //Repositories
-use user\UserRepository as User;
+use user\CompadUserRepository as User;
 
 class LoginController extends Controller
 {
@@ -79,13 +78,12 @@ class LoginController extends Controller
 
 			if ($foundUser != null) {
 
-				// Auth::login($foundUser);
+				Auth::login($foundUser);
 
 				Session::put('firstname', $foundUser->firstname);
 				Session::put('lastname', @$foundUser->lastname);
 
-				//return Redirect::intended('/admin/home');
-				return view('dashboard');
+				return Redirect::intended('/admin/home');
 
 			} else {
 				Session::flash('message', trans('messages.error_login'));
@@ -108,7 +106,6 @@ class LoginController extends Controller
 	}
 
 	public function showLogin() {
-		// return Redirect::to('login');
         return view('auth.login');
 	}
 }
