@@ -14,9 +14,9 @@ class CompadUser extends Model implements \Illuminate\Contracts\Auth\Authenticat
     public static function rules($id) 
     {
 		return array(
-            'username' => 'unique:iq_user,username,'.@$id.',id',
-            'email' => 'required|unique:iq_user,email,'.@$id.',id',
-            'password' => 'required|min:8',
+            'username' => 'unique:uq_compad_user,username,'.@$id.',id',
+            'email' => 'required|unique:uq_compad_user,email,'.@$id.',id',
+            //'password' => 'required|min:8',
             'firstname' => 'required',
             'lastname' => 'required',
             'phone_number' => 'numeric',

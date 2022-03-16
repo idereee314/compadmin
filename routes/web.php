@@ -37,8 +37,7 @@ Route::get('/', function () {
 });
 
 Route::group([
-    'name' => 'admin.',
-    'prefix' => 'admin',
+    'prefix' => '',
     'middleware' => 'auth'
 ], function(){
     //Home

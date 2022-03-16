@@ -1,7 +1,6 @@
 
 
-<form class="form" method="POST" id="add-user-form" action="{{route('user.store')}}">
-    <input type="hidden" name="partnerId" id="partnerId" value="{{ @$partnerId }}"/>
+<form class="form" method="POST" id="add-compaduser-form" action="{{route('compaduser.store')}}">
     <div class="modal-header bg-gray-100">
         <h5 class="modal-title" id="exampleModalLabel">{{trans('display.general_new')}}</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -9,7 +8,7 @@
         </button>
     </div>
 
-    <div class="card-body m-4">
+    <div class="card-body">
             <div class="form-group row">
                 <label class="col-md-3 col-form-label text-right">{{trans('display.human_lastname')}}: <span class="text-danger">*</span></label>
                 <div class="col-md-9">
@@ -33,7 +32,7 @@
                     <div class="error-here"></div>
                 </div>
             </div>
-            @if(!$partnerId)
+
             <div class="form-group row">
                 <label class="col-md-3 col-form-label text-right">{{trans('display.username')}}: <span class="text-danger">*</span></label>
                <div class="col-md-9">
@@ -41,6 +40,14 @@
                    <div class="error-here"></div>
                    <span class="text-muted help-block">{{ trans('messages.info_max_length', ['number' => 20]) }}</span>
                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-md-3 col-form-label text-right">{{trans('display.human_phone_number')}}: <span class="text-danger">*</span></label>
+                <div class="col-md-9">
+                    <input type="number" class="form-control" name="phone_number" id="phone_number" autocomplete="off" placeholder="{{trans('display.human_phone_number')}}">
+                    <div class="error-here"></div>
+                </div>
             </div>
       
             <div class="form-group row">
@@ -58,29 +65,11 @@
                     <div class="error-here"></div>
                 </div>
             </div>
-
-            <div class="form-group row">
-                <label class="col-3 col-form-label text-right">{{trans('display.role')}}:</label>
-                <div class="col-9 col-form-label">
-                    <div class="checkbox-list">
-                        @foreach ($roles->where('type', @Config::get('smart.role_type')['cms']) as $key => $role)
-                        <label class="checkbox checkbox-outline checkbox-outline-2x checkbox-primary">
-                            <input type="checkbox" name="roles[]" id="role{{$key}}" value="{{$role->role_id}}"/>
-                            <span></span>
-                            {{$role->name}}
-                        </label>
-                        @endforeach
-                    </div>
-                </div>
-            </div>
-            @else
-            <input type="hidden" name="roles[]" value="{{ @$roles->where('type', @Config::get('smart.role_type')['client'])->first()->role_id }}"/>
-            @endif
-        </div>
     </div>
-        <div class="modal-footer text-right bg-gray-100 border-top-0">
-            <button type="button" id="close" class="btn btn-light-primary font-weight-bold" data-dismiss="modal">{{trans('display.general_close')}}</button>
-            <button type="submit" class="btn btn-primary font-weight-bold">{{trans('display.general_save')}}</button>
-        </div>
+
+    <div class="modal-footer text-right bg-gray-100 border-top-0">
+        <button type="button" id="close" class="btn btn-light-primary font-weight-bold" data-dismiss="modal">{{trans('display.general_close')}}</button>
+        <button type="submit" class="btn btn-primary font-weight-bold">{{trans('display.general_save')}}</button>
+    </div>
 </form>
 

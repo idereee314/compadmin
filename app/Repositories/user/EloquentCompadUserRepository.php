@@ -42,6 +42,7 @@ class EloquentCompadUserRepository implements CompadUserRepository {
 		$user->lastname = $input['lastname'];
 		$user->email = $input['email'];
 		$user->username = $input['username'];
+		$user->phone_number = @$input['phone_number'];
 		$user->password = md5($input['password']);
 
 		$user->save();
@@ -59,6 +60,7 @@ class EloquentCompadUserRepository implements CompadUserRepository {
 		$user->firstname = $input['firstname'];
 		$user->lastname = $input['lastname'];
 		$user->username = $input['username'];
+		$user->phone_number = @$input['phone_number'];
 		$user->email = $input['email'];
 
 		$user->save();
@@ -98,18 +100,22 @@ class EloquentCompadUserRepository implements CompadUserRepository {
                     $qry->whereRaw('LOWER(sd_user.email) like ?', array('%'.mb_strtolower($searchData->get('user_mail')).'%'));
                 }
             })
-            ->addColumn('action', function ($user) {
-				$actionHtml = '<div class="btn-group dropup">';
-					$actionHtml .= '<button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-expanded="true">';
-						$actionHtml .= '<i class="fa fa-server"></i>';
-						$actionHtml .= '<span class="sr-only">Toggle Dropdown</span>';
-					$actionHtml .= '</button>';
-					$actionHtml .= '<ul class="dropdown-menu float-right">';
-					$actionHtml .= '<a href="javascript:;" class="dropdown-item user-edit" data-userid="'.$user->user_id.'">'.trans('display.general_edit').'</a>';
-					$actionHtml .= '<a href="javascript:;" class="dropdown-item user-delete" data-userid="'.$user->user_id.'">'.trans('display.general_delete').'</a>';
-					$actionHtml .= '<li class="divider"></li>';
-					$actionHtml .= '<a href="javascript:;" class="dropdown-item change-password" data-userid="'.$user->user_id.'">'.trans('display.user_password_change').'</a>';
-					$actionHtml .= '</ul>';
+			->editColumn('created_at', function($qry)
+			{
+				return $qry->created_at;
+			})
+            ->addColumn('action', function ($compaduser) {
+
+				$actionHtml = '<div class="dropdown dropdown-inline">';
+				$actionHtml .= '<a href="javascript:;" class="btn btn-sm btn-clean btn-icon" data-toggle="dropdown">';
+				$actionHtml .= '<i class="fa fa-server"></i>';
+				$actionHtml .= '</a>';
+				$actionHtml .= '<div class="dropdown-menu dropdown-menu-sm dropdown-menu-right">';
+				$actionHtml .= '<ul class="nav nav-hoverable flex-column">';
+				$actionHtml .= 	'<li class="nav-item"><a class="nav-link" href="#" onclick="compadUserEdit('.$compaduser->id.')"><i class="nav-icon flaticon-edit-1"></i><span class="nav-text">'.trans('display.general_edit').'</span></a></li>';
+				$actionHtml .= 	'<li class="nav-item"><a class="nav-link" href="#" onclick="compadUserDelete('.$compaduser->id.')"><i class="nav-icon flaticon-delete"></i><span class="nav-text">'.trans('display.general_delete').'</span></a></li>';
+				$actionHtml .= '</ul>';
+				$actionHtml .= '</div>';
 				$actionHtml .= '</div>';
 
 				return $actionHtml;
