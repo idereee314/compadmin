@@ -14,6 +14,7 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->bind('user\CompadUserRepository', 'user\EloquentCompadUserRepository'); 
+        $this->app->bind('member\MemberRepository', 'member\EloquentMemberRepository'); 
     }
 
     /**

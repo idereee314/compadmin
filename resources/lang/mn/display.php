@@ -7,6 +7,7 @@ return [
     "IQ_admin" => "IQ админ",
      'iq_center' => 'Оюуны хөгжил IQ төв',
      'contact_us' => 'Холбоо барих',
+    
 
     /** VERB **/
     "general_create" => "Үүсгэх",
@@ -327,6 +328,8 @@ return [
     "login_do_login" => "Нэвтрэх",
     "login_forgot_password" => "Нууц үгээ мартсан?",
     "profile_title" => "Хэрэглэгч",
+    "profile_photo" => "Нүүр зураг",
+    'id_photo' => 'зураг',
 
     // Notify
     "notify_title" => "Сонордуулга",
@@ -355,6 +358,9 @@ return [
     "human_email" => "И-мэйл хаяг",
     'human_register_number' => 'Регистрийн дугаар',
     "human_phone_number" => "Утасны дугаар",
+    'human_contact_phone' => 'Холбоо барих утасны дугаар',
+    'human_birth' => 'Төрсөн огноо',
+
 
     //portal->menu
     "portal" => 'Вэб',

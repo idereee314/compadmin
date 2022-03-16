@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Auth\LoginController;
 use dashboard\HomeController;
 use core\CompadUserController;
+use member\MemberController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -46,6 +47,9 @@ Route::group([
     //User
     Route::resource('/compaduser', 'core\CompadUserController', ['names' => 'compaduser']);
     Route::any('/compaduser/data/list', [CompadUserController::class, 'getDatatableList'])->name('compaduser.data.list');
+
+    //Member
+    Route::resource('/member', 'member\MemberController', ['names' => 'member']);
+    Route::any('/member/data/list', [MemberController::class, 'getDatatableList'])->name('compaduser.data.list');
 });
 
-Route::get('/test', [HomeController::class, 'test'])->name('home.test');
