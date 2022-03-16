@@ -2,16 +2,12 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 
-class CompadUser extends Model
+class CompadUser extends Model implements \Illuminate\Contracts\Auth\Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use Authenticatable;
 
     protected $table = 'uq_compad_user';
 

@@ -9,13 +9,12 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Validator;
-
 use Session;
 use SmartHelper;
 use Config;
 
-//Repositories
-use user\UserRepositoryInterface as User;
+//Repositories 
+use core\CompadUserRepositoryInterface as CompadUser;
 
 class LoginController extends Controller
 {
@@ -45,9 +44,9 @@ class LoginController extends Controller
      * @return void
      */
 
-    public function __construct(User $user)
+    public function __construct(CompadUser $compadUser)
 	{
-		$this->user = $user;
+		$this->compadUser = $compadUser;
     }
 
     public function doLogin()
@@ -75,17 +74,16 @@ class LoginController extends Controller
 				'password' 	=> Request::get('password')
 			);
 
-			$foundUser = $this->user->findByUsernamePassword($userdata['username'], $userdata['password']);
+			$foundUser = $this->compadUser->findByUsernamePassword($userdata['username'], $userdata['password']);
 
 			if ($foundUser != null) {
 
-				// Auth::login($foundUser);
+				Auth::login($foundUser);
 
 				Session::put('firstname', $foundUser->firstname);
 				Session::put('lastname', @$foundUser->lastname);
 
-				//return Redirect::intended('/admin/home');
-				return view('dashboard');
+				return Redirect::intended('/admin/home');
 
 			} else {
 				Session::flash('message', trans('messages.error_login'));
@@ -108,7 +106,6 @@ class LoginController extends Controller
 	}
 
 	public function showLogin() {
-		// return Redirect::to('login');
         return view('auth.login');
 	}
 }

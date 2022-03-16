@@ -1,4 +1,3 @@
-<!--begin::Header Mobile-->
 <div id="kt_header_mobile" class="header-mobile header-mobile-fixed">
     <!--begin::Logo-->
     <a href="index.html">
@@ -26,4 +25,3 @@
     </div>
     <!--end::Toolbar-->
 </div>
-<!--end::Header Mobile-->
