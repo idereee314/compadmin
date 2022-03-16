@@ -1,7 +1,6 @@
 
 
-<form class="form" method="POST" id="add-user-form" action="{{route('user.store')}}">
-    <input type="hidden" name="partnerId" id="partnerId" value="{{ @$partnerId }}"/>
+<form class="form" method="POST" id="add-compaduser-form" action="{{route('compaduser.store')}}">
     <div class="modal-header bg-gray-100">
         <h5 class="modal-title" id="exampleModalLabel">{{trans('display.general_new')}}</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -33,7 +32,7 @@
                     <div class="error-here"></div>
                 </div>
             </div>
-            @if(!$partnerId)
+
             <div class="form-group row">
                 <label class="col-md-3 col-form-label text-right">{{trans('display.username')}}: <span class="text-danger">*</span></label>
                <div class="col-md-9">
@@ -58,24 +57,6 @@
                     <div class="error-here"></div>
                 </div>
             </div>
-
-            <div class="form-group row">
-                <label class="col-3 col-form-label text-right">{{trans('display.role')}}:</label>
-                <div class="col-9 col-form-label">
-                    <div class="checkbox-list">
-                        @foreach ($roles->where('type', @Config::get('smart.role_type')['cms']) as $key => $role)
-                        <label class="checkbox checkbox-outline checkbox-outline-2x checkbox-primary">
-                            <input type="checkbox" name="roles[]" id="role{{$key}}" value="{{$role->role_id}}"/>
-                            <span></span>
-                            {{$role->name}}
-                        </label>
-                        @endforeach
-                    </div>
-                </div>
-            </div>
-            @else
-            <input type="hidden" name="roles[]" value="{{ @$roles->where('type', @Config::get('smart.role_type')['client'])->first()->role_id }}"/>
-            @endif
         </div>
     </div>
         <div class="modal-footer text-right bg-gray-100 border-top-0">

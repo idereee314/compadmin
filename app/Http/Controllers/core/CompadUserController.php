@@ -43,7 +43,7 @@ class CompadUserController extends Controller
      */
     public function create()
     {
-        //
+        return view($this->view_path.'.add');
     }
 
     /**

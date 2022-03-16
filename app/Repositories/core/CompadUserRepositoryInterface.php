@@ -9,6 +9,8 @@ interface CompadUserRepositoryInterface
   public function allPaginate();
 
   public function find($id);
+  
+	public function findByUsernamePassword($username, $password);
 
   public function create($input);
 
