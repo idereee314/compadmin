@@ -50,6 +50,6 @@ Route::group([
 
     //Member
     Route::resource('/member', 'member\MemberController', ['names' => 'member']);
-    Route::any('/member/data/list', [MemberController::class, 'getDatatableList'])->name('compaduser.data.list');
+    Route::any('/member/data/list', [MemberController::class, 'getDatatableList'])->name('member.data.list');
 });
 

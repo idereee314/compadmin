@@ -34,7 +34,7 @@
                                     </div>
                                     <div class="row">
                                         <div class="col-sm-12">
-                                            <table class="table table-head-custom table-bordered dataTable no-footer" id="user_datatable" role="grid" aria-describedby="kt_datatable_info" style="width: 1235px;">
+                                            <table class="table table-separate table-head-custom table-checkable dataTable no-footer dtr-inline" id="user_datatable" role="grid" aria-describedby="kt_datatable_info" style="width: 1235px;">
                                                 <thead>
                                                     <tr role="row">
                                                         <th class="sorting sorting_asc" tabindex="0" aria-controls="kt_datatable" rowspan="1" colspan="1" width="15px">No.</th>
@@ -73,7 +73,7 @@
 
 <script>
 $(document).ready(function() {
-    compadUserTable = $("#user_datatable").DataTable({
+    userTable = $("#user_datatable").DataTable({
         processing:     true,
         serverSide:     true,
         deferRender:    true,
@@ -120,11 +120,11 @@ $(document).ready(function() {
             targets: [0, 6, 7]
         }],
         order: [[ 5, "desc" ]],
-        dom: '<"float-left"B><"float-right"l><"clear">tip',
+        dom: "<'top'B><'row'<'col-sm-12'tr>><'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7 dataTables_pager'lp>>",
         buttons: [
         {
-            text: '<i class="fa fa-plus-square"></i> Шинээр нэмэх',
-            className: "btn font-weight-bolder btn-sm btn-light-success px-3 mt-6",
+            text: '<i class="la la-plus"></i> Шинээр нэмэх',
+            className: "btn btn-light-danger font-weight-bolder",
             action: function ( e, dt, node, config ) {
                 $.get('{!! route('compaduser.create') !!}', showAddModal);
             }
@@ -132,7 +132,7 @@ $(document).ready(function() {
 	});
 
     $('#user-search-form').on('submit', function(e) {
-        compadUserTable.draw();
+        userTable.draw();
         e.preventDefault();
     });
 
@@ -161,7 +161,7 @@ function showAddModal( data ) {
                     success: function(response) {
                         $('#compadUserAddModal').find("#close").trigger('click');
                         $('.panel-sub-heading').html(response).fadeIn().delay(5000).fadeOut();
-                        compadUserTable.draw();
+                        userTable.draw();
                     },
                     error: function (xhr, textStatus, error) {
                         console.log(xhr.statusText);
@@ -211,7 +211,7 @@ function compadUserEditModal(data){
                     success: function(response) {
                         $('#compadUserEditModal').find("#close").trigger('click');
                         $('.panel-sub-heading').html(response).fadeIn().delay(5000).fadeOut();
-                        compadUserTable.draw();
+                        userTable.draw();
                     },
                     error: function (xhr, textStatus, error) {
                         console.log(xhr.statusText);
@@ -261,7 +261,7 @@ function compadUserDelete(id)
                 type: 'DELETE',
                 success: function(response) {
                     $('.panel-sub-heading').html(response).fadeIn().delay(5000).fadeOut();
-                    compadUserTable.draw();
+                    userTable.draw();
                 },
                 error: function (xhr, textStatus, error) {
                     console.log(xhr.statusText);
