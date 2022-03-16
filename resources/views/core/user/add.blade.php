@@ -1,6 +1,6 @@
 
 
-<form class="form" method="POST" id="add-compaduser-form" action="{{route('compaduser.store')}}">
+<form class="form" method="POST" id="add-user-form" action="{{route('user.store')}}">
     <div class="modal-header bg-gray-100">
         <h5 class="modal-title" id="exampleModalLabel">{{trans('display.general_new')}}</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">

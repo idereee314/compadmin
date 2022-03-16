@@ -1,4 +1,4 @@
-<form class="form" id="edit-compaduser-form" action="{{route('compaduser.update', $compadUser->id)}}"  method="POST">
+<form class="form" id="edit-user-form" action="{{route('user.update', $compadUser->id)}}"  method="POST">
     <input type="hidden" name="_method" value="put" />
     <div class="modal-header bg-gray-100">
         <h5 class="modal-title" id="exampleModalLabel">{{trans('display.general_edit')}}</h5>
