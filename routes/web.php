@@ -45,8 +45,8 @@ Route::group([
     Route::get('/home', [HomeController::class, 'index']);
 
     //User
-    Route::resource('/compaduser', 'core\CompadUserController', ['names' => 'compaduser']);
-    Route::any('/compaduser/data/list', [CompadUserController::class, 'getDatatableList'])->name('compaduser.data.list');
+    Route::resource('/user', 'core\CompadUserController', ['names' => 'user']);
+    Route::any('/user/data/list', [CompadUserController::class, 'getDatatableList'])->name('user.data.list');
 
     //Member
     Route::resource('/member', 'member\MemberController', ['names' => 'member']);

@@ -83,7 +83,7 @@ $(document).ready(function() {
         dataType: 'json',
         paginationType: "full_numbers",
         ajax: {
-            url: '{{route('compaduser.data.list')}}',
+            url: '{{route('user.data.list')}}',
             type: 'POST',
             data: function ( d ) {
                 d.name = $('#user-search-form input[id="name"]').val();
@@ -126,7 +126,7 @@ $(document).ready(function() {
             text: '<i class="la la-plus"></i> Шинээр нэмэх',
             className: "btn btn-light-danger font-weight-bolder",
             action: function ( e, dt, node, config ) {
-                $.get('{!! route('compaduser.create') !!}', showAddModal);
+                $.get('{!! route('user.create') !!}', showAddModal);
             }
         }]
 	});
@@ -145,7 +145,7 @@ function showAddModal( data ) {
     $('#compadUserAddModal').on('shown.bs.modal', function(){
         $('#compadUserAddModal .modal-content').html(data);
 
-        $('#add-compaduser-form').validate({
+        $('#add-user-form').validate({
             ignore: [],
             highlight:function(element) {
                 $(element).parents('.form-group').addClass('has-error has-feedback');
@@ -195,7 +195,7 @@ function compadUserEditModal(data){
         $('#compadUserEditModal').on('shown.bs.modal', function(){
             $('#compadUserEditModal .modal-content').html(data);
 
-            $('#edit-compaduser-form').validate({
+            $('#edit-user-form').validate({
             ignore: [],
             highlight:function(element) {
                 $(element).parents('.form-group').addClass('has-error has-feedback');
@@ -257,7 +257,7 @@ function compadUserDelete(id)
     }).then(function(result) {
         if (result.value) {
             $.ajax({
-                url: 'compaduser/' + id,
+                url: 'user/' + id,
                 type: 'DELETE',
                 success: function(response) {
                     $('.panel-sub-heading').html(response).fadeIn().delay(5000).fadeOut();
@@ -276,7 +276,7 @@ function compadUserDelete(id)
 
 function compadUserEdit(id)
 {
-    $.get('/compaduser/' + id + '/edit', compadUserEditModal);
+    $.get('/user/' + id + '/edit', compadUserEditModal);
 }
 
 </script>
