@@ -29,6 +29,9 @@
                             <div class="card-body">
                                 <!--begin: Datatable-->
                                 <div id="kt_datatable_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
+                                    <div class="panel-sub-heading">
+
+                                    </div>
                                     <div class="row">
                                         <div class="col-sm-12">
                                             <table class="table table-head-custom table-bordered dataTable no-footer" id="user_datatable" role="grid" aria-describedby="kt_datatable_info" style="width: 1235px;">
@@ -39,7 +42,7 @@
                                                         <th  class="sorting" tabindex="0" aria-controls="kt_datatable" rowspan="1" colspan="1" width="20%">{{trans('display.human_email')}}</th>
                                                         <th  class="sorting" tabindex="0" aria-controls="kt_datatable" rowspan="1" colspan="1" width="15%">{{trans('display.human_firstname')}}</th>
                                                         <th  class="sorting" tabindex="0" aria-controls="kt_datatable" rowspan="1" colspan="1" width="15%">{{trans('display.human_lastname')}}</th>
-                                                        {{-- <th  class="sorting" tabindex="0" aria-controls="kt_datatable" rowspan="1" colspan="1" width="10%">{{trans('display.role')}}</th> --}}
+                                                        <th  class="sorting" tabindex="0" aria-controls="kt_datatable" rowspan="1" colspan="1" width="10%">{{trans('display.human_phone_number')}}</th>
                                                         <th  class="sorting" tabindex="0" aria-controls="kt_datatable" rowspan="1" colspan="1" width="10%">{{trans('display.general_created_at')}}</th>
                                                         <th  class="sorting" tabindex="0" aria-controls="kt_datatable" rowspan="1" colspan="1" width="5">{{trans('display.general_manage')}}</th>
                                                     </tr>
@@ -59,6 +62,7 @@
                 @include('layouts.footer')
                 <!--end::Footer-->
             </div>
+            @include ($view_path.'.modals')
             <!--end::Wrapper-->
         <!--end::Main-->
 </section>
@@ -69,7 +73,6 @@
 
 <script>
 $(document).ready(function() {
-
     compadUserTable = $("#user_datatable").DataTable({
         processing:     true,
         serverSide:     true,
@@ -103,6 +106,7 @@ $(document).ready(function() {
             {data: 'email'},
             {data: 'firstname'},
             {data: 'lastname'},
+            {data: 'phone_number'},
             {data: 'created_at'},
             {data: 'action'},
         ],
@@ -113,14 +117,14 @@ $(document).ready(function() {
             targets: [0]
         },{
             class: "text-center",
-            targets: [0]
+            targets: [0, 6, 7]
         }],
         order: [[ 5, "desc" ]],
         dom: '<"float-left"B><"float-right"l><"clear">tip',
         buttons: [
         {
             text: '<i class="fa fa-plus-square"></i> Шинээр нэмэх',
-            className: "btn btn-primary mt-6",
+            className: "btn font-weight-bolder btn-sm btn-light-success px-3 mt-6",
             action: function ( e, dt, node, config ) {
                 $.get('{!! route('compaduser.create') !!}', showAddModal);
             }
@@ -132,20 +136,6 @@ $(document).ready(function() {
         e.preventDefault();
     });
 
-    $('#user_datatable tbody').on('click', 'tr[role=row]', function () {
-    var tr = $(this);
-    var row = compadUserTable.row(this);
-    
-    if ( row.child.isShown() ) {
-        row.child.hide();
-        //tr.removeClass('shown');
-        compadUserTable.$('tr.selected').removeClass('shown selected');
-    }
-    else {
-        row.child( row.data().details ).show();
-        tr.addClass('shown selected');
-    }
-});
 }).ajaxStart($.blockUI).ajaxStop($.unblockUI);
 
 //Modal
@@ -203,7 +193,7 @@ function showAddModal( data ) {
 function compadUserEditModal(data){
     $('#compadUserEditModal').modal();
         $('#compadUserEditModal').on('shown.bs.modal', function(){
-            $('#compadUserEditModal .modal-body').html(data);
+            $('#compadUserEditModal .modal-content').html(data);
 
             $('#edit-compaduser-form').validate({
             ignore: [],
@@ -252,7 +242,7 @@ $('#compadUserEditModal').on('hidden.bs.modal', function(){
 }
 
 //UserDelete
-function userDelete(id)
+function compadUserDelete(id)
 {
     Swal.fire({
         title: "Та устгахдаа итгэлтэй байна уу",
@@ -286,7 +276,7 @@ function userDelete(id)
 
 function compadUserEdit(id)
 {
-    $.get('/admin/compaduser/' + id + '/edit', compadUserEditModal);
+    $.get('/compaduser/' + id + '/edit', compadUserEditModal);
 }
 
 </script>

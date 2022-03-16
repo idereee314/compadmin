@@ -44,6 +44,11 @@ License: You must have a valid license purchased only from themeforest(the above
 		<script src="/assets/plugins/global/plugins.bundle.js"></script>
 		<script src="/assets/plugins/custom/prismjs/prismjs.bundle.js"></script>
 		<script src="/assets/js/scripts.bundle.js"></script>
+
+        <script src="{{asset('assets/js/plugins/custom/blockui/jquery.blockUI.js')}}"> </script>
+        <script src="{{asset('assets/js/plugins/custom/jquery-confirm/jquery-confirm.min.js') }}"></script>
+        <script src="{{asset('assets/js/plugins/custom/jquery-validation/dist/jquery.validate.js') }}"></script>
+
 		<!--end::Global Theme Bundle-->
 		@yield('javascript')
 	</body>

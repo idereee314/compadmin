@@ -8,7 +8,7 @@
         </button>
     </div>
 
-    <div class="card-body m-4">
+    <div class="card-body">
             <div class="form-group row">
                 <label class="col-md-3 col-form-label text-right">{{trans('display.human_lastname')}}: <span class="text-danger">*</span></label>
                 <div class="col-md-9">
@@ -41,6 +41,14 @@
                    <span class="text-muted help-block">{{ trans('messages.info_max_length', ['number' => 20]) }}</span>
                </div>
             </div>
+
+            <div class="form-group row">
+                <label class="col-md-3 col-form-label text-right">{{trans('display.human_phone_number')}}: <span class="text-danger">*</span></label>
+                <div class="col-md-9">
+                    <input type="number" class="form-control" name="phone_number" id="phone_number" autocomplete="off" placeholder="{{trans('display.human_phone_number')}}">
+                    <div class="error-here"></div>
+                </div>
+            </div>
       
             <div class="form-group row">
                 <label class="col-md-3 col-form-label text-right">{{trans('display.user_password')}}: <span class="text-danger">*</span></label>
@@ -57,11 +65,11 @@
                     <div class="error-here"></div>
                 </div>
             </div>
-        </div>
     </div>
-        <div class="modal-footer text-right bg-gray-100 border-top-0">
-            <button type="button" id="close" class="btn btn-light-primary font-weight-bold" data-dismiss="modal">{{trans('display.general_close')}}</button>
-            <button type="submit" class="btn btn-primary font-weight-bold">{{trans('display.general_save')}}</button>
-        </div>
+
+    <div class="modal-footer text-right bg-gray-100 border-top-0">
+        <button type="button" id="close" class="btn btn-light-primary font-weight-bold" data-dismiss="modal">{{trans('display.general_close')}}</button>
+        <button type="submit" class="btn btn-primary font-weight-bold">{{trans('display.general_save')}}</button>
+    </div>
 </form>
 

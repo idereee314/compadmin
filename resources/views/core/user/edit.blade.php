@@ -1,5 +1,3 @@
-
-
 <form class="form" id="edit-compaduser-form" action="{{route('compaduser.update', $compadUser->id)}}"  method="POST">
     <input type="hidden" name="_method" value="put" />
     <div class="modal-header bg-gray-100">
@@ -38,6 +36,14 @@
             <label class="col-md-3 col-form-label text-right">{{trans('display.username')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9">
                 <input class="form-control" name="username" id="username" autocomplete="off" value="{{ $compadUser->username }}" placeholder="{{trans('display.username')}}">
+                <div class="error-here"></div>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-md-3 col-form-label text-right">{{trans('display.human_phone_number')}}: <span class="text-danger">*</span></label>
+            <div class="col-md-9">
+                <input type="number" class="form-control" name="phone_number" id="phone_number" autocomplete="off" value="{{ $compadUser->phone_number }}" placeholder="{{trans('display.human_phone_number')}}">
                 <div class="error-here"></div>
             </div>
         </div>

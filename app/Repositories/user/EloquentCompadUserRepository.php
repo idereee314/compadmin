@@ -42,6 +42,7 @@ class EloquentCompadUserRepository implements CompadUserRepository {
 		$user->lastname = $input['lastname'];
 		$user->email = $input['email'];
 		$user->username = $input['username'];
+		$user->phone_number = @$input['phone_number'];
 		$user->password = md5($input['password']);
 
 		$user->save();
@@ -59,6 +60,7 @@ class EloquentCompadUserRepository implements CompadUserRepository {
 		$user->firstname = $input['firstname'];
 		$user->lastname = $input['lastname'];
 		$user->username = $input['username'];
+		$user->phone_number = @$input['phone_number'];
 		$user->email = $input['email'];
 
 		$user->save();
@@ -98,6 +100,10 @@ class EloquentCompadUserRepository implements CompadUserRepository {
                     $qry->whereRaw('LOWER(sd_user.email) like ?', array('%'.mb_strtolower($searchData->get('user_mail')).'%'));
                 }
             })
+			->editColumn('created_at', function($qry)
+			{
+				return $qry->created_at;
+			})
             ->addColumn('action', function ($compaduser) {
 
 				$actionHtml = '<div class="dropdown dropdown-inline">';
