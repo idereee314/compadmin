@@ -62,7 +62,7 @@ return [
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => App\Models\CompadUser::class,
+            'model' => user\CompadUser::class,
         ],
 
         // 'users' => [

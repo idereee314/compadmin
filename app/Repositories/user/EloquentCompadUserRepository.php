@@ -1,6 +1,6 @@
-<?php namespace core;
+<?php namespace user;
 
-use App\Models\CompadUser;
+use user\CompadUser as User;
 use core\sessions\Sessions;
 
 use Hash;
@@ -17,27 +17,26 @@ use Carbon;
 use Session;
 use Config;
 
-class CompadUserRepository implements CompadUserRepositoryInterface {
+class EloquentCompadUserRepository implements CompadUserRepository {
 
 	public function all()
 	{
-		return CompadUser::all();
+		return User::all();
 	}
 
 	public function allPaginate()
 	{
-		return CompadUser::paginate(ConfigHelper::getConfigValueByCode('pagination_global_list'));
+		return User::paginate(ConfigHelper::getConfigValueByCode('pagination_global_list'));
 	}
 
 	public function find($id)
 	{
-		return CompadUser::find($id);
+		return User::find($id);
 	}
-
 
 	public function create($input)
 	{
-		$user = new CompadUser;
+		$user = new User;
 
 		$user->firstname = $input['firstname'];
 		$user->lastname = $input['lastname'];
@@ -50,15 +49,9 @@ class CompadUserRepository implements CompadUserRepositoryInterface {
 
  	public function findByEmail($email)
  	{
- 		$user = CompadUser::where('email', '=', $email)->first();
+ 		$user = User::where('email', '=', $email)->first();
  		return $user;
 	}
-
-	public function findByUsernamePassword($username, $password)
-    {
-        $compadUser = CompadUser::where('password', md5($password))->where('username', $username)->first();
-        return $compadUser;
-    }
 
  	public function update($id, $input)
 	{
@@ -71,6 +64,12 @@ class CompadUserRepository implements CompadUserRepositoryInterface {
 		$user->save();
 	}
 
+	public function findByUsernamePassword($username, $password)
+    {
+        $user = User::where('password', md5($password))->where('username', $username)->first();
+        return $user;
+    }
+	
 	public function delete($id)
 	{
 		$user = $this->find($id);
@@ -80,7 +79,7 @@ class CompadUserRepository implements CompadUserRepositoryInterface {
 
     public function getDatatableList($searchData)
     {
-		$qry = CompadUser::select('*');
+		$qry = User::select('*');
 
         $data = Datatables::make($qry)
             ->filter(function ($qry) use ($searchData) {

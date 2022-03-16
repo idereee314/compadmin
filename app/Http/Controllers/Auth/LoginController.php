@@ -13,8 +13,8 @@ use Session;
 use SmartHelper;
 use Config;
 
-//Repositories 
-use core\CompadUserRepositoryInterface as CompadUser;
+//Repositories
+use user\CompadUserRepository as User;
 
 class LoginController extends Controller
 {
@@ -44,9 +44,9 @@ class LoginController extends Controller
      * @return void
      */
 
-    public function __construct(CompadUser $compadUser)
+    public function __construct(User $user)
 	{
-		$this->compadUser = $compadUser;
+		$this->user = $user;
     }
 
     public function doLogin()
@@ -74,7 +74,7 @@ class LoginController extends Controller
 				'password' 	=> Request::get('password')
 			);
 
-			$foundUser = $this->compadUser->findByUsernamePassword($userdata['username'], $userdata['password']);
+			$foundUser = $this->user->findByUsernamePassword($userdata['username'], $userdata['password']);
 
 			if ($foundUser != null) {
 

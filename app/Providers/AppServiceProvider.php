@@ -3,8 +3,6 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use core\CompadUserRepositoryInterface;
-use core\CompadUserRepository;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -15,7 +13,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind(CompadUserRepositoryInterface::class, CompadUserRepository::class);        
+        $this->app->bind('user\CompadUserRepository', 'user\EloquentCompadUserRepository'); 
     }
 
     /**
