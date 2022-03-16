@@ -15,7 +15,7 @@ use SmartHelper;
 use Config;
 
 //Repositories
-use user\UserRepositoryInterface as User;
+use user\UserRepository as User;
 
 class LoginController extends Controller
 {
