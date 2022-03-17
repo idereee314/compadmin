@@ -9,10 +9,12 @@ use user\CompadUser as User;
 
 use Auth;
 use Carbon;
+use Illuminate\Support\Str;
 
 class Member extends Model
 {
     protected $table = 'uq_member';
+    protected $appends = array('fullname');
     
     public static function rules($id) 
     {
@@ -27,6 +29,11 @@ class Member extends Model
             'id_photo' => 'required',
 		);
 	}
+
+    public function getFullnameAttribute()
+    {
+		return Str::slug($this->lastname).'. '.$this->firstname;
+    }
 
     public function user()
     {

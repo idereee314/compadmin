@@ -21,6 +21,11 @@ class EventConfig extends Model
             'reg_end_date' => 'required'
 		);
 	}
+
+    public function event()
+    {
+        return $this->belongsTo('event\Event', 'event_id');
+    }
     
     public static function boot()
     {

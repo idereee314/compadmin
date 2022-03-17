@@ -16,6 +16,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind('user\CompadUserRepository', 'user\EloquentCompadUserRepository'); 
         $this->app->bind('member\MemberRepository', 'member\EloquentMemberRepository'); 
         $this->app->bind('event\EventRegistrationRepository', 'event\EloquentEventRegistrationRepository'); 
+        $this->app->bind('event\EventConfigRepository', 'event\EloquentEventConfigRepository'); 
 
         //reference
         $this->app->bind('reference\EntryConfigAgeRepository', 'reference\EloquentEntryConfigAgeRepository'); 

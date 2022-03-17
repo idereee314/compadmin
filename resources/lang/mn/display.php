@@ -74,106 +74,6 @@ return [
     'general_color_code' => 'Өнгөний код',
     'general_rank' => 'Зэрэглэл',
 
-    //assessment
-    "assessment" => 'Үнэлгээ',
-    'assessment_platform' => 'Үнэлгээний цахим платформ',
-    "assessment_description" => "Үнэлгээний тайлбар",
-
-    //question
-    "general_question" => "Асуулт",
-    "question_add_success" => "Асуулт амжилттай нэмэгдлээ",
-    "question_remove_success" => "Асуулт амжилттай хасагдлаа",
-    "question_update_success" => "Асуулт амжилттай шинэчилэгдлээ",
-    "question_add_failed" => "Асуулт нэмэхэд алдаа гарлаа",
-    "question_edit" => "Асуулт засах",
-    'question_is_timed' => 'Хугацаатай эсэх',
-    'question_not_timed' => 'Хугацаагүй',
-    'question_count' => 'Асуултын тоо',
-    'question_section_title' => 'Нэр',
-    'transfer_question_list' => 'Асуултын жагсаалт руу шилжих',
-    'alternative_question' => 'Харьцуулах текст',
-    'show_question' => "асуулт харах ",
-    'question_selected_count' => 'Сонгох зөв хариултын тоо',
-    'data_entry' => 'Мэдээлэл оруулах',
-
-
-    //answer
-    "answer_option_id" => "Хариултын төрөл",
-    "answer" => "Хариулт",
-    "answer_correction" => "Зөв хариулт",
-    'ordered_correction' => 'Зөв дараалал',
-    'is_const_answer' => 'Хариулт тогтмол эсэх',
-    'answer_score' => 'Хариултын оноо',
-    'is_answer_score' => 'Хариулт оноотой эсэх',
-    'is_answer_money' => 'Мөнгөний хариулттай эсэх',
-
-    //exam
-    'exam' => 'Шалгалтын загвар',
-    'exam_instruction_text' => 'Шалгалтын заавар',
-    'exam_information_text' => 'Шалгалтын мэдээлэл',
-    'exam_total_score' => 'Нийт оноо',
-    'exam_question_count' => 'Асуултын тоо',
-    'variant_id' => 'Хувилбар',
-    'duration_minute' => 'Хугацаа',
-    'start_exam' => 'Эхлэх хугацаа',
-    'end_exam' => 'Дуусах хугацаа',
-    'exam_method' => 'Сорил үүсгэх арга',
-    'add_sub_exam_part' => 'Дэд хэсэг нэмэх',
-    'work_level' => 'Ажлын түвшин',
-    'max-question-count' => 'Боломжит асуултын тоо',
-    'max-duration_minute' => 'Боломжит хугацаа',
-    'exam_generate' => 'Шалгалт боловсруулах',
-    'exam_part' => 'Шалгалтын хэсэг', 
-    'exam_part_name' => 'Хэсэгийн нэр',
-    'show_exam' => 'Шалгалт харах',
-    'transfer_exam_list' => 'Шалгалтын жагсаалт руу шилжих',
-    'insert_exam_name' => 'Шалгалтын нэр оруулах',
-    'generate_examPart' => 'Шалгалтын хэсэгийн боловсруулах', 
-    'sub_examPart' => 'Шалгалтын дэд хэсэг',
-    'exam_result_template' => 'Тайлангийн загвар',
-    'show_order' => 'Харах дараалал',
-    'exam_recovery' => 'Шалгалт сэргээх үү',
-    'exam_copy' => 'Шалгалт хуулах уу',
-
-    "exam_add_success" => "Шалгалт амжилттай нэмэгдлээ",
-    "exam_add_failed" => "Шалгалт нэмэхэд алдаа гарлаа",
-    'transfer_generate_exam_list' => 'Шалгалтын жагсаалт руу шилжих',
-    'is_grouped' => 'Бүлэглэх эсэх',
-    'insert_exam_category' => 'Ангилал оруулна уу',
-    'insert_exam_name' => 'Шалгалтын нэр оруулна уу',
-    'occupation_title' => 'Ажил мэргэжил',
-
-    'exam_summary_score' => 'Жишиг оноо',
-    'exam_summary_min_precent' => 'Доод хувь',
-    'exam_summary_max_precent' => 'Дээд хувь',
-    'exam_summary_precent' => 'Хувь',
-    'exam_summary_match_pattern' => 'Формат',
-    'exam_summary_is_match' => 'Таарах эсэх',
-
-    'exam_percent_value' => 'Хувь',
-    'exam_percent_min_age' => 'Доод нас',
-    'exam_percent_max_age' => 'Дээд нас',
-    'exam_percent_min_score' => 'Доод оноо',
-    'exam_percent_max_score' => 'Дээд оноо',
-
-    'exam_package' => 'Сорилын багц',
-
-    //Category
-    'sub_category' => 'Дэд ангилал',
-    'rank_order' => 'Түвшин',
-    'icon_url' => 'Дүрс зураг',
-
-    //Image
-    "general_image_upload" => "Зураг оруулах",
-    "general_image_change" => "Зураг солих",
-    'image_add_success' => 'Зураг амжилттай хадгалагдлаа',
-    'image_add_error' => 'Зураг хадгалахад алдаа гарлаа',
-    'show_image' => "зураг харах ",
-
-    // Chat
-    "chat_online" => "Онлайн",
-    "chat_offline" => "Оффлайн",
-
     /** NOUN **/
     "general_code" => "Код",
     "general_name" => "Нэр",
@@ -362,38 +262,11 @@ return [
     'human_birth' => 'Төрсөн огноо',
     'human_gender_code' => 'Хүйс',
 
-
-    //portal->menu
-    "portal" => 'Вэб',
-    'menu_title' => 'Цэс',
-
-    //portal->content
-    'content' => 'Контент',
-    'content_title' => 'Гарчиг',
-    'content_summury' => 'Хураангуй',
-    'content_body' => 'Дэлгэрэнгүй',
-    'section_id' => 'Харагдах дараалал',
-
-    //partner
-    'partner_register' => 'Байгууллагын регистер',
-    'partner_name' => 'Харилцагчийн нэр',
-    'partner_address' => 'Хаяг',
-    'partner_logo' => 'Лого',
-    'partner_ip_address' => 'Зөвшөөрөх IP хаяг',
-    'company_name' => 'Байгууллага',
-
-    //contract
-    'contract_title' => 'Гэрээ',
-    'contract_begin_date' => 'Гэрээ эхлэх',
-    'contract_end_date' => 'Гэрээ дуусах',
-    'contract_type' => 'Гэрээний төрөл',
-    'contract_candidate_count' => 'Оролцогч',
-    'contract_generattion_count' => 'Боловсруулах',
-    'contract_exam_limit_count' => 'Нийт сорил',
-
-    // news
-    'news_title' => 'Гарчиг',
-    'news_summury' => 'Мэдээний хураангуй',
-    'news_description' => 'Мэдээний дэлгэрэнгүй',
-    'news_type' => 'Мэдээний төрөл'
+    'comp_entry' => 'Төрөл',
+    'comp_entry_age' => 'Нас',
+    'comp_entry_belt' => 'Бүс',
+    'comp_entry_weight' => 'Жин',
+    'comp_academy' => 'Академи',
+    'comp_member' => 'Оролцогч',
+    'comp_title' => 'Тэмцээн',
 ];

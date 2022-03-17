@@ -2,6 +2,7 @@
 
 @section('styles')
 <link rel="stylesheet" href="{{asset('assets/js/plugins/custom/datatables/datatables.bundle.css')}}">
+<link rel="stylesheet" href="{{asset('assets/js/plugins/custom/select/css/select2.min')}}">
 @endsection
 
 @section('content')
@@ -25,31 +26,123 @@
                         <!--begin::Card-->
                         <div class="card card-custom">
                             <div class="card-header flex-wrap py-5">
+                                <div class="card-title">
+                                    <h3 class="card-label">Тэмцээний жагсаалт 
+                                    <span class="d-block text-muted pt-2 font-size-sm">Тэмцээний бүртгэлийн хэсэг</span></h3>
+                                </div>
                             </div>
                             <div class="card-body">
+                                <!--begin: Search Form-->
+                                <form class="mb-15">
+                                    <div class="row mb-6">
+                                        <div class="col-lg-3 mb-lg-0 mb-6">
+                                            <label>RecordID:</label>
+                                            <input type="text" class="form-control datatable-input" placeholder="E.g: 4590" data-col-index="0" />
+                                        </div>
+                                        <div class="col-lg-3 mb-lg-0 mb-6">
+                                            <label>OrderID:</label>
+                                            <input type="text" class="form-control datatable-input" placeholder="E.g: 37000-300" data-col-index="1" />
+                                        </div>
+                                        <div class="col-lg-3 mb-lg-0 mb-6">
+                                            <label>Country:</label>
+                                            <select class="form-control datatable-input" data-col-index="2">
+                                                <option value="">Select</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-lg-3 mb-lg-0 mb-6">
+                                            <label>Agent:</label>
+                                            <input type="text" class="form-control datatable-input" placeholder="Agent ID or name" data-col-index="4" />
+                                        </div>
+                                    </div>
+                                    <div class="row mb-8">
+                                        <div class="col-lg-3 mb-lg-0 mb-6">
+                                            <label>Ship Date:</label>
+                                            <div class="input-daterange input-group" id="kt_datepicker">
+                                                <input type="text" class="form-control datatable-input" name="start" placeholder="From" data-col-index="5" />
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text">
+                                                        <i class="la la-ellipsis-h"></i>
+                                                    </span>
+                                                </div>
+                                                <input type="text" class="form-control datatable-input" name="end" placeholder="To" data-col-index="5" />
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 mb-lg-0 mb-6">
+                                            <label>Status:</label>
+                                            <select class="form-control datatable-input" data-col-index="6">
+                                                <option value="">Select</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-lg-3 mb-lg-0 mb-6">
+                                            <label>Type:</label>
+                                            <select class="form-control datatable-input" data-col-index="7">
+                                                <option value="">Select</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-8">
+                                        <div class="col-lg-12">
+                                        <button class="btn btn-primary btn-primary--icon" id="kt_search">
+                                            <span>
+                                                <i class="la la-search"></i>
+                                                <span>Search</span>
+                                            </span>
+                                        </button>&#160;&#160;
+                                        <button class="btn btn-secondary btn-secondary--icon" id="kt_reset">
+                                            <span>
+                                                <i class="la la-close"></i>
+                                                <span>Reset</span>
+                                            </span>
+                                        </button></div>
+                                    </div>
+                                </form>
                                 <!--begin: Datatable-->
-                                <div id="kt_datatable_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
+                                <div class="dataTables_wrapper dt-bootstrap4">
                                     <div class="panel-sub-heading">
 
                                     </div>
                                     <div class="row">
                                         <div class="col-sm-12">
-                                            <table class="table table-separate table-head-custom table-checkable dataTable no-footer dtr-inline" id="event_registration_table" role="grid" aria-describedby="kt_datatable_info" style="width: 1235px;">
+                                            <table class="table table-separate table-head-custom" id="event-registration-datatable" style="margin-top: 13px !important">
                                                 <thead>
-                                                    <tr role="row">
-                                                        <th class="sorting sorting_asc" tabindex="0" aria-controls="kt_datatable" rowspan="1" colspan="1" width="15px">No.</th>
-                                                        {{-- <th  class="sorting" tabindex="0" aria-controls="kt_datatable" rowspan="1" colspan="1" width="15%">{{trans('display.username')}}</th> --}}
-                                                        <th  class="sorting" tabindex="0" aria-controls="kt_datatable" rowspan="1" colspan="1" width="15%">{{trans('display.human_register_number')}}</th>
-                                                        <th  class="sorting" tabindex="0" aria-controls="kt_datatable" rowspan="1" colspan="1" width="15%">{{trans('display.human_firstname')}}</th>
-                                                        <th  class="sorting" tabindex="0" aria-controls="kt_datatable" rowspan="1" colspan="1" width="15%">{{trans('display.human_lastname')}}</th>
-                                                        <th  class="sorting" tabindex="0" aria-controls="kt_datatable" rowspan="1" colspan="1" width="8%">{{trans('display.human_contact_phone')}}</th>
-                                                        <th  class="sorting" tabindex="0" aria-controls="kt_datatable" rowspan="1" colspan="1" width="8%">{{trans('display.human_birth')}}</th>
-                                                        <th  class="sorting" tabindex="0" aria-controls="kt_datatable" rowspan="1" colspan="1" width="8%">{{trans('display.profile_photo')}}</th>
-                                                        <th  class="sorting" tabindex="0" aria-controls="kt_datatable" rowspan="1" colspan="1" width="8%">{{trans('display.id_photo')}}</th>
-                                                        <th  class="sorting" tabindex="0" aria-controls="kt_datatable" rowspan="1" colspan="1" width="8%">{{trans('display.general_created_at')}}</th>
-                                                        <th  class="sorting" tabindex="0" aria-controls="kt_datatable" rowspan="1" colspan="1" width="5">{{trans('display.general_manage')}}</th>
-                                                    </tr>
+                                                <tr>
+													<th colspan="4">{{ trans('display.comp_member') }}</th>
+													<th colspan="8">{{ trans('display.comp_title') }}</th>
+												</tr>
+                                                <tr>
+                                                    <th width="15px">No.</th>
+                                                    <th width="15%">{{trans('display.comp_event')}}</th>
+                                                    <th width="5%">{{trans('display.human_register_number')}}</th>
+                                                    <th width="15%">{{trans('display.human_name')}}</th>
+                                                    <th width="8%">{{trans('display.human_phone_number')}}</th>
+                                                    <th width="15%">{{trans('display.comp_entry')}}</th>
+                                                    <th width="15%">{{trans('display.comp_entry_age')}}</th>
+                                                    <th width="15%">{{trans('display.comp_entry_belt')}}</th>
+                                                    <th width="15%">{{trans('display.comp_entry_weight')}}</th>
+                                                    <th width="15%">{{trans('display.general_status')}}</th>
+                                                    <th width="8%">{{trans('display.general_created_at')}}</th>
+                                                    <th width="5%">{{trans('display.general_manage')}}</th>
+                                                </tr>
                                                 </thead>
+                                                <tbody>
+                                    
+                                                </tbody>
+                                                <tfoot>
+                                                <tr>
+                                                    <th>No.</th>
+                                                    <th>{{trans('display.comp_event')}}</th>
+                                                    <th>{{trans('display.human_register_number')}}</th>
+                                                    <th>{{trans('display.human_name')}}</th>
+                                                    <th>{{trans('display.human_phone_number')}}</th>
+                                                    <th>{{trans('display.comp_entry')}}</th>
+                                                    <th>{{trans('display.comp_entry_age')}}</th>
+                                                    <th>{{trans('display.comp_entry_belt')}}</th>
+                                                    <th>{{trans('display.comp_entry_weight')}}</th>
+                                                    <th>{{trans('display.general_status')}}</th>
+                                                    <th>{{trans('display.general_created_at')}}</th>
+                                                    <th>{{trans('display.general_manage')}}</th>
+                                                </tr>
+                                                </tfoot>
                                             </table>    
                                         </div>
                                     </div>
@@ -72,11 +165,12 @@
 
 @section('javascript')
 <script src="{{asset('assets/js/plugins/custom/datatables/datatables.js')}}"></script>
+<script src="{{asset('assets/js/plugins/custom/select2/js/select2.min.js')}}"></script>
 <script src="{{asset('assets/js/smart.js')}}"></script>
 
 <script>
 $(document).ready(function() {
-    eventRegistrationTable = $("#event_registration_table").DataTable({
+    eventTable = $("#event-registration-datatable").DataTable({
         processing:     true,
         serverSide:     true,
         deferRender:    true,
@@ -86,7 +180,7 @@ $(document).ready(function() {
         dataType: 'json',
         paginationType: "full_numbers",
         ajax: {
-            url: '{{route('member.data.list')}}',
+            url: '{{route('event.registration.data.list')}}',
             type: 'POST',
             data: function ( d ) {
                 d.name = $('#user-search-form input[id="name"]').val();
@@ -94,8 +188,19 @@ $(document).ready(function() {
                 d.role = $('#user-search-form select[id="role"]').val();
             },
         },
-        "fnCreatedRow": function( nRow, aData, iDataIndex ) {
-            $(nRow).attr('id', aData[0]);
+        drawCallback: function(settings) {
+            var api = this.api();
+            var rows = api.rows({page: 'current'}).nodes();
+            var last = null;
+
+            api.column(1, {page: 'current'}).data().each(function(group, i) {
+                if (last !== group) {
+                    $(rows).eq(i).before(
+                        '<tr class="group"><td colspan="11">&nbsp;' + group + '</td></tr>',
+                    );
+                    last = group;
+                }
+            });
         },
         columns: [
             {
@@ -105,40 +210,67 @@ $(document).ready(function() {
                 },
                 width: "30px"
             },
-            // {data: 'user.firstname'},
-            {data: 'register_number'},
-            {data: 'firstname'},
-            {data: 'lastname'},
-            {data: 'contact_phone'},
-            {data: 'birth'},
-            {data: 'profile_photo'},
-            {data: 'id_photo'},
+            {data: 'event.name'},
+            {data: 'member.register_number'},
+            {
+                data: 'member', 
+                render: function (data, type, row, meta) {
+                    var name = data.lastname.substr(0,1) + '. ' + data.firstname;
+                    return name;
+                },
+                "defaultContent": ""
+            },
+            {data: 'member.contact_phone'},
+            {data: 'entry.name', "defaultContent": ""},
+            {
+                data: 'age',
+                render: function (data, type, row, meta) {
+                    var age;
+                    if(data.end_age != null)
+                    {
+                        age = data.start_age + '-' + data.end_age;
+                    }
+                    else 
+                    {
+                        age = data.start_age + '+';
+                    }
+                    return age;
+                }, "defaultContent": ""
+            },
+            {data: 'belt.name', "defaultContent": ""},
+            {data: 'weight.weight', "defaultContent": ""},
+            {data: 'status', "defaultContent": ""},
             {data: 'created_at'},
             {data: 'action'},
         ],
         columnDefs: [ 
+        {
+            // hide columns by index number
+            targets: [1],
+            visible: false,
+        },
         {
             searchable: false,
             orderable: false,
             targets: [0]
         },{
             class: "text-center",
-            targets: [0, 6, 7, 8, 9]
+            targets: [0]
         }],
-        order: [[ 9, "desc" ]],
+        order: [[ 10, "desc" ]],
         dom: "<'top'B><'row'<'col-sm-12'tr>><'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7 dataTables_pager'lp>>",
         buttons: [
         {
             text: '<i class="la la-plus"></i> Шинээр нэмэх',
             className: "btn btn-light-danger font-weight-bolder mb-2",
             action: function ( e, dt, node, config ) {
-                $.get('{!! route('member.create') !!}', showAddModal);
+                $.get('{!! route('event.registration.create') !!}', showAddModal);
             }
         }]
 	});
 
     $('#user-search-form').on('submit', function(e) {
-        eventRegistrationTable.draw();
+        eventTable.draw();
         e.preventDefault();
     });
 
@@ -147,11 +279,40 @@ $(document).ready(function() {
 //Modal
 function showAddModal( data ) {
 
-    $('#memberAddModal').modal();
-    $('#memberAddModal').on('shown.bs.modal', function(){
-        $('#memberAddModal .modal-content').html(data);
+    $('#memberModal').modal();
+    $('#memberModal').on('shown.bs.modal', function(){
+        $('#memberModal .modal-content').html(data);
+        $('#create-event-registration-form input[name=member_id]').select2({
+            width: 'resolve',
+            dropdownAutoWidth : true,
+            placeholder: "-- {{ trans('display.general_select') }} --",
+            ajax: {
+                type: 'GET',
+                url: '{!! route('organization.by.tree') !!}',
+                data: function (params) {
+                    return {
+                        q: params
+                    };
+                },
+                processResults: function (data) {
+                    return {results: data}
+                },
+                cache: true
+            },
+            id: 'id',
+            closeOnSelect: true,
+            allowClear: true,
+            maximumSelectionLength: 30,
+            minimumInputLength: 3,
+            formatSelection: function (item) {
+                return item.name;
+            },
+            formatResult: function (item) {
+                return item.name;
+            }
+        });
 
-        $('#add-member-form').validate({
+        $('#create-event-registration-form').validate({
             ignore: [],
             highlight:function(element) {
                 $(element).parents('.form-group').addClass('has-error has-feedback');
@@ -165,9 +326,9 @@ function showAddModal( data ) {
                     type: form.method,
                     data: new FormData(form),
                     success: function(response) {
-                        $('#memberAddModal').find("#close").trigger('click');
+                        $('#memberModal').find("#close").trigger('click');
                         $('.panel-sub-heading').html(response).fadeIn().delay(5000).fadeOut();
-                        eventRegistrationTable.draw();
+                        eventTable.draw();
                     },
                     error: function (xhr, textStatus, error) {
                         console.log(xhr.statusText);
@@ -191,15 +352,15 @@ function showAddModal( data ) {
         $(this).off('shown.bs.modal');
     });
 
-    $('#memberAddModal').on('hidden.bs.modal', function(){
-        $('#memberAddModal .modal-body').empty();
+    $('#memberModal').on('hidden.bs.modal', function(){
+        $('#memberModal .modal-body').empty();
     });
 }
 
-function memberEditModal(data){
-    $('#memberEditModal').modal();
-        $('#memberEditModal').on('shown.bs.modal', function(){
-            $('#memberEditModal .modal-content').html(data);
+function showEditModal(data){
+    $('#memberModal').modal();
+        $('#memberModal').on('shown.bs.modal', function(){
+            $('#memberModal .modal-content').html(data);
 
             $('#edit-member-form').validate({
             ignore: [],
@@ -215,9 +376,9 @@ function memberEditModal(data){
                     type: form.method,
                     data:  new FormData(form),
                     success: function(response) {
-                        $('#memberEditModal').find("#close").trigger('click');
+                        $('#memberModal').find("#close").trigger('click');
                         $('.panel-sub-heading').html(response).fadeIn().delay(5000).fadeOut();
-                        eventRegistrationTable.draw();
+                        eventTable.draw();
                     },
                     error: function (xhr, textStatus, error) {
                         console.log(xhr.statusText);
@@ -241,8 +402,8 @@ function memberEditModal(data){
         $(this).off('shown.bs.modal');
 });
 
-$('#memberEditModal').on('hidden.bs.modal', function(){
-    $('#memberEditModal .modal-body').empty();
+$('#memberModal').on('hidden.bs.modal', function(){
+    $('#memberModal .modal-body').empty();
 });
 
 }
@@ -267,7 +428,7 @@ function memberDelete(id)
                 type: 'DELETE',
                 success: function(response) {
                     $('.panel-sub-heading').html(response).fadeIn().delay(5000).fadeOut();
-                    eventRegistrationTable.draw();
+                    eventTable.draw();
                 },
                 error: function (xhr, textStatus, error) {
                     console.log(xhr.statusText);
@@ -279,11 +440,5 @@ function memberDelete(id)
         }
     });
 }
-
-function compadUserEdit(id)
-{
-    $.get('/member/' + id + '/edit', memberEditModal);
-}
-
 </script>
 @endsection
