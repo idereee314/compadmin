@@ -111,8 +111,8 @@ $(document).ready(function() {
             {data: 'lastname'},
             {data: 'contact_phone'},
             {data: 'birth'},
-            {data: 'profile_photo'},
-            {data: 'id_photo'},
+            {data: 'profile_photo', "defaultContent": ''},
+            {data: 'id_photo', "defaultContent": ''},
             {data: 'created_at'},
             {data: 'action'},
         ],
@@ -280,7 +280,7 @@ function memberDelete(id)
     });
 }
 
-function compadUserEdit(id)
+function memberEdit(id)
 {
     $.get('/member/' + id + '/edit', memberEditModal);
 }

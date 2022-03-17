@@ -360,7 +360,7 @@ return [
     "human_phone_number" => "Утасны дугаар",
     'human_contact_phone' => 'Холбоо барих утасны дугаар',
     'human_birth' => 'Төрсөн огноо',
-    'human_gender_code' => 'Хэрэглэгчийн код',
+    'human_gender_code' => 'Хүйс',
 
 
     //portal->menu

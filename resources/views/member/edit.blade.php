@@ -39,12 +39,20 @@
                 <div class="error-here"></div>
             </div>
         </div>
-
+        
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.human_gender_code')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9">
-                <input type="number" class="form-control" name="gender_code" id="gender_code" value="{{ $member->gender_code }}" autocomplete="off" placeholder="{{trans('display.human_gender_code')}}" onkeyup="numberOnly(this)">
-                <div class="error-here"></div>
+                <div class="radio-inline">
+                    @foreach(Config::get("smart.gender_code") as $key => $gender)
+                        <label class="radio radio-rounded">
+                            <input type="radio" name="gender_code" value="{{$key}}" {{$key == $member->gender_code ? 'checked' : ''}} />
+                            <span></span>
+                            {{$gender}}
+                        </label>
+                    @endforeach
+                    <div class="error-here"></div>
+                </div>
             </div>
         </div>
 

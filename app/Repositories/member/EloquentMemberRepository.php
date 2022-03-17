@@ -98,6 +98,18 @@ class EloquentMemberRepository implements MemberRepository {
                     $qry->whereRaw('LOWER(sd_user.email) like ?', array('%'.mb_strtolower($searchData->get('user_mail')).'%'));
                 }
             })
+			->editColumn('profile_photo', function ($qry) {
+				if ($qry->profile_photo) {
+					return '<button class="btn btn-light" onclick="showImage('.$qry->id.')"><i class="far fa-eye ml-1"></i></button>';
+				}
+				return "";
+			})
+			->editColumn('id_photo', function ($qry) {
+				if ($qry->id_photo) {
+					return '<button class="btn btn-light" onclick="showImage('.$qry->id.')"><i class="far fa-eye ml-1"></i></button>';
+				}
+				return "";
+			})		 
 			->editColumn('created_at', function($qry)
 			{
 				return $qry->created_at;
@@ -118,7 +130,7 @@ class EloquentMemberRepository implements MemberRepository {
 
 				return $actionHtml;
 
-            })->rawColumns(['action'])
+            })->rawColumns(['profile_photo', 'id_photo', 'action'])
             ->make(true);
 
         return $data;
