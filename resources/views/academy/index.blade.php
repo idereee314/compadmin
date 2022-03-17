@@ -42,8 +42,10 @@
                                                 <thead>
                                                     <tr role="row">
                                                         <th class="sorting sorting_asc">No.</th>
+                                                        <th >{{trans('display.organization')}}</th>
                                                         <th >{{trans('display.general_name')}}</th>
                                                         <th>{{trans('display.general_name_en')}}</th>
+                                                        <th>{{trans('display.general_sort_order')}}</th>
                                                         <th>{{trans('display.general_created_at')}}</th>
                                                         <th>{{trans('display.general_manage')}}</th>
                                                     </tr>
@@ -104,9 +106,10 @@ $(document).ready(function() {
                 },
                 width: "30px"
             },
-
+            {data: 'organization.name'},
             {data: 'name'},
             {data: 'name_en'},
+            {data: 'sort_order'},
             {data: 'created_at'},
             {data: 'action'},
         ],
@@ -117,9 +120,9 @@ $(document).ready(function() {
             targets: [0]
         },{
             class: "text-center",
-            targets: [0, 3]
+            targets: [0, 4, 5]
         }],
-        order: [[ 3, "desc" ]],
+        order: [[ 5, "desc" ]],
         dom: "<'top'B><'row'<'col-sm-12'tr>><'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7 dataTables_pager'lp>>",
         buttons: [
         {

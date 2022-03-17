@@ -121,6 +121,7 @@ class AcademyController extends Controller
     public function edit($id)
     {
         $academy = $this->academy->find($id);
+        $data['organizations'] = $this->organization->all();
         $data['academy'] = $academy;
 
         return view($this->view_path.'.edit', $data);

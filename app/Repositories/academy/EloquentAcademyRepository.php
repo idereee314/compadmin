@@ -41,6 +41,7 @@ class EloquentAcademyRepository implements AcademyRepository {
 		$academy->organization_id = @$input['organization_id'];
 		$academy->name = $input['name'];
 		$academy->name_en = $input['name_en'];
+		$academy->sort_order = $input['sort_order'];
 
 		$academy->save();
 
@@ -53,6 +54,7 @@ class EloquentAcademyRepository implements AcademyRepository {
 		$academy->organization_id = @$input['organization_id'];
 		$academy->name = $input['name'];
 		$academy->name_en = $input['name_en'];
+		$academy->sort_order = $input['sort_order'];
 
 		$academy->save();
 
@@ -68,7 +70,7 @@ class EloquentAcademyRepository implements AcademyRepository {
 
     public function getDatatableList($searchData)
     {
-		$qry = Academy::select('*');
+		$qry = Academy::select('*')->with('organization:id,name');
 
         $data = Datatables::make($qry)
             ->filter(function ($qry) use ($searchData) {
@@ -87,18 +89,7 @@ class EloquentAcademyRepository implements AcademyRepository {
                     $qry->whereRaw('LOWER(sd_user.email) like ?', array('%'.mb_strtolower($searchData->get('user_mail')).'%'));
                 }
             })
-			->editColumn('profile_photo', function ($qry) {
-				if ($qry->profile_photo) {
-					return '<button class="btn btn-light" onclick="showImage('.$qry->id.')"><i class="far fa-eye ml-1"></i></button>';
-				}
-				return "";
-			})
-			->editColumn('id_photo', function ($qry) {
-				if ($qry->id_photo) {
-					return '<button class="btn btn-light" onclick="showImage('.$qry->id.')"><i class="far fa-eye ml-1"></i></button>';
-				}
-				return "";
-			})		 
+
 			->editColumn('created_at', function($qry)
 			{
 				return $qry->created_at;
