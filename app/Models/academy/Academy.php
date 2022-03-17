@@ -6,6 +6,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Model;
 use user\CompadUser as User;
+use organization\Organization;
 
 use Auth;
 use Carbon;
@@ -22,6 +23,11 @@ class Academy extends Model
             'name_en' => 'required',
 		);
 	}
+
+    public function organization()
+    {
+        return $this->belongsTo(Organization::class, 'organization_id');
+    }
 
     public static function boot()
     {

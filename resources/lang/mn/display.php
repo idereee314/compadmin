@@ -269,4 +269,8 @@ return [
     'comp_academy' => 'Академи',
     'comp_member' => 'Оролцогч',
     'comp_title' => 'Тэмцээн',
+
+    //Academy
+
+    "organization" => "Байгууллага",
 ];
