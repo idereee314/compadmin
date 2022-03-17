@@ -75,7 +75,7 @@ return [
             'prefix' => '',
             'prefix_indexes' => true,
             'schema' => 'public',
-            'search_path' => 'uq_comp',
+            'search_path' => 'uq_comp, rt_listing',
             'sslmode' => 'prefer',
         ],
 

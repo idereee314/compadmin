@@ -26,6 +26,41 @@ class EventRegistration extends Model
             'source_type' => 'required'
 		);
 	}
+
+    public function event()
+    {
+        return $this->belongsTo('event\Event', 'event_id');
+    }
+
+    public function member()
+    {
+        return $this->belongsTo('member\Member', 'member_id');
+    }
+
+    public function entry()
+    {
+        return $this->belongsTo('reference\EventEntries', 'entry_id');
+    }
+
+    public function age()
+    {
+        return $this->belongsTo('reference\EntryConfigAge', 'entry_age_id');
+    }
+
+    public function belt()
+    {
+        return $this->belongsTo('reference\EntryConfigBelt', 'entry_belt_id');
+    }
+
+    public function weight()
+    {
+        return $this->belongsTo('reference\EntryConfigWeight', 'entry_weight_id');
+    }
+
+    public function academy()
+    {
+        return $this->belongsTo('reference\Academy', 'academy_id');
+    }
     
     public static function boot()
     {

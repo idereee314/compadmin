@@ -38,17 +38,17 @@
                                     </div>
                                     <div class="row">
                                         <div class="col-sm-12">
-                                            <table class="table table-separate table-head-custom table-checkable dataTable no-footer dtr-inline" id="user_datatable" role="grid" aria-describedby="kt_datatable_info" style="width: 1235px;">
+                                            <table class="table table-separate table-head-custom" id="user-datatable" style="margin-top: 13px !important">
                                                 <thead>
-                                                    <tr role="row">
-                                                        <th class="sorting sorting_asc" tabindex="0" aria-controls="kt_datatable" rowspan="1" colspan="1" width="15px">No.</th>
-                                                        <th  class="sorting" tabindex="0" aria-controls="kt_datatable" rowspan="1" colspan="1" width="15%">{{trans('display.username')}}</th>
-                                                        <th  class="sorting" tabindex="0" aria-controls="kt_datatable" rowspan="1" colspan="1" width="20%">{{trans('display.human_email')}}</th>
-                                                        <th  class="sorting" tabindex="0" aria-controls="kt_datatable" rowspan="1" colspan="1" width="15%">{{trans('display.human_firstname')}}</th>
-                                                        <th  class="sorting" tabindex="0" aria-controls="kt_datatable" rowspan="1" colspan="1" width="15%">{{trans('display.human_lastname')}}</th>
-                                                        <th  class="sorting" tabindex="0" aria-controls="kt_datatable" rowspan="1" colspan="1" width="10%">{{trans('display.human_phone_number')}}</th>
-                                                        <th  class="sorting" tabindex="0" aria-controls="kt_datatable" rowspan="1" colspan="1" width="10%">{{trans('display.general_created_at')}}</th>
-                                                        <th  class="sorting" tabindex="0" aria-controls="kt_datatable" rowspan="1" colspan="1" width="5">{{trans('display.general_manage')}}</th>
+                                                    <tr>
+                                                        <th width="15px">No.</th>
+                                                        <th width="15%">{{trans('display.username')}}</th>
+                                                        <th width="20%">{{trans('display.human_email')}}</th>
+                                                        <th width="15%">{{trans('display.human_firstname')}}</th>
+                                                        <th width="15%">{{trans('display.human_lastname')}}</th>
+                                                        <th width="10%">{{trans('display.human_phone_number')}}</th>
+                                                        <th width="10%">{{trans('display.general_created_at')}}</th>
+                                                        <th width="5">{{trans('display.general_manage')}}</th>
                                                     </tr>
                                                 </thead>
                                             </table>    
@@ -77,7 +77,7 @@
 
 <script>
 $(document).ready(function() {
-    userTable = $("#user_datatable").DataTable({
+    userTable = $("#user-datatable").DataTable({
         processing:     true,
         serverSide:     true,
         deferRender:    true,
@@ -120,7 +120,7 @@ $(document).ready(function() {
             class: "text-center",
             targets: [0, 6, 7]
         }],
-        order: [[ 5, "desc" ]],
+        order: [[ 6, "desc" ]],
         dom: "<'top'B><'row'<'col-sm-12'tr>><'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7 dataTables_pager'lp>>",
         buttons: [
         {

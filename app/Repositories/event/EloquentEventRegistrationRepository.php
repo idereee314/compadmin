@@ -1,6 +1,6 @@
 <?php namespace event;
 
-use event\EventRegistraion;
+use event\EventRegistration;
 use core\sessions\Sessions;
 
 use Hash;
@@ -21,22 +21,22 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 
 	public function all()
 	{
-		return EventRegistraion::all();
+		return EventRegistration::all();
 	}
 
 	public function allPaginate()
 	{
-		return EventRegistraion::paginate(ConfigHelper::getConfigValueByCode('pagination_global_list'));
+		return EventRegistration::paginate(ConfigHelper::getConfigValueByCode('pagination_global_list'));
 	}
 
 	public function find($id)
 	{
-		return EventRegistraion::find($id);
+		return EventRegistration::find($id);
 	}
 
 	public function create($input)
 	{
-		$eventRegistraion = new EventRegistraion;
+		$eventRegistraion = new EventRegistration;
 
 		$eventRegistraion->user_id = $input['user_id'];
 		$eventRegistraion->register_number = $input['register_number'];
@@ -78,7 +78,9 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 
     public function getDatatableList($searchData)
     {
-		$qry = EventRegistraion::select('*');
+		$qry = EventRegistration::selectRaw('uq_event_registration.*, uq_event_config.reg_start_date, uq_event_config. reg_end_date')
+			->join('uq_event_config', 'uq_event_config.event_id', '=', 'uq_event_registration.event_id')
+			->with(['event:id,name,description,event_date,due_date', 'member:id,register_number,contact_phone,firstname,lastname', 'entry:id,name', 'age:id,start_age,end_age', 'belt:id,name', 'weight:id,weight']);
 
         $data = Datatables::make($qry)
             ->filter(function ($qry) use ($searchData) {
@@ -97,6 +99,11 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
                     $qry->whereRaw('LOWER(sd_user.email) like ?', array('%'.mb_strtolower($searchData->get('user_mail')).'%'));
                 }
             })
+			->editColumn('status', function($qry)
+			{
+				$status = '<span class="label label-lg font-weight-bold label-light-'.@Config::get('smart.event_registeation_status_class')[$qry->status].' label-inline">'.@Config::get('enums.event_registeation_status')[$qry->status].'</span>';
+				return $status;
+			})
 			->editColumn('created_at', function($qry)
 			{
 				return $qry->created_at;
@@ -117,7 +124,7 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 
 				return $actionHtml;
 
-            })->rawColumns(['action'])
+            })->rawColumns(['action', 'status'])
             ->make(true);
 
         return $data;

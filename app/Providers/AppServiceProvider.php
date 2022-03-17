@@ -18,6 +18,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind('academy\AcademyRepository', 'academy\EloquentAcademyRepository');  
         $this->app->bind('event\EventRegistrationRepository', 'event\EloquentEventRegistrationRepository'); 
         $this->app->bind('organization\OrganizationRepository', 'organization\EloquentOrganizationRepository'); 
+        $this->app->bind('event\EventConfigRepository', 'event\EloquentEventConfigRepository'); 
 
         //reference
         $this->app->bind('reference\EntryConfigAgeRepository', 'reference\EloquentEntryConfigAgeRepository'); 

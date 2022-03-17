@@ -12,6 +12,13 @@ return array(
 		1 => 'эрэгтэй',
 		2 => 'эмэгтэй'
 	],
+
+	'event_registeation_status_class' => [
+		'sent' => 'primary',
+		'registered' => 'info',
+		'approved' => 'success',
+		'canceled' => 'danger ',
+	]
 )
 
 ?>

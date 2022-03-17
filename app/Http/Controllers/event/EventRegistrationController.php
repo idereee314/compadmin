@@ -10,6 +10,7 @@ use Validator;
 
 //Repositories
 use event\EventRegistrationRepository as EventRegistration;
+use event\EventConfigRepository as EventConfig;
 
 //Models
 use event\EventRegistration as EventRegistrationModel;
@@ -23,10 +24,11 @@ class EventRegistrationController extends Controller
 {
     public $restful = true;
 
-    public function __construct(EventRegistration $eventRegistration)
+    public function __construct(EventRegistration $eventRegistration, EventConfig $eventConfig)
     {
         $this->view_path = 'event.registration';
         $this->eventRegistration = $eventRegistration;
+        $this->eventConfig = $eventConfig;
     }
 
     /**
@@ -48,7 +50,11 @@ class EventRegistrationController extends Controller
      */
     public function create()
     {
-        return view($this->view_path.'.add');
+        //$now = Carbon\Carbon::now()->toDateTimeString();
+        $competitions = $this->eventConfig->getRegistringComp(@$now);
+
+        $data['competitions'] = $competitions;
+        return view($this->view_path.'.add', $data);
     }
 
     /**
