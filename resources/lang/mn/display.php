@@ -328,7 +328,7 @@ return [
     "login_do_login" => "Нэвтрэх",
     "login_forgot_password" => "Нууц үгээ мартсан?",
     "profile_title" => "Хэрэглэгч",
-    "profile_photo" => "Нүүр зураг",
+    "profile_photo" => "Профайл зураг",
     'id_photo' => 'зураг',
 
     // Notify
@@ -358,7 +358,7 @@ return [
     "human_email" => "И-мэйл хаяг",
     'human_register_number' => 'Регистрийн дугаар',
     "human_phone_number" => "Утасны дугаар",
-    'human_contact_phone' => 'Холбоо барих утасны дугаар',
+    'human_contact_phone' => 'Утасны дугаар',
     'human_birth' => 'Төрсөн огноо',
     'human_gender_code' => 'Хүйс',
 

@@ -5,6 +5,7 @@ use Auth\LoginController;
 use dashboard\HomeController;
 use core\CompadUserController;
 use member\MemberController;
+use academy\AcademyController;
 use event\EventRegistrationController;
 
 /*
@@ -53,9 +54,14 @@ Route::group([
     //Member
     Route::resource('/member', 'member\MemberController', ['names' => 'member']);
     Route::any('/member/data/list', [MemberController::class, 'getDatatableList'])->name('member.data.list');
+    Route::get('/member/show/image/{member}', [MemberController::class, 'showImage'])->name('member.show.image');
 
     //Event
     Route::resource('/event/registration', 'event\EventRegistrationController', ['names' => 'event.registration']);
     Route::any('/event/registration/data/list', [EventRegistrationController::class, 'getDatatableList'])->name('event.registration.data.list');
+
+    //Academy
+    Route::resource('/academy', 'academy\AcademyController', ['names' => 'academy']);
+    Route::any('/academy/data/list', [AcademyController::class, 'getDatatableList'])->name('academy.data.list');
 });
 

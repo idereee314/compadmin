@@ -1,6 +1,6 @@
 <?php
 
-namespace member;
+namespace academy;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -9,24 +9,26 @@ use Illuminate\Support\Facades\Input;
 use Validator;
 
 //Repositories
-use member\MemberRepository as Member;
+use academy\AcademyRepository as Academy;
+use organization\OrganizationRepository as Organization;
 
 //Models
-use member\Member as MemberModel;
+use academy\Academy as AcademyModel;
 
 use \Auth as Auth;
 use Config;
 
 use Image;
 
-class MemberController extends Controller
+class AcademyController extends Controller
 {
     public $restful = true;
 
-    public function __construct(Member $member)
+    public function __construct(Academy $academy, Organization $organization)
     {
-        $this->view_path = 'member';
-        $this->member = $member;
+        $this->view_path = 'academy';
+        $this->academy = $academy;
+        $this->organization = $organization;
     }
 
     /**
@@ -48,7 +50,9 @@ class MemberController extends Controller
      */
     public function create()
     {
-        return view($this->view_path.'.add');
+        $data['organizations'] = $this->organization->all();
+
+        return view($this->view_path.'.add', $data);
     }
 
     /**
@@ -61,7 +65,7 @@ class MemberController extends Controller
     {
         $input = Input::all();
 
-        $validator = Validator::make($input, MemberModel::rules(0));
+        $validator = Validator::make($input, AcademyModel::rules(0));
 
         if ($validator->fails())
         {
@@ -75,22 +79,7 @@ class MemberController extends Controller
         {
             try
             {
-                $member = $this->member->create($input);
-
-                $profilePhoto = $input['profile_photo'];
-                $idPhoto = $input['id_photo'];
-
-                if(isset($profilePhoto) || isset($idPhoto)) 
-                {
-                    // $img = Image::make(file_get_contents($image))->fit($demision[0], $demision[1])->encode('data-url');
-                    $img64_profilePhoto = Image::make(file_get_contents($profilePhoto))->fit(250)->encode('data-url');
-                    $img64_idPhoto = Image::make(file_get_contents($idPhoto))->fit(250)->encode('data-url');
-
-                    $member->profile_photo = $img64_profilePhoto;
-                    $member->id_photo = $img64_idPhoto;
-
-                    $member->save();
-                }
+                $academy = $this->academy->create($input);
 
                 $response = array(
                     'status' => 'success',
@@ -131,8 +120,8 @@ class MemberController extends Controller
      */
     public function edit($id)
     {
-        $member = $this->member->find($id);
-        $data['member'] = $member;
+        $academy = $this->academy->find($id);
+        $data['academy'] = $academy;
 
         return view($this->view_path.'.edit', $data);
     }
@@ -148,7 +137,7 @@ class MemberController extends Controller
     {
         $input = Input::all();
 
-        $validator = Validator::make($input, MemberModel::rules($id));
+        $validator = Validator::make($input, AcademyModel::rules($id));
 
         if ($validator->fails())
 		{
@@ -159,54 +148,8 @@ class MemberController extends Controller
             );
         } else {
 			try {
-                $member = $this->member->update($id, $input);
+                $academy = $this->academy->update($id, $input);
 
-                if($input['profile_photo_remove'] != null) {
-                    $member->profile_photo = null;
-                    $member->save();
-                } else {
-
-                    if(Input::hasfile('profile_photo')) {
-    
-                        $destination = $member->profile_photo;
-    
-                        if(File::exists($destination))
-                        {
-                            File::delete($destination);
-                        }
-    
-                        $profilePhoto = Input::file('profile_photo');
-    
-                        $img64_profilePhoto = Image::make(file_get_contents($profilePhoto))->fit(250)->encode('data-url');
-                        $member->profile_photo = $img64_profilePhoto;
-    
-                        $member->save();
-                    }
-                }
-
-                if($input['id_photo_remove'] != null) {
-                    $member->id_photo = null;
-                    $member->save();
-                } else {
-
-                    if(Input::hasfile('id_photo')) {
-
-                        $destination = $member->id_photo;
-
-                        if(File::exists($destination))
-                        {
-                            File::delete($destination);
-                        }
-
-                        $idPhoto = Input::file('id_photo');
-
-                        $img64_idPhoto = Image::make(file_get_contents($idPhoto))->fit(250)->encode('data-url');
-                        $member->id_photo = $img64_idPhoto;
-
-                        $member->save();
-                    }
-                }
-            
 				$response = array(
 					'status' => 'success',
 					'msg' => trans('messages.success_update')
@@ -236,7 +179,7 @@ class MemberController extends Controller
     {
         try {
         
-            $this->member->delete($id);
+            $this->academy->delete($id);
 
             $response = array(
                 'status' => 'success',
@@ -258,28 +201,7 @@ class MemberController extends Controller
 
     public function getDatatableList(Request $request)
     {
-        return $this->member->getDatatableList($request);
-    }
-
-
-    public function showImage($id)
-    {
-        $member = $this->member->find($id);
-
-        if($member->profile_photo)
-        {
-            $data['profile_photo'] = @$member->profile_photo;
-        }
-
-        if($member->id_photo)
-        {
-            $data['id_photo'] = @$member->id_photo;
-        }
-        
-        $returnValue['status'] = true;
-        $returnValue['view'] = strval(view($this->view_path.'.show_image', $data));
-
-        return $returnValue;
+        return $this->academy->getDatatableList($request);
     }
     
 }

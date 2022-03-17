@@ -26,8 +26,8 @@
                         <div class="card card-custom">
                             <div class="card-header flex-wrap py-5">
                                 <div class="card-title">
-                                    <h3 class="card-label">Гишүүдийн жагсаалт 
-                                    <span class="d-block text-muted pt-2 font-size-sm">Гишүүд</span></h3>
+                                    <h3 class="card-label">Академи жагсаалт 
+                                    <span class="d-block text-muted pt-2 font-size-sm">Академи</span></h3>
                                 </div>
                             </div>
                             <div class="card-body">
@@ -38,20 +38,14 @@
                                     </div>
                                     <div class="row">
                                         <div class="col-sm-12">
-                                            <table class="table table-separate table-head-custom table-checkable dataTable no-footer dtr-inline" id="member_datatable" role="grid" aria-describedby="kt_datatable_info" style="width: 1235px;">
+                                            <table class="table table-separate table-head-custom table-checkable dataTable no-footer dtr-inline" id="academy_datatable" role="grid" aria-describedby="kt_datatable_info" style="width: 1235px;">
                                                 <thead>
                                                     <tr role="row">
-                                                        <th class="sorting sorting_asc" tabindex="0" aria-controls="kt_datatable" rowspan="1" colspan="1" width="15px">No.</th>
-                                                        {{-- <th  class="sorting" tabindex="0" aria-controls="kt_datatable" rowspan="1" colspan="1" width="15%">{{trans('display.username')}}</th> --}}
-                                                        <th  class="sorting" tabindex="0" aria-controls="kt_datatable" rowspan="1" colspan="1" width="15%">{{trans('display.human_register_number')}}</th>
-                                                        <th  class="sorting" tabindex="0" aria-controls="kt_datatable" rowspan="1" colspan="1" width="15%">{{trans('display.human_firstname')}}</th>
-                                                        <th  class="sorting" tabindex="0" aria-controls="kt_datatable" rowspan="1" colspan="1" width="15%">{{trans('display.human_lastname')}}</th>
-                                                        <th  class="sorting" tabindex="0" aria-controls="kt_datatable" rowspan="1" colspan="1" width="8%">{{trans('display.human_contact_phone')}}</th>
-                                                        <th  class="sorting" tabindex="0" aria-controls="kt_datatable" rowspan="1" colspan="1" width="8%">{{trans('display.human_birth')}}</th>
-                                                        <th  class="sorting" tabindex="0" aria-controls="kt_datatable" rowspan="1" colspan="1" width="8%">{{trans('display.profile_photo')}}</th>
-                                                        <th  class="sorting" tabindex="0" aria-controls="kt_datatable" rowspan="1" colspan="1" width="8%">{{trans('display.id_photo')}}</th>
-                                                        <th  class="sorting" tabindex="0" aria-controls="kt_datatable" rowspan="1" colspan="1" width="8%">{{trans('display.general_created_at')}}</th>
-                                                        <th  class="sorting" tabindex="0" aria-controls="kt_datatable" rowspan="1" colspan="1" width="5">{{trans('display.general_manage')}}</th>
+                                                        <th class="sorting sorting_asc">No.</th>
+                                                        <th >{{trans('display.general_name')}}</th>
+                                                        <th>{{trans('display.general_name_en')}}</th>
+                                                        <th>{{trans('display.general_created_at')}}</th>
+                                                        <th>{{trans('display.general_manage')}}</th>
                                                     </tr>
                                                 </thead>
                                             </table>    
@@ -80,7 +74,8 @@
 
 <script>
 $(document).ready(function() {
-    memberTable = $("#member_datatable").DataTable({
+    $('.kt-selectpicker').selectpicker();
+    academyTable = $("#academy_datatable").DataTable({
         processing:     true,
         serverSide:     true,
         deferRender:    true,
@@ -90,7 +85,7 @@ $(document).ready(function() {
         dataType: 'json',
         paginationType: "full_numbers",
         ajax: {
-            url: '{{route('member.data.list')}}',
+            url: '{{route('academy.data.list')}}',
             type: 'POST',
             data: function ( d ) {
                 d.name = $('#user-search-form input[id="name"]').val();
@@ -109,14 +104,9 @@ $(document).ready(function() {
                 },
                 width: "30px"
             },
-            // {data: 'user.firstname'},
-            {data: 'register_number'},
-            {data: 'firstname'},
-            {data: 'lastname'},
-            {data: 'contact_phone'},
-            {data: 'birth'},
-            {data: 'profile_photo', "defaultContent": ''},
-            {data: 'id_photo', "defaultContent": ''},
+
+            {data: 'name'},
+            {data: 'name_en'},
             {data: 'created_at'},
             {data: 'action'},
         ],
@@ -127,22 +117,22 @@ $(document).ready(function() {
             targets: [0]
         },{
             class: "text-center",
-            targets: [0, 6, 7, 8, 9]
+            targets: [0, 3]
         }],
-        order: [[ 8, "desc" ]],
+        order: [[ 3, "desc" ]],
         dom: "<'top'B><'row'<'col-sm-12'tr>><'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7 dataTables_pager'lp>>",
         buttons: [
         {
             text: '<i class="la la-plus"></i> Шинээр нэмэх',
             className: "btn btn-light-danger font-weight-bolder mb-2",
             action: function ( e, dt, node, config ) {
-                $.get('{!! route('member.create') !!}', showAddModal);
+                $.get('{!! route('academy.create') !!}', showAddModal);
             }
         }]
 	});
 
     $('#user-search-form').on('submit', function(e) {
-        memberTable.draw();
+        academyTable.draw();
         e.preventDefault();
     });
 
@@ -151,11 +141,11 @@ $(document).ready(function() {
 //Modal
 function showAddModal( data ) {
 
-    $('#memberAddModal').modal();
-    $('#memberAddModal').on('shown.bs.modal', function(){
-        $('#memberAddModal .modal-content').html(data);
+    $('#academyAddModal').modal();
+    $('#academyAddModal').on('shown.bs.modal', function(){
+        $('#academyAddModal .modal-content').html(data);
 
-        $('#add-member-form').validate({
+        $('#add-academy-form').validate({
             ignore: [],
             highlight:function(element) {
                 $(element).parents('.form-group').addClass('has-error has-feedback');
@@ -169,9 +159,9 @@ function showAddModal( data ) {
                     type: form.method,
                     data: new FormData(form),
                     success: function(response) {
-                        $('#memberAddModal').find("#close").trigger('click');
+                        $('#academyAddModal').find("#close").trigger('click');
                         $('.panel-sub-heading').html(response).fadeIn().delay(5000).fadeOut();
-                        memberTable.draw();
+                        academyTable.draw();
                     },
                     error: function (xhr, textStatus, error) {
                         console.log(xhr.statusText);
@@ -195,17 +185,17 @@ function showAddModal( data ) {
         $(this).off('shown.bs.modal');
     });
 
-    $('#memberAddModal').on('hidden.bs.modal', function(){
-        $('#memberAddModal .modal-body').empty();
+    $('#academyAddModal').on('hidden.bs.modal', function(){
+        $('#academyAddModal .modal-body').empty();
     });
 }
 
-function memberEditModal(data){
-    $('#memberEditModal').modal();
-        $('#memberEditModal').on('shown.bs.modal', function(){
-            $('#memberEditModal .modal-content').html(data);
+function academyEditModal(data){
+    $('#academyEditModal').modal();
+        $('#academyEditModal').on('shown.bs.modal', function(){
+            $('#academyEditModal .modal-content').html(data);
 
-            $('#edit-member-form').validate({
+            $('#edit-academy-form').validate({
             ignore: [],
             highlight:function(element) {
                 $(element).parents('.form-group').addClass('has-error has-feedback');
@@ -219,9 +209,9 @@ function memberEditModal(data){
                     type: form.method,
                     data:  new FormData(form),
                     success: function(response) {
-                        $('#memberEditModal').find("#close").trigger('click');
+                        $('#academyEditModal').find("#close").trigger('click');
                         $('.panel-sub-heading').html(response).fadeIn().delay(5000).fadeOut();
-                        memberTable.draw();
+                        academyTable.draw();
                     },
                     error: function (xhr, textStatus, error) {
                         console.log(xhr.statusText);
@@ -245,14 +235,14 @@ function memberEditModal(data){
         $(this).off('shown.bs.modal');
 });
 
-$('#memberEditModal').on('hidden.bs.modal', function(){
-    $('#memberEditModal .modal-body').empty();
+$('#academyEditModal').on('hidden.bs.modal', function(){
+    $('#academyEditModal .modal-body').empty();
 });
 
 }
 
 //UserDelete
-function memberDelete(id)
+function academyDelete(id)
 {
     Swal.fire({
         title: "Та устгахдаа итгэлтэй байна уу",
@@ -267,11 +257,11 @@ function memberDelete(id)
     }).then(function(result) {
         if (result.value) {
             $.ajax({
-                url: 'member/' + id,
+                url: 'academy/' + id,
                 type: 'DELETE',
                 success: function(response) {
                     $('.panel-sub-heading').html(response).fadeIn().delay(5000).fadeOut();
-                    memberTable.draw();
+                    academyTable.draw();
                 },
                 error: function (xhr, textStatus, error) {
                     console.log(xhr.statusText);
@@ -284,27 +274,9 @@ function memberDelete(id)
     });
 }
 
-function memberEdit(id)
+function academyEdit(id)
 {
-    $.get('/member/' + id + '/edit', memberEditModal);
-}
-
-function showImage(id)
-{
-    $.get('/member/show/image/'+id, function( data ) {
-        if (data.status) {
-            $('#showImageModal').modal();
-            $('#showImageModal').on('shown.bs.modal', function(){
-                $('#showImageModal .modal-content').html(data.view);
-
-                $(this).off('shown.bs.modal');
-            });
-        }
-        else
-        {
-            $('.panel-sub-heading').html(data.view).fadeIn().delay(5000).fadeOut();
-        }
-    });
+    $.get('/academy/' + id + '/edit', academyEditModal);
 }
 
 </script>

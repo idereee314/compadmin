@@ -23,8 +23,8 @@ class Member extends Model
             'lastname' => 'required',
             'contact_phone' => 'required',
             'birth' => 'required',
-            'profile_photo' => 'required',
-            'id_photo' => 'required',
+            // 'profile_photo' => 'required',
+            // 'id_photo' => 'required',
 		);
 	}
 

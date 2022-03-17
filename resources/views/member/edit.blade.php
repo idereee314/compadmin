@@ -19,7 +19,7 @@
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.human_lastname')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9">
-                <input type="text" class="form-control" autocomplete="off" name="firstname" value="{{ $member->lastname }}"  data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}"/>
+                <input type="text" class="form-control" autocomplete="off" name="lastname" value="{{ $member->lastname }}"  data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}"/>
                 <div class="error-here"></div>
             </div>
         </div>
@@ -39,7 +39,7 @@
                 <div class="error-here"></div>
             </div>
         </div>
-        
+
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.human_gender_code')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9">
@@ -63,6 +63,53 @@
                 <div class="error-here"></div>
             </div>
         </div>
+
+        <div class="form-group row">
+            <label class="col-md-3 col-form-label text-right">{{trans('display.profile_photo')}}: <span class="text-danger">*</span></label>
+            <div class="col-md-9">
+                <div class="image-input image-input-outline" id="profile_photo">
+                    @if ($member->profile_photo)
+                        <img alt="..." id="profile-image" src="{{$member->profile_photo}}" style="max-width: 150px; max-height:120px">
+                    @else
+                        <img alt="..." id="profile-image" alt="" src="{{asset('/assets/media/users/100_1.jpg')}}" style="max-width: 150px; max-height:120px">
+                    @endif
+                   
+                    <label class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow" data-action="change" data-toggle="tooltip" title="" data-original-title="Change avatar">
+                     <i class="fa fa-pen icon-sm text-muted"></i>
+                     <input type="file" name="profile_photo" accept=".png, .jpg, .jpeg" onchange="changeImage(event)"/>
+                     <input type="hidden" name="profile_photo_remove"/>
+                    </label>
+                   
+                    <span class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"  onclick="removeImage()" data-action="cancel" data-toggle="tooltip" title="Cancel avatar">
+                     <i class="ki ki-bold-close icon-xs text-muted"></i>
+                    </span>
+                </div>
+               
+            </div>
+        </div>    
+        
+        <div class="form-group row">
+            <label class="col-md-3 col-form-label text-right">{{trans('display.id_photo')}}: <span class="text-danger">*</span></label>
+            <div class="col-md-9">
+                <div class="image-input image-input-outline" id="id_photo">
+                    @if ($member->id_photo)
+                        <img alt="..." id="id-image" src="{{$member->id_photo}}" style="max-width: 150px; max-height:120px">
+                    @else
+                        <img alt="..." id="id-image" alt="" src="{{asset('/assets/media/users/100_1.jpg')}}" style="max-width: 150px; max-height:120px">
+                    @endif
+                    <label class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow" data-action="change" data-toggle="tooltip" title="" data-original-title="Change avatar">
+                     <i class="fa fa-pen icon-sm text-muted"></i>
+                     <input type="file" name="id_photo" src="" accept=".png, .jpg, .jpeg" onchange="changeIdImage(event)"/>
+                     <input type="hidden" name="id_photo_remove"/>
+                    </label>
+                   
+                    <span class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"  onclick="removeIdImage()" data-action="cancel" data-toggle="tooltip" title="Cancel avatar">
+                     <i class="ki ki-bold-close icon-xs text-muted"></i>
+                    </span>
+                </div>
+               
+            </div>
+        </div>  
     </div>
 
     <div class="modal-footer text-right bg-gray-100 border-top-0">
@@ -81,4 +128,48 @@
 
     var profilePhoto = new KTImageInput('profile_photo');
     var idPhoto = new KTImageInput('id_photo');
+
+    function changeImage(event)
+    {
+        if(event.target.files.length > 0){
+            var element = document.getElementById("profile-image");
+            var src = URL.createObjectURL(event.target.files[0]);
+            var preview = document.getElementById("profile-image");
+            $('#profile-image').hide();
+            $('#profile-image').fadeIn(900);
+
+            preview.src = src;
+            preview.style.display = "block";
+        }
+    }
+    function changeIdImage(event)
+    {
+        if(event.target.files.length > 0){
+            var element = document.getElementById("id-image");
+            var src = URL.createObjectURL(event.target.files[0]);
+            var preview = document.getElementById("id-image");
+            $('#id-image').hide();
+            $('#id-image').fadeIn(900);
+
+            preview.src = src;
+            preview.style.display = "block";
+        }
+    }
+
+    function removeImage()
+    {
+        var src = "";
+        var preview = document.getElementById("profile-image");
+        preview.src = src;
+    }
+
+    function removeIdImage()
+    {   
+        var src = "";
+        var preview = document.getElementById("id-image");
+        preview.src = src;
+    }
+
+
+    
 </script>
