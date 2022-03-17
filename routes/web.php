@@ -53,15 +53,36 @@ Route::group([
 
     //Member
     Route::resource('/member', 'member\MemberController', ['names' => 'member']);
-    Route::any('/member/data/list', [MemberController::class, 'getDatatableList'])->name('member.data.list');
-    Route::get('/member/show/image/{member}', [MemberController::class, 'showImage'])->name('member.show.image');
+    Route::any('/member/data/list', 'member\MemberController@getDatatableList')->name('member.data.list');
+    Route::get('/member/show/image/{member}', 'member\MemberController@showImage')->name('member.show.image');
+    Route::get('/member/search/data', 'member\MemberController@searchMember')->name('member.search');
 
     //Event
     Route::resource('/event/registration', 'event\EventRegistrationController', ['names' => 'event.registration']);
-    Route::any('/event/registration/data/list', [EventRegistrationController::class, 'getDatatableList'])->name('event.registration.data.list');
+    Route::any('/event/registration/data/list', 'event\EventRegistrationController@getDatatableList')->name('event.registration.data.list');
+    
+    //Entry
+    Route::resource('/event/entry', 'reference\EventEntryController', ['names' => 'event.entry']);
+    Route::any('/event/entry/data/list', 'reference\EventEntryController@getDatatableList')->name('event.entry.data.list');
+    Route::post('/event/entry/by/event', 'reference\EventEntryController@getEntryByEventId')->name('event.entry.by.event');
+
+    //Entry Age
+    Route::resource('/event/entry/age', 'reference\EventEntryAgeController', ['names' => 'event.entry.age']);
+    Route::any('/event/entry/age/data/list', 'reference\EventEntryAgeController@getDatatableList')->name('event.entry.age.data.list');
+    Route::post('/event/entry/age/by/entry', 'reference\EventEntryAgeController@getEntryAgeByEntryId')->name('event.entry.age.by.entry');
+
+    //Entry Belt
+    Route::resource('/event/entry/belt', 'reference\EventEntryBeltController', ['names' => 'event.entry.belt']);
+    Route::any('/event/entry/belt/data/list', 'reference\EventEntryBeltController@getDatatableList')->name('event.entry.belt.data.list');
+    Route::post('/event/entry/belt/by/entry', 'reference\EventEntryBeltController@getEntryBeltByEntryId')->name('event.entry.belt.by.entry');
+
+    //Entry Weight
+    Route::resource('/event/entry/weight', 'reference\EventEntryWeightController', ['names' => 'event.entry.weight']);
+    Route::any('/event/entry/weight/data/list', 'reference\EventEntryWeightController@getDatatableList')->name('event.entry.weight.data.list');
+    Route::post('/event/entry/weight/by/entry', 'reference\EventEntryWeightController@getEntryWeightByEntryId')->name('event.entry.weight.by.entry');
 
     //Academy
     Route::resource('/academy', 'academy\AcademyController', ['names' => 'academy']);
-    Route::any('/academy/data/list', [AcademyController::class, 'getDatatableList'])->name('academy.data.list');
+    Route::any('/academy/data/list', 'academy\AcademyController@getDatatableList')->name('academy.data.list');
 });
 

@@ -19,7 +19,47 @@
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.comp_title')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9">
-                <select class="form-control datatable-input" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}">
+                <select class="form-control datatable-input" id="event_id" name="event_id" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}">
+                    @forelse(@$competitions as $competition)
+                    <option value="{{ $competition->event_id }}">{{ $competition->event->name }}: /{{ $competition->reg_start_date.'-'.$competition->reg_end_date }}/</option>
+                    @empty
+                    @endforelse
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-md-3 col-form-label text-right">{{trans('display.comp_entry')}}: <span class="text-danger">*</span></label>
+            <div class="col-md-9">
+                <input class="form-control form-control-lg" id="entry_id" name="entry_id" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}"/>
+            </div>
+        </div> 
+
+        <div class="form-group row">
+            <label class="col-md-3 col-form-label text-right">{{trans('display.comp_entry_age')}}: <span class="text-danger">*</span></label>
+            <div class="col-md-9">
+                <input class="form-control form-control-lg" id="entry_age_id" name="entry_age_id" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}"/>
+            </div>
+        </div> 
+
+        <div class="form-group row">
+            <label class="col-md-3 col-form-label text-right">{{trans('display.comp_entry_belt')}}: <span class="text-danger">*</span></label>
+            <div class="col-md-9">
+                <input class="form-control form-control-lg" id="entry_belt_id" name="entry_belt_id" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}"/>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-md-3 col-form-label text-right">{{trans('display.comp_entry_weight')}}: <span class="text-danger">*</span></label>
+            <div class="col-md-9">
+                <input class="form-control form-control-lg" id="entry_weight_id" name="entry_weight_id" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}"/>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-md-3 col-form-label text-right">{{trans('display.comp_academy')}}: <span class="text-danger">*</span></label>
+            <div class="col-md-9">
+                <select class="form-control datatable-input" id="academy_id" name="academy_id" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}">
                     <option value="">-- {{ trans('display.general_select') }} --</option>
                     @forelse(@$competitions as $competition)
                     <option value="{{ $competition->event_id }}">{{ $competition->event->name }}: /{{ $competition->reg_start_date.'-'.$competition->reg_end_date }}/</option>
