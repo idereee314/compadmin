@@ -36,28 +36,37 @@ class EloquentMemberRepository implements MemberRepository {
 
 	public function create($input)
 	{
-		$user = new Member;
+		$member = new Member;
 
-		$user->firstname = $input['firstname'];
-		$user->lastname = $input['lastname'];
-		$user->email = $input['email'];
-		$user->username = $input['username'];
-		$user->phone_number = @$input['phone_number'];
-		$user->password = md5($input['password']);
+		// dd($input);
 
-		$user->save();
+		$member->user_id = @$input['user_id'];
+		$member->register_number = $input['register_number'];
+		$member->firstname = $input['firstname'];
+		$member->lastname = $input['lastname'];
+		$member->contact_phone = @$input['contact_phone'];
+		$member->birth = @$input['birth'];
+		$member->gender_code = @$input['gender_code'];
+
+		$member->save();
+
+		return $member;
 	}
 
  	public function update($id, $input)
 	{
-		$user = $this->find($id);
-		$user->firstname = $input['firstname'];
-		$user->lastname = $input['lastname'];
-		$user->username = $input['username'];
-		$user->phone_number = @$input['phone_number'];
-		$user->email = $input['email'];
+		$member = $this->find($id);
+		$member->user_id = @$input['user_id'];
+		$member->register_number = $input['register_number'];
+		$member->firstname = $input['firstname'];
+		$member->lastname = $input['lastname'];
+		$member->contact_phone = @$input['contact_phone'];
+		$member->birth = @$input['birth'];
+		$member->gender_code = @$input['gender_code'];
 
-		$user->save();
+		$member->save();
+
+		return $member;
 	}
 
 	public function delete($id)
@@ -69,7 +78,8 @@ class EloquentMemberRepository implements MemberRepository {
 
     public function getDatatableList($searchData)
     {
-		$qry = Member::select('*')->with('user:id,firstname');
+		//$qry = Member::select('*')->with('user:id,firstname');
+		$qry = Member::select('*');
 
         $data = Datatables::make($qry)
             ->filter(function ($qry) use ($searchData) {

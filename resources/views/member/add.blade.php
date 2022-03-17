@@ -1,6 +1,5 @@
-
-
 <form class="form" method="POST" id="add-member-form" action="{{route('member.store')}}">
+    @csrf
     <div class="modal-header bg-gray-100">
         <h5 class="modal-title" id="exampleModalLabel">{{trans('display.general_new')}}</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -9,6 +8,14 @@
     </div>
 
     <div class="card-body">
+            <div class="form-group row">
+                <label class="col-md-3 col-form-label text-right">{{trans('display.human_register_number')}}: <span class="text-danger">*</span></label>
+                <div class="col-md-9">
+                    <input type="text" class="form-control" autocomplete="off" name="register_number" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}"/>
+                    <div class="error-here"></div>
+                </div>
+            </div>
+
             <div class="form-group row">
                 <label class="col-md-3 col-form-label text-right">{{trans('display.human_lastname')}}: <span class="text-danger">*</span></label>
                 <div class="col-md-9">
@@ -26,45 +33,68 @@
             </div>
 
             <div class="form-group row">
-                <label class="col-md-3 col-form-label text-right">{{trans('display.human_email')}}: <span class="text-danger">*</span></label>
+                <label class="col-md-3 col-form-label text-right">{{trans('display.human_contact_phone')}}: <span class="text-danger">*</span></label>
                 <div class="col-md-9">
-                    <input type="email" class="form-control" autocomplete="off" name="email" data-rule-required="true" data-rule-email="true" data-msg-required="{{ trans('messages.validation_field_required') }}" data-msg-email="{{ trans('messages.validation_mail') }}" data-inputmask="'alias': 'email'"/>
+                    <input type="number" class="form-control" name="contact_phone" id="contact_phone" autocomplete="off" placeholder="{{trans('display.human_contact_phone')}}" onkeyup="numberOnly(this)">
                     <div class="error-here"></div>
                 </div>
             </div>
 
             <div class="form-group row">
-                <label class="col-md-3 col-form-label text-right">{{trans('display.username')}}: <span class="text-danger">*</span></label>
-               <div class="col-md-9">
-                <input class="form-control" name="username" id="username" autocomplete="off" maxlength="20" placeholder="<?php echo e(trans('display.username')); ?>"  data-rule-required="true" data-msg-required="<?php echo e(trans('messages.validation_field_required')); ?>" data-rule-max-lenght="20" data-msg-max="<?php echo e(trans('messages.validation_length')); ?>">
-                   <div class="error-here"></div>
-                   <span class="text-muted help-block">{{ trans('messages.info_max_length', ['number' => 20]) }}</span>
-               </div>
-            </div>
-
-            <div class="form-group row">
-                <label class="col-md-3 col-form-label text-right">{{trans('display.human_phone_number')}}: <span class="text-danger">*</span></label>
+                <label class="col-md-3 col-form-label text-right">{{trans('display.human_gender_code')}}: <span class="text-danger">*</span></label>
                 <div class="col-md-9">
-                    <input type="number" class="form-control" name="phone_number" id="phone_number" autocomplete="off" placeholder="{{trans('display.human_phone_number')}}">
-                    <div class="error-here"></div>
-                </div>
-            </div>
-      
-            <div class="form-group row">
-                <label class="col-md-3 col-form-label text-right">{{trans('display.user_password')}}: <span class="text-danger">*</span></label>
-                <div class="col-md-9">
-                    <input type="password" class="form-control" autocomplete="off" name="password" id="password" placeholder="{{trans('display.user_password')}}" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}" data-rule-minlength="8" data-msg-minlength="{{ trans('messages.validation_register_field_password_min') }}"/>
+                    <input type="number" class="form-control" name="gender_code" id="gender_code" autocomplete="off" placeholder="{{trans('display.human_gender_code')}}" onkeyup="numberOnly(this)">
                     <div class="error-here"></div>
                 </div>
             </div>
 
             <div class="form-group row">
-                <label class="col-md-3 col-form-label text-right">{{trans('display.user_password_confirm')}}: <span class="text-danger">*</span></label>
+                <label class="col-md-3 col-form-label text-right">{{trans('display.human_birth')}}<span class="text-danger"> *</span></label>
                 <div class="col-md-9">
-                    <input type="password" class="form-control" name="cpassword" autocomplete="off" id="password_confirmation" placeholder="{{trans('display.user_password_confirm')}}" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}" data-rule-equalTo="#password" data-msg-equalTo="{{trans('messages.validation_register_field_password_confirmed')}}"/>
+                    <input class="form-control" type="date" name="birth" id="birth" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}"/>
                     <div class="error-here"></div>
                 </div>
             </div>
+
+            <div class="form-group row">
+                <label class="col-md-3 col-form-label text-right">{{trans('display.profile_photo')}}: <span class="text-danger">*</span></label>
+                <div class="col-md-9">
+                    <div class="image-input image-input-outline" id="profile_photo">
+                        <div class="image-input-wrapper" style="background-image: url(/assets/media/users/100_1.jpg)"></div>
+                       
+                        <label class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow" data-action="change" data-toggle="tooltip" title="" data-original-title="Change avatar">
+                         <i class="fa fa-pen icon-sm text-muted"></i>
+                         <input type="file" name="profile_photo" accept=".png, .jpg, .jpeg" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}"/>
+                         <input type="hidden" name="profile_avatar_remove"/>
+                        </label>
+                       
+                        <span class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow" data-action="cancel" data-toggle="tooltip" title="Cancel avatar">
+                         <i class="ki ki-bold-close icon-xs text-muted"></i>
+                        </span>
+                    </div>
+                    <div class="error-here"></div>
+                </div>
+            </div>    
+            
+            <div class="form-group row">
+                <label class="col-md-3 col-form-label text-right">{{trans('display.human_contact_phone')}}: <span class="text-danger">*</span></label>
+                <div class="col-md-9">
+                    <div class="image-input image-input-outline" id="id_photo">
+                        <div class="image-input-wrapper" style="background-image: url(/assets/media/users/100_1.jpg)"></div>
+                       
+                        <label class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow" data-action="change" data-toggle="tooltip" title="" data-original-title="Change avatar">
+                         <i class="fa fa-pen icon-sm text-muted"></i>
+                         <input type="file" name="id_photo" accept=".png, .jpg, .jpeg" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}"/>
+                         <input type="hidden" name="profile_avatar_remove"/>
+                        </label>
+                       
+                        <span class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow" data-action="cancel" data-toggle="tooltip" title="Cancel avatar">
+                         <i class="ki ki-bold-close icon-xs text-muted"></i>
+                        </span>
+                    </div>
+                    <div class="error-here"></div>
+                </div>
+            </div>   
     </div>
 
     <div class="modal-footer text-right bg-gray-100 border-top-0">
@@ -73,3 +103,13 @@
     </div>
 </form>
 
+<script>
+    function numberOnly(input)
+    {
+        var num =  /[^0-9]/gi;
+        input.value = input.value.replace(num, '');
+    }
+
+    var profilePhoto = new KTImageInput('profile_photo');
+    var idPhoto = new KTImageInput('id_photo');
+</script>

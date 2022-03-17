@@ -5,6 +5,8 @@ use Auth\LoginController;
 use dashboard\HomeController;
 use core\CompadUserController;
 use member\MemberController;
+use event\EventRegistrationController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -51,5 +53,9 @@ Route::group([
     //Member
     Route::resource('/member', 'member\MemberController', ['names' => 'member']);
     Route::any('/member/data/list', [MemberController::class, 'getDatatableList'])->name('member.data.list');
+
+    //Event
+    Route::resource('/event/registration', 'event\EventRegistrationController', ['names' => 'event.registration']);
+    Route::any('/event/registration/data/list', [EventRegistrationController::class, 'getDatatableList'])->name('event.registration.data.list');
 });
 

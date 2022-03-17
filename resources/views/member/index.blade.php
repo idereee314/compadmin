@@ -34,15 +34,16 @@
                                     </div>
                                     <div class="row">
                                         <div class="col-sm-12">
-                                            <table class="table table-head-custom table-bordered dataTable no-footer" id="member_datatable" role="grid" aria-describedby="kt_datatable_info" style="width: 1235px;">
+                                            <table class="table table-separate table-head-custom table-checkable dataTable no-footer dtr-inline" id="member_datatable" role="grid" aria-describedby="kt_datatable_info" style="width: 1235px;">
                                                 <thead>
                                                     <tr role="row">
                                                         <th class="sorting sorting_asc" tabindex="0" aria-controls="kt_datatable" rowspan="1" colspan="1" width="15px">No.</th>
-                                                        <th  class="sorting" tabindex="0" aria-controls="kt_datatable" rowspan="1" colspan="1" width="15%">{{trans('display.username')}}</th>
+                                                        {{-- <th  class="sorting" tabindex="0" aria-controls="kt_datatable" rowspan="1" colspan="1" width="15%">{{trans('display.username')}}</th> --}}
                                                         <th  class="sorting" tabindex="0" aria-controls="kt_datatable" rowspan="1" colspan="1" width="15%">{{trans('display.human_register_number')}}</th>
                                                         <th  class="sorting" tabindex="0" aria-controls="kt_datatable" rowspan="1" colspan="1" width="15%">{{trans('display.human_firstname')}}</th>
                                                         <th  class="sorting" tabindex="0" aria-controls="kt_datatable" rowspan="1" colspan="1" width="15%">{{trans('display.human_lastname')}}</th>
                                                         <th  class="sorting" tabindex="0" aria-controls="kt_datatable" rowspan="1" colspan="1" width="8%">{{trans('display.human_contact_phone')}}</th>
+                                                        <th  class="sorting" tabindex="0" aria-controls="kt_datatable" rowspan="1" colspan="1" width="8%">{{trans('display.human_birth')}}</th>
                                                         <th  class="sorting" tabindex="0" aria-controls="kt_datatable" rowspan="1" colspan="1" width="8%">{{trans('display.profile_photo')}}</th>
                                                         <th  class="sorting" tabindex="0" aria-controls="kt_datatable" rowspan="1" colspan="1" width="8%">{{trans('display.id_photo')}}</th>
                                                         <th  class="sorting" tabindex="0" aria-controls="kt_datatable" rowspan="1" colspan="1" width="8%">{{trans('display.general_created_at')}}</th>
@@ -104,7 +105,7 @@ $(document).ready(function() {
                 },
                 width: "30px"
             },
-            {data: 'user.firstname'}
+            // {data: 'user.firstname'},
             {data: 'register_number'},
             {data: 'firstname'},
             {data: 'lastname'},
@@ -112,7 +113,6 @@ $(document).ready(function() {
             {data: 'birth'},
             {data: 'profile_photo'},
             {data: 'id_photo'},
-            {data: 'birth'},
             {data: 'created_at'},
             {data: 'action'},
         ],
@@ -123,14 +123,14 @@ $(document).ready(function() {
             targets: [0]
         },{
             class: "text-center",
-            targets: [0, 6, 7]
+            targets: [0, 6, 7, 8, 9]
         }],
-        order: [[ 5, "desc" ]],
-        dom: '<"float-left"B><"float-right"l><"clear">tip',
+        order: [[ 9, "desc" ]],
+        dom: "<'top'B><'row'<'col-sm-12'tr>><'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7 dataTables_pager'lp>>",
         buttons: [
         {
-            text: '<i class="fa fa-plus-square"></i> Шинээр нэмэх',
-            className: "btn font-weight-bolder btn-sm btn-light-success px-3 mt-6",
+            text: '<i class="la la-plus"></i> Шинээр нэмэх',
+            className: "btn btn-light-danger font-weight-bolder mb-2",
             action: function ( e, dt, node, config ) {
                 $.get('{!! route('member.create') !!}', showAddModal);
             }

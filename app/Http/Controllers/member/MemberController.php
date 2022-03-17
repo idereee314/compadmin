@@ -4,7 +4,7 @@ namespace member;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-//use Input;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Input;
 use Validator;
 
@@ -16,6 +16,8 @@ use member\Member as MemberModel;
 
 use \Auth as Auth;
 use Config;
+
+use Image;
 
 class MemberController extends Controller
 {
@@ -73,8 +75,23 @@ class MemberController extends Controller
         {
             try
             {
-                
+  
                 $member = $this->member->create($input);
+
+                $profilePhoto = $input['profile_photo'];
+                $idPhoto = $input['id_photo'];
+
+                if(isset($profilePhoto) || isset($idPhoto)) 
+                {
+                    // $img = Image::make(file_get_contents($image))->fit($demision[0], $demision[1])->encode('data-url');
+                    $img64_profilePhoto = Image::make(file_get_contents($profilePhoto))->encode('data-url');
+                    $img64_idPhoto = Image::make(file_get_contents($idPhoto))->encode('data-url');
+
+                    $member->profile_photo = $img64_profilePhoto;
+                    $member->id_photo = $img64_idPhoto;
+
+                    $member->save();
+                }
 
                 $response = array(
                     'status' => 'success',
@@ -143,8 +160,42 @@ class MemberController extends Controller
             );
         } else {
 			try {
-				$member = $this->member->update($id, $input);
-                
+                $member = $this->member->update($id, $input);
+
+                if(Input::hasfile('profile_photo')) {
+
+                    $destination = $member->profile_photo;
+
+                    if(File::exists($destination))
+                    {
+                        File::delete($destination);
+                    }
+
+                    $image = Input::file('profile_photo');
+
+                    $img64_profilePhoto = Image::make(file_get_contents($profilePhoto))->encode('data-url');
+                    $member->profile_photo = $img64_profilePhoto;
+
+                    $member->save();
+                }
+
+                if(Input::hasfile('id_photo')) {
+
+                    $destination = $member->id_photo;
+
+                    if(File::exists($destination))
+                    {
+                        File::delete($destination);
+                    }
+
+                    $image = Input::file('id_photo');
+
+                    $img64_idPhoto = Image::make(file_get_contents($profilePhoto))->encode('data-url');
+                    $member->id_photo = $img64_idPhoto;
+
+                    $member->save();
+                }
+            
 				$response = array(
 					'status' => 'success',
 					'msg' => trans('messages.success_update')

@@ -17,14 +17,14 @@ class Member extends Model
     public static function rules($id) 
     {
 		return array(
-            'user_id' => 'required',
+            // 'user_id' => 'required',
             'register_number' => 'required|unique:uq_member,register_number,'.@$id.',id',
             'firstname' => 'required',
             'lastname' => 'required',
             'contact_phone' => 'required',
             'birth' => 'required',
-            // 'profile_photo' => 'required',
-            // 'id_photo' => 'required',
+            'profile_photo' => 'required',
+            'id_photo' => 'required',
 		);
 	}
 
