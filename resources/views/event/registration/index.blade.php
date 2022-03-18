@@ -283,7 +283,38 @@ $(document).ready(function() {
         $.get('registration/'+id+'/edit', showEditModal);
     });
 
-    edit
+    $('#event-registration-datatable tbody').on( 'click', 'tr td a.delete', function () {
+        var id = $(this).data("registrationid");
+
+        Swal.fire({
+            title: "Та устгахдаа итгэлтэй байна уу",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Тийм",
+            cancelButtonText: 'Үгүй',
+            customClass: {
+                confirmButton: "btn btn-primary",
+                cancelButton: 'btn btn-secondary'
+            },
+        }).then(function(result) {
+            if (result.value) {
+                $.ajax({
+                    url: 'registration/' + id,
+                    type: 'DELETE',
+                    success: function(response) {
+                        $('.panel-sub-heading').html(response).fadeIn().delay(5000).fadeOut();
+                        eventTable.draw();
+                    },
+                    error: function (xhr, textStatus, error) {
+                        console.log(xhr.statusText);
+                        console.log(textStatus);
+                        console.log(error);
+                    },
+                    async: false
+                });
+            }
+        });
+    });
 
 }).ajaxStart($.blockUI).ajaxStop($.unblockUI);
 
@@ -563,39 +594,6 @@ function showEditModal(data){
         });
 
         $(this).off('shown.bs.modal');
-    });
-}
-
-//UserDelete
-function memberDelete(id)
-{
-    Swal.fire({
-        title: "Та устгахдаа итгэлтэй байна уу",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonText: "Тийм",
-        cancelButtonText: 'Үгүй',
-        customClass: {
-            confirmButton: "btn btn-primary",
-            cancelButton: 'btn btn-secondary'
-        },
-    }).then(function(result) {
-        if (result.value) {
-            $.ajax({
-                url: 'member/' + id,
-                type: 'DELETE',
-                success: function(response) {
-                    $('.panel-sub-heading').html(response).fadeIn().delay(5000).fadeOut();
-                    eventTable.draw();
-                },
-                error: function (xhr, textStatus, error) {
-                    console.log(xhr.statusText);
-                    console.log(textStatus);
-                    console.log(error);
-                },
-                async: false
-            });
-        }
     });
 }
 </script>
