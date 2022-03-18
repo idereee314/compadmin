@@ -102,7 +102,7 @@ class EloquentMemberRepository implements MemberRepository {
 			})
 			->editColumn('profile_photo', function ($qry) {
 				if ($qry->profile_photo) {
-					return '<img alt="..." src="'.$qry->profile_photo.'" style="max-width: 70px; cursor:pointer" onclick="showImageId('.$qry->id.')">';
+					return '<img alt="..." src="'.$qry->profile_photo.'" style="max-width: 70px; cursor:pointer" onclick="showImageProfile('.$qry->id.')">';
 				}
 				return "";
 			})
