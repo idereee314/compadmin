@@ -155,6 +155,11 @@ function showAddModal( data ) {
     $('#memberAddModal').on('shown.bs.modal', function(){
         $('#memberAddModal .modal-content').html(data);
 
+        $('.only-phone').inputmask("+\\976 99 99 99 99");
+        // $("#register_number").inputmask( { regex: "^[А-Я]{2}:[0-9]{3-9}$" });
+
+        $("#register_number").inputmask({ regex: "[А-Я]{2}[0-9]*"});
+
         $('#add-member-form').validate({
             ignore: [],
             highlight:function(element) {
@@ -204,6 +209,8 @@ function memberEditModal(data){
     $('#memberEditModal').modal();
         $('#memberEditModal').on('shown.bs.modal', function(){
             $('#memberEditModal .modal-content').html(data);
+
+            $('.only-phone').inputmask("+\\976 99 99 99 99");
 
             $('#edit-member-form').validate({
             ignore: [],

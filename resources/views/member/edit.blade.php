@@ -35,7 +35,7 @@
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.human_contact_phone')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9">
-                <input type="number" class="form-control" name="contact_phone" id="contact_phone" value="{{ $member->contact_phone }}" autocomplete="off" value="{{ $member->phone_number }}" placeholder="{{trans('display.human_contact_phone')}}">
+                <input type="text" class="form-control only-phone" name="contact_phone" id="contact_phone" value="{{ $member->contact_phone }}" autocomplete="off" value="{{ $member->phone_number }}" placeholder="{{trans('display.human_contact_phone')}}">
                 <div class="error-here"></div>
             </div>
         </div>
@@ -120,11 +120,11 @@
 </form>
 
 <script>
-    function numberOnly(input)
-    {
-        var num =  /[^0-9]/gi;
-        input.value = input.value.replace(num, '');
-    }
+    // function numberOnly(input)
+    // {
+    //     var num =  /[^0-9]/gi;
+    //     input.value = input.value.replace(num, '');
+    // }
 
     var profilePhoto = new KTImageInput('profile_photo');
     var idPhoto = new KTImageInput('id_photo');

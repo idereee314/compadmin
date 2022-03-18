@@ -11,7 +11,7 @@
             <div class="form-group row">
                 <label class="col-md-3 col-form-label text-right">{{trans('display.human_register_number')}}: <span class="text-danger">*</span></label>
                 <div class="col-md-9">
-                    <input type="text" class="form-control" autocomplete="off" name="register_number" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}"/>
+                    <input type="text" class="form-control" autocomplete="off" name="register_number" id="register_number" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}"/>
                     <div class="error-here"></div>
                 </div>
             </div>
@@ -35,7 +35,7 @@
             <div class="form-group row">
                 <label class="col-md-3 col-form-label text-right">{{trans('display.human_contact_phone')}}: <span class="text-danger">*</span></label>
                 <div class="col-md-9">
-                    <input type="number" class="form-control" name="contact_phone" id="contact_phone" autocomplete="off" placeholder="{{trans('display.human_contact_phone')}}" onkeyup="numberOnly(this)">
+                    <input type="text" class="form-control only-phone" name="contact_phone" id="contact_phone" autocomplete="off" placeholder="{{trans('display.human_contact_phone')}}">
                     <div class="error-here"></div>
                 </div>
             </div>
@@ -112,12 +112,6 @@
 </form>
 
 <script>
-    function numberOnly(input)
-    {
-        var num =  /[^0-9]/gi;
-        input.value = input.value.replace(num, '');
-    }
-
     var profilePhoto = new KTImageInput('profile_photo');
     var idPhoto = new KTImageInput('id_photo');
 </script>

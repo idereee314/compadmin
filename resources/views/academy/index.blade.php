@@ -148,6 +148,10 @@ function showAddModal( data ) {
     $('#academyAddModal').on('shown.bs.modal', function(){
         $('#academyAddModal .modal-content').html(data);
 
+        //$(".only-number").inputmask('Regex', { regex: "\\d+(\\.\\d+)?" });
+       // $(".only-number").inputmask('Regex', { regex: "^[0-9]{256}" });
+      
+
         $('#add-academy-form').validate({
             ignore: [],
             highlight:function(element) {

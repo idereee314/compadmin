@@ -39,7 +39,7 @@
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.general_sort_order')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9">
-                <input type="number" class="form-control" autocomplete="off" name="sort_order"  data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}" onkeyup="numberOnly(this)"/>
+                <input type="text" class="form-control only-number" autocomplete="off" name="sort_order"  data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}"/>
                 <div class="error-here"></div>
             </div>
         </div> 
