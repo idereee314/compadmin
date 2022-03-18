@@ -262,7 +262,7 @@ class MemberController extends Controller
     }
 
 
-    public function showImage($id)
+    public function showImageProfile($id)
     {
         $member = $this->member->find($id);
 
@@ -270,6 +270,16 @@ class MemberController extends Controller
         {
             $data['profile_photo'] = @$member->profile_photo;
         }
+        
+        $returnValue['status'] = true;
+        $returnValue['view'] = strval(view($this->view_path.'.show_image', $data));
+
+        return $returnValue;
+    }
+
+    public function showImageId($id)
+    {
+        $member = $this->member->find($id);
 
         if($member->id_photo)
         {

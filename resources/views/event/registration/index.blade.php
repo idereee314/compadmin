@@ -293,7 +293,6 @@ function showAddModal( data ) {
         $('#create-event-registration-form input[name=entry_belt_id]').select2({data: ""});
         $('#create-event-registration-form input[name=entry_weight_id]').select2({data: ""});
 
-
         $('#create-event-registration-form select[name=event_id]').on('change', function(){
             var eventId = $(this).val();
             var jsonData;
@@ -361,7 +360,6 @@ function showAddModal( data ) {
                 return item.fullname;
             }
         });
-
 
         $('#create-event-registration-form').validate({
             ignore: [],

@@ -31,6 +31,43 @@
                                 </div>
                             </div>
                             <div class="card-body">
+                                <form class="mb-15" id="member-search-form" method="POST">
+                                    <div class="row mb-6">
+                                        <div class="col-lg-3 mb-lg-0 mb-6">
+                                            <label>{{trans('display.human_register_number')}}</label>
+                                            <input class="form-control" name="register_number_search" id="register_number_search" placeholder="{{trans('display.human_register_number')}}" value="">
+                                        </div>
+                                        <div class="col-lg-3 mb-lg-0 mb-6">
+                                            <label>{{trans('display.human_lastname')}}</label>
+                                            <input class="form-control" name="lastname" id="lastname" placeholder="{{trans('display.human_lastname')}}" value="">
+                                        </div>
+                                        <div class="col-lg-3 mb-lg-0 mb-6">
+                                            <label>{{trans('display.human_firstname')}}</label>
+                                            <input class="form-control" name="firstname" id="firstname" placeholder="{{trans('display.human_firstname')}}" value="">
+                                        </div>
+                                        <div class="col-lg-3 mb-lg-0 mb-6">
+                                            <label>{{trans('display.human_phone_number')}}</label>
+                                            <input class="form-control" name="phone_number" id="phone_number" placeholder="{{trans('display.human_phone_number')}}" value="">
+                                        </div>
+                                    </div>
+                                    <div class="row mt-8">
+                                        <div class="col-lg-12">
+                                </div>
+                                </div>
+                                        <button class="btn btn-primary btn-primary--icon" id="data-search" type="submit">
+                                            <span>
+                                                <i class="la la-search"></i>
+                                                <span>{{trans('display.general_search')}}</span>
+                                            </span>
+                                        </button>&#160;&#160;
+                                        <button class="btn btn-secondary btn-secondary--icon reset" type="button">
+                                            <span>
+                                                <i class="la la-close"></i>
+                                                <span>{{trans('display.general_clear')}}</span>
+                                            </span>
+                                        </button></div>
+                                    </div>
+                                </form>
                                 <!--begin: Datatable-->
                                 <div id="kt_datatable_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
                                     <div class="panel-sub-heading">
@@ -41,17 +78,17 @@
                                             <table class="table table-separate table-head-custom table-checkable dataTable no-footer dtr-inline" id="member_datatable" role="grid" aria-describedby="kt_datatable_info" style="width: 1235px;">
                                                 <thead>
                                                     <tr role="row">
-                                                        <th class="sorting sorting_asc" tabindex="0" aria-controls="kt_datatable" rowspan="1" colspan="1" width="15px">No.</th>
-                                                        {{-- <th  class="sorting" tabindex="0" aria-controls="kt_datatable" rowspan="1" colspan="1" width="15%">{{trans('display.username')}}</th> --}}
-                                                        <th  class="sorting" tabindex="0" aria-controls="kt_datatable" rowspan="1" colspan="1" width="15%">{{trans('display.human_register_number')}}</th>
-                                                        <th  class="sorting" tabindex="0" aria-controls="kt_datatable" rowspan="1" colspan="1" width="15%">{{trans('display.human_firstname')}}</th>
-                                                        <th  class="sorting" tabindex="0" aria-controls="kt_datatable" rowspan="1" colspan="1" width="15%">{{trans('display.human_lastname')}}</th>
-                                                        <th  class="sorting" tabindex="0" aria-controls="kt_datatable" rowspan="1" colspan="1" width="8%">{{trans('display.human_contact_phone')}}</th>
-                                                        <th  class="sorting" tabindex="0" aria-controls="kt_datatable" rowspan="1" colspan="1" width="8%">{{trans('display.human_birth')}}</th>
-                                                        <th  class="sorting" tabindex="0" aria-controls="kt_datatable" rowspan="1" colspan="1" width="8%">{{trans('display.profile_photo')}}</th>
-                                                        <th  class="sorting" tabindex="0" aria-controls="kt_datatable" rowspan="1" colspan="1" width="8%">{{trans('display.id_photo')}}</th>
-                                                        <th  class="sorting" tabindex="0" aria-controls="kt_datatable" rowspan="1" colspan="1" width="8%">{{trans('display.general_created_at')}}</th>
-                                                        <th  class="sorting" tabindex="0" aria-controls="kt_datatable" rowspan="1" colspan="1" width="5">{{trans('display.general_manage')}}</th>
+                                                        <th>No.</th>
+                                                        {{-- <th>{{trans('display.username')}}</th> --}}
+                                                        <th>{{trans('display.profile_photo')}}</th>
+                                                        <th>{{trans('display.human_register_number')}}</th>
+                                                        <th>{{trans('display.human_lastname')}}</th>
+                                                        <th>{{trans('display.human_firstname')}}</th>
+                                                        <th>{{trans('display.human_contact_phone')}}</th>
+                                                        <th>{{trans('display.human_birth')}}</th>
+                                                        <th>{{trans('display.id_photo')}}</th>
+                                                        <th>{{trans('display.general_created_at')}}</th>
+                                                        <th>{{trans('display.general_manage')}}</th>
                                                     </tr>
                                                 </thead>
                                             </table>    
@@ -93,9 +130,10 @@ $(document).ready(function() {
             url: '{{route('member.data.list')}}',
             type: 'POST',
             data: function ( d ) {
-                d.name = $('#user-search-form input[id="name"]').val();
-                d.email = $('#user-search-form input[id="email"]').val();
-                d.role = $('#user-search-form select[id="role"]').val();
+                d.register_number = $('#member-search-form input[id="register_number_search"]').val();
+                d.lastname = $('#member-search-form input[id="lastname"]').val();
+                d.firstname = $('#member-search-form input[id="firstname"]').val();
+                d.phone_number = $('#member-search-form input[id="phone_number"]').val();
             },
         },
         "fnCreatedRow": function( nRow, aData, iDataIndex ) {
@@ -109,13 +147,12 @@ $(document).ready(function() {
                 },
                 width: "30px"
             },
-            // {data: 'user.firstname'},
+            {data: 'profile_photo'},
             {data: 'register_number'},
-            {data: 'firstname'},
             {data: 'lastname'},
+            {data: 'firstname'},
             {data: 'contact_phone'},
             {data: 'birth'},
-            {data: 'profile_photo', "defaultContent": ''},
             {data: 'id_photo', "defaultContent": ''},
             {data: 'created_at'},
             {data: 'action'},
@@ -141,9 +178,16 @@ $(document).ready(function() {
         }]
 	});
 
-    $('#user-search-form').on('submit', function(e) {
+    $('#member-search-form').on('submit', function(e) {
         memberTable.draw();
         e.preventDefault();
+    });
+
+    $(".reset").click(function(){
+        $(':input', '#member-search-form')
+         .not(':button, :submit, :reset')
+         .val('')
+         .attr('value', '');
     });
 
 }).ajaxStart($.blockUI).ajaxStop($.unblockUI);
@@ -155,8 +199,8 @@ function showAddModal( data ) {
     $('#memberAddModal').on('shown.bs.modal', function(){
         $('#memberAddModal .modal-content').html(data);
 
-        $('.only-phone').inputmask("+\\976 99 99 99 99");
         $("#register_number").inputmask({ regex: "[А-Я]{2}[0-9]*"});
+        $('.only-phone').inputmask("99 99 99 99");
 
         $('#add-member-form').validate({
             ignore: [],
@@ -208,7 +252,8 @@ function memberEditModal(data){
         $('#memberEditModal').on('shown.bs.modal', function(){
             $('#memberEditModal .modal-content').html(data);
 
-            $('.only-phone').inputmask("+\\976 99 99 99 99");
+            $("#register_number").inputmask({ regex: "[А-Я]{2}[0-9]*"});
+            $('.only-phone').inputmask("99 99 99 99");
 
             $('#edit-member-form').validate({
             ignore: [],
@@ -294,9 +339,28 @@ function memberEdit(id)
     $.get('/member/' + id + '/edit', memberEditModal);
 }
 
-function showImage(id)
+function showImageProfile(id)
 {
-    $.get('/member/show/image/'+id, function( data ) {
+    $.get('/member/show/image/profile/'+id, function( data ) {
+        if (data.status) {
+            $('#showImageModal').modal();
+            $('#showImageModal').on('shown.bs.modal', function(){
+                $('#showImageModal .modal-content').html(data.view);
+
+                $(this).off('shown.bs.modal');
+            });
+        }
+        else
+        {
+            $('.panel-sub-heading').html(data.view).fadeIn().delay(5000).fadeOut();
+        }
+    });
+}
+
+function showImageId(id)
+{
+    console.log(id)
+    $.get('/member/show/image/id/'+id, function( data ) {
         if (data.status) {
             $('#showImageModal').modal();
             $('#showImageModal').on('shown.bs.modal', function(){
