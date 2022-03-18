@@ -122,4 +122,16 @@ class EloquentEntryConfigWeightRepository implements EntryConfigWeightRepository
 		$weights = $qry->get();
 		return $weights;
 	}
+
+	public function getEntryWeightByAgeId($ageId)
+	{
+		$weights = "";
+		if(@$ageId)
+		{
+			$qry = EntryConfigWeight::where('entry_age_id', $ageId);
+		}
+
+		$weights = @$qry->get();
+		return $weights;
+	}
 }

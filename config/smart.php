@@ -13,6 +13,13 @@ return array(
 		2 => 'эмэгтэй'
 	],
 
+	'event_registeation_status' => [
+		'created' => 'created',
+		//'registered' => 'Бүртгэсэн',
+		'approved' => 'approved',
+		'canceled' => 'canceled',
+	],
+
 	'event_registeation_status_class' => [
 		'created' => 'primary',
 		'registered' => 'info',

@@ -277,6 +277,14 @@ $(document).ready(function() {
         e.preventDefault();
     });
 
+    $('#event-registration-datatable tbody').on( 'click', 'tr td a.edit', function () {
+        var id = $(this).data("registrationid");
+
+        $.get('registration/'+id+'/edit', showEditModal);
+    });
+
+    edit
+
 }).ajaxStart($.blockUI).ajaxStop($.unblockUI);
 
 //Modal
@@ -331,6 +339,110 @@ function showAddModal( data ) {
 
         });
 
+        $('#create-event-registration-form input[name=entry_id]').on('change', function(){
+            var entryId = $(this).val();
+            var jsonDataAge;
+            var jsonDataBelt;
+
+            $.ajax({
+                type: 'POST',
+                url: '{!! route('event.entry.age.by.entry') !!}',
+                data: {entry_id: entryId},
+                success: function (data) {
+                    jsonDataAge = JSON.parse(data);
+                },
+                error: function (xhr, textStatus, error) {
+                    console.log(xhr.statusText);
+                    console.log(textStatus);
+                    console.log(error);
+                },
+                async: false
+            });
+
+            $.ajax({
+                type: 'POST',
+                url: '{!! route('event.entry.belt.by.entry') !!}',
+                data: {entry_id: entryId},
+                success: function (data) {
+                    jsonDataBelt = JSON.parse(data);
+                },
+                error: function (xhr, textStatus, error) {
+                    console.log(xhr.statusText);
+                    console.log(textStatus);
+                    console.log(error);
+                },
+                async: false
+            });
+
+            $('#create-event-registration-form input[name=entry_age_id]').select2({
+                placeholder: "-- {{ trans('display.general_select') }} --",
+                data: {results: jsonDataAge, text: function (item) {
+                    return item;
+                }},
+                id: 'id',
+                closeOnSelect: true,
+                allowClear: true,
+                formatSelection: function (item) {
+                    return item.start_age + '-' + item.end_age;
+                },
+                formatResult: function (item) {
+                    return item.start_age + '-' + item.end_age;
+                }
+            });
+
+            $('#create-event-registration-form input[name=entry_belt_id]').select2({
+                placeholder: "-- {{ trans('display.general_select') }} --",
+                data: {results: jsonDataBelt, text: function (item) {
+                    return item;
+                }},
+                id: 'id',
+                closeOnSelect: true,
+                allowClear: true,
+                formatSelection: function (item) {
+                    return item.name;
+                },
+                formatResult: function (item) {
+                    return item.name;
+                }
+            });
+        });
+
+        $('#create-event-registration-form input[name=entry_age_id]').on('change', function(){
+            var ageId = $(this).val();
+            var jsonData;
+
+            $.ajax({
+                type: 'POST',
+                url: '{!! route('event.entry.weight.by.age') !!}',
+                data: {entry_age_id: ageId},
+                success: function (data) {
+                    jsonData = JSON.parse(data);
+                },
+                error: function (xhr, textStatus, error) {
+                    console.log(xhr.statusText);
+                    console.log(textStatus);
+                    console.log(error);
+                },
+                async: false
+            });
+
+            $('#create-event-registration-form input[name=entry_weight_id]').select2({
+                placeholder: "-- {{ trans('display.general_select') }} --",
+                data: {results: jsonData, text: function (item) {
+                    return item;
+                }},
+                id: 'id',
+                closeOnSelect: true,
+                allowClear: true,
+                formatSelection: function (item) {
+                return item.weight;
+                },
+                formatResult: function (item) {
+                    return item.weight;
+                }
+            }); 
+        });
+
         $('#create-event-registration-form input[name=member_id]').select2({
             width: 'resolve',
             dropdownAutoWidth : true,
@@ -355,10 +467,10 @@ function showAddModal( data ) {
             maximumSelectionLength: 30,
             minimumInputLength: 3,
             formatSelection: function (item) {
-                return item.fullname;
+                return item.firstname + ": " + item.lastname;
             },
             formatResult: function (item) {
-                return item.fullname;
+                return item.firstname + ": " + item.lastname;
             }
         });
 
@@ -412,10 +524,10 @@ function showAddModal( data ) {
 
 function showEditModal(data){
     $('#memberModal').modal();
-        $('#memberModal').on('shown.bs.modal', function(){
-            $('#memberModal .modal-content').html(data);
+    $('#memberModal').on('shown.bs.modal', function(){
+        $('#memberModal .modal-content').html(data);
 
-            $('#edit-member-form').validate({
+        $('#edit-member-form').validate({
             ignore: [],
             highlight:function(element) {
                 $(element).parents('.form-group').addClass('has-error has-feedback');
@@ -453,12 +565,7 @@ function showEditModal(data){
         });
 
         $(this).off('shown.bs.modal');
-});
-
-$('#memberModal').on('hidden.bs.modal', function(){
-    $('#memberModal .modal-body').empty();
-});
-
+    });
 }
 
 //UserDelete

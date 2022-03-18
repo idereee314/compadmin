@@ -16,14 +16,14 @@ class EventRegistration extends Model
     public static function rules($id) 
     {
 		return array(
-            'member_id' => 'required',
+            'member_id' => 'required|unique_with:uq_event_registration,event_id,entry_id,'.$id.'=id',
             'event_id' => 'required',
             'entry_id' => 'required',
             'entry_age_id' => 'required',
             'entry_belt_id' => 'required',
             'entry_weight_id' => 'required',
             'academy_id' => 'required',
-            'source_type' => 'required'
+            'status' => 'required'
 		);
 	}
 
@@ -74,6 +74,7 @@ class EventRegistration extends Model
 
         static::creating(function($eventRegistration)
         {
+            $eventRegistration->source_type = 'admin';
             $eventRegistration->created_by = Auth::id();
 			$eventRegistration->created_at = Carbon\Carbon::now()->toDateTimeString();
         });

@@ -65,8 +65,8 @@
             <div class="col-md-9">
                 <select class="form-control datatable-input" id="academy_id" name="academy_id" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}">
                     <option value="">-- {{ trans('display.general_select') }} --</option>
-                    @forelse(@$competitions as $competition)
-                    <option value="{{ $competition->event_id }}">{{ $competition->event->name }}: /{{ $competition->reg_start_date.'-'.$competition->reg_end_date }}/</option>
+                    @forelse(@$academies as $academy)
+                    <option value="{{ $academy->id }}">{{ $academy->name }}</option>
                     @empty
                     @endforelse
                 </select>
@@ -92,105 +92,3 @@
         <button type="submit" class="btn btn-primary font-weight-bold">{{trans('display.general_save')}}</button>
     </div>
 </form>
-
-<script>
-    function entryFunction(event) {
-        $.ajax({
-            type: 'POST',
-                url: '{!! route('event.entry.age.by.entry') !!}',
-                data: {entry_id:  event.val},
-                success: function (data) {
-                    jsonData = JSON.parse(data);
-
-                    $('#create-event-registration-form input[name=entry_age_id]').select2({
-                        placeholder: "-- {{ trans('display.general_select') }} --",
-                        data: {results: jsonData, text: function (item) {
-                            return item;
-                        }},
-                        id: 'id',
-                        closeOnSelect: true,
-                        allowClear: true,
-                        formatSelection: function (item) {
-                        return item.start_age + '-' + item.end_age;
-                        },
-                        formatResult: function (item) {
-                            return item.start_age + '-' + item.end_age;
-                        }
-                    });
-
-                    // entry_belt_id
-                   
-                },
-                error: function (xhr, textStatus, error) {
-                    console.log(xhr.statusText);
-                    console.log(textStatus);
-                    console.log(error);
-                },
-                async: false
-            });
-
-        $.ajax({
-            type: 'POST',
-                url: '{!! route('event.entry.belt.by.entry') !!}',
-                data: {entry_id:  event.val},
-                success: function (data) {
-                    jsonData = JSON.parse(data);
-                    $('#create-event-registration-form input[name=entry_belt_id]').select2({
-                        placeholder: "-- {{ trans('display.general_select') }} --",
-                        data: {results: jsonData, text: function (item) {
-                            return item;
-                        }},
-                        id: 'id',
-                        closeOnSelect: true,
-                        allowClear: true,
-                        formatSelection: function (item) {
-                        return item.name;
-                        },
-                        formatResult: function (item) {
-                            return item.name;
-                        }
-                    });                   
-                },
-                error: function (xhr, textStatus, error) {
-                    console.log(xhr.statusText);
-                    console.log(textStatus);
-                    console.log(error);
-                },
-                async: false
-            });
-    }
-
-    function ageFunction(event) {
-        $.ajax({
-            type: 'POST',
-                url: '{!! route('event.entry.weight.by.entry') !!}',
-                data: {age_id:  event.val},
-                success: function (data) {
-                    jsonData = JSON.parse(data);
-
-                    $('#create-event-registration-form input[name=entry_belt_id]').select2({
-                        placeholder: "-- {{ trans('display.general_select') }} --",
-                        data: {results: jsonData, text: function (item) {
-                            return item;
-                        }},
-                        id: 'id',
-                        closeOnSelect: true,
-                        allowClear: true,
-                        formatSelection: function (item) {
-                        return item.start_age;
-                        },
-                        formatResult: function (item) {
-                            return item.start_age;
-                        }
-                    });
-                   
-                },
-                error: function (xhr, textStatus, error) {
-                    console.log(xhr.statusText);
-                    console.log(textStatus);
-                    console.log(error);
-                },
-                async: false
-            });
-    }
-</script>
