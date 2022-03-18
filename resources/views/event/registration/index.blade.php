@@ -2,7 +2,7 @@
 
 @section('styles')
 <link rel="stylesheet" href="{{asset('assets/js/plugins/custom/datatables/datatables.bundle.css')}}">
-<link rel="stylesheet" href="{{asset('assets/js/plugins/custom/select/css/select2.min')}}">
+<link rel="stylesheet" href="{{asset('assets/js/plugins/custom/select2-3.5.3/css/select2.min.css')}}">
 @endsection
 
 @section('content')
@@ -33,7 +33,7 @@
                             </div>
                             <div class="card-body">
                                 <!--begin: Search Form-->
-                                <form class="mb-15">
+                                <form class="mb-15" id="event-registration-search-form" method="POST">
                                     <div class="row mb-6">
                                         <div class="col-lg-3 mb-lg-0 mb-6">
                                             <label>RecordID:</label>
@@ -165,7 +165,8 @@
 
 @section('javascript')
 <script src="{{asset('assets/js/plugins/custom/datatables/datatables.js')}}"></script>
-<script src="{{asset('assets/js/plugins/custom/select2/js/select2.min.js')}}"></script>
+<script src="{{asset('assets/js/plugins/custom/select2-3.5.3/js/select2.min.js')}}"></script>
+<!--<script src="{{asset('assets/js/plugins/custom/select2-ng/select2.min.js')}}"></script>-->
 <script src="{{asset('assets/js/smart.js')}}"></script>
 
 <script>
@@ -269,7 +270,7 @@ $(document).ready(function() {
         }]
 	});
 
-    $('#user-search-form').on('submit', function(e) {
+    $('#event-registration-search-form').on('submit', function(e) {
         eventTable.draw();
         e.preventDefault();
     });
@@ -282,13 +283,22 @@ function showAddModal( data ) {
     $('#memberModal').modal();
     $('#memberModal').on('shown.bs.modal', function(){
         $('#memberModal .modal-content').html(data);
+        $('#create-event-registration-form select[name=event_id]').select2({
+            placeholder: "-- {{ trans('display.general_select') }} --"
+        });
+        $('#create-event-registration-form input[name=entry_id]').select2({data: ""});
+        $('#create-event-registration-form input[name=entry_age_id]').select2({data: ""});
+        $('#create-event-registration-form input[name=entry_belt_id]').select2({data: ""});
+        $('#create-event-registration-form input[name=entry_weight_id]').select2({data: ""});
+        
         $('#create-event-registration-form input[name=member_id]').select2({
             width: 'resolve',
             dropdownAutoWidth : true,
+            dropdownParent: $('#memberModal'),
             placeholder: "-- {{ trans('display.general_select') }} --",
             ajax: {
                 type: 'GET',
-                url: '{!! route('organization.by.tree') !!}',
+                url: '{!! route('member.search') !!}',
                 data: function (params) {
                     return {
                         q: params
@@ -305,11 +315,48 @@ function showAddModal( data ) {
             maximumSelectionLength: 30,
             minimumInputLength: 3,
             formatSelection: function (item) {
-                return item.name;
+                return item.fullname;
             },
             formatResult: function (item) {
-                return item.name;
+                return item.fullname;
             }
+        });
+
+        $('#create-event-registration-form select[name=event_id]').on('change', function(){
+            var eventId = $(this).val();
+            var jsonData;
+
+            $.ajax({
+                type: 'POST',
+                url: '{!! route('event.entry.by.event') !!}',
+                data: {event_id: eventId},
+                success: function (data) {
+                    jsonData = JSON.parse(data);
+                },
+                error: function (xhr, textStatus, error) {
+                    console.log(xhr.statusText);
+                    console.log(textStatus);
+                    console.log(error);
+                },
+                async: false
+            });
+
+            $('#create-event-registration-form input[name=entry_id]').select2({
+                placeholder: "-- {{ trans('display.general_select') }} --",
+                data: {results: jsonData, text: function (item) {
+                    return item.name;
+                }},
+                id: 'id',
+                closeOnSelect: true,
+                allowClear: true,
+                formatSelection: function (item) {
+                return item.name;
+                },
+                formatResult: function (item) {
+                    return item.name;
+                }
+            });
+
         });
 
         $('#create-event-registration-form').validate({
@@ -348,6 +395,8 @@ function showAddModal( data ) {
                 }
             }
         });
+
+        $('#create-event-registration-form select[name=event_id]').trigger('change');
 
         $(this).off('shown.bs.modal');
     });

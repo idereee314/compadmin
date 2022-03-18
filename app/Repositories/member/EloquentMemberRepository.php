@@ -135,4 +135,24 @@ class EloquentMemberRepository implements MemberRepository {
 
         return $data;
 	}
+
+	public function searchMember($data)
+    {
+        //DB::enableQueryLog();
+        $member = "";
+        $qry = Member::selectRaw("*, concat(substr(lastname, 1, 1), '.', firstname) as fullname");
+
+        if(!empty(@$data))
+		{
+			$qry->whereRaw("LOWER(register_number) like ?", array('%'.mb_strtolower(@$data).'%'))
+				->orWhereRaw("LOWER(firstname) like ?", array('%'.mb_strtolower(@$data).'%'))
+				->orWhereRaw("LOWER(lastname) like ?", array('%'.mb_strtolower(@$data).'%'));
+        }
+        $member = $qry->orderBy('firstname', 'asc')->get();
+        /*
+        $queries = DB::getQueryLog();
+        dd($queries);
+        */
+		return $member;
+    }
 }

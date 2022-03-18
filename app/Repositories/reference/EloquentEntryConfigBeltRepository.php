@@ -113,4 +113,16 @@ class EloquentEntryConfigBeltRepository implements EntryConfigBeltRepository {
 
         return $data;
 	}
+
+	public function getEntryBeltByEntryId($entryId)
+	{
+		$belts = "";
+		if(@$entryId)
+		{
+			$qry = EntryConfigBelt::where('entry_id', $entryId);
+		}
+
+		$belts = $qry->get();
+		return $belts;
+	}
 }

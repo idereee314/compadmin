@@ -14,7 +14,7 @@ return array(
 	],
 
 	'event_registeation_status' => [
-		'sent' => 'Илгээсэн',
+		'created' => 'Илгээсэн',
 		'registered' => 'Бүртгэсэн',
 		'approved' => 'Баталгаажсан',
 		'canceled' => 'Цуцалсан',

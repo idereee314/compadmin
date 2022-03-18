@@ -14,7 +14,7 @@ return array(
 	],
 
 	'event_registeation_status_class' => [
-		'sent' => 'primary',
+		'created' => 'primary',
 		'registered' => 'info',
 		'approved' => 'success',
 		'canceled' => 'danger ',

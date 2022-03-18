@@ -110,4 +110,16 @@ class EloquentEntryConfigWeightRepository implements EntryConfigWeightRepository
 
         return $data;
 	}
+
+	public function getEntryWeightByEntryId($entryId)
+	{
+		$weights = "";
+		if(@$entryId)
+		{
+			$qry = EntryConfigWeight::where('entry_id', $entryId);
+		}
+
+		$weights = $qry->get();
+		return $weights;
+	}
 }

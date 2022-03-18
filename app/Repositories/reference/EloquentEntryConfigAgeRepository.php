@@ -112,4 +112,16 @@ class EloquentEntryConfigAgeRepository implements EntryConfigAgeRepository {
 
         return $data;
 	}
+
+	public function getEntryAgeByEntryId($entryId)
+	{
+		$ages = "";
+		if(@$entryId)
+		{
+			$qry = EntryConfigAge::where('entry_id', $entryId);
+		}
+
+		$ages = $qry->get();
+		return $ages;
+	}
 }

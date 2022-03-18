@@ -281,5 +281,13 @@ class MemberController extends Controller
 
         return $returnValue;
     }
+
+    public function searchMember()
+    {
+        $input = Input::all();
+
+        $members = $this->member->searchMember(@$input['q']);
+        return json_encode($members);
+    }
     
 }

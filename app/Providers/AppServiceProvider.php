@@ -17,15 +17,16 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind('member\MemberRepository', 'member\EloquentMemberRepository');
         $this->app->bind('academy\AcademyRepository', 'academy\EloquentAcademyRepository');  
         $this->app->bind('event\EventRegistrationRepository', 'event\EloquentEventRegistrationRepository'); 
-        $this->app->bind('organization\OrganizationRepository', 'organization\EloquentOrganizationRepository'); 
         $this->app->bind('event\EventConfigRepository', 'event\EloquentEventConfigRepository'); 
 
+        $this->app->bind('organization\OrganizationRepository', 'organization\EloquentOrganizationRepository'); 
+
         //reference
+        $this->app->bind('reference\EventEntriesRepository', 'reference\EloquentEventEntriesRepository'); 
         $this->app->bind('reference\EntryConfigAgeRepository', 'reference\EloquentEntryConfigAgeRepository'); 
         $this->app->bind('reference\EntryConfigBeltRepository', 'reference\EloquentEntryConfigBeltRepository'); 
         $this->app->bind('reference\EntryConfigRepository', 'reference\EloquentEntryConfigRepository'); 
         $this->app->bind('reference\EntryConfigWeightRepository', 'reference\EloquentEntryConfigWeightRepository'); 
-        $this->app->bind('reference\EventEntriesRepository', 'reference\EloquentEventEntriesRepository'); 
     }
 
     /**
