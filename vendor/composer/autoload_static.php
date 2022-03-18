@@ -588,6 +588,13 @@ class ComposerStaticInit8da5d45392af245feb314a3d0411c64d
                 0 => __DIR__ . '/..' . '/ezyang/htmlpurifier/library',
             ),
         ),
+        'F' => 
+        array (
+            'Felixkiss\\UniqueWithValidator\\' => 
+            array (
+                0 => __DIR__ . '/..' . '/felixkiss/uniquewith-validator/src',
+            ),
+        ),
     );
 
     public static $classMap = array (
@@ -1439,6 +1446,7 @@ class ComposerStaticInit8da5d45392af245feb314a3d0411c64d
         'Faker\\Provider\\nl_BE\\Payment' => __DIR__ . '/..' . '/fakerphp/faker/src/Faker/Provider/nl_BE/Payment.php',
         'Faker\\Provider\\nl_BE\\Person' => __DIR__ . '/..' . '/fakerphp/faker/src/Faker/Provider/nl_BE/Person.php',
         'Faker\\Provider\\nl_BE\\PhoneNumber' => __DIR__ . '/..' . '/fakerphp/faker/src/Faker/Provider/nl_BE/PhoneNumber.php',
+        'Faker\\Provider\\nl_BE\\Text' => __DIR__ . '/..' . '/fakerphp/faker/src/Faker/Provider/nl_BE/Text.php',
         'Faker\\Provider\\nl_NL\\Address' => __DIR__ . '/..' . '/fakerphp/faker/src/Faker/Provider/nl_NL/Address.php',
         'Faker\\Provider\\nl_NL\\Color' => __DIR__ . '/..' . '/fakerphp/faker/src/Faker/Provider/nl_NL/Color.php',
         'Faker\\Provider\\nl_NL\\Company' => __DIR__ . '/..' . '/fakerphp/faker/src/Faker/Provider/nl_NL/Company.php',
@@ -1560,6 +1568,9 @@ class ComposerStaticInit8da5d45392af245feb314a3d0411c64d
         'Faker\\Provider\\zh_TW\\Text' => __DIR__ . '/..' . '/fakerphp/faker/src/Faker/Provider/zh_TW/Text.php',
         'Faker\\UniqueGenerator' => __DIR__ . '/..' . '/fakerphp/faker/src/Faker/UniqueGenerator.php',
         'Faker\\ValidGenerator' => __DIR__ . '/..' . '/fakerphp/faker/src/Faker/ValidGenerator.php',
+        'Felixkiss\\UniqueWithValidator\\RuleParser' => __DIR__ . '/..' . '/felixkiss/uniquewith-validator/src/Felixkiss/UniqueWithValidator/RuleParser.php',
+        'Felixkiss\\UniqueWithValidator\\ServiceProvider' => __DIR__ . '/..' . '/felixkiss/uniquewith-validator/src/Felixkiss/UniqueWithValidator/ServiceProvider.php',
+        'Felixkiss\\UniqueWithValidator\\Validator' => __DIR__ . '/..' . '/felixkiss/uniquewith-validator/src/Felixkiss/UniqueWithValidator/Validator.php',
         'Fideloper\\Proxy\\TrustProxies' => __DIR__ . '/..' . '/fideloper/proxy/src/TrustProxies.php',
         'Fideloper\\Proxy\\TrustedProxyServiceProvider' => __DIR__ . '/..' . '/fideloper/proxy/src/TrustedProxyServiceProvider.php',
         'Fruitcake\\Cors\\CorsServiceProvider' => __DIR__ . '/..' . '/fruitcake/laravel-cors/src/CorsServiceProvider.php',

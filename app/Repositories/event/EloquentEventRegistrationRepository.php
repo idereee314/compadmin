@@ -38,34 +38,30 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 	{
 		$eventRegistraion = new EventRegistration;
 
-		$eventRegistraion->user_id = $input['user_id'];
-		$eventRegistraion->register_number = $input['register_number'];
-		$eventRegistraion->firstname = $input['firstname'];
-		$eventRegistraion->lastname = $input['lastname'];
-		$eventRegistraion->username = $input['username'];
-		$eventRegistraion->contact_phone = @$input['contact_phone'];
-		$eventRegistraion->birth = @$input['birth'];
-		$eventRegistraion->gender_code = @$input['gender_code'];
+		$eventRegistraion->member_id = $input['member_id'];
+		$eventRegistraion->event_id = $input['event_id'];
+		$eventRegistraion->entry_id = $input['entry_id'];
+		$eventRegistraion->entry_age_id = $input['entry_age_id'];
+		$eventRegistraion->entry_belt_id = $input['entry_belt_id'];
+		$eventRegistraion->entry_weight_id = @$input['entry_weight_id'];
+		$eventRegistraion->academy_id = @$input['academy_id'];
+		$eventRegistraion->status = @$input['status'];
 
 		$eventRegistraion->save();
-
 		return $eventRegistraion;
 	}
 
  	public function update($id, $input)
 	{
 		$eventRegistraion = $this->find($id);
-		$eventRegistraion->user_id = $input['user_id'];
-		$eventRegistraion->register_number = $input['register_number'];
-		$eventRegistraion->firstname = $input['firstname'];
-		$eventRegistraion->lastname = $input['lastname'];
-		$eventRegistraion->username = $input['username'];
-		$eventRegistraion->contact_phone = @$input['contact_phone'];
-		$eventRegistraion->birth = @$input['birth'];
-		$eventRegistraion->gender_code = @$input['gender_code'];
+		$eventRegistraion->entry_id = $input['entry_id'];
+		$eventRegistraion->entry_age_id = $input['entry_age_id'];
+		$eventRegistraion->entry_belt_id = $input['entry_belt_id'];
+		$eventRegistraion->entry_weight_id = @$input['entry_weight_id'];
+		$eventRegistraion->academy_id = @$input['academy_id'];
+		$eventRegistraion->status = @$input['status'];
 
 		$eventRegistraion->save();
-
 		return $eventRegistraion;
 	}
 
@@ -108,7 +104,7 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 			{
 				return $qry->created_at;
 			})
-            ->addColumn('action', function ($member) {
+            ->addColumn('action', function ($qry) {
 
 				$actionHtml = '<div class="dropdown dropdown-inline">';
 				$actionHtml .= '<a href="javascript:;" class="btn btn-sm btn-clean btn-icon" data-toggle="dropdown">';
@@ -116,8 +112,12 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 				$actionHtml .= '</a>';
 				$actionHtml .= '<div class="dropdown-menu dropdown-menu-sm dropdown-menu-right">';
 				$actionHtml .= '<ul class="nav nav-hoverable flex-column">';
-				$actionHtml .= 	'<li class="nav-item"><a class="nav-link" href="#" onclick="memberEdit('.$member->id.')"><i class="nav-icon flaticon-edit-1"></i><span class="nav-text">'.trans('display.general_edit').'</span></a></li>';
-				$actionHtml .= 	'<li class="nav-item"><a class="nav-link" href="#" onclick="memberDelete('.$member->id.')"><i class="nav-icon flaticon-delete"></i><span class="nav-text">'.trans('display.general_delete').'</span></a></li>';
+				if($qry->status == @Config::get('smart.event_registeation_status')['created'])
+				{
+					
+				}
+				$actionHtml .= 	'<li class="nav-item"><a class="nav-link edit" href="javascript:;" data-registrationid="'.$$qry->id.'"><i class="nav-icon flaticon-edit-1"></i><span class="nav-text">'.trans('display.general_edit').'</span></a></li>';
+				$actionHtml .= 	'<li class="nav-item"><a class="nav-link delete" href="javascript:;" data-registrationid="'.$$qry->id.'"><i class="nav-icon flaticon-delete"></i><span class="nav-text">'.trans('display.general_delete').'</span></a></li>';
 				$actionHtml .= '</ul>';
 				$actionHtml .= '</div>';
 				$actionHtml .= '</div>';

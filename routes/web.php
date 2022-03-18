@@ -81,6 +81,7 @@ Route::group([
     Route::resource('/event/entry/weight', 'reference\EventEntryWeightController', ['names' => 'event.entry.weight']);
     Route::any('/event/entry/weight/data/list', 'reference\EventEntryWeightController@getDatatableList')->name('event.entry.weight.data.list');
     Route::post('/event/entry/weight/by/entry', 'reference\EventEntryWeightController@getEntryWeightByEntryId')->name('event.entry.weight.by.entry');
+    Route::post('/event/entry/weight/by/age', 'reference\EventEntryWeightController@getEntryWeightByAgeId')->name('event.entry.weight.by.age');
 
     //Academy
     Route::resource('/academy', 'academy\AcademyController', ['names' => 'academy']);

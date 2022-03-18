@@ -9,10 +9,10 @@ use Illuminate\Support\Facades\Input;
 use Validator;
 
 //Repositories
-use reference\EventEntryWeightRepository as EventEntryWeight;
+use reference\EntryConfigWeightRepository as EventEntryWeight;
 
 //Models
-use reference\EventEntryWeight as EventEntryWeightModel;
+use reference\EntryConfigWeight as EventEntryWeightModel;
 
 use \Auth as Auth;
 use Config;
@@ -205,6 +205,14 @@ class EventEntryWeightController extends Controller
     {
         $input = Input::all();
         $weights = $this->eventEntryWeight->getEntryWeightByEntryId(@$input['entry_id']);    
+
+        return json_encode($weights);
+    }
+
+    public function getEntryWeightByAgeId()
+    {
+        $input = Input::all();
+        $weights = $this->eventEntryWeight->getEntryWeightByAgeId(@$input['entry_age_id']);    
 
         return json_encode($weights);
     }
