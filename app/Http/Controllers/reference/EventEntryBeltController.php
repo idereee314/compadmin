@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Input;
 use Validator;
 
 //Repositories
-use reference\EventEntryBeltRepository as EventEntryBelt;
+use reference\EntryConfigBeltRepository as EventEntryBelt;
 
 //Models
 use reference\EventEntryBelt as EventEntryBeltModel;

@@ -2,7 +2,7 @@
 
 @section('styles')
 <link rel="stylesheet" href="{{asset('assets/js/plugins/custom/datatables/datatables.bundle.css')}}">
-<link rel="stylesheet" href="{{asset('assets/js/plugins/custom/select2-3.5.3/css/select2.min.css')}}">
+{{-- <link rel="stylesheet" href="{{asset('assets/js/plugins/custom/select2-3.5.3/css/select2.min.css')}}"> --}}
 @endsection
 
 @section('content')
@@ -165,12 +165,14 @@
 
 @section('javascript')
 <script src="{{asset('assets/js/plugins/custom/datatables/datatables.js')}}"></script>
-<script src="{{asset('assets/js/plugins/custom/select2-3.5.3/js/select2.min.js')}}"></script>
+<script src="{{asset('assets/js/plugins/custom/select2-ng/select2.min.js')}}"></script>
+{{-- <script src="{{asset('assets/js/plugins/custom/select2-3.5.3/js/select2.min.js')}}"></script> --}}
 <!--<script src="{{asset('assets/js/plugins/custom/select2-ng/select2.min.js')}}"></script>-->
 <script src="{{asset('assets/js/smart.js')}}"></script>
 
 <script>
 $(document).ready(function() {
+    $('.kt-selectpicker').selectpicker();
     eventTable = $("#event-registration-datatable").DataTable({
         processing:     true,
         serverSide:     true,
@@ -290,7 +292,45 @@ function showAddModal( data ) {
         $('#create-event-registration-form input[name=entry_age_id]').select2({data: ""});
         $('#create-event-registration-form input[name=entry_belt_id]').select2({data: ""});
         $('#create-event-registration-form input[name=entry_weight_id]').select2({data: ""});
-        
+
+
+        $('#create-event-registration-form select[name=event_id]').on('change', function(){
+            var eventId = $(this).val();
+            var jsonData;
+
+            $.ajax({
+                type: 'POST',
+                url: '{!! route('event.entry.by.event') !!}',
+                data: {event_id: eventId},
+                success: function (data) {
+                    jsonData = JSON.parse(data);
+                },
+                error: function (xhr, textStatus, error) {
+                    console.log(xhr.statusText);
+                    console.log(textStatus);
+                    console.log(error);
+                },
+                async: false
+            });
+
+            $('#create-event-registration-form input[name=entry_id]').select2({
+                placeholder: "-- {{ trans('display.general_select') }} --",
+                data: {results: jsonData, text: function (item) {
+                    return item;
+                }},
+                id: 'id',
+                closeOnSelect: true,
+                allowClear: true,
+                formatSelection: function (item) {
+                return item.name;
+                },
+                formatResult: function (item) {
+                    return item.name;
+                }
+            });
+
+        });
+
         $('#create-event-registration-form input[name=member_id]').select2({
             width: 'resolve',
             dropdownAutoWidth : true,
@@ -322,42 +362,6 @@ function showAddModal( data ) {
             }
         });
 
-        $('#create-event-registration-form select[name=event_id]').on('change', function(){
-            var eventId = $(this).val();
-            var jsonData;
-
-            $.ajax({
-                type: 'POST',
-                url: '{!! route('event.entry.by.event') !!}',
-                data: {event_id: eventId},
-                success: function (data) {
-                    jsonData = JSON.parse(data);
-                },
-                error: function (xhr, textStatus, error) {
-                    console.log(xhr.statusText);
-                    console.log(textStatus);
-                    console.log(error);
-                },
-                async: false
-            });
-
-            $('#create-event-registration-form input[name=entry_id]').select2({
-                placeholder: "-- {{ trans('display.general_select') }} --",
-                data: {results: jsonData, text: function (item) {
-                    return item.name;
-                }},
-                id: 'id',
-                closeOnSelect: true,
-                allowClear: true,
-                formatSelection: function (item) {
-                return item.name;
-                },
-                formatResult: function (item) {
-                    return item.name;
-                }
-            });
-
-        });
 
         $('#create-event-registration-form').validate({
             ignore: [],

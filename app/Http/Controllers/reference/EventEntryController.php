@@ -204,8 +204,8 @@ class EventEntryController extends Controller
     public function getEntryByEventId()
     {
         $input = Input::all();
-        $entries = $this->eventEntry->getEntryByEventId(@$input['event_id']);    
+        $entries = $this->eventEntry->getEntryByEventId(@$input['event_id']); 
 
-        return json_encode($entries->pluck('name', 'id')->toArray());
+        return json_encode($entries);
     }
 }

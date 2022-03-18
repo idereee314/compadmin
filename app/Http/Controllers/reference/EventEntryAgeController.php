@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Input;
 use Validator;
 
 //Repositories
-use reference\EventEntryAgeRepository as EventEntryAge;
+use reference\EntryConfigAgeRepository as EventEntryAge;
 
 //Models
 use reference\EventEntryAge as EventEntryAgeModel;
@@ -204,7 +204,7 @@ class EventEntryAgeController extends Controller
     public function getEntryAgeByEntryId()
     {
         $input = Input::all();
-        $ages = $this->eventEntryAge->getEntryAgeByEntryId(@$input['entry_id']);    
+        $ages = $this->eventEntryAge->getEntryAgeByEntryId(@$input['entry_id']);   
 
         return json_encode($ages);
     }

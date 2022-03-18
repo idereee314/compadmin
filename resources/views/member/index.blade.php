@@ -156,8 +156,6 @@ function showAddModal( data ) {
         $('#memberAddModal .modal-content').html(data);
 
         $('.only-phone').inputmask("+\\976 99 99 99 99");
-        // $("#register_number").inputmask( { regex: "^[А-Я]{2}:[0-9]{3-9}$" });
-
         $("#register_number").inputmask({ regex: "[А-Я]{2}[0-9]*"});
 
         $('#add-member-form').validate({
