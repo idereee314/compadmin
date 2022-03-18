@@ -58,7 +58,7 @@ class EloquentMemberRepository implements MemberRepository {
 		$member->register_number = $input['register_number'];
 		$member->firstname = $input['firstname'];
 		$member->lastname = $input['lastname'];
-		$member->contact_phone = @$input['contact_phone'];
+		$member->contact_phone = preg_replace('/\s+/', '', @$input['contact_phone']);
 		$member->birth = @$input['birth'];
 		$member->gender_code = @$input['gender_code'];
 
