@@ -116,7 +116,8 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 				{
 					$actionHtml .= 	'<li class="nav-item"><a class="nav-link edit" href="javascript:;" data-registrationid="'.$qry->id.'"><i class="nav-icon flaticon-edit-1"></i><span class="nav-text">'.trans('display.general_edit').'</span></a></li>';
 					$actionHtml .= 	'<li class="nav-item"><a class="nav-link delete" href="javascript:;" data-registrationid="'.$qry->id.'"><i class="nav-icon flaticon-delete"></i><span class="nav-text">'.trans('display.general_delete').'</span></a></li>';
-				}
+				} 
+				
 				$actionHtml .= '</ul>';
 				$actionHtml .= '</div>';
 				$actionHtml .= '</div>';

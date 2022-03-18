@@ -147,6 +147,11 @@ class EventRegistrationController extends Controller
     {
         $eventRegistration = $this->eventRegistration->find($id);
         $data['eventRegistration'] = $eventRegistration;
+        $competitions = $this->eventConfig->getRegistringComp(@$now);
+        $academy = $this->academy->all();
+
+        $data['competitions'] = $competitions;
+        $data['academies'] = $academy;
 
         return view($this->view_path.'.edit', $data);
     }

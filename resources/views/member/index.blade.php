@@ -51,9 +51,6 @@
                                         </div>
                                     </div>
                                     <div class="row mt-8">
-                                        <div class="col-lg-12">
-                                </div>
-                                </div>
                                         <button class="btn btn-primary btn-primary--icon" id="data-search" type="submit">
                                             <span>
                                                 <i class="la la-search"></i>
@@ -65,7 +62,7 @@
                                                 <i class="la la-close"></i>
                                                 <span>{{trans('display.general_clear')}}</span>
                                             </span>
-                                        </button></div>
+                                        </button>
                                     </div>
                                 </form>
                                 <!--begin: Datatable-->
