@@ -1,58 +1,89 @@
-<form class="form" id="edit-member-form" action="{{route('member.update', $member->id)}}"  method="POST">
+<link rel="stylesheet" href="{{asset('assets/js/plugins/custom/jasny-bootstrap-fileinput/css/jasny-bootstrap-fileinput.min.css')}}">
+<link rel="stylesheet" href="{{asset('assets/js/plugins/custom/bootstrap-tagsinput/dist/bootstrap-tagsinput.css')}}">
+<link rel="stylesheet" href="{{asset('assets/js/plugins/custom/select2-ng/select2.css')}}">
+<link rel="stylesheet" href="{{asset('assets/js/plugins/custom/select2-ng/select2-bootstrap.css')}}">
+<link rel="stylesheet" href="{{asset('assets/js/plugins/custom/select2-ng/select2-custom.css')}}">
+
+<form class="form" method="POST" id="update-event-registration-form" action="{{ route('event.registration.update', $eventRegistration->id)}}">
     <input type="hidden" name="_method" value="put" />
     <div class="modal-header bg-gray-100">
-        <h5 class="modal-title" id="exampleModalLabel">{{trans('display.general_edit')}}</h5>
+        <h5 class="modal-title" id="exampleModalLabel">{{trans('display.general_new')}}</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <i aria-hidden="true" class="ki ki-close"></i>
         </button>
     </div>
 
-    <div class="card-body m-4">
+    <div class="card-body">
         <div class="form-group row">
-            <label class="col-md-3 col-form-label text-right">{{trans('display.human_register_number')}}: <span class="text-danger">*</span></label>
+            <label class="col-md-3 col-form-label text-right">{{trans('display.comp_member')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9">
-                <input type="text" class="form-control" autocomplete="off" name="register_number" value="{{ $member->register_number }}" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}"/>
-                <div class="error-here"></div>
+                <input class="form-control form-control-lg" id="member_id" name="member_id" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}"/>
+            </div>
+        </div> 
+
+        <div class="form-group row">
+            <label class="col-md-3 col-form-label text-right">{{trans('display.comp_title')}}: <span class="text-danger">*</span></label>
+            <div class="col-md-9">
+                <select class="form-control datatable-input" id="event_id" name="event_id" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}">
+                    @forelse(@$competitions as $competition)
+                    <option value="{{ $competition->event_id }}" {{$eventRegistration->event_id == $competition->event_id ? 'selected' : ''}}>{{ $competition->event->name }}: /{{ $competition->reg_start_date.'-'.$competition->reg_end_date }}/</option>
+                    @empty
+                    @endforelse
+                </select>
             </div>
         </div>
 
         <div class="form-group row">
-            <label class="col-md-3 col-form-label text-right">{{trans('display.human_lastname')}}: <span class="text-danger">*</span></label>
+            <label class="col-md-3 col-form-label text-right">{{trans('display.comp_entry')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9">
-                <input type="text" class="form-control" autocomplete="off" name="firstname" value="{{ $member->lastname }}"  data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}"/>
-                <div class="error-here"></div>
+                <input class="form-control form-control-lg" type="text" id="entry_id" name="entry_id" value="{{$eventRegistration->entry_id}}" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}"/>
+            </div>
+        </div> 
+
+        <div class="form-group row">
+            <label class="col-md-3 col-form-label text-right">{{trans('display.comp_entry_belt')}}: <span class="text-danger">*</span></label>
+            <div class="col-md-9">
+                <input class="form-control form-control-lg" id="entry_belt_id" name="entry_belt_id" value="{{$eventRegistration->entry_belt_id}}" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}"/>
             </div>
         </div>
 
         <div class="form-group row">
-            <label class="col-md-3 col-form-label text-right">{{trans('display.human_firstname')}}: <span class="text-danger">*</span></label>
+            <label class="col-md-3 col-form-label text-right">{{trans('display.comp_entry_age')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9">
-                <input type="text" class="form-control" autocomplete="off" name="firstname" value="{{ $member->firstname }}" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}"/>
-                <div class="error-here"></div>
+                <input class="form-control form-control-lg" id="entry_age_id" name="entry_age_id" value="{{$eventRegistration->entry_age_id}}" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}"/>
+            </div>
+        </div> 
+
+        <div class="form-group row">
+            <label class="col-md-3 col-form-label text-right">{{trans('display.comp_entry_weight')}}: <span class="text-danger">*</span></label>
+            <div class="col-md-9">
+                <input class="form-control form-control-lg" id="entry_weight_id" name="entry_weight_id" value="{{$eventRegistration->entry_weight_id}}" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}"/>
             </div>
         </div>
 
         <div class="form-group row">
-            <label class="col-md-3 col-form-label text-right">{{trans('display.human_contact_phone')}}: <span class="text-danger">*</span></label>
+            <label class="col-md-3 col-form-label text-right">{{trans('display.comp_academy')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9">
-                <input type="number" class="form-control" name="contact_phone" id="contact_phone" value="{{ $member->contact_phone }}" autocomplete="off" value="{{ $member->phone_number }}" placeholder="{{trans('display.human_contact_phone')}}">
-                <div class="error-here"></div>
+                <select class="form-control datatable-input" id="academy_id" name="academy_id" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}">
+                    <option value="">-- {{ trans('display.general_select') }} --</option>
+                    @forelse(@$academies as $academy)
+                    <option value="{{ $academy->id }}" {{$eventRegistration->academy_id == $academy->id ? 'selected' : ''}}>{{ $academy->name }}</option>
+                    @empty
+                    @endforelse
+                </select>
             </div>
         </div>
 
         <div class="form-group row">
-            <label class="col-md-3 col-form-label text-right">{{trans('display.human_gender_code')}}: <span class="text-danger">*</span></label>
+            <label class="col-md-3 col-form-label text-right">{{trans('display.general_status')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9">
-                <input type="number" class="form-control" name="gender_code" id="gender_code" value="{{ $member->gender_code }}" autocomplete="off" placeholder="{{trans('display.human_gender_code')}}" onkeyup="numberOnly(this)">
-                <div class="error-here"></div>
-            </div>
-        </div>
-
-        <div class="form-group row">
-            <label class="col-md-3 col-form-label text-right">{{trans('display.human_birth')}}<span class="text-danger"> *</span></label>
-            <div class="col-md-9">
-                <input class="form-control" type="date" name="birth" id="birth" value="{{ $member->birth }}" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}"/>
-                <div class="error-here"></div>
+                <select class="form-control datatable-input" id="status" name="status" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}">
+                    <option value="">-- {{ trans('display.general_select') }} --</option>
+                    @forelse(@Config::get("enums.event_registeation_status") as $key => $status)
+                    <option value="{{ $key }}" {{$eventRegistration->status == $key ? 'selected' : ''}}>{{ $status }}</option>
+                    @empty
+                    @endforelse
+                </select>
             </div>
         </div>
     </div>
@@ -61,16 +92,4 @@
         <button type="button" id="close" class="btn btn-light-primary font-weight-bold" data-dismiss="modal">{{trans('display.general_close')}}</button>
         <button type="submit" class="btn btn-primary font-weight-bold">{{trans('display.general_save')}}</button>
     </div>
-
 </form>
-
-<script>
-    function numberOnly(input)
-    {
-        var num =  /[^0-9]/gi;
-        input.value = input.value.replace(num, '');
-    }
-
-    var profilePhoto = new KTImageInput('profile_photo');
-    var idPhoto = new KTImageInput('id_photo');
-</script>
