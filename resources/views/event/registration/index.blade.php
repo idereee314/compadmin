@@ -603,11 +603,14 @@ function showEditModal(data){
         });
 
         $('#update-event-registration-form select[name=event_id]').trigger('change');
+        $('#update-event-registration-form select[name=entry_id]').trigger('change');
 
         $('#update-event-registration-form input[name=entry_id]').on('change', function(){
             var entryId = $(this).val();
             var jsonDataAge;
             var jsonDataBelt;
+
+            console.log(jsonDataAge)
 
             $.ajax({
                 type: 'POST',
@@ -671,8 +674,7 @@ function showEditModal(data){
                 }
             });
         });
-
-        $('#update-event-registration-form select[name=entry_id]').trigger('change');
+       
         $('#update-event-registration-form select[name=entry_age_id]').trigger('change');
         $('#update-event-registration-form select[name=entry_belt_id]').trigger('change');
 
