@@ -80,19 +80,43 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 
         $data = Datatables::make($qry)
             ->filter(function ($qry) use ($searchData) {
-                if($searchData->has('username') && $searchData->get('username') !== null)
+                if($searchData->has('event') && $searchData->get('event') !== null)
                 {
-                    $qry->whereRaw('LOWER(sd_user.username) like ?', array('%'.mb_strtolower($searchData->get('username')).'%'));
+                    $qry->where('event_id', $searchData->get('event'));
                 }
 
-                if($searchData->has('firstname') && $searchData->get('firstname') !== null)
+                if($searchData->has('entry') && $searchData->get('entry') !== null)
                 {
-                    $qry->whereRaw('LOWER(firstname) like ?', array('%'.mb_strtolower($searchData->get('firstname')).'%'));
+					$qry->where('entry_id', $searchData->get('entry'));
 				}
 
-                if($searchData->has('user_mail') && $searchData->get('user_mail') !== null)
+				if($searchData->has('entryAge') && $searchData->get('entryAge') !== null)
                 {
-                    $qry->whereRaw('LOWER(sd_user.email) like ?', array('%'.mb_strtolower($searchData->get('user_mail')).'%'));
+					$qry->where('entry_age_id', $searchData->get('entryAge'));
+				}
+
+				if($searchData->has('entryBelt') && $searchData->get('entryBelt') !== null)
+                {
+					$qry->where('entry_belt_id', $searchData->get('entryBelt'));
+				}
+
+				if($searchData->has('entryWeight') && $searchData->get('entryWeight') !== null)
+                {
+					$qry->where('entry_weight_id', $searchData->get('entryWeight'));
+				}
+
+				if($searchData->has('status') && $searchData->get('status') !== null)
+                {
+					$qry->where('status', $searchData->get('status'));
+				}
+
+                if($searchData->has('member') && $searchData->get('member') !== null)
+                {
+					$qry->whereHas('member', function($q){
+						$q->whereRaw("LOWER(register_number) like ?", array('%'.mb_strtolower($searchData->get('member')).'%'))
+						->orWhereRaw("LOWER(firstname) like ?", array('%'.mb_strtolower($searchData->get('member')).'%'))
+						->orWhereRaw("LOWER(lastname) like ?", array('%'.mb_strtolower($searchData->get('member')).'%'));
+					});
                 }
             })
 			->editColumn('status', function($qry)

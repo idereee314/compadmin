@@ -89,7 +89,7 @@
                                         </div>
                                         <div class="col-lg-3 mb-lg-0 mb-6">
                                             <label>Оролцогч:</label>
-                                            <input type="text" class="form-control datatable-input" placeholder="Оролцогчийн мэдээллээр хайх" data-col-index="5" />
+                                            <input type="text" class="form-control datatable-input" name="member" id="member" placeholder="Оролцогчийн мэдээллээр хайх" data-col-index="5" />
                                         </div>
                                         <div class="col-lg-3 mb-lg-0 mb-6">
                                             <label>{{ trans('display.general_date') }}:</label>
