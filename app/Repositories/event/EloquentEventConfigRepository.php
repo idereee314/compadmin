@@ -71,4 +71,10 @@ class EloquentEventConfigRepository implements EventConfigRepository {
 		$comps = $qry->get();
 		return $comps;
 	}
+
+	public function getEventConfig()
+	{
+		$comps = EventConfig::selectRaw('uq_event_config.*, rti_event.name')->join('rti_event', 'rti_event.id', '=', 'uq_event_config.event_id')->get();
+		return $comps;
+	}
 }

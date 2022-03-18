@@ -36,64 +36,99 @@
                                 <form class="mb-15" id="event-registration-search-form" method="POST">
                                     <div class="row mb-6">
                                         <div class="col-lg-3 mb-lg-0 mb-6">
-                                            <label>RecordID:</label>
-                                            <input type="text" class="form-control datatable-input" placeholder="E.g: 4590" data-col-index="0" />
-                                        </div>
-                                        <div class="col-lg-3 mb-lg-0 mb-6">
-                                            <label>OrderID:</label>
-                                            <input type="text" class="form-control datatable-input" placeholder="E.g: 37000-300" data-col-index="1" />
-                                        </div>
-                                        <div class="col-lg-3 mb-lg-0 mb-6">
-                                            <label>Country:</label>
-                                            <select class="form-control datatable-input" data-col-index="2">
-                                                <option value="">Select</option>
+                                            <label>{{ trans('display.comp_title') }}:</label>
+                                            <select class="form-control datatable-input" name="search_event" id="search_event" data-col-index="0">
+                                                <option value="">-- {{ trans('display.general_all') }} --</option>
+                                                @forelse(@$competitions as $competition)
+                                                <option value="{{ $competition->id }}">{{ $competition->name }}</option>
+                                                @empty
+                                                @endforelse
                                             </select>
                                         </div>
                                         <div class="col-lg-3 mb-lg-0 mb-6">
-                                            <label>Agent:</label>
-                                            <input type="text" class="form-control datatable-input" placeholder="Agent ID or name" data-col-index="4" />
+                                            <label>{{ trans('display.comp_entry') }}:</label>
+                                            <select class="form-control datatable-input" name="search_entry" id="search_entry" data-col-index="1">
+                                                <option value="">-- {{ trans('display.general_all') }} --</option>
+                                                @forelse(@$eventEntries as $eventEntry)
+                                                <option value="{{ $eventEntry->id }}">{{ $eventEntry->name }}</option>
+                                                @empty
+                                                @endforelse
+                                            </select>
+                                        </div>
+                                        <div class="col-lg-3 mb-lg-0 mb-6">
+                                            <label>{{ trans('display.comp_entry_age') }}:</label>
+                                            <select class="form-control datatable-input" name="search_entry_age" id="search_entry_age" data-col-index="2">
+                                                <option value="">-- {{ trans('display.general_all') }} --</option>
+                                                @forelse(@$configAges as $age)
+                                                <option value="{{ $age->id }}">{{ $age->start_age }}-{{ $age->end_age }}</option>
+                                                @empty
+                                                @endforelse
+                                            </select>
+                                        </div>
+                                        <div class="col-lg-3 mb-lg-0 mb-6">
+                                            <label>{{ trans('display.comp_entry_belt') }}:</label>
+                                            <select class="form-control datatable-input" name="search_entry_belt" id="search_entry_belt" data-col-index="3">
+                                                <option value="">-- {{ trans('display.general_all') }} --</option>
+                                                @forelse(@$configBelts as $belt)
+                                                <option value="{{ $belt->id }}">{{ $belt->name }}</option>
+                                                @empty
+                                                @endforelse
+                                            </select>
                                         </div>
                                     </div>
                                     <div class="row mb-8">
                                         <div class="col-lg-3 mb-lg-0 mb-6">
-                                            <label>Ship Date:</label>
+                                            <label>{{ trans('display.comp_entry_weight') }}:</label>
+                                            <select class="form-control datatable-input" name="search_entry_belt" id="search_entry_belt" data-col-index="4">
+                                                <option value="">-- {{ trans('display.general_all') }} --</option>
+                                                @forelse(@$configWeights as $weight)
+                                                <option value="{{ $weight->id }}">{{ $weight->weight }}</option>
+                                                @empty
+                                                @endforelse
+                                            </select>
+                                        </div>
+                                        <div class="col-lg-3 mb-lg-0 mb-6">
+                                            <label>Оролцогч:</label>
+                                            <input type="text" class="form-control datatable-input" placeholder="Оролцогчийн мэдээллээр хайх" data-col-index="5" />
+                                        </div>
+                                        <div class="col-lg-3 mb-lg-0 mb-6">
+                                            <label>{{ trans('display.general_date') }}:</label>
                                             <div class="input-daterange input-group" id="kt_datepicker">
-                                                <input type="text" class="form-control datatable-input" name="start" placeholder="From" data-col-index="5" />
+                                                <input type="text" class="form-control datatable-input" name="start" placeholder="From" data-col-index="7" />
                                                 <div class="input-group-append">
                                                     <span class="input-group-text">
                                                         <i class="la la-ellipsis-h"></i>
                                                     </span>
                                                 </div>
-                                                <input type="text" class="form-control datatable-input" name="end" placeholder="To" data-col-index="5" />
+                                                <input type="text" class="form-control datatable-input" name="end" placeholder="To" data-col-index="7" />
                                             </div>
                                         </div>
                                         <div class="col-lg-3 mb-lg-0 mb-6">
-                                            <label>Status:</label>
-                                            <select class="form-control datatable-input" data-col-index="6">
-                                                <option value="">Select</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-lg-3 mb-lg-0 mb-6">
-                                            <label>Type:</label>
-                                            <select class="form-control datatable-input" data-col-index="7">
-                                                <option value="">Select</option>
+                                            <label>{{ trans('display.general_status') }}:</label>
+                                            <select class="form-control datatable-input" name="search_status" id="search_status" data-col-index="8">
+                                                <option value="">-- {{ trans('display.general_all') }} --</option>
+                                                @forelse(@Config::get('enums.event_registeation_status') as $key => $status)
+                                                <option value="{{ $key }}">{{ $status }}</option>
+                                                @empty
+                                                @endforelse
                                             </select>
                                         </div>
                                     </div>
                                     <div class="row mt-8">
                                         <div class="col-lg-12">
-                                        <button class="btn btn-primary btn-primary--icon" id="kt_search">
-                                            <span>
-                                                <i class="la la-search"></i>
-                                                <span>Search</span>
-                                            </span>
-                                        </button>&#160;&#160;
-                                        <button class="btn btn-secondary btn-secondary--icon" id="kt_reset">
-                                            <span>
-                                                <i class="la la-close"></i>
-                                                <span>Reset</span>
-                                            </span>
-                                        </button></div>
+                                            <button type="submit" class="btn btn-primary btn-primary--icon">
+                                                <span>
+                                                    <i class="la la-search"></i>
+                                                    <span>{{ trans('display.general_search') }}</span>
+                                                </span>
+                                            </button>
+                                            <button type="reset" class="btn btn-secondary btn-secondary--icon">
+                                                <span>
+                                                    <i class="la la-close"></i>
+                                                    <span>{{ trans('display.general_reset') }}</span>
+                                                </span>
+                                            </button>
+                                        </div>
                                     </div>
                                 </form>
                                 <!--begin: Datatable-->
@@ -172,7 +207,6 @@
 
 <script>
 $(document).ready(function() {
-    $('.kt-selectpicker').selectpicker();
     eventTable = $("#event-registration-datatable").DataTable({
         processing:     true,
         serverSide:     true,
@@ -186,9 +220,12 @@ $(document).ready(function() {
             url: '{{route('event.registration.data.list')}}',
             type: 'POST',
             data: function ( d ) {
-                d.name = $('#user-search-form input[id="name"]').val();
-                d.email = $('#user-search-form input[id="email"]').val();
-                d.role = $('#user-search-form select[id="role"]').val();
+                d.event = $('#event-registration-search-form select[id="search_event"]').val();
+                d.entry = $('#event-registration-search-form select[id="search_entry"]').val();
+                d.entryAge = $('#event-registration-search-form select[id="search_entry_age"]').val();
+                d.entryBelt = $('#event-registration-search-form select[id="search_entry_belt"]').val();
+                d.entryWeight = $('#event-registration-search-form select[id="search_entry_weight"]').val();
+                d.status = $('#event-registration-search-form select[id="search_status"]').val();
             },
         },
         drawCallback: function(settings) {
@@ -314,6 +351,18 @@ $(document).ready(function() {
                 });
             }
         });
+    });
+
+    $(".reset").click(function(){
+        $('#event-registration-search-form select.chosen-select').val([]).trigger('chosen:updated');
+        $(':input', '#event-registration-search-form')
+         .not(':button, :submit, :reset')
+         .val('')
+         .removeAttr('checked')
+         .removeAttr('selected')
+         .attr('value', '');
+
+        $('#event-registration-search-form')[0].reset();
     });
 
 }).ajaxStart($.blockUI).ajaxStop($.unblockUI);

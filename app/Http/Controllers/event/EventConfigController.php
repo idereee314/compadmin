@@ -9,37 +9,25 @@ use Illuminate\Support\Facades\Input;
 use Validator;
 
 //Repositories
-use reference\EventEntriesRepository as EventEntries;
-use reference\EntryConfigAgeRepository as EntryConfigAge;
-use reference\EntryConfigBeltRepository as EntryConfigBelt;
-use reference\EntryConfigWeightRepository as EntryConfigWeight;
-
-use event\EventRegistrationRepository as EventRegistration;
 use event\EventConfigRepository as EventConfig;
 use academy\AcademyRepository as Academy;
 
 //Models
-use event\EventRegistration as EventRegistrationModel;
+use event\EventConfig as EventConfigModel;
 
 use \Auth as Auth;
 use Config;
 
 use Image;
 
-class EventRegistrationController extends Controller
+class EventConfigController extends Controller
 {
     public $restful = true;
 
-    public function __construct(EventRegistration $eventRegistration, EventConfig $eventConfig, Academy $academy, EventEntries $eventEntries, EntryConfigAge $configAge, EntryConfigBelt $configBelt, EntryConfigWeight $configWeight)
+    public function __construct(EventConfig $eventConfig)
     {
-        $this->view_path = 'event.registration';
-        $this->eventRegistration = $eventRegistration;
+        $this->view_path = 'event.config';
         $this->eventConfig = $eventConfig;
-        $this->academy = $academy;
-        $this->eventEntries = $eventEntries;
-        $this->configAge = $configAge;
-        $this->configBelt = $configBelt;
-        $this->configWeight = $configWeight;
     }
 
     /**
@@ -49,17 +37,6 @@ class EventRegistrationController extends Controller
      */
     public function index()
     {
-        $competitions = $this->eventConfig->getEventConfig();
-        $eventEntries = $this->eventEntries->all();
-        $configAges = $this->configAge->all();
-        $configBelts = $this->configBelt->all();
-        $configWeights = $this->configWeight->all();
-
-        $data['competitions'] = $competitions;
-        $data['eventEntries'] = $eventEntries;
-        $data['configAges'] = $configAges;
-        $data['configBelts'] = $configBelts;
-        $data['configWeights'] = $configWeights;
         $data['view_path'] = $this->view_path;
 
         return view($this->view_path.'.index', $data);
@@ -72,12 +49,7 @@ class EventRegistrationController extends Controller
      */
     public function create()
     {
-        //$now = Carbon\Carbon::now()->toDateTimeString();
-        $competitions = $this->eventConfig->getRegistringComp(@$now);
-        $academy = $this->academy->all();
-
-        $data['competitions'] = $competitions;
-        $data['academies'] = $academy;
+        $data['view_path'] = $this->view_path;
 
         return view($this->view_path.'.add', $data);
     }
@@ -91,7 +63,7 @@ class EventRegistrationController extends Controller
     public function store(Request $request)
     {
         $input = Input::all();
-        $validator = Validator::make($input, EventRegistrationModel::rules(0));
+        $validator = Validator::make($input, EventConfigModel::rules(0));
 
         if ($validator->fails())
         {
@@ -105,7 +77,7 @@ class EventRegistrationController extends Controller
         {
             try
             {
-                $event = $this->eventRegistration->create($input);
+                $event = $this->eventConfig->create($input);
                 $response = array(
                     'status' => 'success',
                     'msg' => trans('messages.success_save')
@@ -145,8 +117,8 @@ class EventRegistrationController extends Controller
      */
     public function edit($id)
     {
-        $eventRegistration = $this->eventRegistration->find($id);
-        $data['eventRegistration'] = $eventRegistration;
+        $eventConfig = $this->eventConfig->find($id);
+        $data['eventConfig'] = $eventConfig;
 
         return view($this->view_path.'.edit', $data);
     }
@@ -173,7 +145,7 @@ class EventRegistrationController extends Controller
             );
         } else {
 			try {
-                $event = $this->eventRegistration->update($id, $input);
+                $event = $this->eventConfig->update($id, $input);
             
 				$response = array(
 					'status' => 'success',
@@ -204,7 +176,7 @@ class EventRegistrationController extends Controller
     {
         try {
         
-            $this->eventRegistration->delete($id);
+            $this->eventConfig->delete($id);
 
             $response = array(
                 'status' => 'success',
@@ -226,7 +198,6 @@ class EventRegistrationController extends Controller
 
     public function getDatatableList(Request $request)
     {
-        return $this->eventRegistration->getDatatableList($request);
+        return $this->eventConfig->getDatatableList($request);
     }
-
 }
