@@ -54,7 +54,8 @@ Route::group([
     //Member
     Route::resource('/member', 'member\MemberController', ['names' => 'member']);
     Route::any('/member/data/list', 'member\MemberController@getDatatableList')->name('member.data.list');
-    Route::get('/member/show/image/{member}', 'member\MemberController@showImage')->name('member.show.image');
+    Route::get('/member/show/image/profile/{member}', 'member\MemberController@showImageProfile')->name('member.show.image');
+    Route::get('/member/show/image/id/{member}', 'member\MemberController@showImageId')->name('member.show.image');
     Route::get('/member/search/data', 'member\MemberController@searchMember')->name('member.search');
 
     //Event

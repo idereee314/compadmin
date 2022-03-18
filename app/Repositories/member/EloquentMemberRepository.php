@@ -38,13 +38,11 @@ class EloquentMemberRepository implements MemberRepository {
 	{
 		$member = new Member;
 
-		// dd($input);
-
 		$member->user_id = @$input['user_id'];
 		$member->register_number = $input['register_number'];
 		$member->firstname = $input['firstname'];
 		$member->lastname = $input['lastname'];
-		$member->contact_phone = @$input['contact_phone'];
+		$member->contact_phone = preg_replace('/\s+/', '', @$input['contact_phone']);
 		$member->birth = @$input['birth'];
 		$member->gender_code = @$input['gender_code'];
 
@@ -78,35 +76,39 @@ class EloquentMemberRepository implements MemberRepository {
 
     public function getDatatableList($searchData)
     {
-		//$qry = Member::select('*')->with('user:id,firstname');
 		$qry = Member::select('*');
 
         $data = Datatables::make($qry)
-            ->filter(function ($qry) use ($searchData) {
-                if($searchData->has('username') && $searchData->get('username') !== null)
-                {
-                    $qry->whereRaw('LOWER(sd_user.username) like ?', array('%'.mb_strtolower($searchData->get('username')).'%'));
-                }
-
-                if($searchData->has('firstname') && $searchData->get('firstname') !== null)
-                {
-                    $qry->whereRaw('LOWER(firstname) like ?', array('%'.mb_strtolower($searchData->get('firstname')).'%'));
+			->filter(function ($qry) use ($searchData) {
+				if($searchData->has('register_number') && $searchData->get('register_number') !== null)
+				{
+					$qry->where('register_number', $searchData->get('register_number'));
 				}
 
-                if($searchData->has('user_mail') && $searchData->get('user_mail') !== null)
-                {
-                    $qry->whereRaw('LOWER(sd_user.email) like ?', array('%'.mb_strtolower($searchData->get('user_mail')).'%'));
-                }
-            })
+				if($searchData->has('lastname') && $searchData->get('lastname') !== null)
+				{
+					$qry->whereRaw('LOWER(lastname) like ?', array('%'.mb_strtolower($searchData->get('lastname')).'%'));
+				}
+
+				if($searchData->has('firstname') && $searchData->get('firstname') !== null)
+				{
+					$qry->whereRaw('LOWER(firstname) like ?', array('%'.mb_strtolower($searchData->get('firstname')).'%'));
+				}
+
+				if($searchData->has('phone_number') && $searchData->get('phone_number') !== null)
+				{
+					$qry->where('phone_number', $searchData->get('phone_number'));
+				}
+			})
 			->editColumn('profile_photo', function ($qry) {
 				if ($qry->profile_photo) {
-					return '<button class="btn btn-light" onclick="showImage('.$qry->id.')"><i class="far fa-eye ml-1"></i></button>';
+					return '<img alt="..." src="'.$qry->profile_photo.'" style="max-width: 70px; cursor:pointer" onclick="showImageId('.$qry->id.')">';
 				}
 				return "";
 			})
 			->editColumn('id_photo', function ($qry) {
 				if ($qry->id_photo) {
-					return '<button class="btn btn-light" onclick="showImage('.$qry->id.')"><i class="far fa-eye ml-1"></i></button>';
+					return '<button class="btn btn-light" onclick="showImageId('.$qry->id.')"><i class="far fa-eye ml-1"></i></button>';
 				}
 				return "";
 			})		 

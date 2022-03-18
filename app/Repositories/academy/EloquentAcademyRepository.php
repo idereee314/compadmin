@@ -74,9 +74,9 @@ class EloquentAcademyRepository implements AcademyRepository {
 
         $data = Datatables::make($qry)
             ->filter(function ($qry) use ($searchData) {
-                if($searchData->has('username') && $searchData->get('username') !== null)
+                if($searchData->has('register_number_search') && $searchData->get('register_number_search') !== null)
                 {
-                    $qry->whereRaw('LOWER(sd_user.username) like ?', array('%'.mb_strtolower($searchData->get('username')).'%'));
+                    $qry->whereRaw('LOWER(register_number) like ?', array('%'.mb_strtolower($searchData->get('register_number_search')).'%'));
                 }
 
                 if($searchData->has('firstname') && $searchData->get('firstname') !== null)
@@ -84,9 +84,14 @@ class EloquentAcademyRepository implements AcademyRepository {
                     $qry->whereRaw('LOWER(firstname) like ?', array('%'.mb_strtolower($searchData->get('firstname')).'%'));
 				}
 
-                if($searchData->has('user_mail') && $searchData->get('user_mail') !== null)
+                if($searchData->has('lastname') && $searchData->get('lastname') !== null)
                 {
-                    $qry->whereRaw('LOWER(sd_user.email) like ?', array('%'.mb_strtolower($searchData->get('user_mail')).'%'));
+                    $qry->whereRaw('LOWER(lastname) like ?', array('%'.mb_strtolower($searchData->get('lastname')).'%'));
+                }
+
+				if($searchData->has('phone_number') && $searchData->get('phone_number') !== null)
+                {
+                    $qry->whereRaw('LOWER(phone_number) like ?', array('%'.mb_strtolower($searchData->get('phone_number')).'%'));
                 }
             })
 

@@ -13,6 +13,7 @@
                 <div class="col-md-9">
                     <input type="text" class="form-control" autocomplete="off" name="register_number" id="register_number" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}"/>
                     <div class="error-here"></div>
+                    <span class="form-text text-muted">Регистрын дугаарын үсгийг томоор бичнэ</span>
                 </div>
             </div>
 
@@ -21,6 +22,7 @@
                 <div class="col-md-9">
                     <input type="text" class="form-control" autocomplete="off" name="lastname" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}"/>
                     <div class="error-here"></div>
+                   
                 </div>
             </div>
 

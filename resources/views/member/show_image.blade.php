@@ -7,10 +7,10 @@
     </div>
     <div class="card-body m-4">
         <div class="form-group d-flex justify-content-center">
-            @if($profile_photo)
-                <img alt="..." src="{{$profile_photo}}" style="max-width: 150px">
+            @if(@$profile_photo)
+                <img alt="..." src="{{@$profile_photo}}" style="max-width: 150px">
             @else
-                <img alt="..." src="{{$id_photo}}" style="max-width: 150px">
+                <img alt="..." src="{{@$id_photo}}" style="max-width: 150px">
             @endif
         </div>
     </div>

@@ -229,7 +229,7 @@ return [
     "login_forgot_password" => "Нууц үгээ мартсан?",
     "profile_title" => "Хэрэглэгч",
     "profile_photo" => "Профайл зураг",
-    'id_photo' => 'зураг',
+    'id_photo' => 'Хавсралт',
 
     // Notify
     "notify_title" => "Сонордуулга",
