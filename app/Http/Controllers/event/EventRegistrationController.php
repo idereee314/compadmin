@@ -12,12 +12,14 @@ use Validator;
 use event\EventRegistrationRepository as EventRegistration;
 use event\EventConfigRepository as EventConfig;
 use academy\AcademyRepository as Academy;
+use member\MemberRepository as Member;
 
 //Models
 use event\EventRegistration as EventRegistrationModel;
 
 use \Auth as Auth;
 use Config;
+use Illuminate\Support\Str;
 
 use Image;
 
@@ -25,12 +27,13 @@ class EventRegistrationController extends Controller
 {
     public $restful = true;
 
-    public function __construct(EventRegistration $eventRegistration, EventConfig $eventConfig, Academy $academy)
+    public function __construct(EventRegistration $eventRegistration, EventConfig $eventConfig, Academy $academy, Member $member)
     {
         $this->view_path = 'event.registration';
         $this->eventRegistration = $eventRegistration;
         $this->eventConfig = $eventConfig;
         $this->academy = $academy;
+        $this->member = $member;
     }
 
     /**
@@ -132,7 +135,10 @@ class EventRegistrationController extends Controller
         $competitions = $this->eventConfig->getRegistringComp(@$now);
         $academy = $this->academy->all();
 
+        $member = $this->member->find($eventRegistration->member_id);        
+
         $data['competitions'] = $competitions;
+        $data['firstname'] = $member->firstname;
         $data['academies'] = $academy;
 
         return view($this->view_path.'.edit', $data);
@@ -149,7 +155,16 @@ class EventRegistrationController extends Controller
     {
         $input = Input::all();
 
-        $validator = Validator::make($input, Member::rules($id));
+        $rules = [
+            'entry_id' => 'required',
+            'entry_age_id' => 'required',
+            'entry_belt_id' => 'required',
+            'entry_weight_id' => 'required',
+            'academy_id' => 'required',
+            'status' => 'required'
+        ];
+
+        $validator = Validator::make($input, $rules);
 
         if ($validator->fails())
 		{
@@ -161,7 +176,7 @@ class EventRegistrationController extends Controller
         } else {
 			try {
                 $event = $this->eventRegistration->update($id, $input);
-            
+
 				$response = array(
 					'status' => 'success',
 					'msg' => trans('messages.success_update')
@@ -190,14 +205,26 @@ class EventRegistrationController extends Controller
     public function destroy($id)
     {
         try {
-        
-            $this->eventRegistration->delete($id);
+            $eventRegistration = $this->eventRegistration->find($id);
+            if(!empty($eventRegistration))
+            {
+                if($eventRegistration->status == 'created')
+                {
+                    $this->eventRegistration->delete($id);
 
-            $response = array(
-                'status' => 'success',
-                'msg' => trans('messages.success_delete')
-            );
-    
+                    $response = array(
+                        'status' => 'success',
+                        'msg' => trans('messages.success_delete')
+                    );
+                }
+                else
+                {
+                    $response = array(
+                        'status' => 'warning',
+                        'msg' => 'Баталгаажуулсан хэрэглэгч устгах боломжгүй'                    );
+                }
+            }
+          
         } catch(\Illuminate\Database\QueryException $e)
         {
             $response = array(

@@ -603,8 +603,7 @@ function showEditModal(data){
         });
 
         $('#update-event-registration-form select[name=event_id]').trigger('change');
-        $('#update-event-registration-form select[name=entry_id]').trigger('change');
-
+      
         $('#update-event-registration-form input[name=entry_id]').on('change', function(){
             var entryId = $(this).val();
             var jsonDataAge;
@@ -674,9 +673,8 @@ function showEditModal(data){
                 }
             });
         });
-       
-        $('#update-event-registration-form select[name=entry_age_id]').trigger('change');
-        $('#update-event-registration-form select[name=entry_belt_id]').trigger('change');
+
+        $('#update-event-registration-form input[name=entry_id]').trigger('change');
 
         $('#update-event-registration-form input[name=entry_age_id]').on('change', function(){
             var ageId = $(this).val();
@@ -782,11 +780,9 @@ function showEditModal(data){
             }
         });
 
-       
-        // $('#update-event-registration-form select[name=entry_age_id]').trigger('change');
-        // $('#update-event-registration-form select[name=entry_belt_id]').trigger('change');
-        // $('#update-event-registration-form select[name=entry_weight_id]').trigger('change');
-        // $('#update-event-registration-form select[name=member_id]').trigger('change');
+        $('#update-event-registration-form input[name=entry_age_id]').trigger('change');
+        $('#update-event-registration-form input[name=entry_belt_id]').trigger('change');
+        $('#update-event-registration-form input[name=entry_weight_id]').trigger('change');
 
         $(this).off('shown.bs.modal');
     });

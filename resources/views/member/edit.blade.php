@@ -85,7 +85,6 @@
                      <i class="ki ki-bold-close icon-xs text-muted"></i>
                     </span>
                 </div>
-               
             </div>
         </div>    
         

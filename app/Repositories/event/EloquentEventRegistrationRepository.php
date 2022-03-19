@@ -67,9 +67,9 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 
 	public function delete($id)
 	{
-		$user = $this->find($id);
+		$eventRegistraion = $this->find($id);
 
-		$user->delete();
+		$eventRegistraion->delete();
 	}
 
     public function getDatatableList($searchData)

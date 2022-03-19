@@ -17,14 +17,14 @@
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.comp_member')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9">
-                <input class="form-control form-control-lg" id="member_id" name="member_id" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}"/>
+                <input class="form-control form-control-lg" disabled value="{{$firstname}}"/>
             </div>
         </div> 
 
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.comp_title')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9">
-                <select class="form-control datatable-input" id="event_id" name="event_id" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}">
+                <select class="form-control datatable-input" id="event_id" name="event_id" disabled data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}">
                     @forelse(@$competitions as $competition)
                     <option value="{{ $competition->event_id }}" {{$eventRegistration->event_id == $competition->event_id ? 'selected' : ''}}>{{ $competition->event->name }}: /{{ $competition->reg_start_date.'-'.$competition->reg_end_date }}/</option>
                     @empty
