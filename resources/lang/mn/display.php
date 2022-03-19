@@ -73,6 +73,7 @@ return [
     'general_letter' => 'Үсэг',
     'general_color_code' => 'Өнгөний код',
     'general_rank' => 'Зэрэглэл',
+    'general_reset' => 'Цэвэрлэх',
 
     /** NOUN **/
     "general_code" => "Код",
