@@ -149,14 +149,19 @@ class EventRegistrationController extends Controller
     public function edit($id)
     {
         $eventRegistration = $this->eventRegistration->find($id);
-        $data['eventRegistration'] = $eventRegistration;
         $competitions = $this->eventConfig->getRegistringComp(@$now);
         $academy = $this->academy->all();
+        $eventEntries = $this->eventEntries->getEntryByEventId($eventRegistration->event_id);
+        $configBelts = $this->configBelt->getEntryBeltByEntryId($eventRegistration->entry_id);
+        $configAges = $this->configAge->getEntryAgeByEntryId($eventRegistration->entry_id);
+        $configWeights = $this->configWeight->getEntryWeightByAgeId($eventRegistration->entry_age_id);   
 
-        $member = $this->member->find($eventRegistration->member_id);        
-
+        $data['eventRegistration'] = $eventRegistration;
         $data['competitions'] = $competitions;
-        $data['firstname'] = $member->firstname;
+        $data['eventEntries'] = $eventEntries;
+        $data['configBelts'] = $configBelts;
+        $data['configAges'] = $configAges;
+        $data['configWeights'] = $configWeights;
         $data['academies'] = $academy;
 
         return view($this->view_path.'.edit', $data);
@@ -259,6 +264,21 @@ class EventRegistrationController extends Controller
     public function getDatatableList(Request $request)
     {
         return $this->eventRegistration->getDatatableList($request);
+    }
+
+    public function getConfigByEntryId()
+    {
+        $input = Input::all();
+        $config = array();
+		if(@$input['entry_id'])
+		{
+			$belts = $this->configBelt->getEntryBeltByEntryId($input['entry_id']);
+            $ages = $this->configAge->getEntryAgeByEntryId($input['entry_id']);
+
+            $config['belt'] = $belts;
+            $config['age'] = $ages;
+		}
+        return json_encode(@$config);
     }
 
 }

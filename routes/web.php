@@ -68,6 +68,7 @@ Route::group([
     //Event
     Route::resource('/event/registration', 'event\EventRegistrationController', ['names' => 'event.registration']);
     Route::any('/event/registration/data/list', 'event\EventRegistrationController@getDatatableList')->name('event.registration.data.list');
+    Route::post('/event/registration/take/config', 'event\EventRegistrationController@getConfigByEntryId')->name('event.registration.take.config');
     
     //Entry
     Route::resource('/event/entry', 'reference\EventEntryController', ['names' => 'event.entry']);

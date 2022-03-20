@@ -2,7 +2,7 @@
 
 @section('styles')
 <link rel="stylesheet" href="{{asset('assets/js/plugins/custom/datatables/datatables.bundle.css')}}">
-{{-- <link rel="stylesheet" href="{{asset('assets/js/plugins/custom/select2-3.5.3/css/select2.min.css')}}"> --}}
+<link rel="stylesheet" href="{{asset('assets/js/plugins/custom/select2-4.1.0/css/select2.min.css')}}">
 @endsection
 
 @section('content')
@@ -200,8 +200,7 @@
 
 @section('javascript')
 <script src="{{asset('assets/js/plugins/custom/datatables/datatables.js')}}"></script>
-<script src="{{asset('assets/js/plugins/custom/select2-ng/select2.min.js')}}"></script>
-{{-- <script src="{{asset('assets/js/plugins/custom/select2-3.5.3/js/select2.min.js')}}"></script> --}}
+<script src="{{asset('assets/js/plugins/custom/select2-4.1.0/js/select2.min.js')}}"></script>
 <!--<script src="{{asset('assets/js/plugins/custom/select2-ng/select2.min.js')}}"></script>-->
 <script src="{{asset('assets/js/smart.js')}}"></script>
 
@@ -376,7 +375,6 @@ function showAddModal( data ) {
         $('#create-event-registration-form select[name=event_id]').select2({
             placeholder: "-- {{ trans('display.general_select') }} --"
         });
-
         $('#create-event-registration-form input[name=entry_id]').select2({data: ""});
         $('#create-event-registration-form input[name=entry_age_id]').select2({data: ""});
         $('#create-event-registration-form input[name=entry_belt_id]').select2({data: ""});
@@ -403,48 +401,37 @@ function showAddModal( data ) {
 
             $('#create-event-registration-form input[name=entry_id]').select2({
                 placeholder: "-- {{ trans('display.general_select') }} --",
-                data: {results: jsonData, text: function (item) {
-                    return item;
-                }},
+                data: jsonData,
                 id: 'id',
                 closeOnSelect: true,
                 allowClear: true,
-                formatSelection: function (item) {
-                return item.name;
+                templateSelection: function (item) {
+                    return item.name;
                 },
-                formatResult: function (item) {
+                templateResult: function (item) {
                     return item.name;
                 }
             });
 
+            $('#create-event-registration-form input[name=entry_age_id]').select2({data: ""});
+            $('#create-event-registration-form input[name=entry_belt_id]').select2({data: ""});
+            $('#create-event-registration-form input[name=entry_weight_id]').select2({data: ""});
         });
 
         $('#create-event-registration-form input[name=entry_id]').on('change', function(){
             var entryId = $(this).val();
+            var jsonConfig;
             var jsonDataAge;
             var jsonDataBelt;
 
             $.ajax({
                 type: 'POST',
-                url: '{!! route('event.entry.age.by.entry') !!}',
+                url: '{!! route('event.registration.take.config') !!}',
                 data: {entry_id: entryId},
                 success: function (data) {
-                    jsonDataAge = JSON.parse(data);
-                },
-                error: function (xhr, textStatus, error) {
-                    console.log(xhr.statusText);
-                    console.log(textStatus);
-                    console.log(error);
-                },
-                async: false
-            });
-
-            $.ajax({
-                type: 'POST',
-                url: '{!! route('event.entry.belt.by.entry') !!}',
-                data: {entry_id: entryId},
-                success: function (data) {
-                    jsonDataBelt = JSON.parse(data);
+                    jsonConfig = JSON.parse(data);
+                    jsonDataAge = jsonConfig['age'];
+                    jsonDataBelt = jsonConfig['belt'];
                 },
                 error: function (xhr, textStatus, error) {
                     console.log(xhr.statusText);
@@ -456,47 +443,45 @@ function showAddModal( data ) {
 
             $('#create-event-registration-form input[name=entry_age_id]').select2({
                 placeholder: "-- {{ trans('display.general_select') }} --",
-                data: {results: jsonDataAge, text: function (item) {
-                    return item;
-                }},
+                data: jsonDataAge,
                 id: 'id',
                 closeOnSelect: true,
                 allowClear: true,
-                formatSelection: function (item) {
-                    return item.start_age + '-' + item.end_age;
+                templateSelection: function (item) {
+                    return item.age;
                 },
-                formatResult: function (item) {
-                    return item.start_age + '-' + item.end_age;
+                templateResult: function (item) {
+                    return item.age;
                 }
             });
 
             $('#create-event-registration-form input[name=entry_belt_id]').select2({
                 placeholder: "-- {{ trans('display.general_select') }} --",
-                data: {results: jsonDataBelt, text: function (item) {
-                    return item;
-                }},
+                data: jsonDataBelt,
                 id: 'id',
                 closeOnSelect: true,
                 allowClear: true,
-                formatSelection: function (item) {
+                templateSelection: function (item) {
                     return item.name;
                 },
-                formatResult: function (item) {
+                templateResult: function (item) {
                     return item.name;
                 }
             });
+
+            $('#create-event-registration-form input[name=entry_weight_id]').select2({data: ""});
         });
 
         $('#create-event-registration-form input[name=entry_age_id]').on('change', function(){
             var ageId = $(this).val();
-            var jsonData;
+            var jsonDataWeight;
 
             $.ajax({
                 type: 'POST',
                 url: '{!! route('event.entry.weight.by.age') !!}',
                 data: {entry_age_id: ageId},
                 success: function (data) {
-                    jsonData = JSON.parse(data);
+                    jsonDataWeight = JSON.parse(data);
                 },
                 error: function (xhr, textStatus, error) {
                     console.log(xhr.statusText);
@@ -508,49 +493,49 @@ function showAddModal( data ) {
 
             $('#create-event-registration-form input[name=entry_weight_id]').select2({
                 placeholder: "-- {{ trans('display.general_select') }} --",
-                data: {results: jsonData, text: function (item) {
-                    return item;
-                }},
+                data: jsonDataWeight,
                 id: 'id',
                 closeOnSelect: true,
                 allowClear: true,
-                formatSelection: function (item) {
-                return item.weight;
+                templateSelection: function (item) {
+                    return item.weight;
                 },
-                formatResult: function (item) {
+                templateResult: function (item) {
                     return item.weight;
                 }
             }); 
         });
 
-        $('#create-event-registration-form input[name=member_id]').select2({
+        $('#create-event-registration-form select[name=member_id]').select2({
             width: 'resolve',
             dropdownAutoWidth : true,
             dropdownParent: $('#memberModal'),
             placeholder: "-- {{ trans('display.general_select') }} --",
+            minimumInputLength: 3,
             ajax: {
-                type: 'GET',
                 url: '{!! route('member.search') !!}',
+                delay: 1500,
                 data: function (params) {
-                    return {
-                        q: params
-                    };
+                    var query = {
+                        q: params.term,
+                        type: 'public'
+                    }
+                    return query;
                 },
                 processResults: function (data) {
-                    return {results: data}
+                    return {
+                        results: data
+                    };
                 },
                 cache: true
             },
-            id: 'id',
-            closeOnSelect: true,
-            allowClear: true,
-            maximumSelectionLength: 30,
-            minimumInputLength: 3,
-            formatSelection: function (item) {
-                return item.firstname + ": " + item.lastname;
+            templateSelection: function (item) {
+                return item.firstname || item.lastname;
+//                return item.firstname + ": " + item.lastname;
             },
-            formatResult: function (item) {
-                return item.firstname + ": " + item.lastname;
+            templateResult: function (item) {
+                return item.firstname || item.lastname;
+                //return item.firstname + ": " + item.lastname;
             }
         });
 
@@ -591,8 +576,6 @@ function showAddModal( data ) {
             }
         });
 
-        $('#create-event-registration-form select[name=event_id]').trigger('change');
-
         $(this).off('shown.bs.modal');
     });
 
@@ -610,62 +593,33 @@ function showEditModal(data){
             placeholder: "-- {{ trans('display.general_select') }} --"
         });
 
-        $('#update-event-registration-form input[name=entry_id]').select2({data: ""});
-        $('#update-event-registration-form input[name=entry_age_id]').select2({data: ""});
-        $('#update-event-registration-form input[name=entry_belt_id]').select2({data: ""});
-        $('#update-event-registration-form input[name=entry_weight_id]').select2({data: ""});
-
-        $('#update-event-registration-form select[name=event_id]').on('change', function(){
-            var eventId = $(this).val();
-            var jsonData;
-
-            $.ajax({
-                type: 'POST',
-                url: '{!! route('event.entry.by.event') !!}',
-                data: {event_id: eventId},
-                success: function (data) {
-                    jsonData = JSON.parse(data);
-                },
-                error: function (xhr, textStatus, error) {
-                    console.log(xhr.statusText);
-                    console.log(textStatus);
-                    console.log(error);
-                },
-                async: false
-            });
-
-            $('#update-event-registration-form input[name=entry_id]').select2({
-                placeholder: "-- {{ trans('display.general_select') }} --",
-                data: {results: jsonData, text: function (item) {
-                    return item;
-                }},
-                id: 'id',
-                closeOnSelect: true,
-                allowClear: true,
-                formatSelection: function (item) {
-                return item.name;
-                },
-                formatResult: function (item) {
-                    return item.name;
-                }
-            });
+        $('#update-event-registration-form select[name=entry_id]').select2({
+            placeholder: "-- {{ trans('display.general_select') }} --"
+        });
+        $('#update-event-registration-form select[name=entry_age_id]').select2({
+            placeholder: "-- {{ trans('display.general_select') }} --"
+        });
+        $('#update-event-registration-form select[name=entry_belt_id]').select2({
+            placeholder: "-- {{ trans('display.general_select') }} --"
+        });
+        $('#update-event-registration-form select[name=entry_weight_id]').select2({
+            placeholder: "-- {{ trans('display.general_select') }} --"
         });
 
-        $('#update-event-registration-form select[name=event_id]').trigger('change');
-      
-        $('#update-event-registration-form input[name=entry_id]').on('change', function(){
+        $('#update-event-registration-form select[name=entry_id]').on('change', function(){
             var entryId = $(this).val();
-            var jsonDataAge;
+            var jsonDataConfig;
             var jsonDataBelt;
-
-            console.log(jsonDataAge)
+            var jsonDataAge;
 
             $.ajax({
                 type: 'POST',
-                url: '{!! route('event.entry.age.by.entry') !!}',
+                url: '{!! route('event.registration.take.config') !!}',
                 data: {entry_id: entryId},
                 success: function (data) {
-                    jsonDataAge = JSON.parse(data);
+                    jsonDataConfig = JSON.parse(data);
+                    jsonDataBelt = jsonDataConfig['belt'];
+                    jsonDataAge = jsonDataConfig['age'];
                 },
                 error: function (xhr, textStatus, error) {
                     console.log(xhr.statusText);
@@ -675,71 +629,47 @@ function showEditModal(data){
                 async: false
             });
 
-            $.ajax({
-                type: 'POST',
-                url: '{!! route('event.entry.belt.by.entry') !!}',
-                data: {entry_id: entryId},
-                success: function (data) {
-                    jsonDataBelt = JSON.parse(data);
-                },
-                error: function (xhr, textStatus, error) {
-                    console.log(xhr.statusText);
-                    console.log(textStatus);
-                    console.log(error);
-                },
-                async: false
-            });
-
-            $('#update-event-registration-form input[name=entry_age_id]').select2({
+            $('#update-event-registration-form select[name=entry_belt_id]').select2({
                 placeholder: "-- {{ trans('display.general_select') }} --",
-                data: {results: jsonDataAge, text: function (item) {
-                    return item;
-                }},
+                data: jsonDataBelt,
                 id: 'id',
                 closeOnSelect: true,
                 allowClear: true,
-                formatSelection: function (item) {
-                    if(item.end_age == null) {
-                        var endAge = '+';
-                    } else {
-                        var endAge = '-' + item.end_age;
-                    }
-                    return item.start_age + endAge;
+                templateSelection: function (item) {
+                    return item.name;
                 },
-                formatResult: function (item) {
-                    return item.start_age + endAge;
+                templateResult: function (item) {
+                    return item.name;
                 }
             });
 
-            $('#update-event-registration-form input[name=entry_belt_id]').select2({
+            $('#update-event-registration-form select[name=entry_age_id]').select2({
                 placeholder: "-- {{ trans('display.general_select') }} --",
-                data: {results: jsonDataBelt, text: function (item) {
-                    return item;
-                }},
+                data:jsonDataAge,
                 id: 'id',
                 closeOnSelect: true,
                 allowClear: true,
-                formatSelection: function (item) {
-                    return item.name;
+                templateSelection: function (item) {
+                    return item.age;
                 },
-                formatResult: function (item) {
-                    return item.name;
+                templateResult: function (item) {
+                    return item.age;
                 }
             });
+
+            $('#update-event-registration-form select[name=entry_weight_id]').select({data: ''});
         });
 
-        $('#update-event-registration-form input[name=entry_id]').trigger('change');
-
-        $('#update-event-registration-form input[name=entry_age_id]').on('change', function(){
+        $('#update-event-registration-form select[name=entry_age_id]').on('change', function(){
             var ageId = $(this).val();
-            var jsonData;
+            var jsonDataWeight;
 
             $.ajax({
                 type: 'POST',
                 url: '{!! route('event.entry.weight.by.age') !!}',
                 data: {entry_age_id: ageId},
                 success: function (data) {
-                    jsonData = JSON.parse(data);
+                    jsonDataWeight = JSON.parse(data);
                 },
                 error: function (xhr, textStatus, error) {
                     console.log(xhr.statusText);
@@ -749,52 +679,19 @@ function showEditModal(data){
                 async: false
             });
 
-            $('#update-event-registration-form input[name=entry_weight_id]').select2({
+            $('#update-event-registration-form select[name=entry_weight_id]').select2({
                 placeholder: "-- {{ trans('display.general_select') }} --",
-                data: {results: jsonData, text: function (item) {
-                    return item;
-                }},
+                data: jsonDataWeight,
                 id: 'id',
                 closeOnSelect: true,
                 allowClear: true,
-                formatSelection: function (item) {
-                return item.weight;
+                templateSelection: function (item) {
+                    return item.weight;
                 },
-                formatResult: function (item) {
+                templateResult: function (item) {
                     return item.weight;
                 }
             }); 
-        });
-
-        $('#update-event-registration-form input[name=member_id]').select2({
-            width: 'resolve',
-            dropdownAutoWidth : true,
-            dropdownParent: $('#memberModal'),
-            placeholder: "-- {{ trans('display.general_select') }} --",
-            ajax: {
-                type: 'GET',
-                url: '{!! route('member.search') !!}',
-                data: function (params) {
-                    return {
-                        q: params
-                    };
-                },
-                processResults: function (data) {
-                    return {results: data}
-                },
-                cache: true
-            },
-            id: 'id',
-            closeOnSelect: true,
-            allowClear: true,
-            maximumSelectionLength: 30,
-            minimumInputLength: 3,
-            formatSelection: function (item) {
-                return item.firstname + ": " + item.lastname;
-            },
-            formatResult: function (item) {
-                return item.firstname + ": " + item.lastname;
-            }
         });
 
         $('#update-event-registration-form').validate({
@@ -833,10 +730,6 @@ function showEditModal(data){
                 }
             }
         });
-
-        $('#update-event-registration-form input[name=entry_age_id]').trigger('change');
-        $('#update-event-registration-form input[name=entry_belt_id]').trigger('change');
-        $('#update-event-registration-form input[name=entry_weight_id]').trigger('change');
 
         $(this).off('shown.bs.modal');
     });

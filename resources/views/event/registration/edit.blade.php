@@ -7,7 +7,7 @@
 <form class="form" method="POST" id="update-event-registration-form" action="{{ route('event.registration.update', $eventRegistration->id)}}">
     <input type="hidden" name="_method" value="put" />
     <div class="modal-header bg-gray-100">
-        <h5 class="modal-title" id="exampleModalLabel">{{trans('display.general_new')}}</h5>
+        <h5 class="modal-title" id="exampleModalLabel">{{trans('display.general_edit')}}</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <i aria-hidden="true" class="ki ki-close"></i>
         </button>
@@ -17,7 +17,7 @@
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.comp_member')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9">
-                <input class="form-control form-control-lg" disabled value="{{$firstname}}"/>
+                <input class="form-control form-control-lg" disabled value="{{ mb_substr($eventRegistration->member->lastname,0,1).'.'.$eventRegistration->member->firstname }}"/>
             </div>
         </div> 
 
@@ -36,28 +36,48 @@
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.comp_entry')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9">
-                <input class="form-control form-control-lg" type="text" id="entry_id" name="entry_id" value="{{$eventRegistration->entry_id}}" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}"/>
+                <select class="form-control form-control-input" type="text" id="entry_id" name="entry_id" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}">
+                @forelse(@$eventEntries as $entry)
+                    <option value="{{ $entry->id }}" {{ $eventRegistration->entry_id == $entry->id ? 'selected' : ''}}>{{ $entry->name }}</option>
+                    @empty
+                    @endforelse
+                </select>
             </div>
         </div> 
 
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.comp_entry_belt')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9">
-                <input class="form-control form-control-lg" id="entry_belt_id" name="entry_belt_id" value="{{$eventRegistration->entry_belt_id}}" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}"/>
+                <select class="form-control form-control-input" id="entry_belt_id" name="entry_belt_id" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}">
+                    @forelse(@$configBelts as $belt)
+                    <option value="{{ $belt->id }}" {{ $eventRegistration->entry_belt_id == $belt->id ? 'selected' : ''}}>{{ $belt->name }}</option>
+                    @empty
+                    @endforelse
+                </select>
             </div>
         </div>
 
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.comp_entry_age')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9">
-                <input class="form-control form-control-lg" id="entry_age_id" name="entry_age_id" value="{{$eventRegistration->entry_age_id}}" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}"/>
+                <select class="form-control form-control-input" id="entry_age_id" name="entry_age_id" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}">
+                    @forelse(@$configAges as $age)
+                    <option value="{{ $age->id }}" {{ $eventRegistration->entry_age_id == $age->id ? 'selected' : ''}}>{{ @$age->start_age }} - {{ @$age->end_age }}</option>
+                    @empty
+                    @endforelse
+                </select>
             </div>
         </div> 
 
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.comp_entry_weight')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9">
-                <input class="form-control form-control-lg" id="entry_weight_id" name="entry_weight_id" value="{{$eventRegistration->entry_weight_id}}" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}"/>
+                <select class="form-control form-control-lg" id="entry_weight_id" name="entry_weight_id" value="{{$eventRegistration->entry_weight_id}}" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}">
+                    @forelse(@$configWeights as $weight)
+                    <option value="{{ $weight->id }}" {{ $eventRegistration->entry_weight_id == $weight->id ? 'selected' : ''}}>{{ @$weight->weight }}</option>
+                    @empty
+                    @endforelse
+                </select>
             </div>
         </div>
 
