@@ -82,7 +82,7 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
             ->filter(function ($qry) use ($searchData) {
                 if($searchData->has('event') && $searchData->get('event') !== null)
                 {
-                    $qry->where('event_id', $searchData->get('event'));
+                    $qry->where('uq_event_registration.event_id', $searchData->get('event'));
                 }
 
                 if($searchData->has('entry') && $searchData->get('entry') !== null)
@@ -115,7 +115,8 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 					$qry->whereHas('member', function($q){
 						$q->whereRaw("LOWER(register_number) like ?", array('%'.mb_strtolower($searchData->get('member')).'%'))
 						->orWhereRaw("LOWER(firstname) like ?", array('%'.mb_strtolower($searchData->get('member')).'%'))
-						->orWhereRaw("LOWER(lastname) like ?", array('%'.mb_strtolower($searchData->get('member')).'%'));
+						->orWhereRaw("LOWER(lastname) like ?", array('%'.mb_strtolower($searchData->get('member')).'%'))
+						->orWhereRaw("LOWER(contact_phone) like ?", array('%'.mb_strtolower($searchData->get('member')).'%'));
 					});
                 }
             })

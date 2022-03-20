@@ -112,9 +112,9 @@ class EloquentEventEntriesRepository implements EventEntriesRepository {
 		if(@$eventId)
 		{
 			$qry = EventEntries::where('event_id', $eventId);
+			$entries = $qry->get();
 		}
 
-		$entries = $qry->get();
 		return $entries;
 	}
 }
