@@ -77,9 +77,11 @@ class EventRegistrationController extends Controller
     {
         //$now = Carbon\Carbon::now()->toDateTimeString();
         $competitions = $this->eventConfig->getRegistringComp(@$now);
+        //$members = $this->member->all();
         $academy = $this->academy->all();
 
         $data['competitions'] = $competitions;
+        //$data['members'] = $members;
         $data['academies'] = $academy;
 
         return view($this->view_path.'.add', $data);
