@@ -64,7 +64,7 @@ class LoginController extends Controller
 
 			Session::flash('message', trans('messages.error_login'));
 
-			return Redirect::to('/login')
+			return Redirect::to('/')
 				->withErrors($validator)
 				->withInput(Request::except('password'));
 		} else {
@@ -87,7 +87,7 @@ class LoginController extends Controller
 
 			} else {
 				Session::flash('message', trans('messages.error_login'));
-				return Redirect::to('/login');
+				return Redirect::to('/');
 			}
 		}
     }
@@ -102,7 +102,7 @@ class LoginController extends Controller
 		Auth::logout();
 		Session::flush();
 
-    	return Redirect::to('/login');
+    	return Redirect::to('/');
 	}
 
 	public function showLogin() {
