@@ -156,6 +156,7 @@ class EloquentMemberRepository implements MemberRepository {
 				->orWhereRaw("LOWER(lastname) like ?", array('%'.mb_strtolower(@$data).'%'));
         }
         $member = $qry->orderBy('firstname', 'asc')->get();
+
         /*
         $queries = DB::getQueryLog();
         dd($queries);
@@ -163,23 +164,20 @@ class EloquentMemberRepository implements MemberRepository {
 		return $member;
     }
 
-	public function memberListByEvent($eventId)
-	{
-        $members = "";
+	// public function memberListByEvent($memberId)
+	// {
+    //     $members = "";
 
+    //     if(!empty(@$memberId))
+	// 	{	
+	// 		$qry = Member::selectRaw("uq_member.*, uq_event_config.id")
+	// 		->leftJoin('uq_event_registration', 'uq_member.id', '=', 'uq_event_registration.member_id')
+	// 		->where('uq_member.id', $memberId);
+    //     }
+    //     $members = $qry->get();
 
-
-        if(!empty(@$eventId))
-		{	
-			$qry = Member::selectRaw("uq_member.*, uq_event_config.id, uq_event_registration.event_id")
-			->leftJoin('uq_event_registration', 'uq_member.id', '=', 'uq_event_registration.member_id')
-			->leftJoin('uq_event_config', 'uq_event_registration.event_id', '=', 'uq_event_config.event_id')
-			->where('uq_event_registration.event_id', '!=', $eventId);	
-        }
-        $members = $qry->get();
-
-		dd($members);
+	// 	dd($members);
   
-		return $members;
-	}
+	// 	return $members;
+	// }
 }

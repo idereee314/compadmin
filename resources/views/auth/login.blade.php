@@ -28,7 +28,7 @@
 					<!--begin::Login Header-->
 					<div class="d-flex flex-center mb-15">
 						<a href="#">
-							<img src="{{asset('assets/images/logo/uniq_logo.png')}}" class="max-h-75px max-w-105px" alt="" />
+							<img src="{{asset('/assets/images/logo/uniq_logo.png')}}" class="max-h-75px max-w-105px" alt="" />
 						</a>
 					</div>
 					<!--end::Login Header-->

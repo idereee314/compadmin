@@ -33,14 +33,14 @@ Route::get('/phpinfo', function()
     phpinfo();
 });
 
-Route::get('login', [LoginController::class, 'showLogin'])->name('show.login');
+Route::get('/', [LoginController::class, 'showLogin'])->name('show.login');
 Route::post('login', [LoginController::class, 'doLogin'])->name('do.login');
 
 Route::get('logout', [LoginController::class, 'doLogout'])->name('system.logout');
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
 
 Route::group([
     'prefix' => '',

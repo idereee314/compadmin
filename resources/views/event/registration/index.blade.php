@@ -522,7 +522,9 @@ function showAddModal( data ) {
                     }
                     return query;
                 },
+
                 processResults: function (data) {
+                    console.log(data);
                     return {
                         results: data
                     };
@@ -530,12 +532,14 @@ function showAddModal( data ) {
                 cache: true
             },
             templateSelection: function (item) {
-                return item.firstname || item.lastname;
+               // return item.firstname || item.lastname;
 //                return item.firstname + ": " + item.lastname;
+                return item.fullname;
             },
             templateResult: function (item) {
-                return item.firstname || item.lastname;
+                //return item.firstname || item.lastname;
                 //return item.firstname + ": " + item.lastname;
+                return item.fullname;
             }
         });
 

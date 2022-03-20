@@ -378,8 +378,7 @@ class MemberController extends Controller
     {   
         try
         {
-            $member = $this->member->find($memberId);
-            $members = $this->member->memberListByEvent($member->eventRegistration()->first()->event_id);
+            $members = $this->member->memberListByEvent($memberId);
 
             $response = array(
                 'status' => 'success',
