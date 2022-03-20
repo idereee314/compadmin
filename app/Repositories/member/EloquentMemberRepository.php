@@ -145,7 +145,7 @@ class EloquentMemberRepository implements MemberRepository {
     {
         //DB::enableQueryLog();
         $member = "";
-        $qry = Member::selectRaw("*, concat(substring(lastname, 1, 1), '.', firstname) as fullname");
+        $qry = Member::selectRaw("id, firstname, lastname, concat(substring(lastname, 1, 1), '.', firstname) as fullname");
 
         if(!empty(@$data))
 		{
