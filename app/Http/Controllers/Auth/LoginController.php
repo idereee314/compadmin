@@ -36,7 +36,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/login';
+    protected $redirectTo = '/';
 
     /**
      * Create a new controller instance.
@@ -102,7 +102,7 @@ class LoginController extends Controller
 		Auth::logout();
 		Session::flush();
 
-    	return Redirect::to('/login');
+    	return Redirect::to('/');
 	}
 
 	public function showLogin() {
