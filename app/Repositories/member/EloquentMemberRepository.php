@@ -3,6 +3,7 @@
 use member\Member;
 use core\sessions\Sessions;
 use user\User;
+use event\EventRegistration;
 
 use Hash;
 use Log;
@@ -161,4 +162,24 @@ class EloquentMemberRepository implements MemberRepository {
         */
 		return $member;
     }
+
+	public function memberListByEvent($eventId)
+	{
+        $members = "";
+
+
+
+        if(!empty(@$eventId))
+		{	
+			$qry = Member::selectRaw("uq_member.*, uq_event_config.id, uq_event_registration.event_id")
+			->leftJoin('uq_event_registration', 'uq_member.id', '=', 'uq_event_registration.member_id')
+			->leftJoin('uq_event_config', 'uq_event_registration.event_id', '=', 'uq_event_config.event_id')
+			->where('uq_event_registration.event_id', '!=', $eventId);	
+        }
+        $members = $qry->get();
+
+		dd($members);
+  
+		return $members;
+	}
 }

@@ -6,6 +6,8 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Model;
 use user\CompadUser as User;
+use event\Event;
+use event\EventRegistration;
 
 use Auth;
 use Carbon;
@@ -39,7 +41,17 @@ class Member extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
-    
+
+    public function event()
+    {
+        return $this->belongsTo(Event::class, 'event_id');
+    }
+
+    public function eventRegistration()
+    {
+        return $this->hasMany(EventRegistration::class, 'member_id');
+    }
+
     public static function boot()
     {
         parent::boot();

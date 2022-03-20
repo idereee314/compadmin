@@ -11,6 +11,7 @@ use Validator;
 //Repositories
 use member\MemberRepository as Member;
 use user\UserRepository as User;
+use event\EventRegistrationRepository as EventRegistration;
 
 //Models
 use member\Member as MemberModel;
@@ -24,11 +25,12 @@ class MemberController extends Controller
 {
     public $restful = true;
 
-    public function __construct(Member $member, User $user)
+    public function __construct(Member $member, User $user, EventRegistration $eventRegistration)
     {
         $this->view_path = 'member';
         $this->member = $member;
         $this->user = $user;
+        $this->eventRegistration = $eventRegistration;
     }
 
     /**
@@ -371,5 +373,28 @@ class MemberController extends Controller
         $users = $this->user->searchUser(@$input['q']);
         return json_encode($users);
     }
-    
+
+    public function memberListByEvent($memberId)
+    {   
+        try
+        {
+            $member = $this->member->find($memberId);
+            $members = $this->member->memberListByEvent($member->eventRegistration()->first()->event_id);
+
+            $response = array(
+                'status' => 'success',
+                'msg' => trans('messages.success_save')
+            );
+
+        }
+        catch(\Illuminate\Database\QueryException $e)
+        {
+            $response = array(
+                'status' => 'error',
+                'msg' => trans('messages.error_save'),
+                'errors' => $e->getMessage()
+            );
+
+        }
+    }
 }

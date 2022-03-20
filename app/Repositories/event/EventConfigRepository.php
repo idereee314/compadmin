@@ -4,5 +4,5 @@ namespace event;
 
 interface EventConfigRepository
 {
-
+  
 }
