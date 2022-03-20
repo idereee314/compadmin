@@ -33,6 +33,7 @@ return array (
 	"success_share" => "Амжилттай хуваалцлаа",
 	"success_create" => "Амжилттай үүсгэгдлээ",
 	"success_connect" => "Амжилттай холболоо",
+	"success_disconnect" => "Амжилттай салгалаа",
 	"success_insert" => "Амжилттай оруулллаа",
 	"success_changed_password" => "Нууц үгийг амжилттай өөрчиллөө",
 	"success_finished" => "Амжилттай дууслаа",

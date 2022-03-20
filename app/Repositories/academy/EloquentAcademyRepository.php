@@ -115,7 +115,7 @@ class EloquentAcademyRepository implements AcademyRepository {
 
 				return $actionHtml;
 
-            })->rawColumns(['action'])
+            })->rawColumns(['organization_id', 'action'])
             ->make(true);
 
         return $data;

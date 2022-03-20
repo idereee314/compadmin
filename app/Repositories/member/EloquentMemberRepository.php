@@ -2,6 +2,7 @@
 
 use member\Member;
 use core\sessions\Sessions;
+use user\User;
 
 use Hash;
 use Log;
@@ -142,26 +143,6 @@ class EloquentMemberRepository implements MemberRepository {
 	}
 
 	public function searchMember($data)
-    {
-        //DB::enableQueryLog();
-        $member = "";
-        $qry = Member::selectRaw("*, concat(substring(lastname, 1, 1), '.', firstname) as fullname");
-
-        if(!empty(@$data))
-		{
-			$qry->whereRaw("LOWER(register_number) like ?", array('%'.mb_strtolower(@$data).'%'))
-				->orWhereRaw("LOWER(firstname) like ?", array('%'.mb_strtolower(@$data).'%'))
-				->orWhereRaw("LOWER(lastname) like ?", array('%'.mb_strtolower(@$data).'%'));
-        }
-        $member = $qry->orderBy('firstname', 'asc')->get();
-        /*
-        $queries = DB::getQueryLog();
-        dd($queries);
-        */
-		return $member;
-    }
-
-	public function searchUser($data)
     {
         //DB::enableQueryLog();
         $member = "";

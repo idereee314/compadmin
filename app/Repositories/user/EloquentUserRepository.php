@@ -43,8 +43,8 @@ class EloquentUserRepository implements UserRepository {
         if(!empty(@$data))
 		{
 			$qry->whereRaw("LOWER(firstname) like ?", array('%'.mb_strtolower(@$data).'%'))
+				->orWhere('mobile_number', @$data)
 				->orWhereRaw("LOWER(lastname) like ?", array('%'.mb_strtolower(@$data).'%'));
-				// ->where("phone_number", @$data);
         }
         $user = $qry->orderBy('firstname', 'asc')->get();
         /*

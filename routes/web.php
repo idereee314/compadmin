@@ -36,6 +36,8 @@ Route::get('/phpinfo', function()
 Route::get('login', [LoginController::class, 'showLogin'])->name('show.login');
 Route::post('login', [LoginController::class, 'doLogin'])->name('do.login');
 
+Route::get('logout', [LoginController::class, 'doLogout'])->name('system.logout');
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -50,7 +52,6 @@ Route::group([
     //User
     Route::resource('/user', 'core\CompadUserController', ['names' => 'user']);
     Route::any('/user/data/list', [CompadUserController::class, 'getDatatableList'])->name('user.data.list');
-    Route::get('/user/search/data', 'core\CompadUserController@searchUser')->name('user.search');
 
     //Member
     Route::resource('/member', 'member\MemberController', ['names' => 'member']);
@@ -60,6 +61,7 @@ Route::group([
     Route::get('/member/search/data', 'member\MemberController@searchMember')->name('member.search');
     Route::get('/member/create/connect/user/{member}', 'member\MemberController@createConnectUser')->name('create.connect.user');
     Route::post('/member/update/connect/user/{member}', 'member\MemberController@updateConnectUser')->name('update.connect.user');
+    Route::get('/user/search/data', 'member\MemberController@searchUser')->name('user.search');
 
     //Event
     Route::resource('/event/registration', 'event\EventRegistrationController', ['names' => 'event.registration']);

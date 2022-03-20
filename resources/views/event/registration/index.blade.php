@@ -699,10 +699,15 @@ function showEditModal(data){
                 closeOnSelect: true,
                 allowClear: true,
                 formatSelection: function (item) {
-                    return item.start_age + '-' + item.end_age;
+                    if(item.end_age == null) {
+                        var endAge = '+';
+                    } else {
+                        var endAge = '-' + item.end_age;
+                    }
+                    return item.start_age + endAge;
                 },
                 formatResult: function (item) {
-                    return item.start_age + '-' + item.end_age;
+                    return item.start_age + endAge;
                 }
             });
 

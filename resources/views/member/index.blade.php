@@ -404,8 +404,7 @@ function connectUser(id)
                     id: 'id',
                     closeOnSelect: true,
                     allowClear: true,
-                    maximumSelectionLength: 30,
-                    minimumInputLength: 3,
+                    minimumInputLength: 8,
                     formatSelection: function (item) {
                         return item.firstname + ": " + item.lastname;
                     },

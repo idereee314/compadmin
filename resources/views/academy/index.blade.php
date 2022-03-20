@@ -42,8 +42,8 @@
                                                 <thead>
                                                     <tr role="row">
                                                         <th class="sorting sorting_asc">No.</th>
-                                                        <th >{{trans('display.organization')}}</th>
-                                                        <th >{{trans('display.general_name')}}</th>
+                                                        <th>{{trans('display.organization')}}</th>
+                                                        <th>{{trans('display.general_name')}}</th>
                                                         <th>{{trans('display.general_name_en')}}</th>
                                                         <th>{{trans('display.general_sort_order')}}</th>
                                                         <th>{{trans('display.general_created_at')}}</th>
@@ -106,7 +106,7 @@ $(document).ready(function() {
                 },
                 width: "30px"
             },
-            {data: 'organization.name'},
+            {data: 'organization.name', "defaultContent": ""},
             {data: 'name'},
             {data: 'name_en'},
             {data: 'sort_order'},

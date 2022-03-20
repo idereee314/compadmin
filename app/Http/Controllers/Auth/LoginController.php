@@ -94,10 +94,10 @@ class LoginController extends Controller
 
 	public function doLogout()
 	{
-		if(SmartHelper::checkRedis())
-		{
-			SmartHelper::removeUserFromRedis(Auth::user()->user_id);
-		}
+		// if(SmartHelper::checkRedis())
+		// {
+		// 	SmartHelper::removeUserFromRedis(Auth::user()->id);
+		// }
 
 		Auth::logout();
 		Session::flush();
