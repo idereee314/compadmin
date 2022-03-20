@@ -16,7 +16,9 @@
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.comp_member')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9">
-                <select class="form-control" id="member_id" name="member_id" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}"></select>
+                <select class="form-control" id="member_id" name="member_id" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}">
+                    <option value="0">-- {{ trans('display.general_select') }} --</option>
+                </select>
             </div>
         </div> 
 

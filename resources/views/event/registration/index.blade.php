@@ -632,7 +632,7 @@ function showAddModal( data ) {
                 }
             }); 
         });
-        /*
+        
         $('#create-event-registration-form select[name=member_id]').select2({
             width: 'resolve',
             dropdownAutoWidth : true,
@@ -650,21 +650,21 @@ function showAddModal( data ) {
                 },
                 processResults: function (data) {
                     return {
-                        results: data.items
+                        results: JSON.parse(data)
                     };
                 },
                 cache: true
             },
             templateSelection: function (item) {
-                return item.firstname || item.lastname;
-//                return item.firstname + ": " + item.lastname;
+//                return item.firstname || item.lastname;
+                return item.firstname + ": " + item.lastname;
             },
             templateResult: function (item) {
-                return item.firstname || item.lastname;
-                //return item.firstname + ": " + item.lastname;
+//                return item.firstname || item.lastname;
+                return item.firstname + ": " + item.lastname;
             }
         });
-        */
+        
 
         $('#create-event-registration-form').validate({
             ignore: [],

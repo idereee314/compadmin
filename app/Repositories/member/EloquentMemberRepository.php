@@ -166,20 +166,14 @@ class EloquentMemberRepository implements MemberRepository {
 	public function memberListByEvent($eventId)
 	{
         $members = "";
-
-
-
         if(!empty(@$eventId))
 		{	
-			$qry = Member::selectRaw("uq_member.*, uq_event_config.id, uq_event_registration.event_id")
+			$qry = Member::selectRaw("uq_member.*")
 			->leftJoin('uq_event_registration', 'uq_member.id', '=', 'uq_event_registration.member_id')
-			->leftJoin('uq_event_config', 'uq_event_registration.event_id', '=', 'uq_event_config.event_id')
 			->where('uq_event_registration.event_id', '!=', $eventId);	
-        }
-        $members = $qry->get();
 
-		dd($members);
-  
+			$members = $qry->get();  
+        }
 		return $members;
 	}
 }
