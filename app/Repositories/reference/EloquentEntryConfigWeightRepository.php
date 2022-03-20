@@ -129,9 +129,9 @@ class EloquentEntryConfigWeightRepository implements EntryConfigWeightRepository
 		if(@$ageId)
 		{
 			$qry = EntryConfigWeight::where('entry_age_id', $ageId);
+			$weights = @$qry->get();
 		}
 
-		$weights = @$qry->get();
 		return $weights;
 	}
 }

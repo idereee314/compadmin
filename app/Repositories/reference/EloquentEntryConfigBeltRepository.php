@@ -120,9 +120,9 @@ class EloquentEntryConfigBeltRepository implements EntryConfigBeltRepository {
 		if(@$entryId)
 		{
 			$qry = EntryConfigBelt::where('entry_id', $entryId);
+			$belts = $qry->get();
 		}
 
-		$belts = $qry->get();
 		return $belts;
 	}
 }

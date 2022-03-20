@@ -119,9 +119,9 @@ class EloquentEntryConfigAgeRepository implements EntryConfigAgeRepository {
 		if(@$entryId)
 		{
 			$qry = EntryConfigAge::selectRaw("id, start_age, end_age, CASE WHEN start_age is null THEN '-' || end_age WHEN end_age is null THEN start_age || '+' else start_age || '-' || end_age END as age")->where('entry_id', $entryId);
+			$ages = $qry->get();
 		}
 
-		$ages = $qry->get();
 		return $ages;
 	}
 }
