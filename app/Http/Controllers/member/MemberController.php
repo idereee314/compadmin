@@ -10,6 +10,7 @@ use Validator;
 
 //Repositories
 use member\MemberRepository as Member;
+use user\UserRepository as User;
 
 //Models
 use member\Member as MemberModel;
@@ -23,10 +24,11 @@ class MemberController extends Controller
 {
     public $restful = true;
 
-    public function __construct(Member $member)
+    public function __construct(Member $member, User $user)
     {
         $this->view_path = 'member';
         $this->member = $member;
+        $this->user = $user;
     }
 
     /**
@@ -300,7 +302,15 @@ class MemberController extends Controller
 
     public function createConnectUser($id)
     {
+        $member = $this->member->find($id);
+
         $data['id'] = $id;
+
+        if(!empty($member->user_id))
+        {
+            @$data['firstname'] = $this->user->find($member->user_id)->firstname;
+        }
+
         $returnValue['status'] = true;
         $returnValue['view'] = strval(view($this->view_path.'.connect_user', $data));
 
@@ -313,21 +323,28 @@ class MemberController extends Controller
         try {
            
             $member = $this->member->find($memberId);
-            $member->user_id = $input['user_id'];
-            
 
-            //dd($member);
+            if(!empty($member->user_id))
+            {
+                $member->user_id = null;
+                $response = array(
+                    'status' => 'success',
+                    'msg' => trans('messages.success_disconnect')
+                );
+            }
+            else
+            {
+                $member->user_id = $input['user_id'];
+                $response = array(
+                    'status' => 'success',
+                    'msg' => trans('messages.success_connect')
+                );
+            }
             
             $member->save();
-
-            $response = array(
-                'status' => 'success',
-                'msg' => trans('messages.success_connect')
-            );
     
         } catch(\Illuminate\Database\QueryException $e)
         {
-            dd($e);
             $response = array(
                 'status' => 'error',
                 'msg' => trans('messages.error_delete'),
@@ -351,7 +368,7 @@ class MemberController extends Controller
     {
         $input = Input::all();
 
-        $users = $this->member->searchUser(@$input['q']);
+        $users = $this->user->searchUser(@$input['q']);
         return json_encode($users);
     }
     

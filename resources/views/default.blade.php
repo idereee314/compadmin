@@ -30,7 +30,7 @@ License: You must have a valid license purchased only from themeforest(the above
 		<!--end::Global Theme Styles-->
 		<!--begin::Layout Themes(used by all pages)-->
 		<!--end::Layout Themes-->
-		<link rel="shortcut icon" href="assets/media/logos/favicon.ico" />
+		<link rel="shortcut icon" href="{{asset('assets/images/logo/uniq_logo.ico')}}" />
 	</head>
 	<!--end::Head-->
 	<!--begin::Body-->

@@ -15,13 +15,19 @@
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.username')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9">
-                <input class="form-control form-control-lg" id="user_id" name="user_id" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}"/>
+                @if(@$firstname)
+                    <input class="form-control form-control-lg" value="{{@$firstname}}"/>
+                @else
+                    <input class="form-control form-control-lg" id="user_id" name="user_id" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}"/> 
+                @endif
             </div>
         </div> 
     </div>
 
     <div class="modal-footer text-right bg-gray-100 border-top-0">
         <button type="button" id="close" class="btn btn-light-primary font-weight-bold" data-dismiss="modal">{{ trans('display.general_close') }}</button>
-        <button type="submit" class="btn btn-primary font-weight-bold">{{trans('display.general_save')}}</button>
+        <button type="submit" class="btn btn-primary font-weight-bold">
+            {{@$firstname == null ? trans('display.general_save') : 'Салгах'}}
+        </button>
     </div>
 </form>
