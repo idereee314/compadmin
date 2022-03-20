@@ -111,7 +111,10 @@ class EloquentMemberRepository implements MemberRepository {
 					return '<button class="btn btn-light" onclick="showImageId('.$qry->id.')"><i class="far fa-eye ml-1"></i></button>';
 				}
 				return "";
-			})		 
+			})
+			->editColumn('connect_user', function ($qry) {
+					return '<button type="button" onclick="connectUser('.$qry->id.')" class="btn btn-outline-secondary">Холбох</button>';
+			})			
 			->editColumn('created_at', function($qry)
 			{
 				return $qry->created_at;
@@ -132,13 +135,33 @@ class EloquentMemberRepository implements MemberRepository {
 
 				return $actionHtml;
 
-            })->rawColumns(['profile_photo', 'id_photo', 'action'])
+            })->rawColumns(['profile_photo', 'id_photo', 'connect_user', 'action'])
             ->make(true);
 
         return $data;
 	}
 
 	public function searchMember($data)
+    {
+        //DB::enableQueryLog();
+        $member = "";
+        $qry = Member::selectRaw("*, concat(substring(lastname, 1, 1), '.', firstname) as fullname");
+
+        if(!empty(@$data))
+		{
+			$qry->whereRaw("LOWER(register_number) like ?", array('%'.mb_strtolower(@$data).'%'))
+				->orWhereRaw("LOWER(firstname) like ?", array('%'.mb_strtolower(@$data).'%'))
+				->orWhereRaw("LOWER(lastname) like ?", array('%'.mb_strtolower(@$data).'%'));
+        }
+        $member = $qry->orderBy('firstname', 'asc')->get();
+        /*
+        $queries = DB::getQueryLog();
+        dd($queries);
+        */
+		return $member;
+    }
+
+	public function searchUser($data)
     {
         //DB::enableQueryLog();
         $member = "";

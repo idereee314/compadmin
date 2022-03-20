@@ -84,6 +84,7 @@
                                                         <th>{{trans('display.human_contact_phone')}}</th>
                                                         <th>{{trans('display.human_birth')}}</th>
                                                         <th>{{trans('display.id_photo')}}</th>
+                                                        <th>{{trans('display.general_connect')}}</th>
                                                         <th>{{trans('display.general_created_at')}}</th>
                                                         <th>{{trans('display.general_manage')}}</th>
                                                     </tr>
@@ -110,6 +111,7 @@
 
 @section('javascript')
 <script src="{{asset('assets/js/plugins/custom/datatables/datatables.js')}}"></script>
+<script src="{{asset('assets/js/plugins/custom/select2-ng/select2.min.js')}}"></script>
 <script src="{{asset('assets/js/smart.js')}}"></script>
 
 <script>
@@ -151,6 +153,7 @@ $(document).ready(function() {
             {data: 'contact_phone'},
             {data: 'birth'},
             {data: 'id_photo', "defaultContent": ''},
+            {data: 'connect_user', "defaultContent": ''},
             {data: 'created_at'},
             {data: 'action'},
         ],
@@ -161,9 +164,9 @@ $(document).ready(function() {
             targets: [0]
         },{
             class: "text-center",
-            targets: [0, 6, 7, 8, 9]
+            targets: [0, 6, 7, 8, 9, 10]
         }],
-        order: [[ 8, "desc" ]],
+        order: [[ 9, "desc" ]],
         dom: "<'top'B><'row'<'col-sm-12'tr>><'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7 dataTables_pager'lp>>",
         buttons: [
         {
@@ -356,12 +359,97 @@ function showImageProfile(id)
 
 function showImageId(id)
 {
-    console.log(id)
     $.get('/member/show/image/id/'+id, function( data ) {
         if (data.status) {
             $('#showImageModal').modal();
             $('#showImageModal').on('shown.bs.modal', function(){
                 $('#showImageModal .modal-content').html(data.view);
+
+                $(this).off('shown.bs.modal');
+            });
+        }
+        else
+        {
+            $('.panel-sub-heading').html(data.view).fadeIn().delay(5000).fadeOut();
+        }
+    });
+}
+
+function connectUser(id)
+{
+    $.get('/member/create/connect/user/'+id, function( data ) {
+        if (data.status) {
+            $('#connetUserModal').modal();
+            $('#connetUserModal').on('shown.bs.modal', function(){
+                $('#connetUserModal .modal-content').html(data.view);
+                
+                $('#connect-user-form input[name=user_id]').select2({
+                    width: 'resolve',
+                    dropdownAutoWidth : true,
+                    dropdownParent: $('#connetUserModal'),
+                    placeholder: "-- {{ trans('display.general_select') }} --",
+                    ajax: {
+                        type: 'GET',
+                        url: '{!! route('user.search') !!}',
+                        data: function (params) {
+                            return {
+                                q: params
+                            };
+                        },
+                        processResults: function (data) {
+                            return {results: data}
+                        },
+                        cache: true
+                    },
+                    id: 'id',
+                    closeOnSelect: true,
+                    allowClear: true,
+                    maximumSelectionLength: 30,
+                    minimumInputLength: 3,
+                    formatSelection: function (item) {
+                        return item.firstname + ": " + item.lastname;
+                    },
+                    formatResult: function (item) {
+                        return item.firstname + ": " + item.lastname;
+                    }
+                });
+
+                $('#connect-user-form').validate({
+                    ignore: [],
+                    highlight:function(element) {
+                        $(element).parents('.form-group').addClass('has-error has-feedback');
+                    },
+                    unhighlight: function(element) {
+                        $(element).parents('.form-group').removeClass('has-error');
+                    },
+                    submitHandler: function(form) {
+                        $.ajax({
+                            url: form.action,
+                            type: form.method,
+                            data: new FormData(form),
+                            success: function(response) {
+                                $('#connetUserModal').find("#close").trigger('click');
+                                $('.panel-sub-heading').html(response).fadeIn().delay(5000).fadeOut();
+                                memberTable.draw();
+                            },
+                            error: function (xhr, textStatus, error) {
+                                console.log(xhr.statusText);
+                                console.log(textStatus);
+                                console.log(error);
+                            },
+                            async: false,
+                            processData: false,
+                            contentType: false
+                        });
+                    },
+                    errorPlacement: function(error, element) {
+                        if($(element).parents('.form-group').find(".error-here")){
+                            error.appendTo($(element).parents('.form-group').find(".error-here"));
+                        } else {
+                            error.insertAfter(element);
+                        }
+                    }
+                });
 
                 $(this).off('shown.bs.modal');
             });

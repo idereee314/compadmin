@@ -74,6 +74,7 @@ return [
     'general_color_code' => 'Өнгөний код',
     'general_rank' => 'Зэрэглэл',
     'general_reset' => 'Цэвэрлэх',
+    'general_connect' => 'Холбох',
 
     /** NOUN **/
     "general_code" => "Код",

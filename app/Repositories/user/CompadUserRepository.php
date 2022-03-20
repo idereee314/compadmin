@@ -8,17 +8,19 @@ interface CompadUserRepository
 
   public function allPaginate();
 
-	public function find($id);
+  public function find($id);
 
-	public function create($input);
+  public function create($input);
 
- 	public function findByEmail($email);
+  public function findByEmail($email);
 
- 	public function update($id, $input);
+  public function update($id, $input);
 
-	public function findByUsernamePassword($username, $password);
+  public function findByUsernamePassword($username, $password);
 
-	public function delete($id);
+  public function delete($id);
+
+  public function searchUser($data);
   
   public function getDatatableList($searchData);
 }

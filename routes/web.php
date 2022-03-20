@@ -50,13 +50,16 @@ Route::group([
     //User
     Route::resource('/user', 'core\CompadUserController', ['names' => 'user']);
     Route::any('/user/data/list', [CompadUserController::class, 'getDatatableList'])->name('user.data.list');
+    Route::get('/user/search/data', 'core\CompadUserController@searchUser')->name('user.search');
 
     //Member
     Route::resource('/member', 'member\MemberController', ['names' => 'member']);
     Route::any('/member/data/list', 'member\MemberController@getDatatableList')->name('member.data.list');
-    Route::get('/member/show/image/profile/{member}', 'member\MemberController@showImageProfile')->name('member.show.image');
-    Route::get('/member/show/image/id/{member}', 'member\MemberController@showImageId')->name('member.show.image');
+    Route::get('/member/show/image/profile/{member}', 'member\MemberController@showImageProfile')->name('member.show.imageprofile');
+    Route::get('/member/show/image/id/{member}', 'member\MemberController@showImageId')->name('member.show.imageid');
     Route::get('/member/search/data', 'member\MemberController@searchMember')->name('member.search');
+    Route::get('/member/create/connect/user/{member}', 'member\MemberController@createConnectUser')->name('create.connect.user');
+    Route::post('/member/update/connect/user/{member}', 'member\MemberController@updateConnectUser')->name('update.connect.user');
 
     //Event
     Route::resource('/event/registration', 'event\EventRegistrationController', ['names' => 'event.registration']);

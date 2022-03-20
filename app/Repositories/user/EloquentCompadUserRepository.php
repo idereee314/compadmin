@@ -9,9 +9,9 @@ use ConfigHelper;
 use DateHelper;
 use DB;
 use Yajra\DataTables\Facades\DataTables;
-use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Html\Builder;
 
+use \Auth as Auth;
 use SecurityHelper;
 use Carbon;
 use Session;
@@ -113,7 +113,10 @@ class EloquentCompadUserRepository implements CompadUserRepository {
 				$actionHtml .= '<div class="dropdown-menu dropdown-menu-sm dropdown-menu-right">';
 				$actionHtml .= '<ul class="nav nav-hoverable flex-column">';
 				$actionHtml .= 	'<li class="nav-item"><a class="nav-link" href="#" onclick="compadUserEdit('.$compaduser->id.')"><i class="nav-icon flaticon-edit-1"></i><span class="nav-text">'.trans('display.general_edit').'</span></a></li>';
-				$actionHtml .= 	'<li class="nav-item"><a class="nav-link" href="#" onclick="compadUserDelete('.$compaduser->id.')"><i class="nav-icon flaticon-delete"></i><span class="nav-text">'.trans('display.general_delete').'</span></a></li>';
+				if(Auth::user()->id != $compaduser->id)
+				{
+					$actionHtml .= 	'<li class="nav-item"><a class="nav-link" href="#" onclick="compadUserDelete('.$compaduser->id.')"><i class="nav-icon flaticon-delete"></i><span class="nav-text">'.trans('display.general_delete').'</span></a></li>';
+				}
 				$actionHtml .= '</ul>';
 				$actionHtml .= '</div>';
 				$actionHtml .= '</div>';
@@ -125,4 +128,24 @@ class EloquentCompadUserRepository implements CompadUserRepository {
 
         return $data;
 	}
+
+	public function searchUser($data)
+    {
+        //DB::enableQueryLog();
+        $user = "";
+        $qry = User::selectRaw("*, concat(substring(lastname, 1, 1), '.', firstname) as fullname");
+
+        if(!empty(@$data))
+		{
+			$qry->whereRaw("LOWER(firstname) like ?", array('%'.mb_strtolower(@$data).'%'))
+				->orWhereRaw("LOWER(lastname) like ?", array('%'.mb_strtolower(@$data).'%'));
+				// ->where("phone_number", @$data);
+        }
+        $user = $qry->orderBy('firstname', 'asc')->get();
+        /*
+        $queries = DB::getQueryLog();
+        dd($queries);
+        */
+		return $user;
+    }
 }

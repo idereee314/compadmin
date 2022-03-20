@@ -78,7 +78,7 @@
                     <label class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow" data-action="change" data-toggle="tooltip" title="" data-original-title="Change avatar">
                      <i class="fa fa-pen icon-sm text-muted"></i>
                      <input type="file" name="profile_photo" accept=".png, .jpg, .jpeg" onchange="changeImage(event)"/>
-                     <input type="hidden" name="profile_photo_remove"/>
+                     <input type="hidden" name="profile_photo_remove" id="profile_photo_remove"/>
                     </label>
                    
                     <span class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"  onclick="removeImage()" data-action="cancel" data-toggle="tooltip" title="Cancel avatar">
@@ -100,7 +100,7 @@
                     <label class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow" data-action="change" data-toggle="tooltip" title="" data-original-title="Change avatar">
                      <i class="fa fa-pen icon-sm text-muted"></i>
                      <input type="file" name="id_photo" src="" accept=".png, .jpg, .jpeg" onchange="changeIdImage(event)"/>
-                     <input type="hidden" name="id_photo_remove"/>
+                     <input type="hidden" name="id_photo_remove" id="id_photo_remove"/>
                     </label>
                    
                     <span class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"  onclick="removeIdImage()" data-action="cancel" data-toggle="tooltip" title="Cancel avatar">
@@ -120,15 +120,17 @@
 </form>
 
 <script>
-    var profilePhoto = new KTImageInput('profile_photo');
-    var idPhoto = new KTImageInput('id_photo');
+    var profile_photo = document.getElementById("profile_photo");
+    var id_photo = document.getElementById("id_photo");
 
     function changeImage(event)
     {
         if(event.target.files.length > 0){
             var element = document.getElementById("profile-image");
+            profile_photo.classList.add('image-input-changed')
             var src = URL.createObjectURL(event.target.files[0]);
             var preview = document.getElementById("profile-image");
+            document.getElementById("profile_photo_remove").value = 'on';
             $('#profile-image').hide();
             $('#profile-image').fadeIn(900);
 
@@ -140,8 +142,10 @@
     {
         if(event.target.files.length > 0){
             var element = document.getElementById("id-image");
+            id_photo.classList.add('image-input-changed')
             var src = URL.createObjectURL(event.target.files[0]);
             var preview = document.getElementById("id-image");
+            document.getElementById("id_photo_remove").value = 'on';
             $('#id-image').hide();
             $('#id-image').fadeIn(900);
 
@@ -154,6 +158,8 @@
     {
         var src = "";
         var preview = document.getElementById("profile-image");
+        document.getElementById("profile_photo_remove").value = 'off';
+        profile_photo.classList.remove('image-input-changed');
         preview.src = src;
     }
 
@@ -161,6 +167,8 @@
     {   
         var src = "";
         var preview = document.getElementById("id-image");
+        id_photo.classList.remove('image-input-changed');
+        document.getElementById("id_photo_remove").value = 'off';
         preview.src = src;
     }
 

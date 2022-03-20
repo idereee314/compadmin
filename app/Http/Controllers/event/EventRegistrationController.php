@@ -32,7 +32,7 @@ class EventRegistrationController extends Controller
 {
     public $restful = true;
 
-    public function __construct(EventRegistration $eventRegistration, EventConfig $eventConfig, Academy $academy, EventEntries $eventEntries, EntryConfigAge $configAge, EntryConfigBelt $configBelt, EntryConfigWeight $configWeight)
+    public function __construct(EventRegistration $eventRegistration, EventConfig $eventConfig, Academy $academy, EventEntries $eventEntries, EntryConfigAge $configAge, EntryConfigBelt $configBelt, EntryConfigWeight $configWeight, Member $member)
     {
         $this->view_path = 'event.registration';
         $this->eventRegistration = $eventRegistration;
@@ -42,6 +42,7 @@ class EventRegistrationController extends Controller
         $this->configAge = $configAge;
         $this->configBelt = $configBelt;
         $this->configWeight = $configWeight;
+        $this->member = $member;
     }
 
     /**

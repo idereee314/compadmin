@@ -1446,7 +1446,6 @@ class ComposerStaticInit8da5d45392af245feb314a3d0411c64d
         'Faker\\Provider\\nl_BE\\Payment' => __DIR__ . '/..' . '/fakerphp/faker/src/Faker/Provider/nl_BE/Payment.php',
         'Faker\\Provider\\nl_BE\\Person' => __DIR__ . '/..' . '/fakerphp/faker/src/Faker/Provider/nl_BE/Person.php',
         'Faker\\Provider\\nl_BE\\PhoneNumber' => __DIR__ . '/..' . '/fakerphp/faker/src/Faker/Provider/nl_BE/PhoneNumber.php',
-        'Faker\\Provider\\nl_BE\\Text' => __DIR__ . '/..' . '/fakerphp/faker/src/Faker/Provider/nl_BE/Text.php',
         'Faker\\Provider\\nl_NL\\Address' => __DIR__ . '/..' . '/fakerphp/faker/src/Faker/Provider/nl_NL/Address.php',
         'Faker\\Provider\\nl_NL\\Color' => __DIR__ . '/..' . '/fakerphp/faker/src/Faker/Provider/nl_NL/Color.php',
         'Faker\\Provider\\nl_NL\\Company' => __DIR__ . '/..' . '/fakerphp/faker/src/Faker/Provider/nl_NL/Company.php',
@@ -6557,6 +6556,7 @@ class ComposerStaticInit8da5d45392af245feb314a3d0411c64d
         'event\\EloquentEventRegistrationRepository' => __DIR__ . '/../..' . '/app/Repositories/event/EloquentEventRegistrationRepository.php',
         'event\\Event' => __DIR__ . '/../..' . '/app/Models/event/Event.php',
         'event\\EventConfig' => __DIR__ . '/../..' . '/app/Models/event/EventConfig.php',
+        'event\\EventConfigController' => __DIR__ . '/../..' . '/app/Http/Controllers/event/EventConfigController.php',
         'event\\EventConfigRepository' => __DIR__ . '/../..' . '/app/Repositories/event/EventConfigRepository.php',
         'event\\EventRegistration' => __DIR__ . '/../..' . '/app/Models/event/EventRegistration.php',
         'event\\EventRegistrationController' => __DIR__ . '/../..' . '/app/Http/Controllers/event/EventRegistrationController.php',
@@ -6689,6 +6689,9 @@ class ComposerStaticInit8da5d45392af245feb314a3d0411c64d
         'user\\CompadUserRepository' => __DIR__ . '/../..' . '/app/Repositories/user/CompadUserRepository.php',
         'user\\CompadUserSession' => __DIR__ . '/../..' . '/app/Models/user/CompadUserSession.php',
         'user\\EloquentCompadUserRepository' => __DIR__ . '/../..' . '/app/Repositories/user/EloquentCompadUserRepository.php',
+        'user\\EloquentUserRepository' => __DIR__ . '/../..' . '/app/Repositories/user/EloquentUserRepository.php',
+        'user\\User' => __DIR__ . '/../..' . '/app/Models/user/User.php',
+        'user\\UserRepository' => __DIR__ . '/../..' . '/app/Repositories/user/UserRepository.php',
         'voku\\helper\\ASCII' => __DIR__ . '/..' . '/voku/portable-ascii/src/voku/helper/ASCII.php',
     );
 
