@@ -63,6 +63,8 @@ Route::group([
     Route::post('/member/update/connect/user/{member}', 'member\MemberController@updateConnectUser')->name('update.connect.user');
     Route::get('/user/search/data', 'member\MemberController@searchUser')->name('user.search');
 
+    Route::get('/member/list/by/event/{member}', 'member\MemberController@memberListByEvent');
+
     //Event
     Route::resource('/event/registration', 'event\EventRegistrationController', ['names' => 'event.registration']);
     Route::any('/event/registration/data/list', 'event\EventRegistrationController@getDatatableList')->name('event.registration.data.list');
