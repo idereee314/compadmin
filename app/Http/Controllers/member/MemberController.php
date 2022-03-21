@@ -87,8 +87,8 @@ class MemberController extends Controller
                 if(isset($profilePhoto) || isset($idPhoto)) 
                 {
                     // $img = Image::make(file_get_contents($image))->fit($demision[0], $demision[1])->encode('data-url');
-                    $img64_profilePhoto = Image::make(file_get_contents($profilePhoto))->fit(250)->encode('data-url');
-                    $img64_idPhoto = Image::make(file_get_contents($idPhoto))->fit(250)->encode('data-url');
+                    $img64_profilePhoto = Image::make(file_get_contents($profilePhoto))->encode('data-url');
+                    $img64_idPhoto = Image::make(file_get_contents($idPhoto))->encode('data-url');
 
                     $member->profile_photo = $img64_profilePhoto;
                     $member->id_photo = $img64_idPhoto;
@@ -183,7 +183,7 @@ class MemberController extends Controller
         
                             $profilePhoto = Input::file('profile_photo');
         
-                            $img64_profilePhoto = Image::make(file_get_contents($profilePhoto))->fit(250)->encode('data-url');
+                            $img64_profilePhoto = Image::make(file_get_contents($profilePhoto))->encode('data-url');
                             $member->profile_photo = $img64_profilePhoto;
         
                             $member->save();
@@ -209,7 +209,7 @@ class MemberController extends Controller
     
                             $idPhoto = Input::file('id_photo');
     
-                            $img64_idPhoto = Image::make(file_get_contents($idPhoto))->fit(250)->encode('data-url');
+                            $img64_idPhoto = Image::make(file_get_contents($idPhoto))->encode('data-url');
                             $member->id_photo = $img64_idPhoto;
     
                             $member->save();
