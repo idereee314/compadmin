@@ -4,10 +4,12 @@
     font-size: 0.9rem;
     text-transform: uppercase;
     letter-spacing: 0.1rem;
-    color: black !important;
+    color: black!important;
     background-color: #e4e6ef !important;
 }
 
 table > tfoot {
     background-color: #e4e6ef !important;
 }
+
+
