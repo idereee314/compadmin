@@ -15,8 +15,8 @@
         "oPaginate": {
         	"sFirst":    "&laquo;",
                 "sLast":     "&raquo;",
-                "sNext":     "&lt;",
-                "sPrevious": "&gt;"
+                "sNext":     "&gt;",
+                "sPrevious": "&lt;"
         },
         "oAria": {
                 "sSortAscending":  ": цагаан толгойн дарааллаар эрэмбэлэх",
