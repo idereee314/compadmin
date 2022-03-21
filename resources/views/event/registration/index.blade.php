@@ -20,9 +20,9 @@
                 <!--begin::Header-->
                 @include('layouts.header')
                 
-                <div class="d-flex flex-column-fluid justify-content-center">
+                <div class="d-flex flex-column-fluid">
                     <!--begin::Container-->
-                    <div class="">
+                    <div class="container">
                         <!--begin::Card-->
                         <div class="card card-custom">
                             <div class="card-header flex-wrap py-5">
