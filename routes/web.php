@@ -62,6 +62,8 @@ Route::group([
     Route::get('/member/create/connect/user/{member}', 'member\MemberController@createConnectUser')->name('create.connect.user');
     Route::post('/member/update/connect/user/{member}', 'member\MemberController@updateConnectUser')->name('update.connect.user');
     Route::get('/user/search/data', 'member\MemberController@searchUser')->name('user.search');
+    Route::get('/member/create/status/{member}', 'member\MemberController@createMemberStatus')->name('create.member.status');
+    Route::post('/member/update/status/{member}', 'member\MemberController@updateMemberStatus')->name('update.member.status');
 
     Route::get('/member/list/by/event/{member}', 'member\MemberController@memberListByEvent');
 

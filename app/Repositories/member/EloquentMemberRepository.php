@@ -46,6 +46,7 @@ class EloquentMemberRepository implements MemberRepository {
 		$member->lastname = $input['lastname'];
 		$member->contact_phone = preg_replace('/\s+/', '', @$input['contact_phone']);
 		$member->birth = @$input['birth'];
+		$member->status = Config::get('smart.member_status')['created'];
 		$member->gender_code = @$input['gender_code'];
 
 		$member->save();
@@ -116,6 +117,11 @@ class EloquentMemberRepository implements MemberRepository {
 			})
 			->editColumn('connect_user', function ($qry) {
 					return '<button type="button" onclick="connectUser('.$qry->id.')" class="btn btn-outline-secondary">Холбох</button>';
+			})
+			->editColumn('status', function($qry)
+			{
+				$status = '<span style="cursor:pointer" class="label label-lg font-weight-bold label-light-'.@Config::get('smart.member_status_class')[$qry->status].' label-inline" onclick="chnageMemberStatus('.$qry->id.')">'.@Config::get('enums.member_status')[$qry->status].'</span>';
+				return $status;
 			})			
 			->editColumn('created_at', function($qry)
 			{
@@ -137,7 +143,7 @@ class EloquentMemberRepository implements MemberRepository {
 
 				return $actionHtml;
 
-            })->rawColumns(['profile_photo', 'id_photo', 'connect_user', 'action'])
+            })->rawColumns(['profile_photo', 'id_photo', 'connect_user', 'status', 'action'])
             ->make(true);
 
         return $data;

@@ -374,6 +374,48 @@ class MemberController extends Controller
         return json_encode($users);
     }
 
+    public function createMemberStatus($id)
+    {
+        $member = $this->member->find($id);
+        $data['member'] = $member;
+        
+        $returnValue['status'] = true;
+        $returnValue['view'] = strval(view($this->view_path.'.member_status', $data));
+
+        return $returnValue;
+    }
+    
+    public function updateMemberStatus($memberId)
+    {
+        $input = Input::all();
+        try {
+           
+            $member = $this->member->find($memberId);
+
+            if(!empty($input['status']))
+            {
+                $member->status = $input['status'];
+                $member->save();
+
+                $response = array(
+                    'status' => 'success',
+                    'msg' => trans('messages.success_save')
+                );
+            }
+    
+        } catch(\Illuminate\Database\QueryException $e)
+        {
+            $response = array(
+                'status' => 'error',
+                'msg' => trans('messages.error_delete'),
+                'errors' => $e
+            );
+        }
+
+        $data['response'] = $response;
+        return view('core.alert.messages', $data);
+    }
+
     public function memberListByEvent($memberId)
     {   
         try

@@ -76,7 +76,7 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
     {
 		$qry = EventRegistration::selectRaw('uq_event_registration.*, uq_event_config.reg_start_date, uq_event_config. reg_end_date')
 			->join('uq_event_config', 'uq_event_config.event_id', '=', 'uq_event_registration.event_id')
-			->with(['event:id,name,description,event_date,due_date', 'member:id,register_number,contact_phone,firstname,lastname', 'entry:id,name', 'age:id,start_age,end_age', 'belt:id,name', 'weight:id,weight']);
+			->with(['event:id,name,description,event_date,due_date', 'member:id,register_number,contact_phone,firstname,lastname,profile_photo,id_photo', 'entry:id,name', 'age:id,start_age,end_age', 'belt:id,name', 'weight:id,weight', 'academy:id,name,is_other']);
 
         $data = Datatables::make($qry)
             ->filter(function ($qry) use ($searchData) {
@@ -125,6 +125,26 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 				$status = '<span class="label label-lg font-weight-bold label-light-'.@Config::get('smart.event_registeation_status_class')[$qry->status].' label-inline">'.@Config::get('enums.event_registeation_status')[$qry->status].'</span>';
 				return $status;
 			})
+			->editColumn('profile_photo', function ($qry) {
+				if ($qry->member->profile_photo) {
+					return '<img alt="..." src="'.$qry->member->profile_photo.'" style="max-width: 70px; cursor:pointer" onclick="showImageProfile('.$qry->member_id.')">';
+				}
+				return "";
+			})
+			->editColumn('id_photo', function ($qry) {
+				if ($qry->member->id_photo) {
+					return '<button class="btn btn-light" onclick="showImageId('.$qry->member_id.')"><i class="far fa-eye ml-1"></i></button>';
+				}
+				return "";
+			})
+			->editColumn('academy_name', function($qry)
+			{
+				if($qry->academy->is_other == 1) {
+					return $qry->academy_name;	
+				} else {
+					return $qry->academy->name;
+				}
+			})
 			->editColumn('created_at', function($qry)
 			{
 				return $qry->created_at;
@@ -149,7 +169,7 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 
 				return $actionHtml;
 
-            })->rawColumns(['action', 'status'])
+            })->rawColumns(['action', 'status', 'profile_photo', 'id_photo', 'academy_name'])
             ->make(true);
 
         return $data;

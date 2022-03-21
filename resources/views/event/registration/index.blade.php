@@ -20,9 +20,9 @@
                 <!--begin::Header-->
                 @include('layouts.header')
                 
-                <div class="d-flex flex-column-fluid">
+                <div class="d-flex flex-column-fluid justify-content-center">
                     <!--begin::Container-->
-                    <div class="container">
+                    <div class="">
                         <!--begin::Card-->
                         <div class="card card-custom">
                             <div class="card-header flex-wrap py-5">
@@ -147,16 +147,19 @@
                                                 <tr>
                                                     <th width="15px">No.</th>
                                                     <th width="15%">{{trans('display.comp_event')}}</th>
-                                                    <th width="5%">{{trans('display.human_register_number')}}</th>
-                                                    <th width="15%">{{trans('display.human_name')}}</th>
-                                                    <th width="8%">{{trans('display.human_phone_number')}}</th>
-                                                    <th width="15%">{{trans('display.comp_entry')}}</th>
-                                                    <th width="15%">{{trans('display.comp_entry_age')}}</th>
-                                                    <th width="15%">{{trans('display.comp_entry_belt')}}</th>
-                                                    <th width="15%">{{trans('display.comp_entry_weight')}}</th>
-                                                    <th width="15%">{{trans('display.general_status')}}</th>
-                                                    <th width="8%">{{trans('display.general_created_at')}}</th>
-                                                    <th width="5%">{{trans('display.general_manage')}}</th>
+                                                    <th width="10%">{{trans('display.profile_photo')}}</th>
+                                                    <th width="10%">{{trans('display.human_register_number')}}</th>
+                                                    <th width="10%">{{trans('display.human_name')}}</th>
+                                                    <th width="10%">{{trans('display.human_phone_number')}}</th>
+                                                    <th width="10%">{{trans('display.comp_academy')}}</th>
+                                                    <th width="5%">{{trans('display.id_photo')}}</th>
+                                                    <th width="8%">{{trans('display.comp_entry')}}</th>
+                                                    <th width="8%">{{trans('display.comp_entry_age')}}</th>
+                                                    <th width="8%">{{trans('display.comp_entry_belt')}}</th>
+                                                    <th width="8%">{{trans('display.comp_entry_weight')}}</th>
+                                                    <th width="8%">{{trans('display.general_status')}}</th>
+                                                    <th width="5%">{{trans('display.general_created_at')}}</th>
+                                                    <th width="3%cal">{{trans('display.general_manage')}}</th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
@@ -165,10 +168,14 @@
                                                 <tfoot>
                                                 <tr>
                                                     <th>No.</th>
+                                                    
                                                     <th>{{trans('display.comp_event')}}</th>
+                                                    <th>{{trans('display.profile_photo')}}</th>
                                                     <th>{{trans('display.human_register_number')}}</th>
                                                     <th>{{trans('display.human_name')}}</th>
+                                                    <th>{{trans('display.comp_academy')}}</th>
                                                     <th>{{trans('display.human_phone_number')}}</th>
+                                                    <th>{{trans('display.id_photo')}}</th>
                                                     <th>{{trans('display.comp_entry')}}</th>
                                                     <th>{{trans('display.comp_entry_age')}}</th>
                                                     <th>{{trans('display.comp_entry_belt')}}</th>
@@ -249,7 +256,9 @@ $(document).ready(function() {
                 },
                 width: "30px"
             },
+            
             {data: 'event.name'},
+            {data: 'profile_photo'},
             {data: 'member.register_number'},
             {
                 data: 'member', 
@@ -259,7 +268,9 @@ $(document).ready(function() {
                 },
                 "defaultContent": ""
             },
+            {data: 'academy_name'},
             {data: 'member.contact_phone'},
+            {data: 'id_photo'},
             {data: 'entry.name', "defaultContent": ""},
             {
                 data: 'age',
@@ -296,7 +307,7 @@ $(document).ready(function() {
             class: "text-center",
             targets: [0]
         }],
-        order: [[ 10, "desc" ]],
+        order: [[ 13, "desc" ]],
         dom: "<'top'B><'row'<'col-sm-12'tr>><'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7 dataTables_pager'lp>>",
         buttons: [
         {
@@ -861,6 +872,42 @@ function showEditModal(data){
         });
 
         $(this).off('shown.bs.modal');
+    });
+}
+
+function showImageProfile(id)
+{
+    $.get('/member/show/image/profile/'+id, function( data ) {
+        if (data.status) {
+            $('#showImageModal').modal();
+            $('#showImageModal').on('shown.bs.modal', function(){
+                $('#showImageModal .modal-content').html(data.view);
+
+                $(this).off('shown.bs.modal');
+            });
+        }
+        else
+        {
+            $('.panel-sub-heading').html(data.view).fadeIn().delay(5000).fadeOut();
+        }
+    });
+}
+
+function showImageId(id)
+{
+    $.get('/member/show/image/id/'+id, function( data ) {
+        if (data.status) {
+            $('#showImageModal').modal();
+            $('#showImageModal').on('shown.bs.modal', function(){
+                $('#showImageModal .modal-content').html(data.view);
+
+                $(this).off('shown.bs.modal');
+            });
+        }
+        else
+        {
+            $('.panel-sub-heading').html(data.view).fadeIn().delay(5000).fadeOut();
+        }
     });
 }
 </script>

@@ -19,9 +19,9 @@
                 <!--begin::Header-->
                 @include('layouts.header')
                 
-                <div class="d-flex flex-column-fluid">
+                <div class="d-flex flex-column-fluid justify-content-center">
                     <!--begin::Container-->
-                    <div class="container">
+                    <div class="">
                         <!--begin::Card-->
                         <div class="card card-custom">
                             <div class="card-header flex-wrap py-5">
@@ -85,6 +85,7 @@
                                                         <th>{{trans('display.human_birth')}}</th>
                                                         <th>{{trans('display.id_photo')}}</th>
                                                         <th>{{trans('display.general_connect')}}</th>
+                                                        <th>{{trans('display.general_status')}}</th>
                                                         <th>{{trans('display.general_created_at')}}</th>
                                                         <th>{{trans('display.general_manage')}}</th>
                                                     </tr>
@@ -154,6 +155,7 @@ $(document).ready(function() {
             {data: 'birth'},
             {data: 'id_photo', "defaultContent": ''},
             {data: 'connect_user', "defaultContent": ''},
+            {data: 'status'},
             {data: 'created_at'},
             {data: 'action'},
         ],
@@ -166,7 +168,7 @@ $(document).ready(function() {
             class: "text-center",
             targets: [0, 6, 7, 8, 9, 10]
         }],
-        order: [[ 9, "desc" ]],
+        order: [[ 10, "desc" ]],
         dom: "<'top'B><'row'<'col-sm-12'tr>><'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7 dataTables_pager'lp>>",
         buttons: [
         {
@@ -457,6 +459,65 @@ function connectUser(id)
         {
             $('.panel-sub-heading').html(data.view).fadeIn().delay(5000).fadeOut();
         }
+    });
+}
+
+function chnageMemberStatus(id)
+{
+    $.get('/member/create/status/'+id, function( data ) {
+        if (data.status) {
+            $('#memberStatusModal').modal();
+            $('#memberStatusModal').on('shown.bs.modal', function(){
+                $('#memberStatusModal .modal-content').html(data.view);
+
+                $('#member-status-form').validate({
+                    ignore: [],
+                    highlight:function(element) {
+                        $(element).parents('.form-group').addClass('has-error has-feedback');
+                    },
+                    unhighlight: function(element) {
+                        $(element).parents('.form-group').removeClass('has-error');
+                    },
+                    submitHandler: function(form) {
+                        $.ajax({
+                            url: form.action,
+                            type: form.method,
+                            data: new FormData(form),
+                            success: function(response) {
+                                $('#memberStatusModal').find("#close").trigger('click');
+                                $('.panel-sub-heading').html(response).fadeIn().delay(5000).fadeOut();
+                                memberTable.draw();
+                            },
+                            error: function (xhr, textStatus, error) {
+                                console.log(xhr.statusText);
+                                console.log(textStatus);
+                                console.log(error);
+                            },
+                            async: false,
+                            processData: false,
+                            contentType: false
+                        });
+                    },
+                    errorPlacement: function(error, element) {
+                        if($(element).parents('.form-group').find(".error-here")){
+                            error.appendTo($(element).parents('.form-group').find(".error-here"));
+                        } else {
+                            error.insertAfter(element);
+                        }
+                    }
+                });
+
+                $(this).off('shown.bs.modal');
+            });
+        }
+        else
+        {
+            $('.panel-sub-heading').html(data.view).fadeIn().delay(5000).fadeOut();
+        }
+    });
+
+    $('#memberStatusModal').on('hidden.bs.modal', function(){
+        $('#memberStatusModal .modal-body').empty();
     });
 }
 

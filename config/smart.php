@@ -27,6 +27,19 @@ return array(
 		'canceled' => 'danger ',
 	],
 
+	'member_status_class' => [
+		'created' => 'primary',
+		'registered' => 'info',
+		'approved' => 'success',
+		'canceled' => 'danger ',
+	],
+
+	'member_status' => [
+		'created' => 'created',
+		'approved' => 'approved',
+		'canceled' => 'canceled',
+	],
+
 	'menu' => [
 		'home' => [
 			'icon' => 'flaticon2-architecture-and-city', 

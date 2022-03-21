@@ -18,6 +18,12 @@ return array(
 		//'registered' => 'Бүртгэсэн',
 		'approved' => 'Баталгаажсан',
 		'canceled' => 'Цуцалсан',
+	],
+
+	'member_status' => [
+		'created' => 'Үүсгэсэн',
+		'approved' => 'Баталгаажсан',
+		'canceled' => 'Цуцалсан',
 	]
 )
 

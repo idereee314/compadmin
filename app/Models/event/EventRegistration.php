@@ -59,7 +59,7 @@ class EventRegistration extends Model
 
     public function academy()
     {
-        return $this->belongsTo('reference\Academy', 'academy_id');
+        return $this->belongsTo('academy\Academy', 'academy_id');
     }
     
     public static function boot()
