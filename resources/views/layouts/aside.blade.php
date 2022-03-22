@@ -1,5 +1,5 @@
 <!--begin::Aside-->
-<div class="aside aside-left d-flex flex-column flex-row-auto aside-on" id="kt_aside">
+<div class="aside aside-left d-flex flex-column flex-row-auto" id="kt_aside">
     <!--begin::Aside Menu-->
     <div class="aside-menu-wrapper flex-column-fluid" id="kt_aside_menu_wrapper">
         <!--begin::Menu Container-->
