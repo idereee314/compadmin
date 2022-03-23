@@ -72,7 +72,7 @@
                                     </div>
                                     <div class="row">
                                         <div class="col-sm-12">
-                                            <table class="table table-separate table-head-custom table-checkable dataTable no-footer dtr-inline" id="member_datatable" role="grid" aria-describedby="kt_datatable_info" style="width: 1235px;">
+                                            <table class="table table-separate table-head-custom table-checkable dataTable no-footer dtr-inline" id="member-datatable" role="grid" aria-describedby="kt_datatable_info" style="width: 1235px;">
                                                 <thead>
                                                     <tr role="row">
                                                         <th>No.</th>
@@ -117,7 +117,7 @@
 
 <script>
 $(document).ready(function() {
-    memberTable = $("#member_datatable").DataTable({
+    memberTable = $("#member-datatable").DataTable({
         processing:     true,
         serverSide:     true,
         deferRender:    true,
@@ -185,6 +185,32 @@ $(document).ready(function() {
         e.preventDefault();
     });
 
+    $('#member-datatable tbody').on( 'click', 'tr td a.edit', function () 
+    {
+        var id = $(this).data("id");
+        $.get('member/' + id + '/edit', memberEditModal);
+    });
+
+
+    $('#member-datatable tbody').on( 'click', 'tr td a.show-image', function () 
+    {
+        var id = $(this).data("id");
+        var type = $(this).data("type");
+
+        $.get('member/show/image/'+type+'/'+id, function( data ) {
+            $('#showImageModal').modal();
+            $('#showImageModal').on('shown.bs.modal', function(){
+                $('#showImageModal .modal-content').html(data);
+
+                $(this).off('shown.bs.modal');
+            });
+
+            $('#showImageModal').on('hidden.bs.modal', function(){
+                $('#showImageModal .modal-body').empty();
+            });
+        });
+    });
+
     $(".reset").click(function(){
         $(':input', '#member-search-form')
          .not(':button, :submit, :reset')
@@ -249,15 +275,16 @@ function showAddModal( data ) {
     });
 }
 
-function memberEditModal(data){
+function memberEditModal(data)
+{
     $('#memberEditModal').modal();
-        $('#memberEditModal').on('shown.bs.modal', function(){
-            $('#memberEditModal .modal-content').html(data);
+    $('#memberEditModal').on('shown.bs.modal', function(){
+        $('#memberEditModal .modal-content').html(data);
 
-            $("#register_number").inputmask({ regex: "[А-Я]{2}[0-9]*"});
-            $('.only-phone').inputmask("99 99 99 99");
+        $("#register_number").inputmask({ regex: "[А-Я]{2}[0-9]*"});
+        $('.only-phone').inputmask("99 99 99 99");
 
-            $('#edit-member-form').validate({
+        $('#edit-member-form').validate({
             ignore: [],
             highlight:function(element) {
                 $(element).parents('.form-group').addClass('has-error has-feedback');
@@ -295,12 +322,11 @@ function memberEditModal(data){
         });
 
         $(this).off('shown.bs.modal');
-});
+    });
 
-$('#memberEditModal').on('hidden.bs.modal', function(){
-    $('#memberEditModal .modal-body').empty();
-});
-
+    $('#memberEditModal').on('hidden.bs.modal', function(){
+        $('#memberEditModal .modal-body').empty();
+    });
 }
 
 //UserDelete
@@ -332,47 +358,6 @@ function memberDelete(id)
                 },
                 async: false
             });
-        }
-    });
-}
-
-function memberEdit(id)
-{
-    $.get('/member/' + id + '/edit', memberEditModal);
-}
-
-function showImageProfile(id)
-{
-    $.get('/member/show/image/profile/'+id, function( data ) {
-        if (data.status) {
-            $('#showImageModal').modal();
-            $('#showImageModal').on('shown.bs.modal', function(){
-                $('#showImageModal .modal-content').html(data.view);
-
-                $(this).off('shown.bs.modal');
-            });
-        }
-        else
-        {
-            $('.panel-sub-heading').html(data.view).fadeIn().delay(5000).fadeOut();
-        }
-    });
-}
-
-function showImageId(id)
-{
-    $.get('/member/show/image/id/'+id, function( data ) {
-        if (data.status) {
-            $('#showImageModal').modal();
-            $('#showImageModal').on('shown.bs.modal', function(){
-                $('#showImageModal .modal-content').html(data.view);
-
-                $(this).off('shown.bs.modal');
-            });
-        }
-        else
-        {
-            $('.panel-sub-heading').html(data.view).fadeIn().delay(5000).fadeOut();
         }
     });
 }

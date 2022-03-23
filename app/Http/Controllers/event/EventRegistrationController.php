@@ -57,12 +57,14 @@ class EventRegistrationController extends Controller
         $configAges = $this->configAge->all();
         $configBelts = $this->configBelt->all();
         $configWeights = $this->configWeight->all();
+        $eventRegStatusCount = $this->eventRegistration->getEventRegStatusCount(263)->pluck('total', 'status')->toArray();
 
         $data['competitions'] = $competitions;
         $data['eventEntries'] = $eventEntries;
         $data['configAges'] = $configAges;
         $data['configBelts'] = $configBelts;
         $data['configWeights'] = $configWeights;
+        $data['eventRegStatusCount'] = $eventRegStatusCount;
         $data['view_path'] = $this->view_path;
 
         return view($this->view_path.'.index', $data);

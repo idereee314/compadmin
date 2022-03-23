@@ -272,34 +272,19 @@ class MemberController extends Controller
     }
 
 
-    public function showImageProfile($id)
+    public function showImage($type, $id)
     {
         $member = $this->member->find($id);
-
-        if($member->profile_photo)
+        if($type == 'profile')
         {
-            $data['profile_photo'] = @$member->profile_photo;
+            $data['imageUrl'] = $member->profile_url;
         }
-        
-        $returnValue['status'] = true;
-        $returnValue['view'] = strval(view($this->view_path.'.show_image', $data));
-
-        return $returnValue;
-    }
-
-    public function showImageId($id)
-    {
-        $member = $this->member->find($id);
-
-        if($member->id_photo)
+        else if($type == 'id')
         {
-            $data['id_photo'] = @$member->id_photo;
+            $data['imageUrl'] = $member->id_url;
         }
-        
-        $returnValue['status'] = true;
-        $returnValue['view'] = strval(view($this->view_path.'.show_image', $data));
 
-        return $returnValue;
+        return view($this->view_path.'.show_image', $data);
     }
 
     public function createConnectUser($id)

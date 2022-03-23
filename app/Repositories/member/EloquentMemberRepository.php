@@ -104,14 +104,14 @@ class EloquentMemberRepository implements MemberRepository {
 				}
 			})
 			->editColumn('profile_photo', function ($qry) {
-				if ($qry->profile_photo) {
-					return '<img alt="..." src="'.$qry->profile_photo.'" style="max-width: 70px; cursor:pointer" onclick="showImageProfile('.$qry->id.')">';
+				if ($qry->profile_url) {
+					return '<a href="javascript:;" class="show-image" data-id="'.$qry->id.'" data-type="profile"><img class="h-75 align-self-end" alt="Profile" src="'.@Config::get('smart.cloud_image_url').$qry->profile_url.'" style="max-width: 50px;"></a>';
 				}
 				return "";
 			})
 			->editColumn('id_photo', function ($qry) {
 				if ($qry->id_photo) {
-					return '<button class="btn btn-light" onclick="showImageId('.$qry->id.')"><i class="far fa-eye ml-1"></i></button>';
+					return '<a class="btn btn-light show-image" data-id="'.$qry->id.'" data-type="id"><i class="far fa-eye ml-1"></i></a>';
 				}
 				return "";
 			})
@@ -135,8 +135,8 @@ class EloquentMemberRepository implements MemberRepository {
 				$actionHtml .= '</a>';
 				$actionHtml .= '<div class="dropdown-menu dropdown-menu-sm dropdown-menu-right">';
 				$actionHtml .= '<ul class="nav nav-hoverable flex-column">';
-				$actionHtml .= 	'<li class="nav-item"><a class="nav-link" href="#" onclick="memberEdit('.$member->id.')"><i class="nav-icon flaticon-edit-1"></i><span class="nav-text">'.trans('display.general_edit').'</span></a></li>';
-				$actionHtml .= 	'<li class="nav-item"><a class="nav-link" href="#" onclick="memberDelete('.$member->id.')"><i class="nav-icon flaticon-delete"></i><span class="nav-text">'.trans('display.general_delete').'</span></a></li>';
+				$actionHtml .= 	'<li class="nav-item"><a class="nav-link edit" href="javascript:;" data-id="'.$member->id.'"><i class="nav-icon flaticon-edit-1"></i><span class="nav-text">'.trans('display.general_edit').'</span></a></li>';
+				$actionHtml .= 	'<li class="nav-item"><a class="nav-link" href="javascript:;" onclick="memberDelete('.$member->id.')"><i class="nav-icon flaticon-delete"></i><span class="nav-text">'.trans('display.general_delete').'</span></a></li>';
 				$actionHtml .= '</ul>';
 				$actionHtml .= '</div>';
 				$actionHtml .= '</div>';

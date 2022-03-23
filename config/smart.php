@@ -8,6 +8,9 @@ return array(
 	|--------------------------------------------------------------------------
 	|
 	*/
+
+	'cloud_image_url' => env('AWS_URL', 'http://sport.uniq.mn/images'),
+
 	'gender_code' => [
 		1 => 'эрэгтэй',
 		2 => 'эмэгтэй'

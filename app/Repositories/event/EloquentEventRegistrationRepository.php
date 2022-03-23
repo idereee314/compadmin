@@ -76,7 +76,7 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
     {
 		$qry = EventRegistration::selectRaw('uq_event_registration.*, uq_event_config.reg_start_date, uq_event_config. reg_end_date')
 			->join('uq_event_config', 'uq_event_config.event_id', '=', 'uq_event_registration.event_id')
-			->with(['event:id,name,description,event_date,due_date', 'member:id,register_number,contact_phone,firstname,lastname,profile_photo,id_photo', 'entry:id,name', 'age:id,start_age,end_age', 'belt:id,name', 'weight:id,weight', 'academy:id,name,is_other']);
+			->with(['event:id,name,description,event_date,due_date', 'member:id,register_number,contact_phone,firstname,lastname,profile_url,id_url', 'entry:id,name', 'age:id,start_age,end_age', 'belt:id,name', 'weight:id,weight', 'academy:id,name,is_other']);
 
         $data = Datatables::make($qry)
             ->filter(function ($qry) use ($searchData) {
@@ -112,7 +112,7 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 
                 if($searchData->has('member') && $searchData->get('member') !== null)
                 {
-					$qry->whereHas('member', function($q){
+					$qry->whereHas('member', function($q) use($searchData){
 						$q->whereRaw("LOWER(register_number) like ?", array('%'.mb_strtolower($searchData->get('member')).'%'))
 						->orWhereRaw("LOWER(firstname) like ?", array('%'.mb_strtolower($searchData->get('member')).'%'))
 						->orWhereRaw("LOWER(lastname) like ?", array('%'.mb_strtolower($searchData->get('member')).'%'))
@@ -125,15 +125,17 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 				$status = '<span class="label label-lg font-weight-bold label-light-'.@Config::get('smart.event_registeation_status_class')[$qry->status].' label-inline">'.@Config::get('enums.event_registeation_status')[$qry->status].'</span>';
 				return $status;
 			})
-			->editColumn('profile_photo', function ($qry) {
-				if ($qry->member->profile_photo) {
-					return '<img alt="..." src="'.$qry->member->profile_photo.'" style="max-width: 70px; cursor:pointer" onclick="showImageProfile('.$qry->member_id.')">';
+			->addColumn('profile_url', function ($qry) {
+				$src = "";
+				if ($qry->member->profile_url) {
+					$src = '<a href="javascript:;" class="show-image" data-id="'.$qry->member->id.'" data-type="profile"><img class="h-75 align-self-end" alt="Profile" src="'.@Config::get('smart.cloud_image_url').$qry->member->profile_url.'" style="max-width: 50px;"></a>';
+					//$src = '<img alt="Profile" src="'.\Storage::disk('s3')->url($qry->member->profile_url).'" style="max-width: 70px; cursor:pointer" onclick="showImageProfile('.$qry->member_id.')">';
 				}
-				return "";
+				return $src;
 			})
 			->editColumn('id_photo', function ($qry) {
-				if ($qry->member->id_photo) {
-					return '<button class="btn btn-light" onclick="showImageId('.$qry->member_id.')"><i class="far fa-eye ml-1"></i></button>';
+				if ($qry->member->id_url) {
+					return '<a class="btn btn-light show-image" data-id="'.$qry->member->id.'" data-type="id"><i class="far fa-eye ml-1"></i></a>';
 				}
 				return "";
 			})
@@ -169,9 +171,21 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 
 				return $actionHtml;
 
-            })->rawColumns(['action', 'status', 'profile_photo', 'id_photo', 'academy_name'])
+            })->rawColumns(['action', 'status', 'profile_url', 'id_photo', 'academy_name'])
             ->make(true);
 
         return $data;
+	}
+
+	public function getEventRegStatusCount($eventId)
+	{
+		$count = "";
+		if(@$eventId)
+		{
+			$qry = EventRegistration::selectRaw('status, count(*) as total')->where('event_id', $eventId)->groupBy('status');
+			$count = $qry->get();
+		}
+
+		return $count;
 	}
 }
