@@ -34,6 +34,17 @@
                             <div class="card-body">
                                 <!--begin: Items-->
                                 <div class="d-flex align-items-center flex-wrap pb-5 border-bottom">
+                                    <!--begin: Item-->
+                                    <div class="d-flex align-items-center flex-lg-fill mr-5 my-1">
+                                        <span class="mr-4">
+                                            <i class="flaticon-file-2 icon-2x text-muted font-weight-bold"></i>
+                                        </span>
+                                        <div class="d-flex flex-column flex-lg-fill">
+                                            <span class="text-dark-75 font-weight-bolder font-size-sm">{{ array_sum(@$eventRegStatusCount) }} {{ trans('display.general_all') }}</span>
+                                            <a href="javascript:;" class="text-primary font-weight-bolder filter-status-count" data-status="">Харах</a>
+                                        </div>
+                                    </div>
+                                    <!--end: Item-->
                                     @forelse(@$eventRegStatusCount as $key => $count)
                                     <!--begin: Item-->
                                     <div class="d-flex align-items-center flex-lg-fill mr-5 my-1">
@@ -94,7 +105,7 @@
                                                                 @endforelse
                                                             </select>
                                                         </div>
-                                                        <div class="col-lg-3 mb-lg-0 mb-6">
+                                                        <div class="col-lg-2 mb-lg-0 mb-6">
                                                             <label>{{ trans('display.comp_entry_age') }}:</label>
                                                             <select class="form-control datatable-input" name="search_entry_age" id="search_entry_age" data-col-index="2">
                                                                 <option value="">-- {{ trans('display.general_all') }} --</option>
@@ -104,7 +115,7 @@
                                                                 @endforelse
                                                             </select>
                                                         </div>
-                                                        <div class="col-lg-3 mb-lg-0 mb-6">
+                                                        <div class="col-lg-2 mb-lg-0 mb-6">
                                                             <label>{{ trans('display.comp_entry_belt') }}:</label>
                                                             <select class="form-control datatable-input" name="search_entry_belt" id="search_entry_belt" data-col-index="3">
                                                                 <option value="">-- {{ trans('display.general_all') }} --</option>
@@ -114,9 +125,7 @@
                                                                 @endforelse
                                                             </select>
                                                         </div>
-                                                    </div>
-                                                    <div class="row mb-8">
-                                                        <div class="col-lg-3 mb-lg-0 mb-6">
+                                                        <div class="col-lg-2 mb-lg-0 mb-6">
                                                             <label>{{ trans('display.comp_entry_weight') }}:</label>
                                                             <select class="form-control datatable-input" name="search_entry_weight" id="search_entry_weight" data-col-index="4">
                                                                 <option value="">-- {{ trans('display.general_all') }} --</option>
@@ -126,6 +135,8 @@
                                                                 @endforelse
                                                             </select>
                                                         </div>
+                                                    </div>
+                                                    <div class="row mb-8">
                                                         <div class="col-lg-3 mb-lg-0 mb-6">
                                                             <label>Оролцогч:</label>
                                                             <input type="text" class="form-control datatable-input" name="search_member" id="search_member" placeholder="Оролцогчийн мэдээллээр хайх" data-col-index="5" />
@@ -133,18 +144,28 @@
                                                         <div class="col-lg-3 mb-lg-0 mb-6">
                                                             <label>{{ trans('display.general_date') }}:</label>
                                                             <div class="input-daterange input-group" id="kt_datepicker">
-                                                                <input type="text" class="form-control datatable-input" name="start" placeholder="From" data-col-index="7" />
+                                                                <input type="text" class="form-control datatable-input" name="search_date[]" id="start" placeholder="From" data-col-index="7" />
                                                                 <div class="input-group-append">
                                                                     <span class="input-group-text">
                                                                         <i class="la la-ellipsis-h"></i>
                                                                     </span>
                                                                 </div>
-                                                                <input type="text" class="form-control datatable-input" name="end" placeholder="To" data-col-index="7" />
+                                                                <input type="text" class="form-control datatable-input" name="search_date[]" id="end" placeholder="To" data-col-index="7" />
                                                             </div>
                                                         </div>
-                                                        <div class="col-lg-3 mb-lg-0 mb-6">
+                                                        <div class="col-lg-2 mb-lg-0 mb-6">
+                                                            <label>{{ trans('display.human_gender_code') }}:</label>
+                                                            <select class="form-control datatable-input" name="search_gender" id="search_gender" data-col-index="8">
+                                                                <option value="">-- {{ trans('display.general_all') }} --</option>
+                                                                @forelse(@Config::get('enums.gender_code') as $key => $gender)
+                                                                <option value="{{ $key }}">{{ $gender }}</option>
+                                                                @empty
+                                                                @endforelse
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-lg-2 mb-lg-0 mb-6">
                                                             <label>{{ trans('display.general_status') }}:</label>
-                                                            <select class="form-control datatable-input" name="search_status" id="search_status" data-col-index="8">
+                                                            <select class="form-control datatable-input" name="search_status" id="search_status" data-col-index="9">
                                                                 <option value="">-- {{ trans('display.general_all') }} --</option>
                                                                 @forelse(@Config::get('enums.event_registeation_status') as $key => $status)
                                                                 <option value="{{ $key }}">{{ $status }}</option>
@@ -161,7 +182,7 @@
                                                                     <span>{{ trans('display.general_search') }}</span>
                                                                 </span>
                                                             </button>
-                                                            <button type="reset" class="btn btn-secondary btn-secondary--icon">
+                                                            <button type="reset" class="btn btn-secondary btn-secondary--icon" id="kt_reset">
                                                                 <span>
                                                                     <i class="la la-close"></i>
                                                                     <span>{{ trans('display.general_reset') }}</span>
@@ -189,21 +210,21 @@
 													<th colspan="11">{{ trans('display.comp_title') }}</th>
 												</tr>
                                                 <tr>
-                                                    <th width="15px">No.</th>
-                                                    <th width="15%">{{trans('display.comp_event')}}</th>
-                                                    <th width="10%">{{trans('display.profile_photo')}}</th>
-                                                    <th width="10%">{{trans('display.human_register_number')}}</th>
-                                                    <th width="10%">{{trans('display.human_name')}}</th>
-                                                    <th width="10%">{{trans('display.human_phone_number')}}</th>
-                                                    <th width="10%">{{trans('display.comp_academy')}}</th>
-                                                    <th width="5%">{{trans('display.id_photo')}}</th>
+                                                    <th width="5%">No.</th>
+                                                    <th width="1%">{{trans('display.comp_event')}}</th>
+                                                    <th width="1%">{{trans('display.profile_photo')}}</th>
+                                                    <th width="8%">{{trans('display.human_register_number')}}</th>
+                                                    <th width="20%">{{trans('display.human_name')}}</th>
+                                                    <th width="8%">{{trans('display.human_phone_number')}}</th>
                                                     <th width="8%">{{trans('display.comp_entry')}}</th>
-                                                    <th width="8%">{{trans('display.comp_entry_age')}}</th>
-                                                    <th width="8%">{{trans('display.comp_entry_belt')}}</th>
-                                                    <th width="8%">{{trans('display.comp_entry_weight')}}</th>
-                                                    <th width="8%">{{trans('display.general_status')}}</th>
-                                                    <th width="5%">{{trans('display.general_created_at')}}</th>
-                                                    <th width="3%cal">{{trans('display.general_manage')}}</th>
+                                                    <th width="5%">{{trans('display.comp_entry_age')}}</th>
+                                                    <th width="5%">{{trans('display.comp_entry_belt')}}</th>
+                                                    <th width="5%">{{trans('display.comp_entry_weight')}}</th>
+                                                    <th width="30%">{{trans('display.comp_academy')}}</th>
+                                                    <th width="1%">{{trans('display.id_photo')}}</th>
+                                                    <th width="1%">{{trans('display.general_status')}}</th>
+                                                    <th width="1%">{{trans('display.general_created_at')}}</th>
+                                                    <th width="1%">{{trans('display.general_manage')}}</th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
@@ -242,13 +263,17 @@ $(document).ready(function() {
         deferRender:    true,
         autoWidth:      true,
         filter:         false,
-        responsive:     false,
+        responsive:     true,
         dataType: 'json',
         paginationType: "full_numbers",
         ajax: {
             url: '{{route('event.registration.data.list')}}',
             type: 'POST',
             data: function ( d ) {
+                var dateArr = {};
+                $('#event-registration-search-form input[name^="search_date"]').map(function(){
+                    dateArr[this.id] = this.value;
+                }).get();
                 d.event = $('#event-registration-search-form select[id="search_event"]').val();
                 d.entry = $('#event-registration-search-form select[id="search_entry"]').val();
                 d.entryAge = $('#event-registration-search-form select[id="search_entry_age"]').val();
@@ -256,6 +281,8 @@ $(document).ready(function() {
                 d.entryWeight = $('#event-registration-search-form select[id="search_entry_weight"]').val();
                 d.status = $('#event-registration-search-form select[id="search_status"]').val();
                 d.member = $('#event-registration-search-form input[id="search_member"]').val();
+                d.gender = $('#event-registration-search-form select[id="search_gender"]').val();
+                d.date = dateArr;
             },
         },
         drawCallback: function(settings) {
@@ -293,8 +320,6 @@ $(document).ready(function() {
                 "defaultContent": ""
             },
             {data: 'member.contact_phone'},
-            {data: 'academy_name'},
-            {data: 'id_photo'},
             {data: 'entry.name', "defaultContent": ""},
             {
                 data: 'age',
@@ -313,6 +338,8 @@ $(document).ready(function() {
             },
             {data: 'belt.name', "defaultContent": ""},
             {data: 'weight.weight', "defaultContent": ""},
+            {data: 'academy_name'},
+            {data: 'id_photo'},
             {data: 'status', "defaultContent": ""},
             {data: 'created_at'},
             {data: 'action'},
@@ -326,7 +353,7 @@ $(document).ready(function() {
         {
             searchable: false,
             orderable: false,
-            targets: [0]
+            targets: [0,1,6,10,13]
         },{
             class: "text-center",
             targets: [0]
@@ -334,14 +361,28 @@ $(document).ready(function() {
         order: [[ 13, "desc" ]],
         dom: "<'top'B><'row'<'col-sm-12'tr>><'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7 dataTables_pager'lp>>",
         buttons: [
-        {
-            text: '<i class="la la-plus"></i> Шинээр нэмэх',
-            className: "btn btn-light-danger font-weight-bolder mb-2",
-            action: function ( e, dt, node, config ) {
-                $.get('{!! route('event.registration.create') !!}', showAddModal);
+            {
+                text: '<i class="la la-plus"></i> Шинээр нэмэх',
+                className: "btn btn-light-danger font-weight-bolder mb-2",
+                action: function ( e, dt, node, config ) {
+                    $.get('{!! route('event.registration.create') !!}', showAddModal);
+                }
+            },
+            {
+                extend: 'excelHtml5',
+                text: '<i class="fa fa-print"></i> {!! trans('display.general_excel') !!}',
+                className: "btn btn-light-warning font-weight-bolder mb-2",
             }
-        }]
+        ]
 	});
+
+    $('#kt_datepicker').datepicker({
+        todayHighlight: true,
+        templates: {
+            leftArrow: '<i class="la la-angle-left"></i>',
+            rightArrow: '<i class="la la-angle-right"></i>',
+        },
+    });
 
     $('#event-registration-search-form').on('submit', function(e) {
         eventTable.draw();
@@ -539,16 +580,13 @@ $(document).ready(function() {
         $('#event-registration-search-form').submit();
     });
 
-    $(".reset").click(function(){
-        $('#event-registration-search-form select.chosen-select').val([]).trigger('chosen:updated');
-        $(':input', '#event-registration-search-form')
-         .not(':button, :submit, :reset')
-         .val('')
-         .removeAttr('checked')
-         .removeAttr('selected')
-         .attr('value', '');
-
-        $('#event-registration-search-form')[0].reset();
+    $("#kt_reset").click(function(e){
+        e.preventDefault();
+        $('.datatable-input').each(function() {
+            $(this).val('');
+            eventTable.column($(this).data('col-index')).search('', false, false);
+        });
+        eventTable.draw();
     });
 
 }).ajaxStart($.blockUI).ajaxStop($.unblockUI);

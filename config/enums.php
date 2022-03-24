@@ -9,8 +9,8 @@ return array(
 	|
 	*/
 	'gender_code' => [
-		1 => 'эрэгтэй',
-		2 => 'эмэгтэй'
+		1 => 'Эрэгтэй',
+		2 => 'Эмэгтэй'
 	],
 
 	'event_registeation_status' => [

@@ -105,9 +105,21 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 					$qry->where('entry_weight_id', $searchData->get('entryWeight'));
 				}
 
+				if($searchData->has('gender') && $searchData->get('gender') !== null)
+                {
+					$qry->whereHas('member', function($q) use($searchData){
+						$q->where('gender_code', $searchData->get('gender'));
+					});				
+				}
+
 				if($searchData->has('status') && $searchData->get('status') !== null)
                 {
 					$qry->where('status', $searchData->get('status'));
+				}
+				
+				if($searchData->has('date') && !empty(array_filter($searchData->get('date'))))
+                {
+					$qry->whereBetween('uq_event_registration.created_at', $searchData->get('date'));
 				}
 
                 if($searchData->has('member') && $searchData->get('member') !== null)
