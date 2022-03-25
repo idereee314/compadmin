@@ -85,7 +85,7 @@ class EloquentMemberRepository implements MemberRepository {
 			->filter(function ($qry) use ($searchData) {
 				if($searchData->has('register_number') && $searchData->get('register_number') !== null)
 				{
-					$qry->where('register_number', $searchData->get('register_number'));
+					$qry->whereRaw("LOWER(register_number) like ?", array('%'.mb_strtolower($searchData->get('register_number')).'%'));
 				}
 
 				if($searchData->has('lastname') && $searchData->get('lastname') !== null)
@@ -100,7 +100,7 @@ class EloquentMemberRepository implements MemberRepository {
 
 				if($searchData->has('phone_number') && $searchData->get('phone_number') !== null)
 				{
-					$qry->where('phone_number', $searchData->get('phone_number'));
+					$qry->whereRaw("LOWER(phone_number) like ?", array('%'.mb_strtolower($searchData->get('phone_number')).'%'));
 				}
 			})
 			->editColumn('profile_photo', function ($qry) {
