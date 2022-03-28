@@ -6,7 +6,7 @@
 </div>
 <div class="card-body m-4">
     <div class="form-group d-flex justify-content-center">
-        <img src="{{ @Config::get('smart.cloud_image_url').@$imageUrl }}" style="width: 100%">
+        <img src="{{ \Storage::disk('s3')->url(@$imageUrl) }}" style="width: 100%">
     </div>
 </div>
 

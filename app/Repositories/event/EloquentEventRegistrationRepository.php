@@ -140,8 +140,7 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 			->addColumn('profile_url', function ($qry) {
 				$src = "";
 				if ($qry->member->profile_url) {
-					$src = '<a href="javascript:;" class="show-image" data-id="'.$qry->member->id.'" data-type="profile"><img class="h-75 align-self-end" alt="Profile" src="'.@Config::get('smart.cloud_image_url').$qry->member->profile_url.'" style="max-width: 50px;"></a>';
-					//$src = '<img alt="Profile" src="'.\Storage::disk('s3')->url($qry->member->profile_url).'" style="max-width: 70px; cursor:pointer" onclick="showImageProfile('.$qry->member_id.')">';
+					$src = '<a href="javascript:;" class="show-image" data-id="'.$qry->member->id.'" data-type="profile"><img class="h-75 align-self-end" alt="Profile" src="'.\Storage::disk('s3')->url($qry->member->profile_url).'" style="max-width: 50px;"></a>';
 				}
 				return $src;
 			})

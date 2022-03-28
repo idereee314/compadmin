@@ -65,7 +65,7 @@
                                 <div class="accordion accordion-light accordion-light-borderless accordion-svg-toggle" id="search">
                                     <div class="card">
                                         <div class="card-header">
-                                            <div class="card-title collapsed" data-toggle="collapse" data-target="#search-member">
+                                            <div class="card-title collapsed" data-toggle="collapse" data-target="#search-registration">
                                                 <span class="svg-icon svg-icon-primary">
                                                     <!--begin::Svg Icon | path:assets/media/svg/icons/Navigation/Angle-double-right.svg-->
                                                     <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
@@ -80,7 +80,7 @@
                                                 <div class="card-label pl-4">Хайлт</div>
                                             </div>
                                         </div>
-                                        <div id="search-member" class="collapse" data-parent="#search">
+                                        <div id="search-registration" class="collapse" data-parent="#search">
                                             <div class="card-body">
                                                 <!--begin: Search Form-->
                                                 <form class="mb-10" id="event-registration-search-form" method="POST">
@@ -139,7 +139,7 @@
                                                     <div class="row mb-8">
                                                         <div class="col-lg-3 mb-lg-0 mb-6">
                                                             <label>Оролцогч:</label>
-                                                            <input type="text" class="form-control datatable-input" name="search_member" id="search_member" placeholder="Оролцогчийн мэдээллээр хайх" data-col-index="5" />
+                                                            <input type="text" class="form-control datatable-input" name="search_member" id="search_member" placeholder="Оролцогчийн мэдээллээр хайх" data-col-index="5"/>
                                                         </div>
                                                         <div class="col-lg-3 mb-lg-0 mb-6">
                                                             <label>{{ trans('display.general_date') }}:</label>

@@ -40,6 +40,9 @@ class MemberController extends Controller
      */
     public function index()
     {
+        $memberGenderCount = $this->member->getGenderCode()->pluck('total', 'gender_code')->toArray();
+
+        $data['memberGenderCount'] = $memberGenderCount;
         $data['view_path'] = $this->view_path;
 
         return view($this->view_path.'.index', $data);
@@ -78,28 +81,60 @@ class MemberController extends Controller
         else
         {
             try
-            {
+            {       
                 $member = $this->member->create($input);
-
-                $profilePhoto = $input['profile_photo'];
-                $idPhoto = $input['id_photo'];
-
-                if(isset($profilePhoto) || isset($idPhoto)) 
-                {
-                    // $img = Image::make(file_get_contents($image))->fit($demision[0], $demision[1])->encode('data-url');
-                    $img64_profilePhoto = Image::make(file_get_contents($profilePhoto))->encode('data-url');
-                    $img64_idPhoto = Image::make(file_get_contents($idPhoto))->encode('data-url');
-
-                    $member->profile_photo = $img64_profilePhoto;
-                    $member->id_photo = $img64_idPhoto;
-
-                    $member->save();
-                }
+                //$member = $this->member->find(264);
 
                 $response = array(
                     'status' => 'success',
                     'msg' => trans('messages.success_save')
                 );
+
+                $profileImage = Input::file('profile_photo');
+                $idImage = Input::file('id_photo');
+                
+                if(@$profileImage)
+                {
+                    $imageName = 'memberpr_' . date('YmdHis') . '_' . uniqid() . '.jpg';
+                    $profileImagePathS3 = "/member/".$member->id."/".$imageName;
+
+                    $image = Image::make($profileImage);
+                    $imageData = $image->encode('jpg');
+                    
+                    try 
+                    {
+                        \Storage::disk('s3')->put($profileImagePathS3, (string)$imageData, 'public');
+                        $member->profile_url = $profileImagePathS3;
+                    }
+                    catch(\Exception $e)
+                    {
+                        $validator->errors()->add('', $e->getMessage());
+                    }
+                }
+
+                if(@$idImage)
+                {
+                    $imageName = 'memberid_' . date('YmdHis') . '_' . uniqid() . '.jpg';
+                    $idImagePathS3 = "/member/".$member->id."/".$imageName;
+
+                    $image = Image::make($idImage);
+                    $imageData = $image->encode('jpg');
+
+                    try 
+                    {
+                        \Storage::disk('s3')->put($idImagePathS3, $imageData, 'public');
+                        $member->id_url = $idImagePathS3;
+                    }
+                    catch(\Exception $e)
+                    {
+                        $validator->errors()->add('', $e->getMessage());
+                    }
+                }
+
+                if(count($validator->errors()) == 0) 
+                {
+                    $member->save();
+                }
 
             }
             catch(\Illuminate\Database\QueryException $e)
@@ -151,6 +186,9 @@ class MemberController extends Controller
     public function update(Request $request, $id)
     {
         $input = Input::all();
+        $profileImage = Input::file('profile_photo');
+        $idImage = Input::file('id_photo');
+        $member = $this->member->find($id);
 
         $validator = Validator::make($input, MemberModel::rules($id));
 
@@ -163,59 +201,52 @@ class MemberController extends Controller
             );
         } else {
 			try {
-                $member = $this->member->update($id, $input);
-
-                if(!empty($input['profile_photo_remove'])) 
+                if(@$profileImage)
                 {
-                    if($input['profile_photo_remove'] == 'off') {
-                        $member->profile_photo = null;
-                        $member->save();
-                    } else {
-    
-                        if(Input::hasfile('profile_photo')) {
-        
-                            $destination = $member->profile_photo;
-        
-                            if(File::exists($destination))
-                            {
-                                File::delete($destination);
-                            }
-        
-                            $profilePhoto = Input::file('profile_photo');
-        
-                            $img64_profilePhoto = Image::make(file_get_contents($profilePhoto))->encode('data-url');
-                            $member->profile_photo = $img64_profilePhoto;
-        
-                            $member->save();
-                        }
+                    if (\Storage::disk('s3')->exists(@$member->profile_url)) {                
+                        \Storage::disk('s3')->delete($member->profile_url);
+                    }
+
+                    $imageName = 'memberpr_' . date('YmdHis') . '_' . uniqid() . '.jpg';
+                    $profileImagePathS3 = "/member/".$member->id."/".$imageName;
+
+                    $image = Image::make($profileImage);
+                    $imageData = $image->encode('jpg');
+                    
+                    try 
+                    {
+                        \Storage::disk('s3')->put($profileImagePathS3, (string)$imageData, 'public');
+                        $input['profile_url'] = $profileImagePathS3;
+                    }
+                    catch(\Exception $e)
+                    {
+                        $validator->errors()->add('', $e->getMessage());
                     }
                 }
 
-                if(!empty($input['id_photo_remove']))
+                if(@$idImage)
                 {
-                    if($input['id_photo_remove'] == 'off') {
-                        $member->id_photo = null;
-                        $member->save();
-                    } else {
-    
-                        if(Input::hasfile('id_photo')) {
-    
-                            $destination = $member->id_photo;
-    
-                            if(File::exists($destination))
-                            {
-                                File::delete($destination);
-                            }
-    
-                            $idPhoto = Input::file('id_photo');
-    
-                            $img64_idPhoto = Image::make(file_get_contents($idPhoto))->encode('data-url');
-                            $member->id_photo = $img64_idPhoto;
-    
-                            $member->save();
-                        }
+                    if (\Storage::disk('s3')->exists(@$member->id_url)) {                
+                        \Storage::disk('s3')->delete(@$member->id_url);
+                    }
+
+                    $imageName = 'memberid_' . date('YmdHis') . '_' . uniqid() . '.jpg';
+                    $idImagePathS3 = "/member/".$member->id."/".$imageName;
+
+                    $image = Image::make($idImage);
+                    $imageData = $image->encode('jpg');
+
+                    try 
+                    {
+                        \Storage::disk('s3')->put($idImagePathS3, $imageData, 'public');
+                        $input['id_url'] = $idImagePathS3;
+                    }
+                    catch(\Exception $e)
+                    {
+                        $validator->errors()->add('', $e->getMessage());
                     }
                 }
+                $this->member->update($id, $input);
             
 				$response = array(
 					'status' => 'success',

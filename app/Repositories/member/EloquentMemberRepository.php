@@ -48,9 +48,10 @@ class EloquentMemberRepository implements MemberRepository {
 		$member->birth = @$input['birth'];
 		$member->status = Config::get('smart.member_status')['created'];
 		$member->gender_code = @$input['gender_code'];
+		$member->profile_url = @$input['profile_url'];
+		$member->id_url = @$input['id_url'];
 
 		$member->save();
-
 		return $member;
 	}
 
@@ -64,9 +65,17 @@ class EloquentMemberRepository implements MemberRepository {
 		$member->contact_phone = preg_replace('/\s+/', '', @$input['contact_phone']);
 		$member->birth = @$input['birth'];
 		$member->gender_code = @$input['gender_code'];
+		if(array_key_exists('profile_url', $input))
+		{
+			$member->profile_url = @$input['profile_url'];
+		}
+
+		if(array_key_exists('id_url', $input))
+		{
+			$member->id_url = @$input['id_url'];
+		}
 
 		$member->save();
-
 		return $member;
 	}
 
@@ -100,17 +109,32 @@ class EloquentMemberRepository implements MemberRepository {
 
 				if($searchData->has('phone_number') && $searchData->get('phone_number') !== null)
 				{
-					$qry->whereRaw("LOWER(phone_number) like ?", array('%'.mb_strtolower($searchData->get('phone_number')).'%'));
+					$qry->whereRaw("LOWER(contact_phone) like ?", array('%'.mb_strtolower($searchData->get('phone_number')).'%'));
+				}
+
+				if($searchData->has('gender') && $searchData->get('gender') !== null)
+                {
+					$qry->where('gender_code', $searchData->get('gender'));				
+				}
+
+				if($searchData->has('status') && $searchData->get('status') !== null)
+                {
+					$qry->where('status', $searchData->get('status'));
+				}
+				if
+				($searchData->has('age') && !empty(array_filter($searchData->get('age'))))
+                {
+					$qry->whereBetween(DB::raw("date_part('year', AGE(now(), birth))"), $searchData->get('age'));
 				}
 			})
 			->editColumn('profile_photo', function ($qry) {
 				if ($qry->profile_url) {
-					return '<a href="javascript:;" class="show-image" data-id="'.$qry->id.'" data-type="profile"><img class="h-75 align-self-end" alt="Profile" src="'.@Config::get('smart.cloud_image_url').$qry->profile_url.'" style="max-width: 50px;"></a>';
+					return '<a href="javascript:;" class="show-image" data-id="'.$qry->id.'" data-type="profile"><img class="h-75 align-self-end" alt="Profile" src="'.\Storage::disk('s3')->url($qry->profile_url).'" style="max-width: 50px;"></a>';
 				}
 				return "";
 			})
 			->editColumn('id_photo', function ($qry) {
-				if ($qry->id_photo) {
+				if ($qry->id_url) {
 					return '<a class="btn btn-light show-image" data-id="'.$qry->id.'" data-type="id"><i class="far fa-eye ml-1"></i></a>';
 				}
 				return "";
@@ -181,6 +205,16 @@ class EloquentMemberRepository implements MemberRepository {
 
 			$members = $qry->get();  
         }
+		return $members;
+	}
+
+	public function getGenderCode()
+	{
+		$members = "";
+		$qry = Member::selectRaw("gender_code, count(*) as total")
+			->groupBy('gender_code');	
+
+		$members = $qry->get();  
 		return $members;
 	}
 }
