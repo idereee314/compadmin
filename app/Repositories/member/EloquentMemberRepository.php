@@ -129,7 +129,7 @@ class EloquentMemberRepository implements MemberRepository {
 			})
 			->editColumn('profile_photo', function ($qry) {
 				if ($qry->profile_url) {
-					return '<a href="javascript:;" class="show-image" data-id="'.$qry->id.'" data-type="profile"><img class="h-75 align-self-end" alt="Profile" src="'.\Storage::disk('s3')->url($qry->profile_url).'" style="max-width: 50px;"></a>';
+					return '<a href="javascript:;" class="show-image" data-id="'.$qry->id.'" data-type="profile"><img class="align-self-end" alt="Profile" src="'.\Storage::disk('s3')->url($qry->profile_url).'" style="max-width: 50px;"></a>';
 				}
 				return "";
 			})
@@ -152,21 +152,11 @@ class EloquentMemberRepository implements MemberRepository {
 				return $qry->created_at;
 			})
             ->addColumn('action', function ($member) {
-
-				$actionHtml = '<div class="dropdown dropdown-inline">';
-				$actionHtml .= '<a href="javascript:;" class="btn btn-sm btn-clean btn-icon" data-toggle="dropdown">';
-				$actionHtml .= '<i class="fa fa-server"></i>';
-				$actionHtml .= '</a>';
-				$actionHtml .= '<div class="dropdown-menu dropdown-menu-sm dropdown-menu-right">';
-				$actionHtml .= '<ul class="nav nav-hoverable flex-column">';
-				$actionHtml .= 	'<li class="nav-item"><a class="nav-link edit" href="javascript:;" data-id="'.$member->id.'"><i class="nav-icon flaticon-edit-1"></i><span class="nav-text">'.trans('display.general_edit').'</span></a></li>';
-				$actionHtml .= 	'<li class="nav-item"><a class="nav-link" href="javascript:;" onclick="memberDelete('.$member->id.')"><i class="nav-icon flaticon-delete"></i><span class="nav-text">'.trans('display.general_delete').'</span></a></li>';
-				$actionHtml .= '</ul>';
-				$actionHtml .= '</div>';
-				$actionHtml .= '</div>';
+				$actionHtml = "";
+				$actionHtml .= 	'<a class="btn btn-sm btn-clean btn-icon edit" href="javascript:;" data-id="'.$member->id.'" title="'.trans('display.general_edit').'"><i class="la la-edit"></i></a>';
+				$actionHtml .= 	'<a class="btn btn-sm btn-clean btn-icon delete" href="javascript:;" data-id="'.$member->id.'" title="'.trans('display.general_delete').'"><i class="la la-trash"></i></li>';
 
 				return $actionHtml;
-
             })->rawColumns(['profile_photo', 'id_photo', 'connect_user', 'status', 'action'])
             ->make(true);
 

@@ -2,7 +2,6 @@
 
 @section('styles')
 <link rel="stylesheet" href="{{asset('assets/js/plugins/custom/datatables/datatables.bundle.css')}}">
-<link rel="stylesheet" href="{{asset('assets/js/plugins/custom/select2-4.1.0/css/select2.min.css')}}">
 @endsection
 
 @section('content')
@@ -87,7 +86,7 @@
                                                     <div class="row mb-6">
                                                         <div class="col-lg-3 mb-lg-0 mb-6">
                                                             <label>{{ trans('display.comp_title') }}:</label>
-                                                            <select class="form-control datatable-input" name="search_event" id="search_event" data-col-index="0">
+                                                            <select class="form-control selectpicker datatable-input" name="search_event" id="search_event" data-col-index="0">
                                                                 <option value="">-- {{ trans('display.general_all') }} --</option>
                                                                 @forelse(@$competitions as $competition)
                                                                 <option value="{{ $competition->event_id }}">{{ $competition->name }}</option>
@@ -97,7 +96,7 @@
                                                         </div>
                                                         <div class="col-lg-3 mb-lg-0 mb-6">
                                                             <label>{{ trans('display.comp_entry') }}:</label>
-                                                            <select class="form-control datatable-input" name="search_entry" id="search_entry" data-col-index="1">
+                                                            <select class="form-control selectpicker datatable-input" name="search_entry" id="search_entry" data-col-index="1">
                                                                 <option value="">-- {{ trans('display.general_all') }} --</option>
                                                                 @forelse(@$eventEntries as $eventEntry)
                                                                 <option value="{{ $eventEntry->id }}">{{ $eventEntry->name }}</option>
@@ -107,7 +106,7 @@
                                                         </div>
                                                         <div class="col-lg-2 mb-lg-0 mb-6">
                                                             <label>{{ trans('display.comp_entry_age') }}:</label>
-                                                            <select class="form-control datatable-input" name="search_entry_age" id="search_entry_age" data-col-index="2">
+                                                            <select class="form-control selectpicker datatable-input" name="search_entry_age" id="search_entry_age" data-col-index="2">
                                                                 <option value="">-- {{ trans('display.general_all') }} --</option>
                                                                 @forelse(@$configAges as $age)
                                                                 <option value="{{ $age->id }}">{{ $age->start_age }}-{{ $age->end_age }}</option>
@@ -117,7 +116,7 @@
                                                         </div>
                                                         <div class="col-lg-2 mb-lg-0 mb-6">
                                                             <label>{{ trans('display.comp_entry_belt') }}:</label>
-                                                            <select class="form-control datatable-input" name="search_entry_belt" id="search_entry_belt" data-col-index="3">
+                                                            <select class="form-control selectpicker datatable-input" name="search_entry_belt" id="search_entry_belt" data-col-index="3">
                                                                 <option value="">-- {{ trans('display.general_all') }} --</option>
                                                                 @forelse(@$configBelts as $belt)
                                                                 <option value="{{ $belt->id }}">{{ $belt->name }}</option>
@@ -127,7 +126,7 @@
                                                         </div>
                                                         <div class="col-lg-2 mb-lg-0 mb-6">
                                                             <label>{{ trans('display.comp_entry_weight') }}:</label>
-                                                            <select class="form-control datatable-input" name="search_entry_weight" id="search_entry_weight" data-col-index="4">
+                                                            <select class="form-control selectpicker datatable-input" name="search_entry_weight" id="search_entry_weight" data-col-index="4">
                                                                 <option value="">-- {{ trans('display.general_all') }} --</option>
                                                                 @forelse(@$configWeights as $weight)
                                                                 <option value="{{ $weight->id }}">{{ $weight->weight }}</option>
@@ -155,7 +154,7 @@
                                                         </div>
                                                         <div class="col-lg-2 mb-lg-0 mb-6">
                                                             <label>{{ trans('display.human_gender_code') }}:</label>
-                                                            <select class="form-control datatable-input" name="search_gender" id="search_gender" data-col-index="8">
+                                                            <select class="form-control selectpicker datatable-input" name="search_gender" id="search_gender" data-col-index="8">
                                                                 <option value="">-- {{ trans('display.general_all') }} --</option>
                                                                 @forelse(@Config::get('enums.gender_code') as $key => $gender)
                                                                 <option value="{{ $key }}">{{ $gender }}</option>
@@ -165,7 +164,7 @@
                                                         </div>
                                                         <div class="col-lg-2 mb-lg-0 mb-6">
                                                             <label>{{ trans('display.general_status') }}:</label>
-                                                            <select class="form-control datatable-input" name="search_status" id="search_status" data-col-index="9">
+                                                            <select class="form-control selectpicker datatable-input" name="search_status" id="search_status" data-col-index="9">
                                                                 <option value="">-- {{ trans('display.general_all') }} --</option>
                                                                 @forelse(@Config::get('enums.event_registeation_status') as $key => $status)
                                                                 <option value="{{ $key }}">{{ $status }}</option>
@@ -211,7 +210,7 @@
 												</tr>
                                                 <tr>
                                                     <th width="5%">No.</th>
-                                                    <th width="1%">{{trans('display.comp_event')}}</th>
+                                                    <th width="1%">{{trans('display.comp_title')}}</th>
                                                     <th width="1%">{{trans('display.profile_photo')}}</th>
                                                     <th width="8%">{{trans('display.human_register_number')}}</th>
                                                     <th width="20%">{{trans('display.human_name')}}</th>
@@ -224,7 +223,7 @@
                                                     <th width="1%">{{trans('display.id_photo')}}</th>
                                                     <th width="1%">{{trans('display.general_status')}}</th>
                                                     <th width="1%">{{trans('display.general_created_at')}}</th>
-                                                    <th width="1%">{{trans('display.general_manage')}}</th>
+                                                    <th width="8%">{{trans('display.general_manage')}}</th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
@@ -250,8 +249,7 @@
 </section>
 
 @section('javascript')
-<script src="{{asset('assets/js/plugins/custom/datatables/datatables.js')}}"></script>
-<script src="{{asset('assets/js/plugins/custom/select2-4.1.0/js/select2.min.js')}}"></script>
+<script src="{{asset('assets/js/plugins/custom/datatables/datatables.bundle.js')}}"></script>
 <!--<script src="{{asset('assets/js/plugins/custom/select2-ng/select2.min.js')}}"></script>-->
 <script src="{{asset('assets/js/smart.js')}}"></script>
 
@@ -359,7 +357,7 @@ $(document).ready(function() {
             targets: [0]
         }],
         order: [[ 13, "desc" ]],
-        dom: "<'top'B><'row'<'col-sm-12'tr>><'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7 dataTables_pager'lp>>",
+        dom: "<'row'<'col-sm-6 text-left'B><'col-sm-6 text-right'<'#colvis'>>><'row'<'col-sm-12'tr>><'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7 dataTables_pager'lp>>",
         buttons: [
             {
                 text: '<i class="la la-plus"></i> Шинээр нэмэх',
@@ -372,7 +370,18 @@ $(document).ready(function() {
                 extend: 'excelHtml5',
                 text: '<i class="fa fa-print"></i> {!! trans('display.general_excel') !!}',
                 className: "btn btn-light-warning font-weight-bolder mb-2",
-            }
+                title: 'Оролцогчийн жагсаалт',
+                customize: function ( xlsx ) {
+                    var sheet = xlsx.xl.worksheets['sheet1.xml'];
+                    $('c[r=A1] t', sheet).text( 'Тэмцээнд оролцогчид' );
+                },
+                exportOptions: {
+                    columns: [ 0,3,4,5,6,7,8,9,10,12,13 ]
+                },
+                modifier: {
+                    page: 'all'
+                }
+            },
         ]
 	});
 
@@ -597,6 +606,7 @@ function showAddModal( data ) {
     $('#memberModal').modal();
     $('#memberModal').on('shown.bs.modal', function(){
         $('#memberModal .modal-content').html(data);
+        $('.selectpicker').selectpicker();
         $('#create-event-registration-form select[name=member_id]').select2();
         $('#create-event-registration-form select[name=event_id]').select2({
             placeholder: "-- {{ trans('display.general_select') }} --"
@@ -814,6 +824,7 @@ function showEditModal(data){
     $('#memberModal').modal();
     $('#memberModal').on('shown.bs.modal', function(){
         $('#memberModal .modal-content').html(data);
+        $('.selectpicker').selectpicker();
 
         $('#update-event-registration-form select[name=event_id]').select2({
             placeholder: "-- {{ trans('display.general_select') }} --"

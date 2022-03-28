@@ -66,7 +66,7 @@
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.comp_academy')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9">
-                <select class="form-control" id="academy_id" name="academy_id" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}">
+                <select class="form-control selectpicker" data-live-search="true" id="academy_id" name="academy_id" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}">
                     <option value="">-- {{ trans('display.general_select') }} --</option>
                     @forelse(@$academies as $academy)
                     <option value="{{ $academy->id }}">{{ $academy->name }}</option>
@@ -79,7 +79,7 @@
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.general_status')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9">
-                <select class="form-control datatable-input" id="status" name="status" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}">
+                <select class="form-control selectpicker" id="status" name="status" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}">
                     <option value="">-- {{ trans('display.general_select') }} --</option>
                     @forelse(@Config::get("enums.event_registeation_status") as $key => $status)
                     <option value="{{ $key }}">{{ $status }}</option>

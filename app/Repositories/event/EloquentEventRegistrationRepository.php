@@ -140,7 +140,7 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 			->addColumn('profile_url', function ($qry) {
 				$src = "";
 				if ($qry->member->profile_url) {
-					$src = '<a href="javascript:;" class="show-image" data-id="'.$qry->member->id.'" data-type="profile"><img class="h-75 align-self-end" alt="Profile" src="'.\Storage::disk('s3')->url($qry->member->profile_url).'" style="max-width: 50px;"></a>';
+					$src = '<a href="javascript:;" class="show-image" data-id="'.$qry->member->id.'" data-type="profile"><img class="align-self-end" alt="Profile" src="'.\Storage::disk('s3')->url($qry->member->profile_url).'" style="max-width: 50px;"></a>';
 				}
 				return $src;
 			})
@@ -163,23 +163,12 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 				return $qry->created_at;
 			})
             ->addColumn('action', function ($qry) {
-
-				$actionHtml = '<div class="dropdown dropdown-inline">';
-				$actionHtml .= '<a href="javascript:;" class="btn btn-sm btn-clean btn-icon" data-toggle="dropdown">';
-				$actionHtml .= '<i class="fa fa-server"></i>';
-				$actionHtml .= '</a>';
-				$actionHtml .= '<div class="dropdown-menu dropdown-menu-sm dropdown-menu-right">';
-				$actionHtml .= '<ul class="nav nav-hoverable flex-column">';
+				$actionHtml = "";
+				$actionHtml .= 	'<a class="btn btn-sm btn-clean btn-icon edit" href="javascript:;" data-registrationid="'.$qry->id.'" title="'.trans('display.general_edit').'"><i class="la la-edit"></i></a>';
 				if($qry->status == @Config::get('smart.event_registeation_status')['created'])
 				{
-					$actionHtml .= 	'<li class="nav-item"><a class="nav-link edit" href="javascript:;" data-registrationid="'.$qry->id.'"><i class="nav-icon flaticon-edit-1"></i><span class="nav-text">'.trans('display.general_edit').'</span></a></li>';
-					$actionHtml .= 	'<li class="nav-item"><a class="nav-link delete" href="javascript:;" data-registrationid="'.$qry->id.'"><i class="nav-icon flaticon-delete"></i><span class="nav-text">'.trans('display.general_delete').'</span></a></li>';
-				} 
-				
-				$actionHtml .= '</ul>';
-				$actionHtml .= '</div>';
-				$actionHtml .= '</div>';
-
+					$actionHtml .= 	'<a class="btn btn-sm btn-clean btn-icon delete" href="javascript:;" data-registrationid="'.$qry->id.'" title="'.trans('display.general_delete').'"><i class="la la-trash"></i></li>';
+				}
 				return $actionHtml;
 
             })->rawColumns(['action', 'status', 'profile_url', 'id_photo', 'academy_name'])

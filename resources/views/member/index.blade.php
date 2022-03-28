@@ -102,7 +102,7 @@
                                                         </div>
                                                         <div class="col-lg-2 mb-lg-0 mb-6">
                                                             <label>{{trans('display.human_gender_code')}}</label>
-                                                            <select class="form-control datatable-input" name="search_gender_code" id="search_gender_code" data-col-index="5">
+                                                            <select class="form-control selectpicker datatable-input" name="search_gender_code" id="search_gender_code" data-col-index="5">
                                                                 <option value="">-- {{ trans('display.general_all') }} --</option>
                                                                 @forelse(@Config::get('enums.gender_code') as $key => $gender)
                                                                 <option value="{{ $key }}">{{ $gender }}</option>
@@ -112,7 +112,7 @@
                                                         </div>
                                                         <div class="col-lg-2 mb-lg-0 mb-6">
                                                             <label>{{ trans('display.general_status') }}:</label>
-                                                            <select class="form-control datatable-input" name="search_status" id="search_status" data-col-index="6">
+                                                            <select class="form-control selectpicker datatable-input" name="search_status" id="search_status" data-col-index="6">
                                                                 <option value="">-- {{ trans('display.general_all') }} --</option>
                                                                 @forelse(@Config::get('enums.member_status') as $key => $status)
                                                                 <option value="{{ $key }}">{{ $status }}</option>
@@ -179,7 +179,7 @@
                                                         <th>{{trans('display.general_connect')}}</th>
                                                         <th>{{trans('display.general_status')}}</th>
                                                         <th>{{trans('display.general_created_at')}}</th>
-                                                        <th>{{trans('display.general_manage')}}</th>
+                                                        <th width="8%">{{trans('display.general_manage')}}</th>
                                                     </tr>
                                                 </thead>
                                             </table>    
@@ -203,7 +203,7 @@
 </section>
 
 @section('javascript')
-<script src="{{asset('assets/js/plugins/custom/datatables/datatables.js')}}"></script>
+<script src="{{asset('assets/js/plugins/custom/datatables/datatables.bundle.js')}}"></script>
 <script src="{{asset('assets/js/plugins/custom/select2-ng/select2.min.js')}}"></script>
 <script src="{{asset('assets/js/smart.js')}}"></script>
 
@@ -276,6 +276,22 @@ $(document).ready(function() {
             action: function ( e, dt, node, config ) {
                 $.get('{!! route('member.create') !!}', showAddModal);
             }
+        },
+        {
+            extend: 'excelHtml5',
+            text: '<i class="fa fa-print"></i> {!! trans('display.general_excel') !!}',
+            className: "btn btn-light-warning font-weight-bolder mb-2",
+            title: 'Оролцогчийн бүртгэл',
+            customize: function ( xlsx ) {
+                var sheet = xlsx.xl.worksheets['sheet1.xml'];
+                $('c[r=A1] t', sheet).text( 'Оролцогчид' );
+            },
+            exportOptions: {
+                columns: [ 0,2,3,4,5,6,9,10 ]
+            },
+            modifier: {
+                page: 'all'
+            }
         }]
 	});
 
@@ -288,6 +304,39 @@ $(document).ready(function() {
     {
         var id = $(this).data("id");
         $.get('member/' + id + '/edit', memberEditModal);
+    });
+
+    $('#member-datatable tbody').on( 'click', 'tr td a.delete', function () {
+        var id = $(this).data("id");
+
+        Swal.fire({
+            title: "Та устгахдаа итгэлтэй байна уу",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Тийм",
+            cancelButtonText: 'Үгүй',
+            customClass: {
+                confirmButton: "btn btn-primary",
+                cancelButton: 'btn btn-secondary'
+            },
+        }).then(function(result) {
+            if (result.value) {
+                $.ajax({
+                    url: 'member/' + id,
+                    type: 'DELETE',
+                    success: function(response) {
+                        $('.panel-sub-heading').html(response).fadeIn().delay(5000).fadeOut();
+                        memberTable.draw();
+                    },
+                    error: function (xhr, textStatus, error) {
+                        console.log(xhr.statusText);
+                        console.log(textStatus);
+                        console.log(error);
+                    },
+                    async: false
+                });
+            }
+    });
     });
 
 
@@ -444,39 +493,6 @@ function memberEditModal(data)
 
     $('#memberEditModal').on('hidden.bs.modal', function(){
         $('#memberEditModal .modal-body').empty();
-    });
-}
-
-//UserDelete
-function memberDelete(id)
-{
-    Swal.fire({
-        title: "Та устгахдаа итгэлтэй байна уу",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonText: "Тийм",
-        cancelButtonText: 'Үгүй',
-        customClass: {
-            confirmButton: "btn btn-primary",
-            cancelButton: 'btn btn-secondary'
-        },
-    }).then(function(result) {
-        if (result.value) {
-            $.ajax({
-                url: 'member/' + id,
-                type: 'DELETE',
-                success: function(response) {
-                    $('.panel-sub-heading').html(response).fadeIn().delay(5000).fadeOut();
-                    memberTable.draw();
-                },
-                error: function (xhr, textStatus, error) {
-                    console.log(xhr.statusText);
-                    console.log(textStatus);
-                    console.log(error);
-                },
-                async: false
-            });
-        }
     });
 }
 
