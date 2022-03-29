@@ -96,17 +96,17 @@
                                                         </div>
                                                         <div class="col-lg-3 mb-lg-0 mb-6">
                                                             <label>{{ trans('display.comp_entry') }}:</label>
-                                                            <select class="form-control selectpicker datatable-input" name="search_entry" id="search_entry" data-col-index="1">
+                                                            <select class="form-control datatable-input" name="search_entry" id="search_entry" data-col-index="1">
                                                                 <option value="">-- {{ trans('display.general_all') }} --</option>
                                                                 @forelse(@$eventEntries as $eventEntry)
-                                                                <option value="{{ $eventEntry->id }}">{{ $eventEntry->name }}</option>
+                                                                <option value="{{ $eventEntry->id }}">{{ $eventEntry->name }} - {{ @Config::get('enums.gender_code')[$eventEntry->gender_code] }}</option>
                                                                 @empty
                                                                 @endforelse
                                                             </select>
                                                         </div>
                                                         <div class="col-lg-2 mb-lg-0 mb-6">
                                                             <label>{{ trans('display.comp_entry_age') }}:</label>
-                                                            <select class="form-control selectpicker datatable-input" name="search_entry_age" id="search_entry_age" data-col-index="2">
+                                                            <select class="form-control datatable-input" name="search_entry_age" id="search_entry_age" data-col-index="2">
                                                                 <option value="">-- {{ trans('display.general_all') }} --</option>
                                                                 @forelse(@$configAges as $age)
                                                                 <option value="{{ $age->id }}">{{ $age->start_age }}-{{ $age->end_age }}</option>
@@ -116,7 +116,7 @@
                                                         </div>
                                                         <div class="col-lg-2 mb-lg-0 mb-6">
                                                             <label>{{ trans('display.comp_entry_belt') }}:</label>
-                                                            <select class="form-control selectpicker datatable-input" name="search_entry_belt" id="search_entry_belt" data-col-index="3">
+                                                            <select class="form-control datatable-input" name="search_entry_belt" id="search_entry_belt" data-col-index="3">
                                                                 <option value="">-- {{ trans('display.general_all') }} --</option>
                                                                 @forelse(@$configBelts as $belt)
                                                                 <option value="{{ $belt->id }}">{{ $belt->name }}</option>
@@ -126,7 +126,7 @@
                                                         </div>
                                                         <div class="col-lg-2 mb-lg-0 mb-6">
                                                             <label>{{ trans('display.comp_entry_weight') }}:</label>
-                                                            <select class="form-control selectpicker datatable-input" name="search_entry_weight" id="search_entry_weight" data-col-index="4">
+                                                            <select class="form-control datatable-input" name="search_entry_weight" id="search_entry_weight" data-col-index="4">
                                                                 <option value="">-- {{ trans('display.general_all') }} --</option>
                                                                 @forelse(@$configWeights as $weight)
                                                                 <option value="{{ $weight->id }}">{{ $weight->weight }}</option>
@@ -137,8 +137,14 @@
                                                     </div>
                                                     <div class="row mb-8">
                                                         <div class="col-lg-3 mb-lg-0 mb-6">
-                                                            <label>Оролцогч:</label>
-                                                            <input type="text" class="form-control datatable-input" name="search_member" id="search_member" placeholder="Оролцогчийн мэдээллээр хайх" data-col-index="5"/>
+                                                            <label>{{ trans('display.comp_academy') }}:</label>
+                                                            <select class="form-control selectpicker datatable-input" data-live-search="true" name="search_academy" id="search_academy" data-col-index="5">
+                                                                <option value="">-- {{ trans('display.general_all') }} --</option>
+                                                                @forelse(@$academies as $academy)
+                                                                <option value="{{ $academy->id }}">{{ $academy->name }}</option>
+                                                                @empty
+                                                                @endforelse
+                                                            </select>
                                                         </div>
                                                         <div class="col-lg-3 mb-lg-0 mb-6">
                                                             <label>{{ trans('display.general_date') }}:</label>
@@ -153,8 +159,12 @@
                                                             </div>
                                                         </div>
                                                         <div class="col-lg-2 mb-lg-0 mb-6">
+                                                            <label>Оролцогч:</label>
+                                                            <input type="text" class="form-control datatable-input" name="search_member" id="search_member" placeholder="Оролцогчийн мэдээллээр хайх" data-col-index="8"/>
+                                                        </div>
+                                                        <div class="col-lg-2 mb-lg-0 mb-6">
                                                             <label>{{ trans('display.human_gender_code') }}:</label>
-                                                            <select class="form-control selectpicker datatable-input" name="search_gender" id="search_gender" data-col-index="8">
+                                                            <select class="form-control selectpicker datatable-input" name="search_gender" id="search_gender" data-col-index="9">
                                                                 <option value="">-- {{ trans('display.general_all') }} --</option>
                                                                 @forelse(@Config::get('enums.gender_code') as $key => $gender)
                                                                 <option value="{{ $key }}">{{ $gender }}</option>
@@ -164,7 +174,7 @@
                                                         </div>
                                                         <div class="col-lg-2 mb-lg-0 mb-6">
                                                             <label>{{ trans('display.general_status') }}:</label>
-                                                            <select class="form-control selectpicker datatable-input" name="search_status" id="search_status" data-col-index="9">
+                                                            <select class="form-control selectpicker datatable-input" name="search_status" id="search_status" data-col-index="10">
                                                                 <option value="">-- {{ trans('display.general_all') }} --</option>
                                                                 @forelse(@Config::get('enums.event_registeation_status') as $key => $status)
                                                                 <option value="{{ $key }}">{{ $status }}</option>
@@ -280,6 +290,7 @@ $(document).ready(function() {
                 d.status = $('#event-registration-search-form select[id="search_status"]').val();
                 d.member = $('#event-registration-search-form input[id="search_member"]').val();
                 d.gender = $('#event-registration-search-form select[id="search_gender"]').val();
+                d.academy = $('#event-registration-search-form select[id="search_academy"]').val();
                 d.date = dateArr;
             },
         },
@@ -580,6 +591,26 @@ $(document).ready(function() {
                 return item.weight;
             }
         }); 
+    });
+
+    $('#event-registration-search-form select[name=search_entry_age]').on('change', function(){
+        var ageId = $(this).val();
+        var jsonDataWeight;
+
+        $.ajax({
+            type: 'POST',
+            url: '{!! route('event.entry.weight.by.age') !!}',
+            data: {entry_age_id: ageId},
+            success: function (data) {
+                jsonDataWeight = JSON.parse(data);
+            },
+            error: function (xhr, textStatus, error) {
+                console.log(xhr.statusText);
+                console.log(textStatus);
+                console.log(error);
+            },
+            async: false
+        });
     });
 
     $(".filter-status-count").on('click', function(){
