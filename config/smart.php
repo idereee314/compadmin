@@ -89,6 +89,15 @@ return array(
 			 ]
 		 ],
 	 ],
+
+	'member_image_size' => [
+		'profile' => [
+			'cropped' => [250, 250],
+		],
+		'id' => [
+			'cropped' => [1200, 1200],
+		]
+	],
  
 )
 

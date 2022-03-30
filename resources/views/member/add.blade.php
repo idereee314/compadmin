@@ -1,5 +1,4 @@
-<form class="form" method="POST" id="add-member-form" action="{{route('member.store')}}">
-    @csrf
+<form class="form" method="POST" id="add-member-form" action="{{route('member.store')}}" enctype="multipart/form-data">
     <div class="modal-header bg-gray-100">
         <h5 class="modal-title" id="exampleModalLabel">{{trans('display.general_new')}}</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -10,7 +9,7 @@
     <div class="card-body">
             <div class="form-group row">
                 <label class="col-md-3 col-form-label text-right">{{trans('display.human_register_number')}}: <span class="text-danger">*</span></label>
-                <div class="col-md-9">
+                <div class="col-md-9 col-lg-6">
                     <input type="text" class="form-control" autocomplete="off" name="register_number" id="register_number" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}"/>
                     <div class="error-here"></div>
                     <span class="form-text text-muted">Регистрын дугаарын үсгийг томоор бичнэ</span>
@@ -19,7 +18,7 @@
 
             <div class="form-group row">
                 <label class="col-md-3 col-form-label text-right">{{trans('display.human_lastname')}}: <span class="text-danger">*</span></label>
-                <div class="col-md-9">
+                <div class="col-md-9 col-lg-6">
                     <input type="text" class="form-control" autocomplete="off" name="lastname" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}"/>
                     <div class="error-here"></div>
                    
@@ -28,7 +27,7 @@
 
             <div class="form-group row">
                 <label class="col-md-3 col-form-label text-right">{{trans('display.human_firstname')}}: <span class="text-danger">*</span></label>
-                <div class="col-md-9">
+                <div class="col-md-9 col-lg-6">
                     <input type="text" class="form-control" autocomplete="off" name="firstname"  data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}"/>
                     <div class="error-here"></div>
                 </div>
@@ -36,7 +35,7 @@
 
             <div class="form-group row">
                 <label class="col-md-3 col-form-label text-right">{{trans('display.human_contact_phone')}}: <span class="text-danger">*</span></label>
-                <div class="col-md-9">
+                <div class="col-md-9 col-lg-6">
                     <input type="text" class="form-control only-phone" name="contact_phone" id="contact_phone" autocomplete="off" placeholder="{{trans('display.human_contact_phone')}}">
                     <div class="error-here"></div>
                 </div>
@@ -44,24 +43,31 @@
 
             <div class="form-group row">
                 <label class="col-md-3 col-form-label text-right">{{trans('display.human_gender_code')}}: <span class="text-danger">*</span></label>
-                <div class="col-md-9">
+                <div class="col-md-9 col-lg-6">
                     <div class="radio-inline">
-                        @foreach(Config::get("smart.gender_code") as $key => $gender)
-                            <label class="radio radio-rounded">
-                                <input type="radio" name="gender_code" value="{{$key}}" />
+                        @foreach(Config::get("enums.gender_code") as $key => $gender)
+                            <label class="radio radio-rounded" for="{{$key}}">
+                                <input type="radio" name="gender_code" value="{{$key}}" id="{{$key}}"/>
                                 <span></span>
                                 {{$gender}}
                             </label>
                         @endforeach
-                        <div class="error-here"></div>
                     </div>
                 </div>
+                <div class="error-here"></div>
             </div>
 
             <div class="form-group row">
                 <label class="col-md-3 col-form-label text-right">{{trans('display.human_birth')}}<span class="text-danger"> *</span></label>
-                <div class="col-md-9">
-                    <input class="form-control" type="date" name="birth" id="birth" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}"/>
+                <div class="col-md-9 col-lg-6">
+                    <div class="input-group date">
+                        <input type="text" name="birth" id="birth" class="form-control" readonly="readonly" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}"/>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="la la-calendar-check-o"></i>
+                            </span>
+                        </div>
+                    </div>
                     <div class="error-here"></div>
                 </div>
             </div>

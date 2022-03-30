@@ -75,7 +75,9 @@ class Member extends Model
 
         static::deleting(function($member)
         {
-
+            if (\Storage::disk('s3')->exists('/member/'.@$member->id)) {  
+                \Storage::disk('s3')->deleteDirectory('/member/'.@$member->id);
+            }
 		});
     }
 }

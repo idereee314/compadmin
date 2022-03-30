@@ -2,7 +2,6 @@
 
 @section('styles')
 <link rel="stylesheet" href="{{asset('assets/js/plugins/custom/datatables/datatables.bundle.css')}}">
-<link rel="stylesheet" href="{{asset('assets/js/plugins/custom/select2-4.1.0/css/select2.min.css')}}">
 @endsection
 
 @section('content')
@@ -65,7 +64,7 @@
                                 <div class="accordion accordion-light accordion-light-borderless accordion-svg-toggle" id="search">
                                     <div class="card">
                                         <div class="card-header">
-                                            <div class="card-title collapsed" data-toggle="collapse" data-target="#search-member">
+                                            <div class="card-title collapsed" data-toggle="collapse" data-target="#search-registration">
                                                 <span class="svg-icon svg-icon-primary">
                                                     <!--begin::Svg Icon | path:assets/media/svg/icons/Navigation/Angle-double-right.svg-->
                                                     <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
@@ -80,14 +79,14 @@
                                                 <div class="card-label pl-4">Хайлт</div>
                                             </div>
                                         </div>
-                                        <div id="search-member" class="collapse" data-parent="#search">
+                                        <div id="search-registration" class="collapse" data-parent="#search">
                                             <div class="card-body">
                                                 <!--begin: Search Form-->
                                                 <form class="mb-10" id="event-registration-search-form" method="POST">
                                                     <div class="row mb-6">
                                                         <div class="col-lg-3 mb-lg-0 mb-6">
                                                             <label>{{ trans('display.comp_title') }}:</label>
-                                                            <select class="form-control datatable-input" name="search_event" id="search_event" data-col-index="0">
+                                                            <select class="form-control selectpicker datatable-input" name="search_event" id="search_event" data-col-index="0">
                                                                 <option value="">-- {{ trans('display.general_all') }} --</option>
                                                                 @forelse(@$competitions as $competition)
                                                                 <option value="{{ $competition->event_id }}">{{ $competition->name }}</option>
@@ -100,7 +99,7 @@
                                                             <select class="form-control datatable-input" name="search_entry" id="search_entry" data-col-index="1">
                                                                 <option value="">-- {{ trans('display.general_all') }} --</option>
                                                                 @forelse(@$eventEntries as $eventEntry)
-                                                                <option value="{{ $eventEntry->id }}">{{ $eventEntry->name }}</option>
+                                                                <option value="{{ $eventEntry->id }}">{{ $eventEntry->name }} - {{ @Config::get('enums.gender_code')[$eventEntry->gender_code] }}</option>
                                                                 @empty
                                                                 @endforelse
                                                             </select>
@@ -138,8 +137,14 @@
                                                     </div>
                                                     <div class="row mb-8">
                                                         <div class="col-lg-3 mb-lg-0 mb-6">
-                                                            <label>Оролцогч:</label>
-                                                            <input type="text" class="form-control datatable-input" name="search_member" id="search_member" placeholder="Оролцогчийн мэдээллээр хайх" data-col-index="5" />
+                                                            <label>{{ trans('display.comp_academy') }}:</label>
+                                                            <select class="form-control selectpicker datatable-input" data-live-search="true" name="search_academy" id="search_academy" data-col-index="5">
+                                                                <option value="">-- {{ trans('display.general_all') }} --</option>
+                                                                @forelse(@$academies as $academy)
+                                                                <option value="{{ $academy->id }}">{{ $academy->name }}</option>
+                                                                @empty
+                                                                @endforelse
+                                                            </select>
                                                         </div>
                                                         <div class="col-lg-3 mb-lg-0 mb-6">
                                                             <label>{{ trans('display.general_date') }}:</label>
@@ -154,8 +159,12 @@
                                                             </div>
                                                         </div>
                                                         <div class="col-lg-2 mb-lg-0 mb-6">
+                                                            <label>Оролцогч:</label>
+                                                            <input type="text" class="form-control datatable-input" name="search_member" id="search_member" placeholder="Оролцогчийн мэдээллээр хайх" data-col-index="8"/>
+                                                        </div>
+                                                        <div class="col-lg-2 mb-lg-0 mb-6">
                                                             <label>{{ trans('display.human_gender_code') }}:</label>
-                                                            <select class="form-control datatable-input" name="search_gender" id="search_gender" data-col-index="8">
+                                                            <select class="form-control selectpicker datatable-input" name="search_gender" id="search_gender" data-col-index="9">
                                                                 <option value="">-- {{ trans('display.general_all') }} --</option>
                                                                 @forelse(@Config::get('enums.gender_code') as $key => $gender)
                                                                 <option value="{{ $key }}">{{ $gender }}</option>
@@ -165,7 +174,7 @@
                                                         </div>
                                                         <div class="col-lg-2 mb-lg-0 mb-6">
                                                             <label>{{ trans('display.general_status') }}:</label>
-                                                            <select class="form-control datatable-input" name="search_status" id="search_status" data-col-index="9">
+                                                            <select class="form-control selectpicker datatable-input" name="search_status" id="search_status" data-col-index="10">
                                                                 <option value="">-- {{ trans('display.general_all') }} --</option>
                                                                 @forelse(@Config::get('enums.event_registeation_status') as $key => $status)
                                                                 <option value="{{ $key }}">{{ $status }}</option>
@@ -211,7 +220,7 @@
 												</tr>
                                                 <tr>
                                                     <th width="5%">No.</th>
-                                                    <th width="1%">{{trans('display.comp_event')}}</th>
+                                                    <th width="1%">{{trans('display.comp_title')}}</th>
                                                     <th width="1%">{{trans('display.profile_photo')}}</th>
                                                     <th width="8%">{{trans('display.human_register_number')}}</th>
                                                     <th width="20%">{{trans('display.human_name')}}</th>
@@ -224,7 +233,7 @@
                                                     <th width="1%">{{trans('display.id_photo')}}</th>
                                                     <th width="1%">{{trans('display.general_status')}}</th>
                                                     <th width="1%">{{trans('display.general_created_at')}}</th>
-                                                    <th width="1%">{{trans('display.general_manage')}}</th>
+                                                    <th width="8%">{{trans('display.general_manage')}}</th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
@@ -250,8 +259,7 @@
 </section>
 
 @section('javascript')
-<script src="{{asset('assets/js/plugins/custom/datatables/datatables.js')}}"></script>
-<script src="{{asset('assets/js/plugins/custom/select2-4.1.0/js/select2.min.js')}}"></script>
+<script src="{{asset('assets/js/plugins/custom/datatables/datatables.bundle.js')}}"></script>
 <!--<script src="{{asset('assets/js/plugins/custom/select2-ng/select2.min.js')}}"></script>-->
 <script src="{{asset('assets/js/smart.js')}}"></script>
 
@@ -282,6 +290,7 @@ $(document).ready(function() {
                 d.status = $('#event-registration-search-form select[id="search_status"]').val();
                 d.member = $('#event-registration-search-form input[id="search_member"]').val();
                 d.gender = $('#event-registration-search-form select[id="search_gender"]').val();
+                d.academy = $('#event-registration-search-form select[id="search_academy"]').val();
                 d.date = dateArr;
             },
         },
@@ -359,7 +368,7 @@ $(document).ready(function() {
             targets: [0]
         }],
         order: [[ 13, "desc" ]],
-        dom: "<'top'B><'row'<'col-sm-12'tr>><'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7 dataTables_pager'lp>>",
+        dom: "<'row'<'col-sm-6 text-left'B><'col-sm-6 text-right'<'#colvis'>>><'row'<'col-sm-12'tr>><'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7 dataTables_pager'lp>>",
         buttons: [
             {
                 text: '<i class="la la-plus"></i> Шинээр нэмэх',
@@ -372,7 +381,18 @@ $(document).ready(function() {
                 extend: 'excelHtml5',
                 text: '<i class="fa fa-print"></i> {!! trans('display.general_excel') !!}',
                 className: "btn btn-light-warning font-weight-bolder mb-2",
-            }
+                title: 'Оролцогчийн жагсаалт',
+                customize: function ( xlsx ) {
+                    var sheet = xlsx.xl.worksheets['sheet1.xml'];
+                    $('c[r=A1] t', sheet).text( 'Тэмцээнд оролцогчид' );
+                },
+                exportOptions: {
+                    columns: [ 0,3,4,5,6,7,8,9,10,12,13 ]
+                },
+                modifier: {
+                    page: 'all'
+                }
+            },
         ]
 	});
 
@@ -573,6 +593,26 @@ $(document).ready(function() {
         }); 
     });
 
+    $('#event-registration-search-form select[name=search_entry_age]').on('change', function(){
+        var ageId = $(this).val();
+        var jsonDataWeight;
+
+        $.ajax({
+            type: 'POST',
+            url: '{!! route('event.entry.weight.by.age') !!}',
+            data: {entry_age_id: ageId},
+            success: function (data) {
+                jsonDataWeight = JSON.parse(data);
+            },
+            error: function (xhr, textStatus, error) {
+                console.log(xhr.statusText);
+                console.log(textStatus);
+                console.log(error);
+            },
+            async: false
+        });
+    });
+
     $(".filter-status-count").on('click', function(){
         var status = $(this).data('status');
 
@@ -597,6 +637,7 @@ function showAddModal( data ) {
     $('#memberModal').modal();
     $('#memberModal').on('shown.bs.modal', function(){
         $('#memberModal .modal-content').html(data);
+        $('.selectpicker').selectpicker();
         $('#create-event-registration-form select[name=member_id]').select2();
         $('#create-event-registration-form select[name=event_id]').select2({
             placeholder: "-- {{ trans('display.general_select') }} --"
@@ -814,6 +855,7 @@ function showEditModal(data){
     $('#memberModal').modal();
     $('#memberModal').on('shown.bs.modal', function(){
         $('#memberModal .modal-content').html(data);
+        $('.selectpicker').selectpicker();
 
         $('#update-event-registration-form select[name=event_id]').select2({
             placeholder: "-- {{ trans('display.general_select') }} --"
