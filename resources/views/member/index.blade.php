@@ -450,7 +450,7 @@ function memberEditModal(data)
         $('#memberEditModal .modal-content').html(data);
         $('.selectpicker').selectpicker();
 
-        $("#register_number").inputmask());
+        $("#register_number").inputmask();
         $('.only-phone').inputmask("99 99 99 99");
 
         $('#birth').datepicker({

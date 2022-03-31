@@ -18,6 +18,7 @@ use SecurityHelper;
 use Carbon;
 use Session;
 use Config;
+use Str;
 
 class EloquentMemberRepository implements MemberRepository {
 
@@ -41,7 +42,7 @@ class EloquentMemberRepository implements MemberRepository {
 		$member = new Member;
 
 		$member->user_id = @$input['user_id'];
-		$member->register_number = ucwords($input['register_number']);
+		$member->register_number = Str::upper($input['register_number']);
 		$member->firstname = $input['firstname'];
 		$member->lastname = $input['lastname'];
 		$member->contact_phone = preg_replace('/\s+/', '', @$input['contact_phone']);
@@ -58,7 +59,7 @@ class EloquentMemberRepository implements MemberRepository {
  	public function update($id, $input)
 	{
 		$member = $this->find($id);
-		$member->register_number = ucwords($input['register_number']);
+		$member->register_number = Str::upper($input['register_number']);
 		$member->firstname = $input['firstname'];
 		$member->lastname = $input['lastname'];
 		$member->contact_phone = preg_replace('/\s+/', '', @$input['contact_phone']);

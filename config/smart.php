@@ -18,15 +18,15 @@ return array(
 
 	'event_registeation_status' => [
 		'created' => 'created',
-		//'registered' => 'Бүртгэсэн',
 		'approved' => 'approved',
+		'checked' => 'Шалгасан',
 		'canceled' => 'canceled',
 	],
 
 	'event_registeation_status_class' => [
 		'created' => 'primary',
-		'registered' => 'info',
 		'approved' => 'success',
+		'checked' => 'info',
 		'canceled' => 'danger ',
 	],
 

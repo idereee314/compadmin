@@ -1,6 +1,6 @@
 @extends('default')
 
-@section('styles')
+@section('css')
 <link rel="stylesheet" href="{{asset('assets/js/plugins/custom/datatables/datatables.bundle.css')}}">
 @endsection
 
@@ -260,17 +260,15 @@
 
 @section('javascript')
 <script src="{{asset('assets/js/plugins/custom/datatables/datatables.bundle.js')}}"></script>
-<!--<script src="{{asset('assets/js/plugins/custom/select2-ng/select2.min.js')}}"></script>-->
-<script src="{{asset('assets/js/smart.js')}}"></script>
 
 <script>
 $(document).ready(function() {
     eventTable = $("#event-registration-datatable").DataTable({
         processing:     true,
         serverSide:     true,
-        deferRender:    true,
-        autoWidth:      true,
-        filter:         false,
+        //deferRender:    true,
+        //autoWidth:      true,
+        //filter:         false,
         responsive:     true,
         dataType: 'json',
         paginationType: "full_numbers",
@@ -343,7 +341,8 @@ $(document).ready(function() {
                         age = data.start_age + '+';
                     }
                     return age;
-                }, "defaultContent": ""
+                },
+                name: "age.start_age", "defaultContent": ""
             },
             {data: 'belt.name', "defaultContent": ""},
             {data: 'weight.weight', "defaultContent": ""},
@@ -362,7 +361,7 @@ $(document).ready(function() {
         {
             searchable: false,
             orderable: false,
-            targets: [0,1,6,10,13]
+            targets: [0,1,2,3,4,5,10,11,14]
         },{
             class: "text-center",
             targets: [0]
@@ -1004,3 +1003,4 @@ function showEditModal(data){
 }
 </script>
 @endsection
+@stop
