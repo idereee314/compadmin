@@ -115,9 +115,9 @@ class EloquentEventEntriesRepository implements EventEntriesRepository {
 			$entries = $qry->get();
 
 			$map = $entries->map(function($items){
-				$data['id'] = $items->id;
-				$data['name'] = $items->name.' - '.@Config::get('enums.gender_code')[$items->gender_code];
-				return $data;
+				$items->id = $items->id;
+				$items->name = $items->name.' - '.@Config::get('enums.gender_code')[$items->gender_code];
+				return $items;
 			});
 		}
 

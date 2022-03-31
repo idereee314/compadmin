@@ -11,7 +11,7 @@
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.human_register_number')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9">
-                <input type="text" class="form-control" autocomplete="off" name="register_number" id="register_number" value="{{ $member->register_number }}" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}"/>
+                <input type="text" class="form-control" autocomplete="off" name="register_number" id="register_number" value="{{ $member->register_number }}"  data-inputmask-regex="^[А-ЯӨҮа-яөү]{2}[0-9]{8}$" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}" style="text-transform: uppercase;"/>
                 <div class="error-here"></div>
                 <span class="form-text text-muted">Регистрын дугаарын үсгийг томоор бичнэ</span>
             </div>
@@ -60,7 +60,14 @@
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.human_birth')}}<span class="text-danger"> *</span></label>
             <div class="col-md-9">
-                <input class="form-control" type="date" name="birth" id="birth" value="{{ $member->birth }}" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}"/>
+                <div class="input-group date">
+                    <input type="text" name="birth" id="birth" class="form-control" value="{{ $member->birth }}" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}"/>
+                    <div class="input-group-append">
+                        <span class="input-group-text">
+                            <i class="la la-calendar-check-o"></i>
+                        </span>
+                    </div>
+                </div>
                 <div class="error-here"></div>
             </div>
         </div>
@@ -110,6 +117,18 @@
                
             </div>
         </div>  
+        <div class="form-group row">
+            <label class="col-md-3 col-form-label text-right">{{trans('display.general_status')}}: <span class="text-danger">*</span></label>
+            <div class="col-md-9">
+                <select class="form-control selectpicker" id="status" name="status" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}">
+                    <option value="">-- {{ trans('display.general_select') }} --</option>
+                    @forelse(@Config::get("enums.member_status") as $key => $status)
+                    <option value="{{ $key }}" {{$member->status == $key ? 'selected' : ''}}>{{ $status }}</option>
+                    @empty
+                    @endforelse
+                </select>
+            </div>
+        </div>
     </div>
 
     <div class="modal-footer text-right bg-gray-100 border-top-0">

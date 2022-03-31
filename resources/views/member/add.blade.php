@@ -10,7 +10,7 @@
             <div class="form-group row">
                 <label class="col-md-3 col-form-label text-right">{{trans('display.human_register_number')}}: <span class="text-danger">*</span></label>
                 <div class="col-md-9 col-lg-6">
-                    <input type="text" class="form-control" autocomplete="off" name="register_number" id="register_number" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}"/>
+                    <input type="text" class="form-control" autocomplete="off" name="register_number" id="register_number" data-inputmask-regex="^[А-ЯӨҮа-яөү]{2}[0-9]{8}$" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}" style="text-transform: uppercase;"/>
                     <div class="error-here"></div>
                     <span class="form-text text-muted">Регистрын дугаарын үсгийг томоор бичнэ</span>
                 </div>

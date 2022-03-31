@@ -38,7 +38,7 @@
             <div class="col-md-9">
                 <select class="form-control form-control-input" type="text" id="entry_id" name="entry_id" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}">
                 @forelse(@$eventEntries as $entry)
-                    <option value="{{ $entry->id }}" {{ $eventRegistration->entry_id == $entry->id ? 'selected' : ''}}>{{ $entry->name }}</option>
+                    <option value="{{ $entry['id'] }}" {{ $eventRegistration->entry_id == @$entry->id ? 'selected' : ''}}>{{ $entry->name }}</option>
                     @empty
                     @endforelse
                 </select>

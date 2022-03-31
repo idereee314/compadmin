@@ -41,7 +41,7 @@ class EloquentMemberRepository implements MemberRepository {
 		$member = new Member;
 
 		$member->user_id = @$input['user_id'];
-		$member->register_number = $input['register_number'];
+		$member->register_number = ucwords($input['register_number']);
 		$member->firstname = $input['firstname'];
 		$member->lastname = $input['lastname'];
 		$member->contact_phone = preg_replace('/\s+/', '', @$input['contact_phone']);
@@ -58,13 +58,13 @@ class EloquentMemberRepository implements MemberRepository {
  	public function update($id, $input)
 	{
 		$member = $this->find($id);
-		$member->user_id = @$input['user_id'];
-		$member->register_number = $input['register_number'];
+		$member->register_number = ucwords($input['register_number']);
 		$member->firstname = $input['firstname'];
 		$member->lastname = $input['lastname'];
 		$member->contact_phone = preg_replace('/\s+/', '', @$input['contact_phone']);
 		$member->birth = @$input['birth'];
 		$member->gender_code = @$input['gender_code'];
+		$member->status = @$input['status'];
 		if(array_key_exists('profile_url', $input))
 		{
 			$member->profile_url = @$input['profile_url'];
@@ -154,7 +154,10 @@ class EloquentMemberRepository implements MemberRepository {
             ->addColumn('action', function ($member) {
 				$actionHtml = "";
 				$actionHtml .= 	'<a class="btn btn-sm btn-clean btn-icon edit" href="javascript:;" data-id="'.$member->id.'" title="'.trans('display.general_edit').'"><i class="la la-edit"></i></a>';
-				$actionHtml .= 	'<a class="btn btn-sm btn-clean btn-icon delete" href="javascript:;" data-id="'.$member->id.'" title="'.trans('display.general_delete').'"><i class="la la-trash"></i></li>';
+				if(@$member->status == @Config::get('smart.member_status')['created'])
+				{
+					$actionHtml .= 	'<a class="btn btn-sm btn-clean btn-icon delete" href="javascript:;" data-id="'.$member->id.'" title="'.trans('display.general_delete').'"><i class="la la-trash"></i></li>';
+				}
 
 				return $actionHtml;
             })->rawColumns(['profile_photo', 'id_photo', 'connect_user', 'status', 'action'])
