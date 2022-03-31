@@ -11,9 +11,6 @@ use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Validator;
 use Session;
 use SmartHelper;
-use 
-
-;
 
 //Repositories
 use user\CompadUserRepository as User;
