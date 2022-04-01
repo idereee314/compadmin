@@ -813,11 +813,13 @@ function showAddModal( data ) {
                 data: {academy_id: academyId},
                 success: function (data) {
                     $('#academy_name_other').addClass('d-none');
+                    $("#academy_name").attr("disabled", true);
                     $("#academy_name").val("");
                     jsonData = JSON.parse(data);
 
                     if(jsonData) {
                         $('#academy_name_other').removeClass('d-none');
+                        $("#academy_name").attr("disabled", false);
                     }              
                 },
                 error: function (xhr, textStatus, error) {
@@ -994,11 +996,13 @@ function showEditModal(data){
                 data: {academy_id: academyId},
                 success: function (data) {
                     $('#academy_name_other').addClass('d-none');
+                    $("#academy_name").attr("disabled", true);
                     $("#academy_name").val("");
                     jsonData = JSON.parse(data);
 
                     if(jsonData) {
                         $('#academy_name_other').removeClass('d-none');
+                        $("#academy_name").attr("disabled", false);
                     }              
                 },
                 error: function (xhr, textStatus, error) {
