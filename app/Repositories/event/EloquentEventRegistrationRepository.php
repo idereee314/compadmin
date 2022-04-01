@@ -178,9 +178,8 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 						$member .= '<img src="'.\Storage::disk('s3')->url($qry->member->profile_url).'" alt="Profile">';
 					$member .= '</div></a>';
 					$member .= '<div class="ml-3">';
-						$member .= '<span class="text-dark-75 line-height-sm d-block pb-2">'.$qry->member->register_number.'</span>';
-						$member .= '<span class="text-dark-75 line-height-sm d-block pb-2" style="white-space: nowrap;">'.$qry->member->lastname.' <strong>'.$qry->member->firstname.'</strong></span>';
-                        $member .= '<span class="text-dark-75 line-height-sm d-block pb-2">'.$qry->member->contact_phone.'</span>';
+						$member .= '<span class="text-dark-75 line-height-sm d-block pb-3" style="white-space: nowrap;">'.$qry->member->lastname.' <strong>'.$qry->member->firstname.'</strong></span>';
+                        $member .= '<span class="text-dark-75 line-height-sm d-block pb-2"><i class="la la-address-book"></i>'.$qry->member->register_number.', <i class="la la-phone"></i>'.$qry->member->contact_phone.'</span>';
 					$member .= '</div>';
                 $member .= '</div>';
 				return $member;
@@ -210,7 +209,7 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 						$actionHtml .= '<i class="la la-cog"></i>';
 					$actionHtml .= '</a>';
 					$actionHtml .= '<div class="dropdown-menu dropdown-menu-sm dropdown-menu-right">';
-						$actionHtml .= '<ul class="nav nav-hoverable flex-column">';;
+						$actionHtml .= '<ul class="nav nav-hoverable flex-column">';
 							$actionHtml .= '<li class="nav-item"><a class="nav-link award" href="javascript:;" data-registrationid="'.$qry->id.'"><i class="nav-icon la la-award"></i><span class="nav-text">Байр эзлүүлэх</span></a></li>';
 						$actionHtml .= '</ul>';
 					$actionHtml .= '</div>';
