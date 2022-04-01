@@ -45,6 +45,7 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 		$eventRegistraion->entry_belt_id = $input['entry_belt_id'];
 		$eventRegistraion->entry_weight_id = @$input['entry_weight_id'];
 		$eventRegistraion->academy_id = @$input['academy_id'];
+		$eventRegistraion->academy_name = @$input['academy_name'];
 		$eventRegistraion->status = @$input['status'];
 
 		$eventRegistraion->save();
@@ -59,6 +60,7 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 		$eventRegistraion->entry_belt_id = $input['entry_belt_id'];
 		$eventRegistraion->entry_weight_id = @$input['entry_weight_id'];
 		$eventRegistraion->academy_id = @$input['academy_id'];
+		$eventRegistraion->academy_name = @$input['academy_name'];
 		$eventRegistraion->status = @$input['status'];
 
 		$eventRegistraion->save();

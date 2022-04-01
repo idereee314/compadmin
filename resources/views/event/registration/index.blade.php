@@ -646,6 +646,7 @@ function showAddModal( data ) {
         $('#create-event-registration-form input[name=entry_age_id]').select2({data: ""});
         $('#create-event-registration-form input[name=entry_belt_id]').select2({data: ""});
         $('#create-event-registration-form input[name=entry_weight_id]').select2({data: ""});
+        $('#create-event-registration-form input[name=academy_id]').select2({data: ""});
 
         $('#create-event-registration-form select[name=event_id]').on('change', function(){
             var eventId = $(this).val();
@@ -804,6 +805,30 @@ function showAddModal( data ) {
                 return item.firstname + ": " + item.lastname;
             }
         });
+
+        $('#create-event-registration-form select[name=academy_id]').on('change', function(){
+            var academyId = $(this).val(); 
+            $.ajax({
+                type: 'POST',
+                url: '{!! route('academy.isother') !!}',
+                data: {academy_id: academyId},
+                success: function (data) {
+                    $('#academy_name_other').addClass('d-none');
+                    $("#academy_name").val("");
+                    jsonData = JSON.parse(data);
+
+                    if(jsonData) {
+                        $('#academy_name_other').removeClass('d-none');
+                    }              
+                },
+                error: function (xhr, textStatus, error) {
+                    console.log(xhr.statusText);
+                    console.log(textStatus);
+                    console.log(error);
+                },
+                async: false
+            });
+        }) 
         
 
         $('#create-event-registration-form').validate({
@@ -961,6 +986,30 @@ function showEditModal(data){
                 }
             }); 
         });
+
+        $('#update-event-registration-form select[name=academy_id]').on('change', function(){
+            var academyId = $(this).val(); 
+            $.ajax({
+                type: 'POST',
+                url: '{!! route('academy.isother') !!}',
+                data: {academy_id: academyId},
+                success: function (data) {
+                    $('#academy_name_other').addClass('d-none');
+                    $("#academy_name").val("");
+                    jsonData = JSON.parse(data);
+
+                    if(jsonData) {
+                        $('#academy_name_other').removeClass('d-none');
+                    }              
+                },
+                error: function (xhr, textStatus, error) {
+                    console.log(xhr.statusText);
+                    console.log(textStatus);
+                    console.log(error);
+                },
+                async: false
+            });
+        }) 
 
         $('#update-event-registration-form').validate({
             ignore: [],

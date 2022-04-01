@@ -269,6 +269,7 @@ return [
     'comp_entry_belt' => 'Бүс',
     'comp_entry_weight' => 'Жин',
     'comp_academy' => 'Академи',
+    'comp_academy_name' => 'Академи нэр',
     'comp_member' => 'Оролцогч',
     'comp_title' => 'Тэмцээн',
 

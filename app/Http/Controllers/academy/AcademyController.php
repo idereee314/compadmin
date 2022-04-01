@@ -205,4 +205,11 @@ class AcademyController extends Controller
         return $this->academy->getDatatableList($request);
     }
     
+    public function getIsOther()
+    {
+        $input = Input::all();
+
+        $academy = $this->academy->find($input['academy_id']);
+        return json_encode($academy->is_other);
+    }
 }

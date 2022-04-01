@@ -76,6 +76,13 @@
             </div>
         </div>
 
+        <div class="form-group row d-none" id="academy_name_other">
+            <label class="col-md-3 col-form-label text-right">{{trans('display.comp_academy_name')}}: <span class="text-danger">*</span></label>
+            <div class="col-md-9">
+                <input class="form-control" id="academy_name" name="academy_name"/>
+            </div>
+        </div>
+
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.general_status')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9">
