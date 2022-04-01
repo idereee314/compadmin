@@ -215,24 +215,17 @@
                                             <table class="table table-separate table-head-custom" id="event-registration-datatable" style="margin-top: 13px !important">
                                                 <thead>
                                                 <tr>
-													<th colspan="4">{{ trans('display.comp_member') }}</th>
-													<th colspan="11">{{ trans('display.comp_title') }}</th>
-												</tr>
-                                                <tr>
                                                     <th width="5%">No.</th>
                                                     <th width="1%">{{trans('display.comp_title')}}</th>
-                                                    <th width="1%">{{trans('display.profile_photo')}}</th>
-                                                    <th width="8%">{{trans('display.human_register_number')}}</th>
-                                                    <th width="20%">{{trans('display.human_name')}}</th>
-                                                    <th width="8%">{{trans('display.human_phone_number')}}</th>
-                                                    <th width="8%">{{trans('display.comp_entry')}}</th>
+                                                    <th width="30%">{{trans('display.comp_member')}}</th>
+                                                    <th width="15%">{{trans('display.comp_entry')}}</th>
                                                     <th width="5%">{{trans('display.comp_entry_age')}}</th>
-                                                    <th width="5%">{{trans('display.comp_entry_belt')}}</th>
+                                                    <th width="8%">{{trans('display.comp_entry_belt')}}</th>
                                                     <th width="5%">{{trans('display.comp_entry_weight')}}</th>
-                                                    <th width="30%">{{trans('display.comp_academy')}}</th>
+                                                    <th width="15%">{{trans('display.comp_academy')}}</th>
                                                     <th width="1%">{{trans('display.id_photo')}}</th>
                                                     <th width="1%">{{trans('display.general_status')}}</th>
-                                                    <th width="1%">{{trans('display.general_created_at')}}</th>
+                                                    <th width="8%">{{trans('display.general_created_at')}}</th>
                                                     <th width="8%">{{trans('display.general_manage')}}</th>
                                                 </tr>
                                                 </thead>
@@ -315,7 +308,9 @@ $(document).ready(function() {
                 width: "30px"
             },
             
-            {data: 'event.name'},
+            {data: 'event'},
+            {data: 'member', "defaultContent": ""},
+            /*
             {data: 'profile_url', "defaultContent": ""},
             {data: 'member.register_number'},
             {
@@ -327,6 +322,7 @@ $(document).ready(function() {
                 "defaultContent": ""
             },
             {data: 'member.contact_phone'},
+            */
             {data: 'entry.name', "defaultContent": ""},
             {
                 data: 'age',
@@ -361,12 +357,12 @@ $(document).ready(function() {
         {
             searchable: false,
             orderable: false,
-            targets: [0,1,2,3,4,5,10,11,14]
+            targets: [0,1,2,7,8,11]
         },{
             class: "text-center",
-            targets: [0]
+            targets: [0,1,8]
         }],
-        order: [[ 13, "desc" ]],
+        order: [[ 10, "desc" ]],
         dom: "<'row'<'col-sm-6 text-left'B><'col-sm-6 text-right'<'#colvis'>>><'row'<'col-sm-12'tr>><'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7 dataTables_pager'lp>>",
         buttons: [
             {
