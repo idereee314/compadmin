@@ -204,6 +204,7 @@
 
 @section('javascript')
 <script src="{{asset('assets/js/plugins/custom/datatables/datatables.bundle.js')}}"></script>
+<script src="{{asset('assets/js/plugins/custom/datatables/datatables.js')}}"></script>
 <script src="{{asset('assets/js/plugins/custom/select2-ng/select2.min.js')}}"></script>
 <script src="{{asset('assets/js/smart.js')}}"></script>
 
@@ -237,7 +238,7 @@ $(document).ready(function() {
         },
         "fnCreatedRow": function( nRow, aData, iDataIndex ) {
             $(nRow).attr('id', aData[0]);
-        },        
+        },
         columns: [
             {
                 data: null,
@@ -384,19 +385,18 @@ function showAddModal( data ) {
     $('#memberAddModal').on('shown.bs.modal', function(){
         $('#memberAddModal .modal-content').html(data);
 
-        $("#register_number").inputmask();
+        $("#register_number").inputmask({ regex: "[А-Я]{2}[0-9]*"});
         $('.only-phone').inputmask("99 99 99 99");
 
         $('#birth').datepicker({
             rtl: KTUtil.isRTL(),
             todayHighlight: true,
             orientation: "bottom left",
-            format:  'yyyy-mm-dd',
             templates: {
                 leftArrow: '<i class="la la-angle-right"></i>',
                 rightArrow: '<i class="la la-angle-left"></i>'
             }
-        });
+        })
 
         $('#add-member-form').validate({
             ignore: [],
@@ -414,7 +414,7 @@ function showAddModal( data ) {
                     success: function(response) {
                         $('#memberAddModal').find("#close").trigger('click');
                         $('.panel-sub-heading').html(response).fadeIn().delay(5000).fadeOut();
-                        memberTable.ajax.reload();
+                        memberTable.draw();
                     },
                     error: function (xhr, textStatus, error) {
                         console.log(xhr.statusText);
@@ -448,21 +448,9 @@ function memberEditModal(data)
     $('#memberEditModal').modal();
     $('#memberEditModal').on('shown.bs.modal', function(){
         $('#memberEditModal .modal-content').html(data);
-        $('.selectpicker').selectpicker();
 
         $("#register_number").inputmask();
         $('.only-phone').inputmask("99 99 99 99");
-
-        $('#birth').datepicker({
-            rtl: KTUtil.isRTL(),
-            todayHighlight: true,
-            orientation: "bottom left",
-            format:  'yyyy-mm-dd',
-            templates: {
-                leftArrow: '<i class="la la-angle-right"></i>',
-                rightArrow: '<i class="la la-angle-left"></i>'
-            }
-        });
 
         $('#edit-member-form').validate({
             ignore: [],
@@ -478,11 +466,9 @@ function memberEditModal(data)
                     type: form.method,
                     data:  new FormData(form),
                     success: function(response) {
-                        var page = memberTable.page.info().page;
-
                         $('#memberEditModal').find("#close").trigger('click');
                         $('.panel-sub-heading').html(response).fadeIn().delay(5000).fadeOut();
-                        memberTable.page(page).draw('page');
+                        memberTable.draw();
                     },
                     error: function (xhr, textStatus, error) {
                         console.log(xhr.statusText);
