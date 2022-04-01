@@ -113,6 +113,16 @@
                 </select>
             </div>
         </div>
+        <div class="form-group row">
+            <label class="col-md-3 col-form-label text-right"></span></label>
+            <div class="col-md-9">
+                <div class="checkbox-inline">
+                    <label class="checkbox checkbox-success"> 
+                    <input type="checkbox" name="is_weight_checked" id="is_weight_checked" {{ @$eventRegistration->is_weight_checked ? 'checked' : ''}}> 
+                    <span></span>Жин шалгасан эсэх</label>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="modal-footer text-right bg-gray-100 border-top-0">

@@ -449,7 +449,7 @@ function memberEditModal(data)
     $('#memberEditModal').on('shown.bs.modal', function(){
         $('#memberEditModal .modal-content').html(data);
 
-        $("#register_number").inputmask({ regex: "[А-Я]{2}[0-9]*"});
+        $("#register_number").inputmask();
         $('.only-phone').inputmask("99 99 99 99");
 
         $('#edit-member-form').validate({

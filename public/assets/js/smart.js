@@ -23,7 +23,7 @@ $.ajaxSetup({
     statusCode: {
         401: function(){
             // Redirec the to the login page.
-            location.href = "/login";
+            location.href = "/";
         }
     }
 });

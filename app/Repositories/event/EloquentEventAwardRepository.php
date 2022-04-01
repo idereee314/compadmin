@@ -1,6 +1,6 @@
 <?php namespace event;
 
-use event\EventRegistration;
+use event\EventAward;
 use core\sessions\Sessions;
 
 use Hash;
@@ -17,69 +17,53 @@ use Carbon;
 use Session;
 use Config;
 
-class EloquentEventRegistrationRepository implements EventRegistrationRepository {
+class EloquentEventAwardRepository implements EventAwardRepository {
 
 	public function all()
 	{
-		return EventRegistration::all();
+		return EventAward::all();
 	}
 
 	public function allPaginate()
 	{
-		return EventRegistration::paginate(ConfigHelper::getConfigValueByCode('pagination_global_list'));
+		return EventAward::paginate(ConfigHelper::getConfigValueByCode('pagination_global_list'));
 	}
 
 	public function find($id)
 	{
-		return EventRegistration::find($id);
+		return EventAward::find($id);
 	}
 
 	public function create($input)
 	{
-		$eventRegistraion = new EventRegistration;
+		$eventAward = new EventAward;
+		$eventAward->event_registration_id = $input['event_registration_id'];
+		$eventAward->member_id = @$input['member_id'];
+		$eventAward->place_number = $input['place_number'];
 
-		$eventRegistraion->member_id = $input['member_id'];
-		$eventRegistraion->event_id = $input['event_id'];
-		$eventRegistraion->entry_id = $input['entry_id'];
-		$eventRegistraion->entry_age_id = $input['entry_age_id'];
-		$eventRegistraion->entry_belt_id = $input['entry_belt_id'];
-		$eventRegistraion->entry_weight_id = @$input['entry_weight_id'];
-		$eventRegistraion->academy_id = @$input['academy_id'];
-		$eventRegistraion->academy_name = @$input['academy_name'];
-		$eventRegistraion->status = @$input['status'];
-
-		$eventRegistraion->save();
-		return $eventRegistraion;
+		$eventAward->save();
+		return $eventAward;
 	}
 
  	public function update($id, $input)
 	{
-		$eventRegistraion = $this->find($id);
-		$eventRegistraion->entry_id = $input['entry_id'];
-		$eventRegistraion->entry_age_id = $input['entry_age_id'];
-		$eventRegistraion->entry_belt_id = $input['entry_belt_id'];
-		$eventRegistraion->entry_weight_id = @$input['entry_weight_id'];
-		$eventRegistraion->academy_id = @$input['academy_id'];
-		$eventRegistraion->academy_name = @$input['academy_name'];
-		$eventRegistraion->status = @$input['status'];
-		$eventRegistraion->is_weight_checked = @$input['is_weight_checked'] ? true: false ;
+		$eventAward = $this->find($id);
+		$eventAward->place_number = $input['place_number'];
 
-		$eventRegistraion->save();
-		return $eventRegistraion;
+		$eventAward->save();
+		return $eventAward;
 	}
 
 	public function delete($id)
 	{
-		$eventRegistraion = $this->find($id);
-
-		$eventRegistraion->delete();
+		$eventAward = $this->find($id);
+		$eventAward->delete();
 	}
 
     public function getDatatableList($searchData)
     {
-		$qry = EventRegistration::selectRaw('uq_event_registration.*, uq_event_config.reg_start_date, uq_event_config. reg_end_date')
-			->join('uq_event_config', 'uq_event_config.event_id', '=', 'uq_event_registration.event_id')
-			->with(['entry:id,name', 'age:id,start_age,end_age', 'belt:id,name', 'weight:id,weight', 'academy:id,name,is_other']);
+		$qry = EventAward::selectRaw('uq_event_award.*')
+			->with(['eventRegistration.event:id,name,description,event_date,due_date', 'member:id,register_number,contact_phone,firstname,lastname,profile_url,id_url', 'eventRegistration.entry:id,name', 'eventRegistration.age:id,start_age,end_age', 'eventRegistration.belt:id,name', 'eventRegistration.weight:id,weight', 'eventRegistration.academy:id,name,is_other']);
 
         $data = Datatables::make($qry)
             ->filter(function ($qry) use ($searchData) {
@@ -90,22 +74,22 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 
                 if($searchData->has('entry') && $searchData->get('entry') !== null)
                 {
-					$qry->where('uq_event_registration.entry_id', $searchData->get('entry'));
+					$qry->where('entry_id', $searchData->get('entry'));
 				}
 
 				if($searchData->has('entryAge') && $searchData->get('entryAge') !== null)
                 {
-					$qry->where('uq_event_registration.entry_age_id', $searchData->get('entryAge'));
+					$qry->where('entry_age_id', $searchData->get('entryAge'));
 				}
 
 				if($searchData->has('entryBelt') && $searchData->get('entryBelt') !== null)
                 {
-					$qry->where('uq_event_registration.entry_belt_id', $searchData->get('entryBelt'));
+					$qry->where('entry_belt_id', $searchData->get('entryBelt'));
 				}
 
 				if($searchData->has('entryWeight') && $searchData->get('entryWeight') !== null)
                 {
-					$qry->where('uq_event_registration.entry_weight_id', $searchData->get('entryWeight'));
+					$qry->where('entry_weight_id', $searchData->get('entryWeight'));
 				}
 
 				if($searchData->has('gender') && $searchData->get('gender') !== null)
@@ -113,11 +97,6 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 					$qry->whereHas('member', function($q) use($searchData){
 						$q->where('gender_code', $searchData->get('gender'));
 					});				
-				}
-
-				if($searchData->has('is_weight') && $searchData->get('is_weight') !== null)
-                {
-					$qry->where('is_weight_checked', $searchData->get('is_weight'));			
 				}
 
 				if($searchData->has('status') && $searchData->get('status') !== null)
@@ -151,17 +130,11 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 					});
                 }
             })
-			->setRowAttr([
-				'class' => function($qry) {
-					return @$qry->is_weight_checked ? 'table-secondary' : '';
-				}
-			])
 			->editColumn('status', function($qry)
 			{
 				$status = '<span class="label label-lg font-weight-bold label-light-'.@Config::get('smart.event_registeation_status_class')[$qry->status].' label-inline">'.@Config::get('enums.event_registeation_status')[$qry->status].'</span>';
 				return $status;
 			})
-			/*
 			->addColumn('profile_url', function ($qry) {
 				$src = "";
 				if ($qry->member->profile_url) {
@@ -169,27 +142,9 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 				}
 				return $src;
 			})
-			*/
-			->addColumn('event', function($qry){
-				return ' <span class="label label-primary label-dot mr-2"></span><span class="font-weight-bold text-danger">'.$qry->event->name.'</span> /'.$qry->event->event_date.' - '.$qry->event->due_date.'/';
-			})
-			->addColumn('member', function($qry){
-				$member = "";
-				$member .= '<div class="d-flex align-items-center">';
-                	$member .= '<a href="javascript:;" class="show-image" data-id="'.$qry->member->id.'" data-type="profile"><div class="symbol symbol-50 flex-shrink-0">';
-						$member .= '<img src="'.\Storage::disk('s3')->url($qry->member->profile_url).'" alt="Profile">';
-					$member .= '</div></a>';
-					$member .= '<div class="ml-3">';
-						$member .= '<span class="text-dark-75 line-height-sm d-block pb-2">'.$qry->member->register_number.'</span>';
-						$member .= '<span class="text-dark-75 line-height-sm d-block pb-2" style="white-space: nowrap;">'.$qry->member->lastname.' <strong>'.$qry->member->firstname.'</strong></span>';
-                        $member .= '<span class="text-dark-75 line-height-sm d-block pb-2">'.$qry->member->contact_phone.'</span>';
-					$member .= '</div>';
-                $member .= '</div>';
-				return $member;
-			})
 			->editColumn('id_photo', function ($qry) {
 				if ($qry->member->id_url) {
-					return '<a class="btn btn-sm btn-clean btn-icon show-image" data-id="'.$qry->member->id.'" data-type="id" title="'.trans('display.id_photo').'"><i class="far fas fa-paperclip text-warning"></i></a>';
+					return '<a class="btn btn-light show-image" data-id="'.$qry->member->id.'" data-type="id"><i class="far fa-eye ml-1"></i></a>';
 				}
 				return "";
 			})
@@ -224,7 +179,7 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 				}
 				return $actionHtml;
 
-            })->rawColumns(['action', 'status', 'member', 'id_photo', 'event', 'academy_name'])
+            })->rawColumns(['action', 'status', 'profile_url', 'id_photo', 'academy_name'])
             ->make(true);
 
         return $data;
@@ -235,7 +190,7 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 		$count = "";
 		if(@$eventId)
 		{
-			$qry = EventRegistration::selectRaw('status, count(*) as total')->where('event_id', $eventId)->groupBy('status');
+			$qry = EventAward::selectRaw('status, count(*) as total')->where('event_id', $eventId)->groupBy('status');
 			$count = $qry->get();
 		}
 

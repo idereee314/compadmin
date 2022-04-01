@@ -19,6 +19,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind('academy\AcademyRepository', 'academy\EloquentAcademyRepository');  
         $this->app->bind('event\EventRegistrationRepository', 'event\EloquentEventRegistrationRepository'); 
         $this->app->bind('event\EventConfigRepository', 'event\EloquentEventConfigRepository'); 
+        $this->app->bind('event\EventAwardRepository', 'event\EloquentEventAwardRepository'); 
 
         $this->app->bind('organization\OrganizationRepository', 'organization\EloquentOrganizationRepository'); 
 

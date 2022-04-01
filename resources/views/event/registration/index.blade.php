@@ -1,6 +1,6 @@
 @extends('default')
 
-@section('styles')
+@section('css')
 <link rel="stylesheet" href="{{asset('assets/js/plugins/custom/datatables/datatables.bundle.css')}}">
 @endsection
 
@@ -163,11 +163,11 @@
                                                             <input type="text" class="form-control datatable-input" name="search_member" id="search_member" placeholder="Оролцогчийн мэдээллээр хайх" data-col-index="8"/>
                                                         </div>
                                                         <div class="col-lg-2 mb-lg-0 mb-6">
-                                                            <label>{{ trans('display.human_gender_code') }}:</label>
-                                                            <select class="form-control selectpicker datatable-input" name="search_gender" id="search_gender" data-col-index="9">
+                                                            <label>Жин шалгасан эсэх:</label>
+                                                            <select class="form-control selectpicker datatable-input" name="search_is_weight" id="search_is_weight" data-col-index="9">
                                                                 <option value="">-- {{ trans('display.general_all') }} --</option>
-                                                                @forelse(@Config::get('enums.gender_code') as $key => $gender)
-                                                                <option value="{{ $key }}">{{ $gender }}</option>
+                                                                @forelse(@Config::get('enums.boolean_type') as $key => $type)
+                                                                <option value="{{ $key }}">{{ $type }}</option>
                                                                 @empty
                                                                 @endforelse
                                                             </select>
@@ -215,24 +215,17 @@
                                             <table class="table table-separate table-head-custom" id="event-registration-datatable" style="margin-top: 13px !important">
                                                 <thead>
                                                 <tr>
-													<th colspan="4">{{ trans('display.comp_member') }}</th>
-													<th colspan="11">{{ trans('display.comp_title') }}</th>
-												</tr>
-                                                <tr>
                                                     <th width="5%">No.</th>
                                                     <th width="1%">{{trans('display.comp_title')}}</th>
-                                                    <th width="1%">{{trans('display.profile_photo')}}</th>
-                                                    <th width="8%">{{trans('display.human_register_number')}}</th>
-                                                    <th width="20%">{{trans('display.human_name')}}</th>
-                                                    <th width="8%">{{trans('display.human_phone_number')}}</th>
-                                                    <th width="8%">{{trans('display.comp_entry')}}</th>
+                                                    <th width="30%">{{trans('display.comp_member')}}</th>
+                                                    <th width="15%">{{trans('display.comp_entry')}}</th>
                                                     <th width="5%">{{trans('display.comp_entry_age')}}</th>
-                                                    <th width="5%">{{trans('display.comp_entry_belt')}}</th>
+                                                    <th width="8%">{{trans('display.comp_entry_belt')}}</th>
                                                     <th width="5%">{{trans('display.comp_entry_weight')}}</th>
-                                                    <th width="30%">{{trans('display.comp_academy')}}</th>
+                                                    <th width="15%">{{trans('display.comp_academy')}}</th>
                                                     <th width="1%">{{trans('display.id_photo')}}</th>
                                                     <th width="1%">{{trans('display.general_status')}}</th>
-                                                    <th width="1%">{{trans('display.general_created_at')}}</th>
+                                                    <th width="8%">{{trans('display.general_created_at')}}</th>
                                                     <th width="8%">{{trans('display.general_manage')}}</th>
                                                 </tr>
                                                 </thead>
@@ -260,17 +253,15 @@
 
 @section('javascript')
 <script src="{{asset('assets/js/plugins/custom/datatables/datatables.bundle.js')}}"></script>
-<!--<script src="{{asset('assets/js/plugins/custom/select2-ng/select2.min.js')}}"></script>-->
-<script src="{{asset('assets/js/smart.js')}}"></script>
 
 <script>
 $(document).ready(function() {
     eventTable = $("#event-registration-datatable").DataTable({
         processing:     true,
         serverSide:     true,
-        deferRender:    true,
-        autoWidth:      true,
-        filter:         false,
+        //deferRender:    true,
+        //autoWidth:      true,
+        //filter:         false,
         responsive:     true,
         dataType: 'json',
         paginationType: "full_numbers",
@@ -291,6 +282,7 @@ $(document).ready(function() {
                 d.member = $('#event-registration-search-form input[id="search_member"]').val();
                 d.gender = $('#event-registration-search-form select[id="search_gender"]').val();
                 d.academy = $('#event-registration-search-form select[id="search_academy"]').val();
+                d.is_weight = $('#event-registration-search-form select[id="search_is_weight"]').val();
                 d.date = dateArr;
             },
         },
@@ -317,7 +309,9 @@ $(document).ready(function() {
                 width: "30px"
             },
             
-            {data: 'event.name'},
+            {data: 'event'},
+            {data: 'member', "defaultContent": ""},
+            /*
             {data: 'profile_url', "defaultContent": ""},
             {data: 'member.register_number'},
             {
@@ -329,6 +323,7 @@ $(document).ready(function() {
                 "defaultContent": ""
             },
             {data: 'member.contact_phone'},
+            */
             {data: 'entry.name', "defaultContent": ""},
             {
                 data: 'age',
@@ -343,7 +338,8 @@ $(document).ready(function() {
                         age = data.start_age + '+';
                     }
                     return age;
-                }, "defaultContent": ""
+                },
+                name: "age.start_age", "defaultContent": ""
             },
             {data: 'belt.name', "defaultContent": ""},
             {data: 'weight.weight', "defaultContent": ""},
@@ -362,12 +358,12 @@ $(document).ready(function() {
         {
             searchable: false,
             orderable: false,
-            targets: [0,1,6,10,13]
+            targets: [0,1,2,7,8,11]
         },{
             class: "text-center",
-            targets: [0]
+            targets: [0,1,8]
         }],
-        order: [[ 13, "desc" ]],
+        order: [[ 10, "desc" ]],
         dom: "<'row'<'col-sm-6 text-left'B><'col-sm-6 text-right'<'#colvis'>>><'row'<'col-sm-12'tr>><'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7 dataTables_pager'lp>>",
         buttons: [
             {
@@ -387,10 +383,13 @@ $(document).ready(function() {
                     $('c[r=A1] t', sheet).text( 'Тэмцээнд оролцогчид' );
                 },
                 exportOptions: {
-                    columns: [ 0,3,4,5,6,7,8,9,10,12,13 ]
-                },
-                modifier: {
-                    page: 'all'
+                    columns: [ 0,2,3,4,5,6,7,9,10],
+                    modifier: {
+                        order: 'current',
+                        page: 'all',
+                        focused: undefined,
+                        selected: undefined
+                    }
                 }
             },
         ]
@@ -1053,3 +1052,4 @@ function showEditModal(data){
 }
 </script>
 @endsection
+@stop
