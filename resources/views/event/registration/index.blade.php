@@ -163,11 +163,11 @@
                                                             <input type="text" class="form-control datatable-input" name="search_member" id="search_member" placeholder="Оролцогчийн мэдээллээр хайх" data-col-index="8"/>
                                                         </div>
                                                         <div class="col-lg-2 mb-lg-0 mb-6">
-                                                            <label>{{ trans('display.human_gender_code') }}:</label>
-                                                            <select class="form-control selectpicker datatable-input" name="search_gender" id="search_gender" data-col-index="9">
+                                                            <label>Жин шалгасан эсэх:</label>
+                                                            <select class="form-control selectpicker datatable-input" name="search_is_weight" id="search_is_weight" data-col-index="9">
                                                                 <option value="">-- {{ trans('display.general_all') }} --</option>
-                                                                @forelse(@Config::get('enums.gender_code') as $key => $gender)
-                                                                <option value="{{ $key }}">{{ $gender }}</option>
+                                                                @forelse(@Config::get('enums.boolean_type') as $key => $type)
+                                                                <option value="{{ $key }}">{{ $type }}</option>
                                                                 @empty
                                                                 @endforelse
                                                             </select>
@@ -282,6 +282,7 @@ $(document).ready(function() {
                 d.member = $('#event-registration-search-form input[id="search_member"]').val();
                 d.gender = $('#event-registration-search-form select[id="search_gender"]').val();
                 d.academy = $('#event-registration-search-form select[id="search_academy"]').val();
+                d.is_weight = $('#event-registration-search-form select[id="search_is_weight"]').val();
                 d.date = dateArr;
             },
         },
@@ -382,10 +383,13 @@ $(document).ready(function() {
                     $('c[r=A1] t', sheet).text( 'Тэмцээнд оролцогчид' );
                 },
                 exportOptions: {
-                    columns: [ 0,3,4,5,6,7,8,9,10,12,13 ]
-                },
-                modifier: {
-                    page: 'all'
+                    columns: [ 0,2,3,4,5,6,7,9,10],
+                    modifier: {
+                        order: 'current',
+                        page: 'all',
+                        focused: undefined,
+                        selected: undefined
+                    }
                 }
             },
         ]

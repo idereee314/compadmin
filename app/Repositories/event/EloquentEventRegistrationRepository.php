@@ -60,6 +60,7 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 		$eventRegistraion->entry_weight_id = @$input['entry_weight_id'];
 		$eventRegistraion->academy_id = @$input['academy_id'];
 		$eventRegistraion->status = @$input['status'];
+		$eventRegistraion->is_weight_checked = @$input['is_weight_checked'] ? true: false ;
 
 		$eventRegistraion->save();
 		return $eventRegistraion;
@@ -112,6 +113,11 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 					});				
 				}
 
+				if($searchData->has('is_weight') && $searchData->get('is_weight') !== null)
+                {
+					$qry->where('is_weight_checked', $searchData->get('is_weight'));			
+				}
+
 				if($searchData->has('status') && $searchData->get('status') !== null)
                 {
 					$qry->where('status', $searchData->get('status'));
@@ -143,6 +149,11 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 					});
                 }
             })
+			->setRowAttr([
+				'class' => function($qry) {
+					return @$qry->is_weight_checked ? 'table-secondary' : '';
+				}
+			])
 			->editColumn('status', function($qry)
 			{
 				$status = '<span class="label label-lg font-weight-bold label-light-'.@Config::get('smart.event_registeation_status_class')[$qry->status].' label-inline">'.@Config::get('enums.event_registeation_status')[$qry->status].'</span>';
@@ -176,7 +187,7 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 			})
 			->editColumn('id_photo', function ($qry) {
 				if ($qry->member->id_url) {
-					return '<a class="btn btn-sm btn-clean btn-icon show-image" data-id="'.$qry->member->id.'" data-type="id" title="'.trans('display.id_photo').'"><i class="far fas fa-paperclip"></i></a>';
+					return '<a class="btn btn-sm btn-clean btn-icon show-image" data-id="'.$qry->member->id.'" data-type="id" title="'.trans('display.id_photo').'"><i class="far fas fa-paperclip text-warning"></i></a>';
 				}
 				return "";
 			})
