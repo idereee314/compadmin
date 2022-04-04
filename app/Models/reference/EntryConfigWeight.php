@@ -12,6 +12,7 @@ use Carbon;
 class EntryConfigWeight extends Model
 {
     protected $table = 'uq_entry_config_weight';
+    protected $primaryKey = 'id';
     
     public static function rules($id) 
     {

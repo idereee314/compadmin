@@ -61,6 +61,11 @@ class EventRegistration extends Model
     {
         return $this->belongsTo('academy\Academy', 'academy_id');
     }
+
+    public function award()
+    {
+        return $this->hasOne('event\EventAward', 'event_registration_id');
+    }
     
     public static function boot()
     {

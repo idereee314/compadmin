@@ -12,6 +12,7 @@ use Carbon;
 class EntryConfigBelt extends Model
 {
     protected $table = 'uq_entry_config_belt';
+    protected $primaryKey = 'id';
     
     public static function rules($id) 
     {

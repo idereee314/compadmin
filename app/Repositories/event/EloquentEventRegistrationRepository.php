@@ -186,12 +186,6 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
                 $member .= '</div>';
 				return $member;
 			})
-			->editColumn('id_photo', function ($qry) {
-				if ($qry->member->id_url) {
-					return '<a class="btn btn-sm btn-clean btn-icon show-image" data-id="'.$qry->member->id.'" data-type="id" title="'.trans('display.id_photo').'"><i class="far fas fa-paperclip text-warning"></i></a>';
-				}
-				return "";
-			})
 			->editColumn('academy_name', function($qry)
 			{
 				if($qry->academy->is_other == 1) {
@@ -206,20 +200,22 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 			})
             ->addColumn('action', function ($qry) {
 				$actionHtml = "";
-				$actionHtml .= '<div class="dropdown dropdown-inline">';
-					$actionHtml .= '<a href="javascript:;" class="btn btn-sm btn-clean btn-icon" data-toggle="dropdown">';
-						$actionHtml .= '<i class="la la-cog"></i>';
-					$actionHtml .= '</a>';
-					$actionHtml .= '<div class="dropdown-menu dropdown-menu-sm dropdown-menu-right">';
-						$actionHtml .= '<ul class="nav nav-hoverable flex-column">';
-							$actionHtml .= '<li class="nav-item"><a class="nav-link award" href="javascript:;" data-registrationid="'.$qry->id.'"><i class="nav-icon la la-award"></i><span class="nav-text">Байр эзлүүлэх</span></a></li>';
-						$actionHtml .= '</ul>';
-					$actionHtml .= '</div>';
-				$actionHtml .= '</div>';
-				$actionHtml .= 	'<a class="btn btn-sm btn-clean btn-icon edit" href="javascript:;" data-registrationid="'.$qry->id.'" title="'.trans('display.general_edit').'"><i class="la la-edit"></i></a>';
+				if ($qry->member->id_url) {
+					$actionHtml .= '<a class="btn btn-icon btn-clean btn-sm mr-3 show-image" data-id="'.$qry->member->id.'" data-type="id" title="'.trans('display.id_photo').'"><i class="far fas fa-paperclip text-warning"></i></a>';
+				}
+				if(@$qry->award)
+				{
+					$actionHtml .= 	'<a class="btn btn-icon btn-light btn-hover-primary btn-sm mr-3 win-place" href="javascript:;" data-registrationid="'.$qry->id.'" title="'.trans('display.comp_award_place').'"><span class="class="svg-icon svg-icon-md svg-icon-primary">'.@$qry->award->place_number.'</span></a>';
+				}
+				else
+				{
+					$actionHtml .= 	'<a class="btn btn-icon btn-light btn-hover-primary btn-sm mr-3 win-place" href="javascript:;" data-registrationid="'.$qry->id.'" title="'.trans('display.comp_award_place').'"><i class="nav-icon la la-award"></i></a>';
+				}
+				
+				$actionHtml .= 	'<a class="btn btn-icon btn-light btn-hover-primary btn-sm mr-3 edit" href="javascript:;" data-registrationid="'.$qry->id.'" title="'.trans('display.general_edit').'"><i class="la la-edit"></i></a>';
 				if($qry->status == @Config::get('smart.event_registeation_status')['created'])
 				{
-					$actionHtml .= 	'<a class="btn btn-sm btn-clean btn-icon delete" href="javascript:;" data-registrationid="'.$qry->id.'" title="'.trans('display.general_delete').'"><i class="la la-trash"></i></li>';
+					$actionHtml .= 	'<a class="btn btn-icon btn-light btn-hover-primary btn-sm delete" href="javascript:;" data-registrationid="'.$qry->id.'" title="'.trans('display.general_delete').'"><i class="la la-trash"></i></li>';
 				}
 				return $actionHtml;
 

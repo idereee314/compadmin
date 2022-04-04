@@ -466,9 +466,11 @@ function memberEditModal(data)
                     type: form.method,
                     data:  new FormData(form),
                     success: function(response) {
+                        var page = memberTable.page.info().page;
+
                         $('#memberEditModal').find("#close").trigger('click');
                         $('.panel-sub-heading').html(response).fadeIn().delay(5000).fadeOut();
-                        memberTable.draw();
+                        memberTable.page(page).draw('page');
                     },
                     error: function (xhr, textStatus, error) {
                         console.log(xhr.statusText);
@@ -549,9 +551,10 @@ function connectUser(id)
                             type: form.method,
                             data: new FormData(form),
                             success: function(response) {
+                                var page = memberTable.page.info().page;
                                 $('#connetUserModal').find("#close").trigger('click');
                                 $('.panel-sub-heading').html(response).fadeIn().delay(5000).fadeOut();
-                                memberTable.draw();
+                                memberTable.page(page).draw('page');
                             },
                             error: function (xhr, textStatus, error) {
                                 console.log(xhr.statusText);

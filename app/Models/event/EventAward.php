@@ -11,6 +11,7 @@ class EventAward extends Model
 {
     protected $table = 'uq_event_award';
     protected $primaryKey = 'id';
+    protected $fillable = ['event_registration_id', 'member_id', 'place_number', 'created_at', 'updated_at'];
 
     public static function rules($id) 
     {
@@ -34,5 +35,16 @@ class EventAward extends Model
     {
         parent::boot();    
 
+        static::updating(function($award)
+        {
+            $award->updated_by = Auth::id();
+			$award->updated_at = Carbon\Carbon::now()->toDateTimeString();
+        });
+
+        static::creating(function($award)
+        {
+            $award->created_by = Auth::id();
+			$award->created_at = Carbon\Carbon::now()->toDateTimeString();
+        });
     }
 }
