@@ -453,7 +453,7 @@ $(document).ready(function() {
                             type: form.method,
                             data: new FormData(form),
                             success: function(response) {
-                                var eventTable = memberTable.page.info().page;
+                                var page = eventTable.page.info().page;
                                 $('#memberModal').find("#close").trigger('click');
                                 $('.panel-sub-heading').html(response).fadeIn().delay(5000).fadeOut();
                                 eventTable.page(page).draw('page');
@@ -1081,7 +1081,7 @@ function showEditModal(data){
                     type: form.method,
                     data: new FormData(form),
                     success: function(response) {
-                        var eventTable = memberTable.page.info().page;
+                        var page = eventTable.page.info().page;
                         $('#memberModal').find("#close").trigger('click');
                         $('.panel-sub-heading').html(response).fadeIn().delay(5000).fadeOut();
                         eventTable.page(page).draw('page');
