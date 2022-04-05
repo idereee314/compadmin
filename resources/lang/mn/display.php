@@ -272,6 +272,8 @@ return [
     'comp_academy_name' => 'Академи нэр',
     'comp_member' => 'Оролцогч',
     'comp_title' => 'Тэмцээн',
+    'comp_award_place' => 'Байр эзлүүлэх',
+    'comp_place_nuber' => 'Байр',
 
     //Academy
 

@@ -217,16 +217,15 @@
                                                 <tr>
                                                     <th width="5%">No.</th>
                                                     <th width="1%">{{trans('display.comp_title')}}</th>
-                                                    <th width="30%">{{trans('display.comp_member')}}</th>
-                                                    <th width="15%">{{trans('display.comp_entry')}}</th>
+                                                    <th width="25%">{{trans('display.comp_member')}}</th>
+                                                    <th width="10%">{{trans('display.comp_entry')}}</th>
                                                     <th width="5%">{{trans('display.comp_entry_age')}}</th>
                                                     <th width="8%">{{trans('display.comp_entry_belt')}}</th>
                                                     <th width="5%">{{trans('display.comp_entry_weight')}}</th>
                                                     <th width="15%">{{trans('display.comp_academy')}}</th>
-                                                    <th width="1%">{{trans('display.id_photo')}}</th>
                                                     <th width="1%">{{trans('display.general_status')}}</th>
                                                     <th width="8%">{{trans('display.general_created_at')}}</th>
-                                                    <th width="8%">{{trans('display.general_manage')}}</th>
+                                                    <th width="30%">{{trans('display.general_manage')}}</th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
@@ -344,7 +343,6 @@ $(document).ready(function() {
             {data: 'belt.name', "defaultContent": ""},
             {data: 'weight.weight', "defaultContent": ""},
             {data: 'academy_name'},
-            {data: 'id_photo'},
             {data: 'status', "defaultContent": ""},
             {data: 'created_at'},
             {data: 'action'},
@@ -358,12 +356,12 @@ $(document).ready(function() {
         {
             searchable: false,
             orderable: false,
-            targets: [0,1,2,7,8,11]
+            targets: [0,1,2,7,10]
         },{
             class: "text-center",
-            targets: [0,1,8]
+            targets: [0,1]
         }],
-        order: [[ 10, "desc" ]],
+        order: [[ 9, "desc" ]],
         dom: "<'row'<'col-sm-6 text-left'B><'col-sm-6 text-right'<'#colvis'>>><'row'<'col-sm-12'tr>><'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7 dataTables_pager'lp>>",
         buttons: [
             {
@@ -383,7 +381,7 @@ $(document).ready(function() {
                     $('c[r=A1] t', sheet).text( 'Тэмцээнд оролцогчид' );
                 },
                 exportOptions: {
-                    columns: [ 0,2,3,4,5,6,7,9,10],
+                    columns: [ 0,2,3,4,5,6,7,8,9],
                     modifier: {
                         order: 'current',
                         page: 'all',
@@ -428,7 +426,62 @@ $(document).ready(function() {
             });
 
             $('#showImageModal').on('hidden.bs.modal', function(){
-                $('#showImageModal .modal-body').empty();
+                $('#showImageModal .modal-content').empty();
+            });
+        });
+    });
+
+    $('#event-registration-datatable tbody').on( 'click', 'tr td a.win-place', function () 
+    {
+        var id = $(this).data("registrationid");
+
+        $.get('registration/create/award?event_reg_id='+id, function( data ) {
+            $('#memberModal').modal();
+            $('#memberModal').on('shown.bs.modal', function(){
+                $('#memberModal .modal-content').html(data);
+                $('#event-award-form').validate({
+                    ignore: [],
+                    highlight:function(element) {
+                        $(element).parents('.form-group').addClass('has-error has-feedback');
+                    },
+                    unhighlight: function(element) {
+                        $(element).parents('.form-group').removeClass('has-error');
+                    },
+                    submitHandler: function(form) {
+                        $.ajax({
+                            url: form.action,
+                            type: form.method,
+                            data: new FormData(form),
+                            success: function(response) {
+                                var eventTable = memberTable.page.info().page;
+                                $('#memberModal').find("#close").trigger('click');
+                                $('.panel-sub-heading').html(response).fadeIn().delay(5000).fadeOut();
+                                eventTable.page(page).draw('page');
+                            },
+                            error: function (xhr, textStatus, error) {
+                                console.log(xhr.statusText);
+                                console.log(textStatus);
+                                console.log(error);
+                            },
+                            async: false,
+                            processData: false,
+                            contentType: false
+                        });
+                    },
+                    errorPlacement: function(error, element) {
+                        if($(element).parents('.form-group').find(".error-here")){
+                            error.appendTo($(element).parents('.form-group').find(".error-here"));
+                        } else {
+                            error.insertAfter(element);
+                        }
+                    }
+                });
+
+                $(this).off('shown.bs.modal');
+            });
+
+            $('#memberModal').on('hidden.bs.modal', function(){
+                $('#memberModal .modal-content').empty();
             });
         });
     });
@@ -873,7 +926,7 @@ function showAddModal( data ) {
     });
 
     $('#memberModal').on('hidden.bs.modal', function(){
-        $('#memberModal .modal-body').empty();
+        $('#memberModal .modal-content').empty();
     });
 }
 
@@ -1028,9 +1081,10 @@ function showEditModal(data){
                     type: form.method,
                     data: new FormData(form),
                     success: function(response) {
+                        var eventTable = memberTable.page.info().page;
                         $('#memberModal').find("#close").trigger('click');
                         $('.panel-sub-heading').html(response).fadeIn().delay(5000).fadeOut();
-                        eventTable.draw();
+                        eventTable.page(page).draw('page');
                     },
                     error: function (xhr, textStatus, error) {
                         console.log(xhr.statusText);
@@ -1052,6 +1106,10 @@ function showEditModal(data){
         });
 
         $(this).off('shown.bs.modal');
+    });
+
+    $('#memberModal').on('hidden.bs.modal', function(){
+        $('#memberModal .modal-content').empty();
     });
 }
 </script>

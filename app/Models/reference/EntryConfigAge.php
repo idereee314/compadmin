@@ -12,6 +12,9 @@ use Carbon;
 class EntryConfigAge extends Model
 {
     protected $table = 'uq_entry_config_age';
+    protected $primaryKey = 'id';
+
+    protected $appends = array('name');
     
     public static function rules($id) 
     {
@@ -22,6 +25,23 @@ class EntryConfigAge extends Model
             'possible_ages' => 'required'
 		);
 	}
+
+    public function getNameAttribute()
+    {
+        if($this->start_age == null)
+        {
+            $age = '-'.$this->end_age;
+        }
+        elseif($this->end_age == null)
+        {
+            $age = $this->start_age.'+';
+        }
+        else
+        {
+            $age = $this->start_age.'-'.$this->end_age;
+        }
+        return $age;
+    }
     
     public static function boot()
     {

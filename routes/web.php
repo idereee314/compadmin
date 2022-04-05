@@ -70,6 +70,8 @@ Route::group([
     Route::resource('/event/registration', 'event\EventRegistrationController', ['names' => 'event.registration']);
     Route::any('/event/registration/data/list', 'event\EventRegistrationController@getDatatableList')->name('event.registration.data.list');
     Route::post('/event/registration/take/config', 'event\EventRegistrationController@getConfigByEntryId')->name('event.registration.take.config');
+    Route::get('/event/registration/create/award', 'event\EventRegistrationController@createPlace')->name('event.registration.create.award');
+    Route::post('/event/registration/take/award', 'event\EventRegistrationController@takePlace')->name('event.registration.take.award');
     
     //Entry
     Route::resource('/event/entry', 'reference\EventEntryController', ['names' => 'event.entry']);

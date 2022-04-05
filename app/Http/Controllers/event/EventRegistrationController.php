@@ -287,4 +287,48 @@ class EventRegistrationController extends Controller
         return json_encode(@$config);
     }
 
+    public function createPlace()
+    {
+        $input = Input::all();
+        $eventRegistration = $this->eventRegistration->find($input['event_reg_id']);
+
+        $data['eventRegistration'] = $eventRegistration;
+
+        return view($this->view_path.'.award', $data);
+    }
+
+    public function takePlace(Request $request)
+    {
+        $input = Input::all();
+        $eventRegistration = $this->eventRegistration->find($input['event_registration_id']);
+        
+        try
+        {
+            $uniqArr['event_registration_id'] = $eventRegistration->id;
+            $uniqArr['member_id'] = $eventRegistration->member_id;
+
+            $inputArr['event_registration_id'] = $eventRegistration->id;
+            $inputArr['member_id'] = $eventRegistration->member_id;
+            $inputArr['place_number'] = $input['place_number'];
+
+            $eventRegistration->award()->updateOrCreate($uniqArr, $inputArr); 
+            $response = array(
+                'status' => 'success',
+                'msg' => trans('messages.success_save')
+            );
+
+        }
+        catch(\Illuminate\Database\QueryException $e)
+        {
+            $response = array(
+                'status' => 'error',
+                'msg' => trans('messages.error_save'),
+                'errors' => $e->getMessage()
+            );
+
+        }
+
+        $data['response'] = $response;
+        return view('core.alert.messages', $data);
+    }
 }

@@ -12,6 +12,7 @@ use Carbon;
 class EventConfig extends Model
 {
     protected $table = 'uq_event_config';
+    protected $primaryKey = 'id';
     
     public static function rules($id) 
     {

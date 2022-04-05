@@ -19,6 +19,7 @@
                 <select class="form-control" id="member_id" name="member_id" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}">
                     <option value="0">-- {{ trans('display.general_select') }} --</option>
                 </select>
+                <div class="error-here"></div>
             </div>
         </div> 
 
@@ -32,6 +33,7 @@
                     @empty
                     @endforelse
                 </select>
+                <div class="error-here"></div>
             </div>
         </div>
 
@@ -39,6 +41,7 @@
             <label class="col-md-3 col-form-label text-right">{{trans('display.comp_entry')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9">
                 <input class="form-control" type="text" id="entry_id" name="entry_id" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}"/>
+                <div class="error-here"></div>
             </div>
         </div> 
 
@@ -52,7 +55,7 @@
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.comp_entry_age')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9">
-                <input class="form-control" id="entry_age_id" name="entry_age_id"  onchange="ageFunction(event)" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}"/>
+                <input class="form-control" id="entry_age_id" name="entry_age_id" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}"/>
             </div>
         </div> 
 
@@ -80,6 +83,7 @@
             <label class="col-md-3 col-form-label text-right">{{trans('display.comp_academy_name')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9">
                 <input class="form-control" id="academy_name" name="academy_name" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required')}}"/>
+                <div class="error-here"></div>
             </div>
         </div>
 
@@ -93,6 +97,7 @@
                     @empty
                     @endforelse
                 </select>
+                <div class="error-here"></div>
             </div>
         </div>
     </div>
