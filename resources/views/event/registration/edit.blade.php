@@ -97,7 +97,7 @@
         <div class="form-group row {{$eventRegistration->academy->is_other == 0 ? 'd-none' : ''}}" id="academy_name_other">
             <label class="col-md-3 col-form-label text-right">{{trans('display.comp_academy_name')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9">
-                <input class="form-control" id="academy_name" name="academy_name" {{$eventRegistration->academy->is_other == 0 ? 'disabled' : ''}} value="{{$eventRegistration->academy_name}}" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}"/>
+                <input class="form-control" id="academy_name" name="academy_name" {{ $eventRegistration->academy->is_other == 0 ? 'disabled' : '' }} value="{{$eventRegistration->academy_name}}" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}"/>
             </div>
         </div>
 
