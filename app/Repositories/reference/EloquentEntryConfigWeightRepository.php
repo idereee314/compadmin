@@ -39,6 +39,7 @@ class EloquentEntryConfigWeightRepository implements EntryConfigWeightRepository
 		$entryConfigWeight = new EntryConfigWeight;
 
 		$entryConfigWeight->entry_id = $input['entry_id'];
+		$entryConfigWeight->entry_age_id = $input['entry_age_id'];
 		$entryConfigWeight->weight = $input['weight'];
 
 		$entryConfigWeight->save();
@@ -50,6 +51,7 @@ class EloquentEntryConfigWeightRepository implements EntryConfigWeightRepository
 	{
 		$entryConfigWeight = $this->find($id);
 		$entryConfigWeight->entry_id = $input['entry_id'];
+		$entryConfigWeight->entry_age_id = $input['entry_age_id'];
 		$entryConfigWeight->weight = $input['weight'];
 
 		$entryConfigWeight->save();
@@ -123,15 +125,28 @@ class EloquentEntryConfigWeightRepository implements EntryConfigWeightRepository
 		return $weights;
 	}
 
-	public function getEntryWeightByAgeId($ageId)
+	// public function getEntryWeightByAgeId($ageId)
+	// {
+	// 	$weights = "";
+	// 	if(@$ageId)
+	// 	{
+	// 		$qry = EntryConfigWeight::where('entry_age_id', $ageId);
+	// 		$weights = @$qry->get();
+	// 	}
+
+	// 	return $weights;
+	// }
+
+	public function getEntryConfigWeightByEntryId($entries, $ages)
 	{
-		$weights = "";
-		if(@$ageId)
+		$configWeights = "";
+		if(count($entries) > 0 && count($ages) > 0)
 		{
-			$qry = EntryConfigWeight::where('entry_age_id', $ageId);
-			$weights = @$qry->get();
+			$qry = EntryConfigWeight::whereIn('entry_id', $entries)
+									->whereIn('entry_age_id', $ages);
+			$configWeights = @$qry->get();
 		}
 
-		return $weights;
+		return $configWeights;
 	}
 }

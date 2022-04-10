@@ -5,6 +5,7 @@ namespace reference;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Model;
+use reference\EventEntries;
 
 use Auth;
 use Carbon;
@@ -20,9 +21,14 @@ class EntryConfigBelt extends Model
             'entry_id' => 'required',
             'name' => 'required',
             'name_en' => 'required',
-            'possible_belts' => 'required'
+            // 'possible_belts' => 'required'
 		);
 	}
+
+    public function entry()
+    {
+        return $this->belongsTo(EventEntries::class, 'entry_id');
+    }
     
     public static function boot()
     {

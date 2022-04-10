@@ -278,4 +278,15 @@ return [
     //Academy
 
     "organization" => "Байгууллага",
+
+    //Event
+    'event_name' => 'Эвент',
+    'reg_start_date' => 'Эхлэх огноо',
+    'reg_end_date' => 'Дуусах огноо',
+
+    //Event-entries
+    'entrance_fee' => 'Төлбөр',
+
+    //Event-config-belt
+    'possible_belts' => 'Боломжит бүс'
 ];

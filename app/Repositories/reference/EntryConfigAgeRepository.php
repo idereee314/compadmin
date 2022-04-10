@@ -15,6 +15,8 @@ interface EntryConfigAgeRepository
   public function update($id, $input);
 
   public function delete($id);
+
+  // public function getConfigAgeByEntryId($entries);
   
   public function getDatatableList($searchData);
 }

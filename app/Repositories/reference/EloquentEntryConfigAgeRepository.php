@@ -124,4 +124,16 @@ class EloquentEntryConfigAgeRepository implements EntryConfigAgeRepository {
 
 		return $ages;
 	}
+
+	public function getConfigAgeByEntryId($entries)
+	{
+		$configAges = "";
+		if(count(@$entries) > 0)
+		{
+			$qry = EntryConfigAge::selectRaw("id, start_age, end_age, CASE WHEN start_age is null THEN '-' || end_age WHEN end_age is null THEN start_age || '+' else start_age || '-' || end_age END as age, entry_id")->whereIn('entry_id', $entries);
+			$configAges = $qry->with('entry:id,name,gender_code')->get();
+		}
+
+		return $configAges;
+	}
 }

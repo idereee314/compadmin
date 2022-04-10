@@ -16,5 +16,7 @@ interface EntryConfigWeightRepository
 
   public function delete($id);
   
+	public function getEntryConfigWeightByEntryId($entries, $ages);
+  
   public function getDatatableList($searchData);
 }

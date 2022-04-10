@@ -10,9 +10,10 @@ use Validator;
 
 //Repositories
 use reference\EntryConfigBeltRepository as EventEntryBelt;
+use reference\EventEntriesRepository as EventEntry;
 
 //Models
-use reference\EventEntryBelt as EventEntryBeltModel;
+use reference\EntryConfigBelt as EventEntryBeltModel;
 
 use \Auth as Auth;
 use Config;
@@ -23,10 +24,11 @@ class EventEntryBeltController extends Controller
 {
     public $restful = true;
 
-    public function __construct(EventEntryBelt $eventEntryBelt)
+    public function __construct(EventEntryBelt $eventEntryBelt, EventEntry $eventEntry)
     {
         $this->view_path = 'event.entry.belt';
         $this->eventEntryBelt = $eventEntryBelt;
+        $this->eventEntry = $eventEntry;
     }
 
     /**
@@ -48,7 +50,10 @@ class EventEntryBeltController extends Controller
      */
     public function create()
     {
-        return view($this->view_path.'.add');
+        $input = Input::all();
+
+        $data['eventEntries'] = $this->eventEntry->getEntryByEventId($input['eventId']);
+        return view($this->view_path.'.add', $data);
     }
 
     /**
@@ -117,6 +122,8 @@ class EventEntryBeltController extends Controller
      */
     public function edit($id)
     {
+        $input = Input::all();
+        $data['eventEntries'] = $this->eventEntry->getEntryByEventId($input['eventId']);
         $eventEntryBelt = $this->eventEntryBelt->find($id);
         $data['eventEntryBelt'] = $eventEntryBelt;
 
@@ -134,7 +141,7 @@ class EventEntryBeltController extends Controller
     {
         $input = Input::all();
 
-        $validator = Validator::make($input, Member::rules($id));
+        $validator = Validator::make($input, EventEntryBeltModel::rules($id));
 
         if ($validator->fails())
 		{

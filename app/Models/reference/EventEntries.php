@@ -5,6 +5,10 @@ namespace reference;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Model;
+use reference\EntryConfigBelt;
+use reference\EntryConfigAge;
+use reference\EntryConfigWeight;
+use reference\EventEntriesFee;
 
 use Auth;
 use Carbon;
@@ -24,6 +28,26 @@ class EventEntries extends Model
             'event_id' => 'required'
 		);
 	}
+
+    public function configBelts()
+    {
+        return $this->hasMany(EntryConfigBelt::class, 'entry_id');
+    }
+
+    public function configAges()
+    {
+        return $this->hasMany(EntryConfigAge::class, 'entry_id');
+    }
+
+    public function configWeights()
+    {
+        return $this->hasMany(EntryConfigWeight::class, 'entry_id');
+    }
+
+    public function configEntriesFees()
+    {
+        return $this->hasMany(EventEntriesFee::class, 'entry_id');
+    }
     
     public static function boot()
     {

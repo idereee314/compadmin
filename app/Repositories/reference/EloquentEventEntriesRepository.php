@@ -37,6 +37,11 @@ class EloquentEventEntriesRepository implements EventEntriesRepository {
 	public function create($input)
 	{
 		$eventEntries = new EventEntries;
+		$eventEntries->name = $input['name'];
+		$eventEntries->name_en = $input['name_en'];
+		$eventEntries->gender_code = $input['gender_code'];
+		$eventEntries->entrance_fee = $input['entrance_fee'];
+		$eventEntries->event_id = $input['event_id'];
 
 		$eventEntries->save();
 
@@ -46,6 +51,11 @@ class EloquentEventEntriesRepository implements EventEntriesRepository {
  	public function update($id, $input)
 	{
 		$eventEntries = $this->find($id);
+		$eventEntries->name = $input['name'];
+		$eventEntries->name_en = $input['name_en'];
+		$eventEntries->gender_code = $input['gender_code'];
+		$eventEntries->entrance_fee = $input['entrance_fee'];
+		$eventEntries->event_id = $input['event_id'];
 
 		$eventEntries->save();
 

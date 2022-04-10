@@ -37,6 +37,9 @@ class EloquentEventConfigRepository implements EventConfigRepository {
 	public function create($input)
 	{
 		$eventConfig = new EventConfig;
+		$eventConfig->event_id = $input['event_id'];
+		$eventConfig->reg_start_date = $input['reg_start_date'];
+		$eventConfig->reg_end_date = $input['reg_end_date'];
 
 		$eventConfig->save();
 
@@ -46,6 +49,9 @@ class EloquentEventConfigRepository implements EventConfigRepository {
  	public function update($id, $input)
 	{
 		$eventConfig = $this->find($id);
+		$eventConfig->event_id = $input['event_id'];
+		$eventConfig->reg_start_date = $input['reg_start_date'];
+		$eventConfig->reg_end_date = $input['reg_end_date'];
 
 		$eventConfig->save();
 
@@ -54,9 +60,9 @@ class EloquentEventConfigRepository implements EventConfigRepository {
 
 	public function delete($id)
 	{
-		$user = $this->find($id);
+		$eventConfig = $this->find($id);
 
-		$user->delete();
+		$eventConfig->delete();
 	}
 
 	public function getRegistringComp($date = null)
@@ -76,5 +82,46 @@ class EloquentEventConfigRepository implements EventConfigRepository {
 	{
 		$comps = EventConfig::selectRaw('uq_event_config.*, rti_event.name')->join('rti_event', 'rti_event.id', '=', 'uq_event_config.event_id')->get();
 		return $comps;
+	}
+
+	public function copyEventConfig($eventConfigId, $input)
+    {
+        $eventConfig = $this->find($eventConfigId);
+
+        $eventConfigCopy = $eventConfig->replicate();
+        $eventConfigCopy->event_id = $input['event_id'];
+        $eventConfigCopy->reg_start_date = $input['reg_start_date'];
+		$eventConfigCopy->reg_start_date = $input['reg_start_date'];
+        $eventConfigCopy->save();
+
+        return $eventConfigCopy;
+    }
+
+	public function getDatatableList($searchData)
+    {
+		$qry = EventConfig::select('*')->with('event:id,name');
+
+        $data = Datatables::make($qry)
+            ->filter(function ($qry) use ($searchData) {
+                if($searchData->has('event') && $searchData->get('event') !== null)
+                {
+                    $qry->where('uq_event_registration.event_id', $searchData->get('event'));
+                }
+            })
+			->editColumn('created_at', function($qry)
+			{
+				return $qry->created_at;
+			})
+            ->addColumn('action', function ($qry) {
+				$actionHtml = "";
+				$actionHtml .= 	'<a class="btn btn-icon btn-light btn-hover-primary btn-sm mr-3 edit" href="'.route('event.config.edit', $qry->id).'" title="'.trans('display.general_edit').'"><i class="la la-edit"></i></a>';
+				$actionHtml .= 	'<a class="btn btn-icon btn-light btn-hover-primary btn-sm delete mr-3" href="javascript:;" data-configid="'.$qry->id.'" title="'.trans('display.general_delete').'"><i class="la la-trash"></i></li>';
+				$actionHtml .= 	'<a class="btn btn-icon btn-light btn-hover-primary btn-sm copy" href="javascript:;" data-configid="'.$qry->id.'" title="'.trans('display.general_copy').'"><i class="far fa-copy"></i></li>';
+				return $actionHtml;
+
+            })->rawColumns(['action'])
+            ->make(true);
+
+        return $data;
 	}
 }

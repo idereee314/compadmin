@@ -2,7 +2,7 @@
 
 namespace reference;
 
-interface EntryConfigBeltRepository
+interface EventEntriesFeeRepository
 {
   public function all();
 
@@ -16,7 +16,7 @@ interface EntryConfigBeltRepository
 
   public function delete($id);
 
-  // public function getConfigBeltByEntryId($entries);
+  public function getEntriesFeeByEntryId($entries);
   
   public function getDatatableList($searchData);
 }

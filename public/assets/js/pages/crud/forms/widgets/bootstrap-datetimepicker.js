@@ -36,6 +36,7 @@ var KTBootstrapDatetimepicker = function () {
 
         // Demo 7
         $('#kt_datetimepicker_7_1').datetimepicker();
+        
         $('#kt_datetimepicker_7_2').datetimepicker({
             useCurrent: false
         });

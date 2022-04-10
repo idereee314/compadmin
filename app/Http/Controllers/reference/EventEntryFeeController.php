@@ -9,26 +9,26 @@ use Illuminate\Support\Facades\Input;
 use Validator;
 
 //Repositories
+use reference\EventEntriesFeeRepository as EventEntryFee;
 use reference\EventEntriesRepository as EventEntry;
-use event\EventConfigRepository as EventConfig;
 
 //Models
-use reference\EventEntries as EventEntryModel;
+use reference\EventEntriesFee as EventEntryFeeModel;
 
 use \Auth as Auth;
 use Config;
 
 use Image;
 
-class EventEntryController extends Controller
+class EventEntryFeeController extends Controller
 {
     public $restful = true;
 
-    public function __construct(EventEntry $eventEntry, EventConfig $eventConfig)
+    public function __construct(EventEntryFee $eventEntryFee, EventEntry $eventEntry)
     {
-        $this->view_path = 'event.entry';
+        $this->view_path = 'event.entry.fee';
+        $this->eventEntryFee = $eventEntryFee;
         $this->eventEntry = $eventEntry;
-        $this->eventConfig = $eventConfig;
     }
 
     /**
@@ -50,7 +50,10 @@ class EventEntryController extends Controller
      */
     public function create()
     {
-        return view($this->view_path.'.add');
+        $input = Input::all();
+
+        $data['eventEntries'] = $this->eventEntry->getEntryByEventId($input['eventId']);
+        return view($this->view_path.'.add', $data);
     }
 
     /**
@@ -63,7 +66,7 @@ class EventEntryController extends Controller
     {
         $input = Input::all();
 
-        $validator = Validator::make($input, EventEntryModel::rules(0));
+        $validator = Validator::make($input, EventEntryFeeModel::rules(0));
 
         if ($validator->fails())
         {
@@ -77,7 +80,7 @@ class EventEntryController extends Controller
         {
             try
             {
-                $event = $this->eventEntry->create($input);
+                $event = $this->eventEntryFee->create($input);
 
                 $response = array(
                     'status' => 'success',
@@ -118,8 +121,11 @@ class EventEntryController extends Controller
      */
     public function edit($id)
     {
-        $eventEntry = $this->eventEntry->find($id);
-        $data['eventEntry'] = $eventEntry;
+        $input = Input::all();
+
+        $data['eventEntries'] = $this->eventEntry->getEntryByEventId($input['eventId']);
+        $eventEntryFee = $this->eventEntryFee->find($id);
+        $data['eventEntryFee'] = $eventEntryFee;
 
         return view($this->view_path.'.edit', $data);
     }
@@ -135,7 +141,7 @@ class EventEntryController extends Controller
     {
         $input = Input::all();
 
-        $validator = Validator::make($input, EventEntryModel::rules($id));
+        $validator = Validator::make($input, EventEntryFeeModel::rules($id));
 
         if ($validator->fails())
 		{
@@ -146,7 +152,7 @@ class EventEntryController extends Controller
             );
         } else {
 			try {
-                $event = $this->eventEntry->update($id, $input);
+                $event = $this->eventEntryFee->update($id, $input);
             
 				$response = array(
 					'status' => 'success',
@@ -177,7 +183,7 @@ class EventEntryController extends Controller
     {
         try {
         
-            $this->eventEntry->delete($id);
+            $this->eventEntryFee->delete($id);
 
             $response = array(
                 'status' => 'success',
@@ -199,14 +205,6 @@ class EventEntryController extends Controller
 
     public function getDatatableList(Request $request)
     {
-        return $this->eventEntry->getDatatableList($request);
-    }
-
-    public function getEntryByEventId()
-    {
-        $input = Input::all();
-        $entries = $this->eventEntry->getEntryByEventId(@$input['event_id']); 
-
-        return json_encode($entries);
+        return $this->eventEntryFee->getDatatableList($request);
     }
 }

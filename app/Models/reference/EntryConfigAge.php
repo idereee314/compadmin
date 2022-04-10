@@ -5,7 +5,8 @@ namespace reference;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Model;
-
+use reference\EntryConfigWeight;
+use reference\EventEntries;
 use Auth;
 use Carbon;
 
@@ -21,8 +22,8 @@ class EntryConfigAge extends Model
 		return array(
             'entry_id' => 'required',
             'start_age' => 'required',
-            'end_age' => 'required',
-            'possible_ages' => 'required'
+            // 'end_age' => 'required',
+            // 'possible_ages' => 'required'
 		);
 	}
 
@@ -41,6 +42,16 @@ class EntryConfigAge extends Model
             $age = $this->start_age.'-'.$this->end_age;
         }
         return $age;
+    }
+
+    public function weights()
+    {
+        return $this->hasMany(EntryConfigWeight::class, 'entry_age_id');
+    }
+
+    public function entry()
+    {
+        return $this->belongsTo(EventEntries::class, 'entry_id');
     }
     
     public static function boot()

@@ -10,6 +10,8 @@ use Validator;
 
 //Repositories
 use reference\EntryConfigWeightRepository as EventEntryWeight;
+use reference\EventEntriesRepository as EventEntry;
+use reference\EntryConfigAgeRepository as EntryConfigAge;
 
 //Models
 use reference\EntryConfigWeight as EventEntryWeightModel;
@@ -23,10 +25,12 @@ class EventEntryWeightController extends Controller
 {
     public $restful = true;
 
-    public function __construct(EventEntryWeight $eventEntryWeight)
+    public function __construct(EventEntryWeight $eventEntryWeight, EventEntry $eventEntry, EntryConfigAge $entryConfigAge)
     {
         $this->view_path = 'event.entry.weight';
         $this->eventEntryWeight = $eventEntryWeight;
+        $this->eventEntry = $eventEntry;
+        $this->entryConfigAge = $entryConfigAge;
     }
 
     /**
@@ -48,7 +52,10 @@ class EventEntryWeightController extends Controller
      */
     public function create()
     {
-        return view($this->view_path.'.add');
+        $input = Input::all();
+
+        $data['eventEntries'] = $this->eventEntry->getEntryByEventId($input['eventId']);
+        return view($this->view_path.'.add', $data);
     }
 
     /**
@@ -75,7 +82,6 @@ class EventEntryWeightController extends Controller
         {
             try
             {
-  
                 $event = $this->eventEntryWeight->create($input);
 
                 $response = array(
@@ -117,8 +123,15 @@ class EventEntryWeightController extends Controller
      */
     public function edit($id)
     {
+        $input = Input::all();
+
+        
+
+        $data['eventEntries'] = $this->eventEntry->getEntryByEventId($input['eventId']);
         $eventEntryWeight = $this->eventEntryWeight->find($id);
+        $configAges = $this->entryConfigAge->getEntryAgeByEntryId($eventEntryWeight->entry_id);
         $data['eventEntryWeight'] = $eventEntryWeight;
+        $data['configAges'] = $configAges;
 
         return view($this->view_path.'.edit', $data);
     }
@@ -134,7 +147,7 @@ class EventEntryWeightController extends Controller
     {
         $input = Input::all();
 
-        $validator = Validator::make($input, Member::rules($id));
+        $validator = Validator::make($input, EventEntryWeightModel::rules($id));
 
         if ($validator->fails())
 		{

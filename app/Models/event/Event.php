@@ -15,6 +15,5 @@ class Event extends Model
 	public static function boot()
     {
         parent::boot();    
-
     }
 }

@@ -23,11 +23,13 @@ return array (
 	"error_remove" => "Хасах үед алдаа гарлаа",
 	"error_change" => "Солих үед алдаа гарлаа",
 	"error_send" => "Илгээхэд алдаа гарлаа",
+	'error_copy' => "Хуулахад алдаа гарлаа",
 
 	"success_save" => "Амжилттай хадгаллаа",
     "success_login" => "Амжилттай нэвтэрлээ",
 	"success_delete" => "Амжилттай устгалаа",
 	'success_void' => 'Амжилттай хүчингүй болголоо',
+	'success_copy' => "Амжилттай хуулагдлаа",
 	'success_recovery' => 'Амжилттай сэргээлээ',
 	"success_update" => "Амжилттай шинэчлэлээ",
 	"success_share" => "Амжилттай хуваалцлаа",

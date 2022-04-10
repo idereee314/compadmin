@@ -72,7 +72,14 @@ Route::group([
     Route::post('/event/registration/take/config', 'event\EventRegistrationController@getConfigByEntryId')->name('event.registration.take.config');
     Route::get('/event/registration/create/award', 'event\EventRegistrationController@createPlace')->name('event.registration.create.award');
     Route::post('/event/registration/take/award', 'event\EventRegistrationController@takePlace')->name('event.registration.take.award');
-    
+
+    Route::resource('/event/config', 'event\EventConfigController', ['names' => 'event.config']);
+    Route::any('/event/config/data/list', 'event\EventConfigController@getDatatableList')->name('event.config.data.list');
+    Route::get('/event/search/data', 'event\EventConfigController@searchEvent')->name('event.search');
+    Route::get('/event/config/copy/create/{eventConfigId}', 'event\EventConfigController@configCopy')->name('event.config.copy.create');
+    Route::post('/event/config/copy/store/{eventConfigId}', 'event\EventConfigController@configCopyExecute')->name('event.config.copy.store');
+    Route::get('/event/config-tabs', 'event\EventConfigController@includeTab')->name('event.config.tabs');
+
     //Entry
     Route::resource('/event/entry', 'reference\EventEntryController', ['names' => 'event.entry']);
     Route::any('/event/entry/data/list', 'reference\EventEntryController@getDatatableList')->name('event.entry.data.list');
@@ -93,6 +100,12 @@ Route::group([
     Route::any('/event/entry/weight/data/list', 'reference\EventEntryWeightController@getDatatableList')->name('event.entry.weight.data.list');
     Route::post('/event/entry/weight/by/entry', 'reference\EventEntryWeightController@getEntryWeightByEntryId')->name('event.entry.weight.by.entry');
     Route::post('/event/entry/weight/by/age', 'reference\EventEntryWeightController@getEntryWeightByAgeId')->name('event.entry.weight.by.age');
+
+    //Entry Fee
+    Route::resource('/event/entry/fee', 'reference\EventEntryFeeController', ['names' => 'event.entry.fee']);
+    // Route::any('/event/entry/fee/data/list', 'reference\EventEntryWeightController@getDatatableList')->name('event.entry.fee.data.list');
+    // Route::post('/event/entry/fee/by/entry', 'reference\EventEntryWeightController@getEntryWeightByEntryId')->name('event.entry.fee.by.entry');
+    // Route::post('/event/entry/fee/by/age', 'reference\EventEntryWeightController@getEntryWeightByAgeId')->name('event.entry.fee.by.age');
 
     //Academy
     Route::resource('/academy', 'academy\AcademyController', ['names' => 'academy']);

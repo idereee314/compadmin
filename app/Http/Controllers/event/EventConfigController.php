@@ -10,7 +10,13 @@ use Validator;
 
 //Repositories
 use event\EventConfigRepository as EventConfig;
+use event\EventRepository as Event;
 use academy\AcademyRepository as Academy;
+use reference\EventEntriesRepository as EventEntries;
+use reference\EntryConfigBeltRepository as EntryConfigBelt;
+use reference\EntryConfigAgeRepository as EntryConfigAge;
+use reference\EntryConfigWeightRepository as EntryConfigWeight;
+use reference\EventEntriesFeeRepository as EventEntriesFee;
 
 //Models
 use event\EventConfig as EventConfigModel;
@@ -24,10 +30,16 @@ class EventConfigController extends Controller
 {
     public $restful = true;
 
-    public function __construct(EventConfig $eventConfig)
+    public function __construct(EventConfig $eventConfig, Event $event, EventEntries $eventEntries, EntryConfigBelt $entryConfigBelt, EntryConfigAge $entryConfigAge, EntryConfigWeight $entryConfigWeight, EventEntriesFee $eventEntriesFee)
     {
         $this->view_path = 'event.config';
         $this->eventConfig = $eventConfig;
+        $this->event = $event;
+        $this->eventEntries = $eventEntries;
+        $this->entryConfigBelt = $entryConfigBelt;
+        $this->entryConfigAge = $entryConfigAge;
+        $this->entryConfigWeight = $entryConfigWeight;
+        $this->eventEntriesFee = $eventEntriesFee;
     }
 
     /**
@@ -117,8 +129,18 @@ class EventConfigController extends Controller
      */
     public function edit($id)
     {
+        // $eventConfig = $this->eventConfig->find($id);
+        // $data['eventConfig'] = $eventConfig;
+        // return view($this->view_path.'.edit', $data);
+        //$input = Input::all();
+
+        $data['tabs'] = collect(Config::get("enums.event_config"))->sortBy('order')->toArray();
+        $data['event_config_id'] = $id;
+        $data['tab_id'] = 'tab1-1';
+
         $eventConfig = $this->eventConfig->find($id);
         $data['eventConfig'] = $eventConfig;
+        $data['view_path'] = $this->view_path;
 
         return view($this->view_path.'.edit', $data);
     }
@@ -134,7 +156,7 @@ class EventConfigController extends Controller
     {
         $input = Input::all();
 
-        $validator = Validator::make($input, Member::rules($id));
+        $validator = Validator::make($input, EventConfigModel::rules($id));
 
         if ($validator->fails())
 		{
@@ -199,5 +221,143 @@ class EventConfigController extends Controller
     public function getDatatableList(Request $request)
     {
         return $this->eventConfig->getDatatableList($request);
+    }
+    
+    public function searchEvent()
+    {
+        $input = Input::all();
+
+        $events = $this->event->searchEvent(@$input['q']);
+        return json_encode($events);
+    }
+
+    public function configCopy($eventConfigId)
+    {
+        $data['view_path'] = $this->view_path;
+        $data['eventConfigId'] = $eventConfigId;
+
+        return view($this->view_path.'.copy_config', $data);
+    }
+
+    public function configCopyExecute($eventConfigId)
+    {
+        $input = Input::all();
+        $validator = Validator::make($input, EventConfigModel::rules($eventConfigId));
+        
+        if ($validator->fails())
+		{
+        	$response = array(
+                'status' => 'error',
+                'msg' => trans('messages.error_save'),
+                'errors' => $validator->errors()
+            );
+        } else {
+            try {
+                $eventConfig = $this->eventConfig->find($eventConfigId);
+                $eventConfigCopy = $this->eventConfig->copyEventConfig($eventConfigId, $input);
+            
+                $eventEntries = $this->eventEntries->getEntryByEventId($eventConfig->event_id);
+                foreach($eventEntries as $eventEntry)
+                {                  
+                    $eventEntryCopy = $eventEntry->replicate();
+                    $eventEntryCopy->event_id = $eventConfigCopy->event_id;
+                    $eventEntryCopy->save();
+
+                    foreach($eventEntry->configBelts as $belt)
+                    {
+                        $beltCopy = $belt->replicate();
+                        $beltCopy->entry_id = $eventEntryCopy->id;
+                        $beltCopy->save();
+                    }
+
+                    foreach($eventEntry->configAges as $age)
+                    {
+                        $ageCopy = $age->replicate();
+                        $ageCopy->entry_id = $eventEntryCopy->id;
+                        $ageCopy->save();
+
+                        foreach($age->weights as $weight)
+                        {
+                            $weightCopy = $weight->replicate();
+                            $weightCopy->entry_id = $eventEntryCopy->id;
+                            $weightCopy->entry_age_id = $ageCopy->id;
+                            $weightCopy->save();
+                        }
+                    }
+
+                    foreach($eventEntry->configEntriesFees as $entriesfee)
+                    {
+                        $entriesfeeCopy = $entriesfee->replicate();
+                        $entriesfeeCopy->entry_id = $eventEntryCopy->id;
+                        $entriesfeeCopy->save();
+                    }
+                }
+
+                $response = array(
+                    'status' => 'success',
+                    'msg' => trans('messages.success_copy')
+                );
+            }
+            catch(Exception $e)
+            {
+                $response = array(
+                    'status' => 'error',
+                    'msg' => trans('messages.error_copy'),
+                    'errors' => $e->getMessage()
+                );
+            }
+        }
+
+        $data['response'] = $response;
+        return view('core.alert.messages', $data);
+    }
+
+    public function includeTab()
+    {
+		$input = Input::all();
+        $eventConfig = $this->eventConfig->find($input['event_config_id']);
+        $entries = $this->eventEntries->getEntryByEventId($eventConfig->event_id);
+        $configEntries = $entries->pluck('id')->toArray();
+
+        if($input['code'] == 'general')
+        {    
+            $data['eventConfig'] = $eventConfig;
+        }
+
+        else if($input['code'] == 'event_entries') 
+        {
+           $data['entries'] = $entries;
+        }
+
+        else if($input['code'] == 'entry_config_belt') 
+        {
+           $configBelsts = $this->entryConfigBelt->getConfigBeltByEntryId($configEntries);
+           $data['configBelsts'] = $configBelsts;
+        }
+
+        else if($input['code'] == 'entry_config_age') 
+        {
+            $configAges = $this->entryConfigAge->getConfigAgeByEntryId($configEntries);;
+            $data['configAges'] = $configAges;
+        }
+
+        else if($input['code'] == 'entry_config_weight') 
+        {
+            $configAges = $this->entryConfigAge->getConfigAgeByEntryId($configEntries);
+            $configAges = $configAges->pluck('id')->toArray();
+            $configWeights = $this->entryConfigWeight->getEntryConfigWeightByEntryId($configEntries, $configAges);
+            $data['configWeights'] = $configWeights;
+        }
+
+        else if($input['code'] == 'event_entries_fee') 
+        {   
+            $configEntriesFees = $this->eventEntriesFee->getEntriesFeeByEntryId($configEntries);
+            $data['configEntriesFees'] = $configEntriesFees;
+        }
+
+        $data['tab_id'] = $input['tab_id'];
+        $data['view_path'] = $this->view_path;
+
+        return view($this->view_path.'.'.$input['name'], $data);
     }
 }

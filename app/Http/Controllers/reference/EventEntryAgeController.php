@@ -10,9 +10,10 @@ use Validator;
 
 //Repositories
 use reference\EntryConfigAgeRepository as EventEntryAge;
+use reference\EventEntriesRepository as EventEntry;
 
 //Models
-use reference\EventEntryAge as EventEntryAgeModel;
+use reference\EntryConfigAge as EventEntryAgeModel;
 
 use \Auth as Auth;
 use Config;
@@ -23,10 +24,11 @@ class EventEntryAgeController extends Controller
 {
     public $restful = true;
 
-    public function __construct(EventEntryAge $eventEntryAge)
+    public function __construct(EventEntryAge $eventEntryAge, EventEntry $eventEntry)
     {
         $this->view_path = 'event.entry.age';
         $this->eventEntryAge = $eventEntryAge;
+        $this->eventEntry = $eventEntry;
     }
 
     /**
@@ -48,7 +50,10 @@ class EventEntryAgeController extends Controller
      */
     public function create()
     {
-        return view($this->view_path.'.add');
+        $input = Input::all();
+
+        $data['eventEntries'] = $this->eventEntry->getEntryByEventId($input['eventId']);
+        return view($this->view_path.'.add', $data);
     }
 
     /**
@@ -60,6 +65,7 @@ class EventEntryAgeController extends Controller
     public function store(Request $request)
     {
         $input = Input::all();
+
 
         $validator = Validator::make($input, EventEntryAgeModel::rules(0));
 
@@ -75,7 +81,6 @@ class EventEntryAgeController extends Controller
         {
             try
             {
-  
                 $event = $this->eventEntryAge->create($input);
 
                 $response = array(
@@ -117,6 +122,9 @@ class EventEntryAgeController extends Controller
      */
     public function edit($id)
     {
+        $input = Input::all();
+
+        $data['eventEntries'] = $this->eventEntry->getEntryByEventId($input['eventId']);
         $eventEntryAge = $this->eventEntryAge->find($id);
         $data['eventEntryAge'] = $eventEntryAge;
 
@@ -134,7 +142,7 @@ class EventEntryAgeController extends Controller
     {
         $input = Input::all();
 
-        $validator = Validator::make($input, Member::rules($id));
+        $validator = Validator::make($input, EventEntryAgeModel::rules($id));
 
         if ($validator->fails())
 		{

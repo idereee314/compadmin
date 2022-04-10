@@ -1,6 +1,6 @@
 <?php namespace reference;
 
-use reference\EntryConfigBelt;
+use reference\EventEntriesFee;
 use core\sessions\Sessions;
 
 use Hash;
@@ -17,59 +17,58 @@ use Carbon;
 use Session;
 use Config;
 
-class EloquentEntryConfigBeltRepository implements EntryConfigBeltRepository {
+class EloquentEventEntriesFeeRepository implements EventEntriesFeeRepository {
 
 	public function all()
 	{
-		return EntryConfigBelt::all();
+		return EventEntriesFee::all();
 	}
 
 	public function allPaginate()
 	{
-		return EntryConfigBelt::paginate(ConfigHelper::getConfigValueByCode('pagination_global_list'));
+		return EventEntriesFee::paginate(ConfigHelper::getConfigValueByCode('pagination_global_list'));
 	}
 
 	public function find($id)
 	{
-		return EntryConfigBelt::find($id);
+		return EventEntriesFee::find($id);
 	}
 
 	public function create($input)
 	{
-		$entryConfigBelt = new EntryConfigBelt;
+		$eventEntriesFee = new EventEntriesFee;
 
-		$entryConfigBelt->entry_id = $input['entry_id'];
-		$entryConfigBelt->name = $input['name'];
-		$entryConfigBelt->name_en = $input['name_en'];
+		$eventEntriesFee->entry_id = $input['entry_id'];
+		$eventEntriesFee->end_date = $input['end_date'];
+		$eventEntriesFee->entrance_fee = $input['entrance_fee'];
 
-		$entryConfigBelt->save();
+		$eventEntriesFee->save();
 
-		return $entryConfigBelt;
+		return $eventEntriesFee;
 	}
 
  	public function update($id, $input)
 	{
-		$entryConfigBelt = $this->find($id);
-		
-		$entryConfigBelt->entry_id = $input['entry_id'];
-		$entryConfigBelt->name = $input['name'];
-		$entryConfigBelt->name_en = $input['name_en'];
+		$eventEntriesFee = $this->find($id);
+		$eventEntriesFee->entry_id = $input['entry_id'];
+		$eventEntriesFee->end_date = $input['end_date'];
+		$eventEntriesFee->entrance_fee = $input['entrance_fee'];
 
-		$entryConfigBelt->save();
+		$eventEntriesFee->save();
 
-		return $entryConfigBelt;
+		return $eventEntriesFee;
 	}
 
 	public function delete($id)
 	{
-		$entryConfigBelt = $this->find($id);
+		$eventEntriesFee = $this->find($id);
 
-		$entryConfigBelt->delete();
+		$eventEntriesFee->delete();
 	}
 
     public function getDatatableList($searchData)
     {
-		$qry = EntryConfigBelt::select('*');
+		$qry = EventEntriesFee::select('*');
 
         $data = Datatables::make($qry)
             ->filter(function ($qry) use ($searchData) {
@@ -92,7 +91,7 @@ class EloquentEntryConfigBeltRepository implements EntryConfigBeltRepository {
 			{
 				return $qry->created_at;
 			})
-            ->addColumn('action', function ($entryConfigBelt) {
+            ->addColumn('action', function ($entryConfig) {
 
 				$actionHtml = '<div class="dropdown dropdown-inline">';
 				$actionHtml .= '<a href="javascript:;" class="btn btn-sm btn-clean btn-icon" data-toggle="dropdown">';
@@ -100,8 +99,8 @@ class EloquentEntryConfigBeltRepository implements EntryConfigBeltRepository {
 				$actionHtml .= '</a>';
 				$actionHtml .= '<div class="dropdown-menu dropdown-menu-sm dropdown-menu-right">';
 				$actionHtml .= '<ul class="nav nav-hoverable flex-column">';
-				$actionHtml .= 	'<li class="nav-item"><a class="nav-link" href="#" onclick="EntryConfigBeltEdit('.$entryConfigBelt->id.')"><i class="nav-icon flaticon-edit-1"></i><span class="nav-text">'.trans('display.general_edit').'</span></a></li>';
-				$actionHtml .= 	'<li class="nav-item"><a class="nav-link" href="#" onclick="EntryConfigBeltDelete('.$entryConfigBelt->id.')"><i class="nav-icon flaticon-delete"></i><span class="nav-text">'.trans('display.general_delete').'</span></a></li>';
+				$actionHtml .= 	'<li class="nav-item"><a class="nav-link" href="#" onclick="entryConfigEdit('.$entryConfig->id.')"><i class="nav-icon flaticon-edit-1"></i><span class="nav-text">'.trans('display.general_edit').'</span></a></li>';
+				$actionHtml .= 	'<li class="nav-item"><a class="nav-link" href="#" onclick="entryConfigDelete('.$entryConfig->id.')"><i class="nav-icon flaticon-delete"></i><span class="nav-text">'.trans('display.general_delete').'</span></a></li>';
 				$actionHtml .= '</ul>';
 				$actionHtml .= '</div>';
 				$actionHtml .= '</div>';
@@ -114,27 +113,15 @@ class EloquentEntryConfigBeltRepository implements EntryConfigBeltRepository {
         return $data;
 	}
 
-	public function getEntryBeltByEntryId($entryId)
+	public function getEntriesFeeByEntryId($entries)
 	{
-		$belts = "";
-		if(@$entryId)
-		{
-			$qry = EntryConfigBelt::where('entry_id', $entryId);
-			$belts = $qry->get();
-		}
-
-		return $belts;
-	}
-
-	public function getConfigBeltByEntryId($entries)
-	{
-		$Configbelts = "";
+		$ConfigFees = "";
 		if(@count($entries) > 0)
 		{
-			$qry = EntryConfigBelt::whereIn('entry_id', $entries);
-			$Configbelts = $qry->get();
+			$qry = EventEntriesFee::whereIn('entry_id', $entries);
+			$ConfigFees = $qry->get();
 		}
 
-		return $Configbelts;
+		return $ConfigFees;
 	}
 }
