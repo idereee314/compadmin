@@ -102,15 +102,15 @@
 
 @section('javascript')
 <script src="{{asset('assets/js/plugins/custom/datatables/datatables.bundle.js')}}"></script>
+<script  type="text/javascript">
 
-<script>
 $(document).ready(function() {
+    
     $("#config_tabs li a").on('click', function() {
         var tab_id = $(this).data("tabid");
         var name = $(this).data("tabname");
         var event_config_id = $("#event_config_id").val();
         var event_id = $("#event_id").val();
-        
         var code = $(this).data("tabcode");
 
         $.get('{!! route('event.config.tabs') !!}', {event_config_id: event_config_id, event_id: event_id, tab_id: tab_id, name: name, code: code})
@@ -123,7 +123,13 @@ $(document).ready(function() {
             }
         });
     });
-});
+
+    if('{{ old('tab_id') }}' != '' || '{{ $tab_id }}' != '') {
+        $('a[name={{ old('tab_id')? old('tab_id'): $tab_id }}]').trigger('click');
+    };
+    // $('a[name=$('input[name=tab_id]').val()? $('input[name=tab_id]').val(): $tab_id]').trigger('click');
+    
+}).ajaxStart($.blockUI).ajaxStop($.unblockUI);
 </script>
 @endsection
 @stop

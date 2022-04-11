@@ -129,11 +129,6 @@ class EventConfigController extends Controller
      */
     public function edit($id)
     {
-        // $eventConfig = $this->eventConfig->find($id);
-        // $data['eventConfig'] = $eventConfig;
-        // return view($this->view_path.'.edit', $data);
-        //$input = Input::all();
-
         $data['tabs'] = collect(Config::get("enums.event_config"))->sortBy('order')->toArray();
         $data['event_config_id'] = $id;
         $data['tab_id'] = 'tab1-1';

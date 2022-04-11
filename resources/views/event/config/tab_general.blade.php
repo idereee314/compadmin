@@ -9,7 +9,7 @@
     <div class="card-body">
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.event_name')}}: <span class="text-danger">*</span></label>
-            <div class="col-md-9">
+            <div class="col-md-9 col-lg-6">
                 <input type="hidden" name="event_id" value="{{$eventConfig->event_id}}">
                 <input class="form-control form-control-lg" disabled value="{{$eventConfig->event->name.'/'.$eventConfig->event->event_date.'-'.$eventConfig->event->due_date}}"/>
             </div>
@@ -69,10 +69,6 @@ $(document).ready(function() {
                     type: form.method,
                     data: new FormData(form),
                     success: function(response) {
-                        // var page = eventConfigTable.page.info().page;
-                        // $('#eventConfigModal').find("#close").trigger('click');
-                        // $('.panel-sub-heading').html(response).fadeIn().delay(5000).fadeOut();
-                        // eventConfigTable.page(page).draw('page');
                         var tab_id = $("#config_tabs").find("li.active a").data("tabid");
                         $(".tab-content").find("#" + tab_id).empty();
 

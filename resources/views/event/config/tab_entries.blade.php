@@ -95,11 +95,9 @@ $("#entry-add").on('click', function(){
 						},
 						success: function(response) {
 							$('#preloader').hide();
-                            var tab_id = $("#config_tabs").find("li.active a").data("tabid");
-                            $(".tab-content").find("#" + tab_id).empty();
-
-                            $("#config_tabs").find("li.active a").trigger('click');
-                            $('.form-sub-heading').html(response).fadeIn().delay(5000).fadeOut();
+                            $('#eventEntryModal').find("#close").trigger('click');   
+                            $("#config_tabs").find("li a.active").trigger('click'); 
+                            $('.form-sub-heading').html(response).fadeIn().delay(5000).fadeOut();   
 						},
 						error: function (xhr, textStatus, error) {
 							console.log(xhr.statusText);
@@ -146,11 +144,9 @@ function updateRecord(id){
 						type: form.method,
 						data: $(form).serialize(),
 						success: function(response) {                           
-                            var tab_id = $("#config_tabs").find("li.active a").data("tabid");
-                            $(".tab-content").find("#" + tab_id).empty();
-
-                            $("#config_tabs").find("li.active a").trigger('click');
-                            $('.form-sub-heading').html(response).fadeIn().delay(5000).fadeOut();
+                            $('#eventEntryModal').find("#close").trigger('click');   
+                            $("#config_tabs").find("li a.active").trigger('click'); 
+                            $('.form-sub-heading').html(response).fadeIn().delay(5000).fadeOut();   
 						},
 						error: function (xhr, textStatus, error) {
 							console.log(xhr.statusText);
@@ -197,11 +193,9 @@ function deleteRecord(id){
 				type: 'DELETE',
 				success: function (response) {
 					$('#preloader').hide();		
-                    var tab_id = $("#config_tabs").find("li.active a").data("tabid");
-                    $(".tab-content").find("#" + tab_id).empty();
-
-                    $("#config_tabs").find("li.active a").trigger('click');
-                    $('.form-sub-heading').html(response).fadeIn().delay(5000).fadeOut();
+                    $('#eventEntryModal').find("#close").trigger('click');   
+                    $("#config_tabs").find("li a.active").trigger('click'); 
+                    $('.form-sub-heading').html(response).fadeIn().delay(5000).fadeOut();   
 				},
 				error: function (xhr, textStatus, error) {
 					console.log(xhr.statusText);

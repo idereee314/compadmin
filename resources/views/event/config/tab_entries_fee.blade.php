@@ -12,6 +12,7 @@
             <thead>
                 <tr>
                     <th class="p-0 w-40px text-center">#</th>
+                    <th class="p-0 min-w-200px text-left">Төрөл</th> 
                     <th class="p-0 min-w-200px text-left">Дуусах хугацаа</th> 
                     <th class="p-0 min-w-200px text-left">Төлбөр</th> 
                     <th class="p-0 min-w-110px text-center">{{trans('display.general_created_at')}}</th>
@@ -23,6 +24,7 @@
 			    @foreach($configEntriesFees as $fee)
                 <tr>
                     <td class="pl-0 py-4 text-center">{{$i}}</td>
+                    <td class="pl-0">{{@$fee->entry->name}} / {{Config::get('enums.gender_code')[@$fee->entry->gender_code]}}</td>
                     <td class="pl-0">{{$fee->end_date}}</td>
                     <td class="text-left">{{$fee->entrance_fee}}</td>
                     <td class="text-center">{{$fee->created_at}}</td>
@@ -101,11 +103,9 @@ $("#entry-add-fee").on('click', function(){
 						},
 						success: function(response) {
 							$('#preloader').hide();
-                            var tab_id = $("#config_tabs").find("li.active a").data("tabid");
-                            $(".tab-content").find("#" + tab_id).empty();
-
-                            $("#config_tabs").find("li.active a").trigger('click');
-                            $('.form-sub-heading').html(response).fadeIn().delay(5000).fadeOut();
+                            $('#eventEntryModal').find("#close").trigger('click');   
+                            $("#config_tabs").find("li a.active").trigger('click'); 
+                            $('.form-sub-heading').html(response).fadeIn().delay(5000).fadeOut();   
 						},
 						error: function (xhr, textStatus, error) {
 							console.log(xhr.statusText);
@@ -161,12 +161,10 @@ function updateRecord(id){
 						url: form.action,
 						type: form.method,
 						data: $(form).serialize(),
-						success: function(response) {                           
-                            var tab_id = $("#config_tabs").find("li.active a").data("tabid");
-                            $(".tab-content").find("#" + tab_id).empty();
-
-                            $("#config_tabs").find("li.active a").trigger('click');
-                            $('.form-sub-heading').html(response).fadeIn().delay(5000).fadeOut();
+						success: function(response) {
+                            $('#eventEntryModal').find("#close").trigger('click');   
+                            $("#config_tabs").find("li a.active").trigger('click'); 
+                            $('.form-sub-heading').html(response).fadeIn().delay(5000).fadeOut();                                                   
 						},
 						error: function (xhr, textStatus, error) {
 							console.log(xhr.statusText);
@@ -213,11 +211,9 @@ function deleteRecord(id){
 				type: 'DELETE',
 				success: function (response) {
 					$('#preloader').hide();		
-                    var tab_id = $("#config_tabs").find("li.active a").data("tabid");
-                    $(".tab-content").find("#" + tab_id).empty();
-
-                    $("#config_tabs").find("li.active a").trigger('click');
-                    $('.form-sub-heading').html(response).fadeIn().delay(5000).fadeOut();
+                    $('#eventEntryModal').find("#close").trigger('click');   
+                    $("#config_tabs").find("li a.active").trigger('click'); 
+                    $('.form-sub-heading').html(response).fadeIn().delay(5000).fadeOut();   
 				},
 				error: function (xhr, textStatus, error) {
 					console.log(xhr.statusText);

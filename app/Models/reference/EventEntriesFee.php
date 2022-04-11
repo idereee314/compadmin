@@ -5,6 +5,7 @@ namespace reference;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Model;
+use reference\EventEntries;
 
 use Auth;
 use Carbon;
@@ -22,6 +23,11 @@ class EventEntriesFee extends Model
             'entrance_fee' => 'required'
 		);
 	}
+
+    public function entry()
+    {
+        return $this->belongsTo(EventEntries::class, 'entry_id');
+    }
     
     public static function boot()
     {
