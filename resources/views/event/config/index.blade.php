@@ -449,7 +449,9 @@ function showAddModal( data ) {
     $('#eventConfigModal').on('shown.bs.modal', function(){
         $('#eventConfigModal .modal-content').html(data);
         $('.selectpicker').selectpicker();
-        $('#reg_start_date').datetimepicker();
+        $('#reg_start_date').datetimepicker({
+            format: 'yyyy-mm-dd',
+        });
         $('#reg_end_date').datetimepicker();
 
         $('#create-event-config-form select[name=event_id]').select2();

@@ -78,16 +78,18 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
     public function getDatatableList($searchData)
     {
 		$qry = EventRegistration::selectRaw('uq_event_registration.*, uq_event_config.reg_start_date, uq_event_config. reg_end_date')
-			->join('uq_event_config', 'uq_event_config.event_id', '=', 'uq_event_registration.event_id')
-			->with(['entry:id,name', 'age:id,start_age,end_age', 'belt:id,name', 'weight:id,weight', 'academy:id,name,is_other']);
+			->join('uq_event_config', 'uq_event_config.event_id', '=', 'uq_event_registration.event_id');
+
+			if($searchData->has('event') && $searchData->get('event') !== null)
+			{
+				$qry->where('uq_event_registration.event_id', $searchData->get('event'));
+			}
+
+			$qry->with(['entry:id,name', 'age:id,start_age,end_age', 'belt:id,name', 'weight:id,weight', 'academy:id,name,is_other']);
 
         $data = Datatables::make($qry)
             ->filter(function ($qry) use ($searchData) {
-                if($searchData->has('event') && $searchData->get('event') !== null)
-                {
-                    $qry->where('uq_event_registration.event_id', $searchData->get('event'));
-                }
-
+                
                 if($searchData->has('entry') && $searchData->get('entry') !== null)
                 {
 					$qry->where('uq_event_registration.entry_id', $searchData->get('entry'));
@@ -203,19 +205,24 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 				if ($qry->member->id_url) {
 					$actionHtml .= '<a class="btn btn-icon btn-clean btn-sm mr-3 show-image" data-id="'.$qry->member->id.'" data-type="id" title="'.trans('display.id_photo').'"><i class="far fas fa-paperclip text-warning"></i></a>';
 				}
-				if(@$qry->award)
+				if($qry->event->due_date <= Carbon\Carbon::now())
 				{
-					$actionHtml .= 	'<a class="btn btn-icon btn-light btn-hover-primary btn-sm mr-3 win-place" href="javascript:;" data-registrationid="'.$qry->id.'" title="'.trans('display.comp_award_place').'"><span class="class="svg-icon svg-icon-md svg-icon-primary">'.@$qry->award->place_number.'</span></a>';
-				}
-				else
-				{
-					$actionHtml .= 	'<a class="btn btn-icon btn-light btn-hover-primary btn-sm mr-3 win-place" href="javascript:;" data-registrationid="'.$qry->id.'" title="'.trans('display.comp_award_place').'"><i class="nav-icon la la-award"></i></a>';
+					if(@$qry->award)
+					{
+						$actionHtml .= 	'<a class="btn btn-icon btn-light btn-hover-primary btn-sm mr-3 win-place" href="javascript:;" data-registrationid="'.$qry->id.'" title="'.trans('display.comp_award_place').'"><span class="class="svg-icon svg-icon-md svg-icon-primary">'.@$qry->award->place_number.'</span></a>';
+					}
+					else
+					{
+						$actionHtml .= 	'<a class="btn btn-icon btn-light btn-hover-primary btn-sm mr-3 win-place" href="javascript:;" data-registrationid="'.$qry->id.'" title="'.trans('display.comp_award_place').'"><i class="nav-icon la la-award"></i></a>';
+					}
 				}
 				
-				$actionHtml .= 	'<a class="btn btn-icon btn-light btn-hover-primary btn-sm mr-3 edit" href="javascript:;" data-registrationid="'.$qry->id.'" title="'.trans('display.general_edit').'"><i class="la la-edit"></i></a>';
-				if($qry->status == @Config::get('smart.event_registeation_status')['created'])
-				{
-					$actionHtml .= 	'<a class="btn btn-icon btn-light btn-hover-primary btn-sm delete" href="javascript:;" data-registrationid="'.$qry->id.'" title="'.trans('display.general_delete').'"><i class="la la-trash"></i></li>';
+				if($qry->event->due_date > Carbon\Carbon::now()){
+					$actionHtml .= 	'<a class="btn btn-icon btn-light btn-hover-primary btn-sm mr-3 edit" href="javascript:;" data-registrationid="'.$qry->id.'" title="'.trans('display.general_edit').'"><i class="la la-edit"></i></a>';
+					if($qry->status == @Config::get('smart.event_registeation_status')['created'])
+					{
+						$actionHtml .= 	'<a class="btn btn-icon btn-light btn-hover-primary btn-sm delete" href="javascript:;" data-registrationid="'.$qry->id.'" title="'.trans('display.general_delete').'"><i class="la la-trash"></i></li>';
+					}
 				}
 				return $actionHtml;
 

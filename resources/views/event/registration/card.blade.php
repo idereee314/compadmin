@@ -1,11 +1,10 @@
 @extends('default')
 
 @section('css')
-<link rel="stylesheet" href="{{asset('assets/js/plugins/custom/datatables/datatables.bundle.css')}}">
 @endsection
 
 @section('content')
-<!--begin::Main-->
+ <!--begin::Main-->
 <!--begin::Header Mobile-->
 @include('layouts.mobile')
 <!--end::Header Mobile-->
@@ -13,29 +12,27 @@
 @include('layouts.aside')
 <!--end::Aside-->
 <!--begin::Wrapper-->
-<div class="d-flex flex-column flex-row-fluid wrapper" id="kt_wrapper">
-    <!--begin::Header-->
-    @include('layouts.header')
-    <!--begin::Content-->
-    <div class="content d-flex flex-column flex-column-fluid">
+    <div class="d-flex flex-column flex-row-fluid wrapper" id="kt_wrapper">
+        <!--begin::Header-->
+        @include('layouts.header')
+        <!--begin::Content-->
+        <div class="content d-flex flex-column flex-column-fluid">
             <!--begin::Subheader-->
             <div class="subheader py-2 py-lg-4 subheader-transparent" id="kt_subheader">
                 <div class="container d-flex align-items-center justify-content-between flex-wrap flex-sm-nowrap">
                     <!--begin::Details-->
                     <div class="d-flex align-items-center flex-wrap mr-2">
                         <!--begin::Title-->
-                        <h2 class="d-flex align-items-center text-dark font-weight-bold my-1 mr-3">Оролцогчдын жагсаалт</h2>
+                        <h5 class="text-dark font-weight-bold mt-2 mb-2 mr-5">Тэмцээнүүд</h5>
                         <!--end::Title-->
-                        <!--begin::Breadcrumb-->
-                        <ul class="breadcrumb breadcrumb-transparent breadcrumb-dot font-weight-bold my-2 p-0">
-                            <li class="breadcrumb-item text-muted">
-                                <a href="javascript:;" class="text-muted">Бүртгэл</a>
-                            </li>
-                            <li class="breadcrumb-item text-muted">
-                                <a href="{{ route('event.competition.card') }}" class="text-muted">Тэмцээн</a>
-                            </li>
-                        </ul>
-                        <!--end::Breadcrumb-->
+                        <!--begin::Separator-->
+                        <div class="subheader-separator subheader-separator-ver mt-2 mb-2 mr-5 bg-gray-200"></div>
+                        <!--end::Separator-->
+                        <!--begin::Search Form-->
+                        <div class="d-flex align-items-center" id="kt_subheader_search">
+                            <span class="text-dark-50 font-weight-bold" id="kt_subheader_total">Нийт {{ @$pagination->total() }}</span>
+                        </div>
+                        <!--end::Search Form-->
                     </div>
                     <!--end::Details-->
                 </div>
@@ -45,210 +42,157 @@
             <div class="d-flex flex-column-fluid">
                 <!--begin::Container-->
                 <div class="container">
-                    <!--begin::Card-->
-                    <div class="card card-custom">
-                        <div class="card-body">
-                            <!--begin: Items-->
-                            <div class="d-flex align-items-center flex-wrap pb-5 border-bottom">
-                                <!--begin: Item-->
-                                <div class="d-flex align-items-center flex-lg-fill mr-5 my-1">
-                                    <span class="mr-4">
-                                        <i class="flaticon-file-2 icon-2x text-muted font-weight-bold"></i>
-                                    </span>
-                                    <div class="d-flex flex-column flex-lg-fill">
-                                        <span class="text-dark-75 font-weight-bolder font-size-sm">{{ array_sum(@$eventRegStatusCount) }} {{ trans('display.general_all') }}</span>
-                                        <a href="javascript:;" class="text-primary font-weight-bolder filter-status-count" data-status="">Харах</a>
+                    <!--begin::Row-->
+                    @foreach(array_chunk(@$events, 2) as $chunk)
+                    <div class="row">
+                    @foreach(@$chunk as $event)
+                        <div class="col-xl-6">
+                            <!--begin::Card-->
+                            <div class="card card-custom gutter-b card-stretch">
+                                <!--begin::Body-->
+                                <div class="card-body">
+                                    <!--begin::Section-->
+                                    <div class="d-flex align-items-center">
+                                        <!--begin::Pic-->
+                                        <div class="flex-shrink-0 mr-4 symbol symbol-65 symbol-circle">
+                                            <img src="{{ \Storage::disk('s3')->url(@$event['pictures_mobile_cover'][0]['dir_url'].'/thumbnail/'.@$event['pictures_mobile_cover'][0]['url']) }}" alt="image" />
+                                        </div>
+                                        <!--end::Pic-->
+                                        <!--begin::Info-->
+                                        <div class="d-flex flex-column mr-auto">
+                                            <!--begin: Title-->
+                                            <a href="#" class="card-title text-hover-primary font-weight-bolder font-size-h5 text-dark mb-1">{{ @$event['name'] }}</a>
+                                            <span class="text-muted font-weight-bold">{{ Carbon\Carbon::parse(@$event['event_date'])->format('Y M d') }} - {{ Carbon\Carbon::parse(@$event['due_date'])->format('Y M d') }}</span>
+                                            <!--end::Title-->
+                                        </div>
+                                        <!--end::Info-->
                                     </div>
-                                </div>
-                                <!--end: Item-->
-                                @forelse(@$eventRegStatusCount as $key => $count)
-                                <!--begin: Item-->
-                                <div class="d-flex align-items-center flex-lg-fill mr-5 my-1">
-                                    <span class="mr-4">
-                                        <i class="flaticon-file-2 icon-2x text-muted font-weight-bold"></i>
-                                    </span>
-                                    <div class="d-flex flex-column flex-lg-fill">
-                                        <span class="text-dark-75 font-weight-bolder font-size-sm">{{ $count }} {{ @Config::get('enums.event_registeation_status')[$key] }}</span>
-                                        <a href="javascript:;" class="text-primary font-weight-bolder filter-status-count" data-status="{{ $key }}">Харах</a>
+                                    <!--end::Section-->
+                                    <!--begin::Content-->
+                                    <div class="d-flex flex-wrap mt-14">
+                                        <div class="mr-12 d-flex flex-column mb-7">
+                                            <span class="d-block font-weight-bold mb-4">Эхлэх</span>
+                                            <span class="btn btn-light-primary btn-sm font-weight-bold btn-upper btn-text">{{ Carbon\Carbon::parse(@$event['reg_start_date'])->format('y M, d') }}</span>
+                                        </div>
+                                        <div class="mr-12 d-flex flex-column mb-7">
+                                            <span class="d-block font-weight-bold mb-4">Дуусах</span>
+                                            <span class="btn btn-light-danger btn-sm font-weight-bold btn-upper btn-text">{{ Carbon\Carbon::parse(@$event['reg_end_date'])->format('y M, d') }}</span>
+                                        </div>
+                                        <!--begin::Progress-->
+                                        <div class="flex-row-fluid mb-7">
+                                            <span class="d-block font-weight-bold mb-4">Бүртгэлийн явц</span>
+                                            <div class="d-flex align-items-center pt-2">
+                                                <div class="progress progress-xs mt-2 mb-2 w-100">
+                                                    <div class="progress-bar bg-warning" role="progressbar" style="width: {{ round(@$event['status_approved'] ? @$event['status_approved'] / @$event['registration_count'] * 100 : 0) }}%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                                                </div>
+                                                <span class="ml-3 font-weight-bolder">{{ round(@$event['status_approved'] ? @$event['status_approved'] / @$event['registration_count'] * 100 : 0) }}%</span>
+                                            </div>
+                                        </div>
+                                        <!--end::Progress-->
                                     </div>
+                                    <!--end::Content-->
+                                    <!--begin::Text-->
+                                    <p class="mb-7 mt-3">{{ Str::words(strip_tags(@$event['description']), 20, '...') }}</p>
+                                    <!--end::Text-->
+                                    <!--begin::Blog-->
+                                    <div class="d-flex flex-wrap">
+                                        <!--begin: Item-->
+                                        <div class="mr-12 d-flex flex-column mb-7">
+                                            <span class="font-weight-bolder mb-4">{{ @Config::get('enums.gender_code')[2] }}</span>
+                                            <span class="font-weight-bolder font-size-h5 pt-1">
+                                            <span class="font-weight-bold text-dark-50"><i class="icon-md fas fa-female"></i></span> {{ array_count_values(array_column($event['members'], 'gender_code'))[2] }}</span>
+                                        </div>
+                                        <!--end::Item-->
+                                        <!--begin::Item-->
+                                        <div class="mr-12 d-flex flex-column mb-7">
+                                            <span class="font-weight-bolder mb-4">{{ @Config::get('enums.gender_code')[1] }}</span>
+                                            <span class="font-weight-bolder font-size-h5 pt-1">
+                                            <span class="font-weight-bold text-dark-50"><i class="icon-md fas fa-male"></i></span> {{ array_count_values(array_column($event['members'], 'gender_code'))[1] }}</span>
+                                        </div>
+                                        <!--end::Item-->
+                                        <!--begin::Item-->
+                                        <div class="d-flex flex-column flex-lg-fill float-left mb-7">
+                                            <span class="font-weight-bolder mb-4">Оролцогч</span>
+                                            <div class="symbol-group symbol-hover">
+                                                @php $count = 0; @endphp
+                                                @forelse(@$event['members'] as $member)
+                                                @if($count < 10)
+                                                    <div class="symbol symbol-30 symbol-circle" data-toggle="tooltip" title="{{ $member['firstname'] }} {{ $member['lastname'] }}">
+                                                        <img alt="Pic" src="{{ \Storage::disk('s3')->url(@$member['profile_url']) }}" style="width: 30px; height: 30px"/>
+                                                    </div>
+                                                @endif
+                                                @php $count ++; @endphp
+                                                @empty
+                                                @endforelse
+                                                @if($count > 10)
+                                                <div class="symbol symbol-30 symbol-circle symbol-light">
+                                                    <span class="symbol-label font-weight-bold">+</span>
+                                                </div>
+                                                @endif
+                                            </div>
+                                        </div>
+                                        <!--end::Item-->
+                                    </div>
+                                    <!--end::Blog-->
                                 </div>
-                                <!--end: Item-->
-                                @empty
-                                @endforelse
-                            </div>
-                            <!--begin: Items-->
-                            <!--begin::Accordion-->
-                            <div class="accordion accordion-light accordion-light-borderless accordion-svg-toggle" id="search">
-                                <div class="card">
-                                    <div class="card-header">
-                                        <div class="card-title collapsed" data-toggle="collapse" data-target="#search-registration">
-                                            <span class="svg-icon svg-icon-primary">
-                                                <!--begin::Svg Icon | path:assets/media/svg/icons/Navigation/Angle-double-right.svg-->
+                                <!--end::Body-->
+                                <!--begin::Footer-->
+                                <div class="card-footer d-flex align-items-center">
+                                    <div class="d-flex">
+                                        <div class="d-flex align-items-center mr-7">
+                                            <span class="svg-icon svg-icon-gray-500">
+                                                <!--begin::Svg Icon | path:/var/www/preview.keenthemes.com/metronic/releases/2021-05-14-112058/theme/html/demo5/dist/../src/media/svg/icons/Communication/Sending.svg-->
                                                 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
                                                     <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                                        <polygon points="0 0 24 0 24 24 0 24" />
-                                                        <path d="M12.2928955,6.70710318 C11.9023712,6.31657888 11.9023712,5.68341391 12.2928955,5.29288961 C12.6834198,4.90236532 13.3165848,4.90236532 13.7071091,5.29288961 L19.7071091,11.2928896 C20.085688,11.6714686 20.0989336,12.281055 19.7371564,12.675721 L14.2371564,18.675721 C13.863964,19.08284 13.2313966,19.1103429 12.8242777,18.7371505 C12.4171587,18.3639581 12.3896557,17.7313908 12.7628481,17.3242718 L17.6158645,12.0300721 L12.2928955,6.70710318 Z" fill="#000000" fill-rule="nonzero" />
-                                                        <path d="M3.70710678,15.7071068 C3.31658249,16.0976311 2.68341751,16.0976311 2.29289322,15.7071068 C1.90236893,15.3165825 1.90236893,14.6834175 2.29289322,14.2928932 L8.29289322,8.29289322 C8.67147216,7.91431428 9.28105859,7.90106866 9.67572463,8.26284586 L15.6757246,13.7628459 C16.0828436,14.1360383 16.1103465,14.7686056 15.7371541,15.1757246 C15.3639617,15.5828436 14.7313944,15.6103465 14.3242754,15.2371541 L9.03007575,10.3841378 L3.70710678,15.7071068 Z" fill="#000000" fill-rule="nonzero" opacity="0.3" transform="translate(9.000003, 11.999999) rotate(-270.000000) translate(-9.000003, -11.999999)" />
+                                                        <rect x="0" y="0" width="24" height="24"/>
+                                                        <path d="M8,13.1668961 L20.4470385,11.9999863 L8,10.8330764 L8,5.77181995 C8,5.70108058 8.01501031,5.63114635 8.04403925,5.56663761 C8.15735832,5.31481744 8.45336217,5.20254012 8.70518234,5.31585919 L22.545552,11.5440255 C22.6569791,11.5941677 22.7461882,11.6833768 22.7963304,11.794804 C22.9096495,12.0466241 22.7973722,12.342628 22.545552,12.455947 L8.70518234,18.6841134 C8.64067359,18.7131423 8.57073936,18.7281526 8.5,18.7281526 C8.22385763,18.7281526 8,18.504295 8,18.2281526 L8,13.1668961 Z" fill="#000000"/>
+                                                        <path d="M4,16 L5,16 C5.55228475,16 6,16.4477153 6,17 C6,17.5522847 5.55228475,18 5,18 L4,18 C3.44771525,18 3,17.5522847 3,17 C3,16.4477153 3.44771525,16 4,16 Z M1,11 L5,11 C5.55228475,11 6,11.4477153 6,12 C6,12.5522847 5.55228475,13 5,13 L1,13 C0.44771525,13 6.76353751e-17,12.5522847 0,12 C-6.76353751e-17,11.4477153 0.44771525,11 1,11 Z M4,6 L5,6 C5.55228475,6 6,6.44771525 6,7 C6,7.55228475 5.55228475,8 5,8 L4,8 C3.44771525,8 3,7.55228475 3,7 C3,6.44771525 3.44771525,6 4,6 Z" fill="#000000" opacity="0.3"/>
+                                                    </g>
+                                                </svg><!--end::Svg Icon-->
+                                            </span>
+                                            <a href="#" class="font-weight-bolder text-primary ml-2">{{ @$event['registration_count'] }} {{ @Config::get('enums.event_registeation_status')['created'] }}</a>
+                                        </div>
+                                        <div class="d-flex align-items-center mr-7">
+                                            <span class="svg-icon svg-icon-gray-500">
+                                                <!--begin::Svg Icon | path:assets/media/svg/icons/Communication/Group-chat.svg-->
+                                                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                        <rect x="0" y="0" width="24" height="24"/>
+                                                        <rect fill="#000000" opacity="0.3" x="11.5" y="2" width="2" height="4" rx="1"/>
+                                                        <rect fill="#000000" opacity="0.3" x="11.5" y="16" width="2" height="5" rx="1"/>
+                                                        <path d="M15.493,8.044 C15.2143319,7.68933156 14.8501689,7.40750104 14.4005,7.1985 C13.9508311,6.98949895 13.5170021,6.885 13.099,6.885 C12.8836656,6.885 12.6651678,6.90399981 12.4435,6.942 C12.2218322,6.98000019 12.0223342,7.05283279 11.845,7.1605 C11.6676658,7.2681672 11.5188339,7.40749914 11.3985,7.5785 C11.2781661,7.74950085 11.218,7.96799867 11.218,8.234 C11.218,8.46200114 11.2654995,8.65199924 11.3605,8.804 C11.4555005,8.95600076 11.5948324,9.08899943 11.7785,9.203 C11.9621676,9.31700057 12.1806654,9.42149952 12.434,9.5165 C12.6873346,9.61150047 12.9723317,9.70966616 13.289,9.811 C13.7450023,9.96300076 14.2199975,10.1308324 14.714,10.3145 C15.2080025,10.4981676 15.6576646,10.7419985 16.063,11.046 C16.4683354,11.3500015 16.8039987,11.7268311 17.07,12.1765 C17.3360013,12.6261689 17.469,13.1866633 17.469,13.858 C17.469,14.6306705 17.3265014,15.2988305 17.0415,15.8625 C16.7564986,16.4261695 16.3733357,16.8916648 15.892,17.259 C15.4106643,17.6263352 14.8596698,17.8986658 14.239,18.076 C13.6183302,18.2533342 12.97867,18.342 12.32,18.342 C11.3573285,18.342 10.4263378,18.1741683 9.527,17.8385 C8.62766217,17.5028317 7.88033631,17.0246698 7.285,16.404 L9.413,14.238 C9.74233498,14.6433354 10.176164,14.9821653 10.7145,15.2545 C11.252836,15.5268347 11.7879973,15.663 12.32,15.663 C12.5606679,15.663 12.7949989,15.6376669 13.023,15.587 C13.2510011,15.5363331 13.4504991,15.4540006 13.6215,15.34 C13.7925009,15.2259994 13.9286662,15.0740009 14.03,14.884 C14.1313338,14.693999 14.182,14.4660013 14.182,14.2 C14.182,13.9466654 14.1186673,13.7313342 13.992,13.554 C13.8653327,13.3766658 13.6848345,13.2151674 13.4505,13.0695 C13.2161655,12.9238326 12.9248351,12.7908339 12.5765,12.6705 C12.2281649,12.5501661 11.8323355,12.420334 11.389,12.281 C10.9583312,12.141666 10.5371687,11.9770009 10.1255,11.787 C9.71383127,11.596999 9.34650161,11.3531682 9.0235,11.0555 C8.70049838,10.7578318 8.44083431,10.3968355 8.2445,9.9725 C8.04816568,9.54816454 7.95,9.03200304 7.95,8.424 C7.95,7.67666293 8.10199848,7.03700266 8.406,6.505 C8.71000152,5.97299734 9.10899753,5.53600171 9.603,5.194 C10.0970025,4.85199829 10.6543302,4.60183412 11.275,4.4435 C11.8956698,4.28516587 12.5226635,4.206 13.156,4.206 C13.9160038,4.206 14.6918294,4.34533194 15.4835,4.624 C16.2751706,4.90266806 16.9686637,5.31433061 17.564,5.859 L15.493,8.044 Z" fill="#000000"/>
                                                     </g>
                                                 </svg>
                                                 <!--end::Svg Icon-->
                                             </span>
-                                            <div class="card-label pl-4">Хайлт</div>
+                                            <a href="#" class="font-weight-bolder text-primary ml-2">{{ @$event['status_approved'] }} {{ @Config::get('enums.event_registeation_status')['approved'] }}</a>
                                         </div>
                                     </div>
-                                    <div id="search-registration" class="collapse" data-parent="#search">
-                                        <div class="card-body">
-                                            <!--begin: Search Form-->
-                                            <form class="mb-10" id="event-registration-search-form" method="POST">
-                                                <input type="hidden" name="search_event" id="search_event" value="{{ @$event->id }}"/>
-                                                <div class="row mb-6">
-                                                    <div class="col-lg-3 mb-lg-0 mb-6">
-                                                        <label>{{ trans('display.comp_entry') }}:</label>
-                                                        <select class="form-control selectpicker datatable-input" name="search_entry" id="search_entry" data-col-index="1">
-                                                            <option value="">-- {{ trans('display.general_all') }} --</option>
-                                                            @forelse(@$eventEntries as $eventEntry)
-                                                            <option value="{{ $eventEntry->id }}">{{ $eventEntry->name }} - {{ @Config::get('enums.gender_code')[$eventEntry->gender_code] }}</option>
-                                                            @empty
-                                                            @endforelse
-                                                        </select>
-                                                    </div>
-                                                    <div class="col-lg-2 mb-lg-0 mb-6">
-                                                        <label>{{ trans('display.comp_entry_age') }}:</label>
-                                                        <select class="form-control datatable-input" name="search_entry_age" id="search_entry_age" data-col-index="2">
-                                                            <option value="">-- {{ trans('display.general_all') }} --</option>
-                                                            
-                                                        </select>
-                                                    </div>
-                                                    <div class="col-lg-2 mb-lg-0 mb-6">
-                                                        <label>{{ trans('display.comp_entry_belt') }}:</label>
-                                                        <select class="form-control datatable-input" name="search_entry_belt" id="search_entry_belt" data-col-index="3">
-                                                            <option value="">-- {{ trans('display.general_all') }} --</option>
-                                                            
-                                                        </select>
-                                                    </div>
-                                                    <div class="col-lg-2 mb-lg-0 mb-6">
-                                                        <label>{{ trans('display.comp_entry_weight') }}:</label>
-                                                        <select class="form-control datatable-input" name="search_entry_weight" id="search_entry_weight" data-col-index="4">
-                                                            <option value="">-- {{ trans('display.general_all') }} --</option>
-                                                            
-                                                        </select>
-                                                    </div>
-                                                    <div class="col-lg-3 mb-lg-0 mb-6">
-                                                        <label>{{ trans('display.comp_academy') }}:</label>
-                                                        <select class="form-control selectpicker datatable-input" data-live-search="true" name="search_academy" id="search_academy" data-col-index="5">
-                                                            <option value="">-- {{ trans('display.general_all') }} --</option>
-                                                            @forelse(@$academies as $academy)
-                                                            <option value="{{ $academy->id }}">{{ $academy->name }}</option>
-                                                            @empty
-                                                            @endforelse
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="row mb-8">
-                                                    <div class="col-lg-3 mb-lg-0 mb-6">
-                                                        <label>{{ trans('display.general_date') }}:</label>
-                                                        <div class="input-daterange input-group" id="kt_datepicker">
-                                                            <input type="text" class="form-control datatable-input" name="search_date[]" id="start" placeholder="From" data-col-index="7" />
-                                                            <div class="input-group-append">
-                                                                <span class="input-group-text">
-                                                                    <i class="la la-ellipsis-h"></i>
-                                                                </span>
-                                                            </div>
-                                                            <input type="text" class="form-control datatable-input" name="search_date[]" id="end" placeholder="To" data-col-index="7" />
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-lg-2 mb-lg-0 mb-6">
-                                                        <label>Оролцогч:</label>
-                                                        <input type="text" class="form-control datatable-input" name="search_member" id="search_member" placeholder="Оролцогчийн мэдээллээр хайх" data-col-index="8"/>
-                                                    </div>
-                                                    <div class="col-lg-2 mb-lg-0 mb-6">
-                                                        <label>Жин шалгасан эсэх:</label>
-                                                        <select class="form-control selectpicker datatable-input" name="search_is_weight" id="search_is_weight" data-col-index="9">
-                                                            <option value="">-- {{ trans('display.general_all') }} --</option>
-                                                            @forelse(@Config::get('enums.boolean_type') as $key => $type)
-                                                            <option value="{{ $key }}">{{ $type }}</option>
-                                                            @empty
-                                                            @endforelse
-                                                        </select>
-                                                    </div>
-                                                    <div class="col-lg-2 mb-lg-0 mb-6">
-                                                        <label>{{ trans('display.general_status') }}:</label>
-                                                        <select class="form-control selectpicker datatable-input" name="search_status" id="search_status" data-col-index="10">
-                                                            <option value="">-- {{ trans('display.general_all') }} --</option>
-                                                            @forelse(@Config::get('enums.event_registeation_status') as $key => $status)
-                                                            <option value="{{ $key }}">{{ $status }}</option>
-                                                            @empty
-                                                            @endforelse
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="row mt-8">
-                                                    <div class="col-lg-12">
-                                                        <button type="submit" class="btn btn-primary btn-primary--icon">
-                                                            <span>
-                                                                <i class="la la-search"></i>
-                                                                <span>{{ trans('display.general_search') }}</span>
-                                                            </span>
-                                                        </button>
-                                                        <button type="reset" class="btn btn-secondary btn-secondary--icon" id="kt_reset">
-                                                            <span>
-                                                                <i class="la la-close"></i>
-                                                                <span>{{ trans('display.general_reset') }}</span>
-                                                            </span>
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
+                                    <a href="/event/registration?event_id={{@$event['id']}}" class="btn btn-primary btn-sm text-uppercase font-weight-bolder mt-5 mt-sm-0 mr-auto mr-sm-0 ml-sm-auto">{{ trans('display.general_detail') }}</a>
                                 </div>
+                                <!--end::Footer-->
                             </div>
-                            <!--end::Accordion-->
-                            <!--begin: Datatable-->
-                            <div class="dataTables_wrapper dt-bootstrap4">
-                                <div class="panel-sub-heading">
-
-                                </div>
-                                <div class="row">
-                                    <div class="col-sm-12">
-                                        <table class="table table-separate table-head-custom" id="event-registration-datatable" style="margin-top: 13px !important">
-                                            <thead>
-                                            <tr>
-                                                <th width="5%">No.</th>
-                                                <th width="1%">{{trans('display.comp_title')}}</th>
-                                                <th width="30%">{{trans('display.comp_member')}}</th>
-                                                <th width="10%">{{trans('display.comp_entry')}}</th>
-                                                <th width="5%">{{trans('display.comp_entry_age')}}</th>
-                                                <th width="8%">{{trans('display.comp_entry_belt')}}</th>
-                                                <th width="5%">{{trans('display.comp_entry_weight')}}</th>
-                                                <th width="15%">{{trans('display.comp_academy')}}</th>
-                                                <th width="1%">{{trans('display.general_status')}}</th>
-                                                <th width="8%">{{trans('display.general_created_at')}}</th>
-                                                <th width="25%">{{trans('display.general_manage')}}</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                            </tbody>
-                                        </table>    
-                                    </div>
-                                </div>
-                            </div>
-                            <!--end: Datatable-->
+                            <!--end::Card-->
                         </div>
+                    @endforeach
                     </div>
-                    <!--end::Card-->
+                    @endforeach
+                    <!--end::Row-->
+                    <!--begin::Pagination-->
+                    {{ @$pagination->links('pagination::theme') }}
+                    <!--end::Pagination-->
                 </div>
                 <!--end::Container-->
             </div>
             <!--end::Entry-->
         </div>
         <!--end::Content-->
-    <!--begin::Footer-->
-    @include('layouts.footer')
-    <!--end::Footer-->
-</div>
-@include ($view_path.'.modals')
-<!--end::Wrapper-->
+        <!--begin::Footer-->
+        @include('layouts.footer')
+        <!--end::Footer-->
+    </div>
+    @include ($view_path.'.modals')
+    <!--end::Wrapper-->
 <!--end::Main-->
 @section('javascript')
 <script src="{{asset('assets/js/plugins/custom/datatables/datatables.bundle.js')}}"></script>
@@ -265,14 +209,14 @@ $(document).ready(function() {
         dataType: 'json',
         paginationType: "full_numbers",
         ajax: {
-            url: '{{ route('event.registration.data.list') }}',
+            url: '{{route('event.registration.data.list')}}',
             type: 'POST',
             data: function ( d ) {
                 var dateArr = {};
                 $('#event-registration-search-form input[name^="search_date"]').map(function(){
                     dateArr[this.id] = this.value;
                 }).get();
-                d.event = $('#event-registration-search-form input[id="search_event"]').val();
+                d.event = $('#event-registration-search-form select[id="search_event"]').val();
                 d.entry = $('#event-registration-search-form select[id="search_entry"]').val();
                 d.entryAge = $('#event-registration-search-form select[id="search_entry_age"]').val();
                 d.entryBelt = $('#event-registration-search-form select[id="search_entry_belt"]').val();
@@ -517,6 +461,44 @@ $(document).ready(function() {
                 });
             }
         });
+    });
+
+    $('#event-registration-search-form select[name=search_event]').on('change', function(){
+        var eventId = $(this).val();
+        var jsonData;
+
+        $.ajax({
+            type: 'POST',
+            url: '{!! route('event.entry.by.event') !!}',
+            data: {event_id: eventId},
+            success: function (data) {
+                jsonData = JSON.parse(data);
+            },
+            error: function (xhr, textStatus, error) {
+                console.log(xhr.statusText);
+                console.log(textStatus);
+                console.log(error);
+            },
+            async: false
+        });
+
+        $('#event-registration-search-form select[name=search_entry]').select2({
+            placeholder: "-- {{ trans('display.general_all') }} --",
+            data: jsonData,
+            id: 'id',
+            closeOnSelect: true,
+            allowClear: true,
+            templateSelection: function (item) {
+                return item.name;
+            },
+            templateResult: function (item) {
+                return item.name;
+            }
+        });
+
+        $('#event-registration-search-form select[name=search_entry_age]').select2({data: ""});
+        $('#event-registration-search-form select[name=search_entry_belt]').select2({data: ""});
+        $('#event-registration-search-form select[name=search_entry_weight]').select2({data: ""});
     });
 
     $('#event-registration-search-form select[name=search_entry]').on('change', function(){

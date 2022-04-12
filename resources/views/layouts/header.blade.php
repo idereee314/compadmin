@@ -20,7 +20,7 @@
             </button>
             <!--end::Aside Toggle-->
             <!--begin::Logo-->
-            <a href="/home">
+            <a href="/event/competition">
                 <img alt="Logo" src="{{asset('assets/images/logo/uniq_logo.png')}}" class="logo-sticky max-h-35px" />
             </a>
             <!--end::Logo-->

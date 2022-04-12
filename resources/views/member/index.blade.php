@@ -392,11 +392,12 @@ function showAddModal( data ) {
             rtl: KTUtil.isRTL(),
             todayHighlight: true,
             orientation: "bottom left",
+            format: 'yyyy-mm-dd',
             templates: {
                 leftArrow: '<i class="la la-angle-right"></i>',
                 rightArrow: '<i class="la la-angle-left"></i>'
             }
-        })
+        });
 
         $('#add-member-form').validate({
             ignore: [],
@@ -451,6 +452,17 @@ function memberEditModal(data)
 
         $("#register_number").inputmask();
         $('.only-phone').inputmask("99 99 99 99");
+
+        $('#birth').datepicker({
+            rtl: KTUtil.isRTL(),
+            todayHighlight: true,
+            orientation: "bottom left",
+            format: 'yyyy-mm-dd',
+            templates: {
+                leftArrow: '<i class="la la-angle-right"></i>',
+                rightArrow: '<i class="la la-angle-left"></i>'
+            }
+        });
 
         $('#edit-member-form').validate({
             ignore: [],
