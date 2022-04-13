@@ -16,8 +16,7 @@ class EventConfig extends Model
     {
 		return array(
             'event_id' => 'required|unique:uq_event_config,event_id,'.$id.',id',
-            'reg_start_date' => 'required',
-            'reg_end_date' => 'required'
+            'reg_date' => 'required',
 		);
 	}
 

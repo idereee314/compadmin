@@ -87,13 +87,12 @@ class EventRegistrationController extends Controller
      */
     public function create()
     {
-        //$now = Carbon\Carbon::now()->toDateTimeString();
-        $competitions = $this->eventConfig->getRegistringComp(@$now);
-        //$members = $this->member->all();
+        $input = Input::all();
+        $entries = $this->eventEntries->getEntryByEventId(@$input['event_id']);
         $academy = $this->academy->all();
 
-        $data['competitions'] = $competitions;
-        //$data['members'] = $members;
+        $data['event_id'] = @$input['event_id'];
+        $data['entries'] = $entries;
         $data['academies'] = $academy;
 
         return view($this->view_path.'.add', $data);
@@ -115,7 +114,7 @@ class EventRegistrationController extends Controller
             $response = array(
                 'status' => 'error',
                 'msg' => trans('messages.error_save'),
-                'errors' => $validator->errors()
+                'errors' => html_entity_decode(HTML::ul($validator->errors()->all()))
             );
         }
         else
@@ -139,8 +138,7 @@ class EventRegistrationController extends Controller
 
             }
         }
-        $data['response'] = $response;
-        return view('core.alert.messages', $data);
+        return $response;
     }
 
     /**
@@ -208,7 +206,7 @@ class EventRegistrationController extends Controller
         	$response = array(
                 'status' => 'error',
                 'msg' => trans('messages.error_save'),
-                'errors' => $validator->errors()
+                'errors' => html_entity_decode(HTML::ul($validator->errors()->all()))
             );
         } else {
 			try {
@@ -229,8 +227,7 @@ class EventRegistrationController extends Controller
 			}
 		}
 
-        $data['response'] = $response;
-        return view('core.alert.messages', $data);
+        return $response;
     }
 
     /**
@@ -258,7 +255,8 @@ class EventRegistrationController extends Controller
                 {
                     $response = array(
                         'status' => 'warning',
-                        'msg' => 'Баталгаажуулсан хэрэглэгч устгах боломжгүй'                    );
+                        'msg' => 'Баталгаажуулсан хэрэглэгч устгах боломжгүй'                    
+                    );
                 }
             }
           
@@ -267,12 +265,11 @@ class EventRegistrationController extends Controller
             $response = array(
                 'status' => 'error',
                 'msg' => trans('messages.error_delete'),
-                'errors' => $e
+                'errors' => $e->getMessage()
             );
         }
 
-        $data['response'] = $response;
-        return view('core.alert.messages', $data);
+        return $response;
     }
 
     public function getDatatableList(Request $request)
@@ -336,8 +333,7 @@ class EventRegistrationController extends Controller
 
         }
 
-        $data['response'] = $response;
-        return view('core.alert.messages', $data);
+        return $response;
     }
 
     public function showCard()

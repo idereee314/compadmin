@@ -34,7 +34,7 @@ class Event extends Model
 
     public function config()
     {
-        return $this->hasMany('event\EventConfig', 'event_id');
+        return $this->hasOne('event\EventConfig', 'event_id');
     }
 
     public function entries()

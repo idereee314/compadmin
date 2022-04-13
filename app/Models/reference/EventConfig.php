@@ -18,8 +18,7 @@ class EventConfig extends Model
     {
 		return array(
             'event_id' => 'required',
-            'reg_start_date' => 'required',
-            'reg_end_date' => 'required'
+            'reg_date' => 'required',
 		);
 	}
 
@@ -43,14 +42,5 @@ class EventConfig extends Model
             $eventConfig->created_by = Auth::id();
 			$eventConfig->created_at = Carbon\Carbon::now()->toDateTimeString();
         });
-
-        static::created(function($eventConfig)
-        {
-            //
-        });
-
-        static::deleting(function($eventConfig)
-        {
-		});
     }
 }

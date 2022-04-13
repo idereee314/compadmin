@@ -17,27 +17,15 @@
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.comp_member')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9">
-                <input class="form-control form-control-lg" disabled value="{{ mb_substr($eventRegistration->member->lastname,0,1).'.'.$eventRegistration->member->firstname }}"/>
+                <input class="form-control form-control-lg" disabled value="{{ $eventRegistration->member->fullname }}"/>
             </div>
         </div> 
 
         <div class="form-group row">
-            <label class="col-md-3 col-form-label text-right">{{trans('display.comp_title')}}: <span class="text-danger">*</span></label>
-            <div class="col-md-9">
-                <select class="form-control datatable-input" id="event_id" name="event_id" disabled data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}">
-                    @forelse(@$competitions as $competition)
-                    <option value="{{ $competition->event_id }}" {{$eventRegistration->event_id == $competition->event_id ? 'selected' : ''}}>{{ $competition->event->name }}: /{{ $competition->reg_start_date.'-'.$competition->reg_end_date }}/</option>
-                    @empty
-                    @endforelse
-                </select>
-            </div>
-        </div>
-
-        <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.comp_entry')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9">
-                <select class="form-control form-control-input" type="text" id="entry_id" name="entry_id" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}">
-                @forelse(@$eventEntries as $entry)
+                <select class="form-control selectpicker" id="entry_id" name="entry_id" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}">
+                    @forelse(@$eventEntries as $entry)
                     <option value="{{ $entry['id'] }}" {{ $eventRegistration->entry_id == @$entry->id ? 'selected' : ''}}>{{ $entry->name }}</option>
                     @empty
                     @endforelse
@@ -113,6 +101,7 @@
                 </select>
             </div>
         </div>
+        @if($eventRegistration->status == @Config::get('smart.event_registeation_status')['approved'])
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right"></span></label>
             <div class="col-md-9">
@@ -123,6 +112,7 @@
                 </div>
             </div>
         </div>
+        @endif
     </div>
 
     <div class="modal-footer text-right bg-gray-100 border-top-0">

@@ -280,9 +280,10 @@ return [
     "organization" => "Байгууллага",
 
     //Event
-    'event_name' => 'Эвент',
+    'event_title' => 'Эвент',
     'reg_start_date' => 'Эхлэх огноо',
     'reg_end_date' => 'Дуусах огноо',
+    'reg_date' => 'Бүртгэлийн огноо',
 
     //Event-entries
     'entrance_fee' => 'Төлбөр',

@@ -36,22 +36,23 @@ class EloquentEventConfigRepository implements EventConfigRepository {
 
 	public function create($input)
 	{
+		$dates = explode("/", @$input['reg_date']);
 		$eventConfig = new EventConfig;
 		$eventConfig->event_id = $input['event_id'];
-		$eventConfig->reg_start_date = $input['reg_start_date'];
-		$eventConfig->reg_end_date = $input['reg_end_date'];
+		$eventConfig->reg_start_date = @$dates[0];
+		$eventConfig->reg_end_date = @$dates[1];
 
 		$eventConfig->save();
-
 		return $eventConfig;
 	}
 
  	public function update($id, $input)
 	{
+		$dates = explode("/", @$input['reg_date']);
 		$eventConfig = $this->find($id);
 		$eventConfig->event_id = $input['event_id'];
-		$eventConfig->reg_start_date = $input['reg_start_date'];
-		$eventConfig->reg_end_date = $input['reg_end_date'];
+		$eventConfig->reg_start_date = @$dates[0];
+		$eventConfig->reg_end_date = @$dates[1];
 
 		$eventConfig->save();
 
@@ -86,14 +87,15 @@ class EloquentEventConfigRepository implements EventConfigRepository {
 
 	public function copyEventConfig($eventConfigId, $input)
     {
+		$dates = explode("/", @$input['reg_date']);
         $eventConfig = $this->find($eventConfigId);
 
         $eventConfigCopy = $eventConfig->replicate();
         $eventConfigCopy->event_id = $input['event_id'];
-        $eventConfigCopy->reg_start_date = $input['reg_start_date'];
-		$eventConfigCopy->reg_start_date = $input['reg_start_date'];
-        $eventConfigCopy->save();
+        $eventConfigCopy->reg_start_date = @$dates[0];
+		$eventConfigCopy->reg_start_date = @$dates[1];
 
+        $eventConfigCopy->save();
         return $eventConfigCopy;
     }
 

@@ -23,7 +23,7 @@ use event\EventConfig as EventConfigModel;
 
 use \Auth as Auth;
 use Config;
-
+use \HTML;
 use Image;
 
 class EventConfigController extends Controller
@@ -82,7 +82,7 @@ class EventConfigController extends Controller
             $response = array(
                 'status' => 'error',
                 'msg' => trans('messages.error_save'),
-                'errors' => $validator->errors()
+                'errors' => html_entity_decode(HTML::ul($validator->errors()->all()))
             );
         }
         else
@@ -106,8 +106,7 @@ class EventConfigController extends Controller
 
             }
         }
-        $data['response'] = $response;
-        return view('core.alert.messages', $data);
+        return $response;
     }
 
     /**
@@ -158,7 +157,7 @@ class EventConfigController extends Controller
         	$response = array(
                 'status' => 'error',
                 'msg' => trans('messages.error_save'),
-                'errors' => $validator->errors()
+                'errors' => html_entity_decode(HTML::ul($validator->errors()->all()))
             );
         } else {
 			try {
@@ -179,8 +178,7 @@ class EventConfigController extends Controller
 			}
 		}
 
-        $data['response'] = $response;
-        return view('core.alert.messages', $data);
+        return $response;
     }
 
     /**
@@ -209,8 +207,7 @@ class EventConfigController extends Controller
             );
         }
 
-        $data['response'] = $response;
-        return view('core.alert.messages', $data);
+        return $response;
     }
 
     public function getDatatableList(Request $request)
@@ -237,14 +234,14 @@ class EventConfigController extends Controller
     public function configCopyExecute($eventConfigId)
     {
         $input = Input::all();
-        $validator = Validator::make($input, EventConfigModel::rules($eventConfigId));
+        $validator = Validator::make($input, EventConfigModel::rules(0));
         
         if ($validator->fails())
 		{
         	$response = array(
                 'status' => 'error',
                 'msg' => trans('messages.error_save'),
-                'errors' => $validator->errors()
+                'errors' => html_entity_decode(HTML::ul($validator->errors()->all()))
             );
         } else {
             try {
@@ -303,8 +300,7 @@ class EventConfigController extends Controller
             }
         }
 
-        $data['response'] = $response;
-        return view('core.alert.messages', $data);
+        return $response;
     }
 
     public function includeTab()

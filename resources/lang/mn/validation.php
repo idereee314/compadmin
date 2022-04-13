@@ -143,11 +143,7 @@ return [
         'email' => trans('display.human_email'),
         'register_number' => trans('display.human_register_number'),
         'code' => trans('display.general_code'),
-        'exams' => trans('display.general_exam'),
-        'packages ' => 'Сорилын багц',
-        'correct_answers' => 'Зөв хариулт',
-        'question' => 'Асуулт',
-        'question_image' => 'Асуултын зураг',
+        'event_id' => trans('display.event_title'),
     ]
     /*
     |--------------------------------------------------------------------------

@@ -125,17 +125,17 @@ class EloquentEntryConfigWeightRepository implements EntryConfigWeightRepository
 		return $weights;
 	}
 
-	// public function getEntryWeightByAgeId($ageId)
-	// {
-	// 	$weights = "";
-	// 	if(@$ageId)
-	// 	{
-	// 		$qry = EntryConfigWeight::where('entry_age_id', $ageId);
-	// 		$weights = @$qry->get();
-	// 	}
+	public function getEntryWeightByAgeId($ageId)
+	{
+		$weights = "";
+		if(@$ageId)
+		{
+			$qry = EntryConfigWeight::where('entry_age_id', $ageId);
+			$weights = @$qry->get();
+		}
 
-	// 	return $weights;
-	// }
+		return $weights;
+	}
 
 	public function getEntryConfigWeightByEntryId($entries, $ages)
 	{
