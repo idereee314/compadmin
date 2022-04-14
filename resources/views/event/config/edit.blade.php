@@ -65,8 +65,8 @@
                     @endif
 
                     <input type="hidden" name="tab_id" id="tab_id" value="{{ isset($tab_id)? $tab_id: 'tab1-1'}}"/>
-                    <input type="hidden" name="event_config_id" id="event_config_id" value="{{ @$event_config_id}}"/>
-                    <input type="hidden" name="event_id" id="event_id" value="{{ @$eventConfig->event->id}}"/>
+                    <input type="hidden" name="event_config_id" id="event_config_id" value="{{ @$eventConfig->id }}"/>
+                    <input type="hidden" name="event_id" id="event_id" value="{{ @$eventConfig->event->id }}"/>
 
                     <div class="card-header card-header-tabs-line">
                         <div class="pull-left">
@@ -99,7 +99,7 @@
                             {!! trans('messages.warning_no_app_type_tab') !!}
                         </div>
                         @else
-                        <div class="tab-pane fade show active mt-8">
+                        <div class="tab-pane fade show active">
                             <div class="tab-content">
                                 <div class="form-sub-heading">
                                 </div>
@@ -137,10 +137,9 @@ $(document).ready(function() {
         var tab_id = $(this).data("tabid");
         var name = $(this).data("tabname");
         var event_config_id = $("#event_config_id").val();
-        var event_id = $("#event_id").val();
         var code = $(this).data("tabcode");
 
-        $.get('{!! route('event.config.tabs') !!}', {event_config_id: event_config_id, event_id: event_id, tab_id: tab_id, name: name, code: code})
+        $.get('{!! route('event.config.tabs') !!}', {event_config_id: event_config_id, tab_id: tab_id, name: name, code: code})
         .done(function( data ) {
             $(".tab-content").find("#"+tab_id).empty().html(data);
         }).fail(function(xhr) {

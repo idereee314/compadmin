@@ -17,12 +17,14 @@ class EntryConfigAge extends Model
 
     protected $appends = array('name');
     
-    public static $rules = array(
-        'entry_id' => 'required',
-        'start_age' => 'required',
-        // 'end_age' => 'required',
-        // 'possible_ages' => 'required'
-    );
+    public static function rules($id) 
+    {
+		return array(
+            'entry_id' => 'required',
+            'start_age' => 'required|numeric|unique_with:uq_entry_config_age,start_age,entry_id,'.$id.'=id',
+            'end_age' => 'nullable|numeric'
+		);
+	}
 
     public function getNameAttribute()
     {

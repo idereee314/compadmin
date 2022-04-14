@@ -16,11 +16,14 @@ class EntryConfigWeight extends Model
     protected $table = 'uq_entry_config_weight';
     protected $primaryKey = 'id';
 
-    public static $rules = array(
-        'entry_id' => 'required',
-        'weight' => 'required',
-        'entry_age_id' => 'required'
-    );
+    public static function rules($id) 
+    {
+		return array(
+            'entry_id' => 'required',
+            'entry_age_id' => 'required',
+            'weight' => 'required|numeric|unique_with:uq_entry_config_weight,weight,entry_id,entry_age_id,'.$id.'=id',
+		);
+	}
 
     public function age()
     {

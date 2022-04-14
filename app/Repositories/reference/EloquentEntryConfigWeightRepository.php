@@ -137,14 +137,14 @@ class EloquentEntryConfigWeightRepository implements EntryConfigWeightRepository
 		return $weights;
 	}
 
-	public function getEntryConfigWeightByEntryId($entries, $ages)
+	public function getConfigWeightByEventId($eventId)
 	{
 		$configWeights = "";
-		if(count($entries) > 0 && count($ages) > 0)
+		if(@$eventId)
 		{
-			$qry = EntryConfigWeight::whereIn('entry_id', $entries)
-									->whereIn('entry_age_id', $ages);
-			$configWeights = @$qry->get();
+			$qry = EntryConfigWeight::select('uq_entry_config_weight.*')->join('uq_event_entries', 'uq_event_entries.id', '=', 'uq_entry_config_weight.entry_id')
+				->where('event_id', $eventId);
+			$configWeights = $qry->get();
 		}
 
 		return $configWeights;

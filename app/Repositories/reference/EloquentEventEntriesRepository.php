@@ -37,28 +37,26 @@ class EloquentEventEntriesRepository implements EventEntriesRepository {
 	public function create($input)
 	{
 		$eventEntries = new EventEntries;
+		$eventEntries->event_id = $input['event_id'];
 		$eventEntries->name = $input['name'];
 		$eventEntries->name_en = $input['name_en'];
 		$eventEntries->gender_code = $input['gender_code'];
 		$eventEntries->entrance_fee = $input['entrance_fee'];
-		$eventEntries->event_id = $input['event_id'];
 
 		$eventEntries->save();
-
 		return $eventEntries;
 	}
 
  	public function update($id, $input)
 	{
 		$eventEntries = $this->find($id);
+		$eventEntries->event_id = $input['event_id'];
 		$eventEntries->name = $input['name'];
 		$eventEntries->name_en = $input['name_en'];
 		$eventEntries->gender_code = $input['gender_code'];
 		$eventEntries->entrance_fee = $input['entrance_fee'];
-		$eventEntries->event_id = $input['event_id'];
 
 		$eventEntries->save();
-
 		return $eventEntries;
 	}
 

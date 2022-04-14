@@ -18,7 +18,7 @@ use reference\EntryConfigWeight as EventEntryWeightModel;
 
 use \Auth as Auth;
 use Config;
-
+use \HTML;
 use Image;
 
 class EventEntryWeightController extends Controller
@@ -53,8 +53,10 @@ class EventEntryWeightController extends Controller
     public function create()
     {
         $input = Input::all();
+        $eventEntries = $this->eventEntry->getEntryByEventId($input['eventId']);
 
-        $data['eventEntries'] = $this->eventEntry->getEntryByEventId($input['eventId']);
+        $data['eventEntries'] = $eventEntries;
+
         return view($this->view_path.'.add', $data);
     }
 
@@ -67,7 +69,6 @@ class EventEntryWeightController extends Controller
     public function store(Request $request)
     {
         $input = Input::all();
-
         $validator = Validator::make($input, EventEntryWeightModel::rules(0));
 
         if ($validator->fails())
@@ -75,7 +76,7 @@ class EventEntryWeightController extends Controller
             $response = array(
                 'status' => 'error',
                 'msg' => trans('messages.error_save'),
-                'errors' => $validator->errors()
+                'errors' => html_entity_decode(HTML::ul($validator->errors()->all()))
             );
         }
         else
@@ -88,7 +89,6 @@ class EventEntryWeightController extends Controller
                     'status' => 'success',
                     'msg' => trans('messages.success_save')
                 );
-
             }
             catch(\Illuminate\Database\QueryException $e)
             {
@@ -97,11 +97,9 @@ class EventEntryWeightController extends Controller
                     'msg' => trans('messages.error_save'),
                     'errors' => $e->getMessage()
                 );
-
             }
         }
-        $data['response'] = $response;
-        return view('core.alert.messages', $data);
+        return $response;
     }
 
     /**
@@ -124,13 +122,12 @@ class EventEntryWeightController extends Controller
     public function edit($id)
     {
         $input = Input::all();
-
-        
-
-        $data['eventEntries'] = $this->eventEntry->getEntryByEventId($input['eventId']);
         $eventEntryWeight = $this->eventEntryWeight->find($id);
+        $eventEntries = $this->eventEntry->getEntryByEventId($input['eventId']);
         $configAges = $this->entryConfigAge->getEntryAgeByEntryId($eventEntryWeight->entry_id);
+
         $data['eventEntryWeight'] = $eventEntryWeight;
+        $data['eventEntries'] = $eventEntries;
         $data['configAges'] = $configAges;
 
         return view($this->view_path.'.edit', $data);
@@ -154,7 +151,7 @@ class EventEntryWeightController extends Controller
         	$response = array(
                 'status' => 'error',
                 'msg' => trans('messages.error_save'),
-                'errors' => $validator->errors()
+                'errors' => html_entity_decode(HTML::ul($validator->errors()->all()))
             );
         } else {
 			try {
@@ -175,8 +172,7 @@ class EventEntryWeightController extends Controller
 			}
 		}
 
-        $data['response'] = $response;
-        return view('core.alert.messages', $data);
+        return $response;
     }
 
     /**
@@ -205,8 +201,7 @@ class EventEntryWeightController extends Controller
             );
         }
 
-        $data['response'] = $response;
-        return view('core.alert.messages', $data);
+        return $response;
     }
 
     public function getDatatableList(Request $request)

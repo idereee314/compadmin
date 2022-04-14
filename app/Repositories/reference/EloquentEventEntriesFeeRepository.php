@@ -113,15 +113,16 @@ class EloquentEventEntriesFeeRepository implements EventEntriesFeeRepository {
         return $data;
 	}
 
-	public function getEntriesFeeByEntryId($entries)
+	public function getEntriesFeeByEventId($eventId)
 	{
-		$ConfigFees = "";
-		if(@count($entries) > 0)
+		$configFees = "";
+		if(@$eventId)
 		{
-			$qry = EventEntriesFee::whereIn('entry_id', $entries);
-			$ConfigFees = $qry->get();
+			$qry = EventEntriesFee::select('uq_event_entries_fee.*')->join('uq_event_entries', 'uq_event_entries.id', '=', 'uq_event_entries_fee.entry_id')
+				->where('event_id', $eventId);
+			$configFees = $qry->get();
 		}
 
-		return $ConfigFees;
+		return $configFees;
 	}
 }

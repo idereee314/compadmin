@@ -144,6 +144,8 @@ return [
         'register_number' => trans('display.human_register_number'),
         'code' => trans('display.general_code'),
         'event_id' => trans('display.event_title'),
+        'start_age' => trans('display.start_age'),
+        'end_age' => trans('display.end_age')
     ]
     /*
     |--------------------------------------------------------------------------

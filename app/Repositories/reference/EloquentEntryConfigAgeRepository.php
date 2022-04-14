@@ -118,20 +118,22 @@ class EloquentEntryConfigAgeRepository implements EntryConfigAgeRepository {
 		$ages = "";
 		if(@$entryId)
 		{
-			$qry = EntryConfigAge::selectRaw("id, start_age, end_age, CASE WHEN start_age is null THEN '-' || end_age WHEN end_age is null THEN start_age || '+' else start_age || '-' || end_age END as age")->where('entry_id', $entryId);
+			$qry = EntryConfigAge::where('entry_id', $entryId);
 			$ages = $qry->get();
 		}
 
 		return $ages;
 	}
 
-	public function getConfigAgeByEntryId($entries)
+	public function getConfigAgeByEventId($eventId)
 	{
 		$configAges = "";
-		if(count(@$entries) > 0)
+		if(@$eventId)
 		{
-			$qry = EntryConfigAge::selectRaw("id, start_age, end_age, CASE WHEN start_age is null THEN '-' || end_age WHEN end_age is null THEN start_age || '+' else start_age || '-' || end_age END as age, entry_id")->whereIn('entry_id', $entries);
-			$configAges = $qry->with('entry:id,name,gender_code')->get();
+			$qry = EntryConfigAge::selectRaw("uq_entry_config_age.id, start_age, end_age, CASE WHEN start_age is null THEN '-' || end_age WHEN end_age is null THEN start_age || '+' else start_age || '-' || end_age END as age, entry_id, uq_entry_config_age.created_at")
+				->join('uq_event_entries', 'uq_event_entries.id', '=', 'uq_entry_config_age.entry_id')
+				->where('event_id', $eventId);
+			$configAges = $qry->get();
 		}
 
 		return $configAges;
