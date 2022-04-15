@@ -696,10 +696,10 @@ function showAddModal( data ) {
                 closeOnSelect: true,
                 allowClear: true,
                 templateSelection: function (item) {
-                    return item.age;
+                    return item.name;
                 },
                 templateResult: function (item) {
-                    return item.age;
+                    return item.name;
                 }
             });
 
@@ -928,10 +928,10 @@ function showEditModal(data){
                 closeOnSelect: true,
                 allowClear: true,
                 templateSelection: function (item) {
-                    return item.age;
+                    return item.name;
                 },
                 templateResult: function (item) {
-                    return item.age;
+                    return item.name;
                 }
             });
 
