@@ -8,7 +8,7 @@
 <form class="form" method="POST" id="update-event-entry-fee-form" action="{{ route('event.entry.fee.update', $eventEntryFee->id) }}">
     <input type="hidden" name="_method" value="put" />
     <div class="modal-header bg-gray-100">
-        <h5 class="modal-title" id="exampleModalLabel">{{trans('display.general_new')}}</h5>
+        <h5 class="modal-title" id="exampleModalLabel">{{trans('display.general_edit')}}</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <i aria-hidden="true" class="ki ki-close"></i>
         </button>

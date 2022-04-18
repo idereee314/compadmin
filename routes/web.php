@@ -103,9 +103,7 @@ Route::group([
 
     //Entry Fee
     Route::resource('/event/entry/fee', 'reference\EventEntryFeeController', ['names' => 'event.entry.fee']);
-    // Route::any('/event/entry/fee/data/list', 'reference\EventEntryWeightController@getDatatableList')->name('event.entry.fee.data.list');
-    // Route::post('/event/entry/fee/by/entry', 'reference\EventEntryWeightController@getEntryWeightByEntryId')->name('event.entry.fee.by.entry');
-    // Route::post('/event/entry/fee/by/age', 'reference\EventEntryWeightController@getEntryWeightByAgeId')->name('event.entry.fee.by.age');
+  
 
     //Academy
     Route::resource('/academy', 'academy\AcademyController', ['names' => 'academy']);

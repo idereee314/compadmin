@@ -8,7 +8,7 @@
     <input type="hidden" name="_method" value="put" />
     <input type="hidden" name="event_id" value="{{$eventEntry->event_id}}" />
     <div class="modal-header bg-gray-100">
-        <h5 class="modal-title" id="exampleModalLabel">{{trans('display.general_new')}}</h5>
+        <h5 class="modal-title" id="exampleModalLabel">{{trans('display.general_edit')}}</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <i aria-hidden="true" class="ki ki-close"></i>
         </button>

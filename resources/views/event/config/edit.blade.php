@@ -23,6 +23,12 @@
                     <div class="container">
                         <!--begin::Card-->
                         <div class="card card-custom m-4">
+                            <div class="card-header flex-wrap py-5">
+                                <div class="card-title">
+                                    <h3 class="card-label">Тэмцээний тохиргоо 
+                                    <span class="d-block text-muted pt-2 font-size-sm">{{trans('display.general_edit')}}</span></h3>
+                                </div>
+                            </div>
                             @if( $errors->count() > 0 )
                                 <div class="panel-sub-heading">
                                     <div class="callout callout-danger">
