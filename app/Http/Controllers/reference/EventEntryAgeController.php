@@ -17,7 +17,7 @@ use reference\EntryConfigAge as EventEntryAgeModel;
 
 use \Auth as Auth;
 use Config;
-
+use \HTML;
 use Image;
 
 class EventEntryAgeController extends Controller
@@ -53,6 +53,7 @@ class EventEntryAgeController extends Controller
         $input = Input::all();
 
         $data['eventEntries'] = $this->eventEntry->getEntryByEventId($input['eventId']);
+
         return view($this->view_path.'.add', $data);
     }
 
@@ -74,7 +75,7 @@ class EventEntryAgeController extends Controller
             $response = array(
                 'status' => 'error',
                 'msg' => trans('messages.error_save'),
-                'errors' => $validator->errors()
+                'errors' => html_entity_decode(HTML::ul($validator->errors()->all()))
             );
         }
         else
@@ -99,8 +100,7 @@ class EventEntryAgeController extends Controller
 
             }
         }
-        $data['response'] = $response;
-        return view('core.alert.messages', $data);
+        return $response;
     }
 
     /**
@@ -123,9 +123,9 @@ class EventEntryAgeController extends Controller
     public function edit($id)
     {
         $input = Input::all();
+        $eventEntryAge = $this->eventEntryAge->find($id);
 
         $data['eventEntries'] = $this->eventEntry->getEntryByEventId($input['eventId']);
-        $eventEntryAge = $this->eventEntryAge->find($id);
         $data['eventEntryAge'] = $eventEntryAge;
 
         return view($this->view_path.'.edit', $data);
@@ -149,7 +149,7 @@ class EventEntryAgeController extends Controller
         	$response = array(
                 'status' => 'error',
                 'msg' => trans('messages.error_save'),
-                'errors' => $validator->errors()
+                'errors' => html_entity_decode(HTML::ul($validator->errors()->all()))
             );
         } else {
 			try {
@@ -170,8 +170,7 @@ class EventEntryAgeController extends Controller
 			}
 		}
 
-        $data['response'] = $response;
-        return view('core.alert.messages', $data);
+        return $response;
     }
 
     /**
@@ -196,12 +195,11 @@ class EventEntryAgeController extends Controller
             $response = array(
                 'status' => 'error',
                 'msg' => trans('messages.error_delete'),
-                'errors' => $e
+                'errors' => $e->getMessage()
             );
         }
 
-        $data['response'] = $response;
-        return view('core.alert.messages', $data);
+        return $response;
     }
 
     public function getDatatableList(Request $request)

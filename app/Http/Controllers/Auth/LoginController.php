@@ -82,7 +82,7 @@ class LoginController extends Controller
 				Session::put('firstname', $foundUser->firstname);
 				Session::put('lastname', @$foundUser->lastname);
 
-				return Redirect::intended('/home');
+				return Redirect::intended('/event/competition');
 
 			} else {
 				Session::flash('message', trans('messages.error_login'));

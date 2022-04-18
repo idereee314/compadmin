@@ -13,12 +13,12 @@
     </div>
     <div class="card-body m-4">
         <div class="form-group row">
-            <label class="col-md-3 col-form-label text-right">{{trans('display.username')}}: <span class="text-danger">*</span></label>
-            <div class="col-md-9">
+            <label class="col-md-4 col-form-label text-right">{{trans('display.username')}}: <span class="text-danger">*</span></label>
+            <div class="col-md-7">
                 @if(@$firstname)
-                    <input class="form-control form-control-lg" value="{{@$firstname}}"/>
+                    <p class="form-control-plaintext text-muted">{{@$firstname}}</p>
                 @else
-                    <input class="form-control form-control-lg" id="user_id" name="user_id" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}"/> 
+                    <select class="form-control" id="user_id" name="user_id" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}"></select>
                 @endif
             </div>
         </div> 

@@ -16,14 +16,23 @@ class EventConfig extends Model
     {
 		return array(
             'event_id' => 'required|unique:uq_event_config,event_id,'.$id.',id',
-            'reg_start_date' => 'required',
-            'reg_end_date' => 'required'
+            'reg_date' => 'required',
 		);
 	}
 
     public function event()
     {
         return $this->belongsTo('event\Event', 'event_id');
+    }
+
+    public function registration()
+    {
+        return $this->hasMany('event\EventRegistration', 'event_id', 'event_id');
+    }
+
+    public function registrationTen()
+    {
+        return $this->hasMany('event\EventRegistration', 'event_id', 'event_id')->orderBy('uq_event_registration.created_at', 'asc')->limit(10);
     }
 
 	public static function boot()

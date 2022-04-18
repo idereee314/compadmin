@@ -21,9 +21,8 @@ class EntryConfigAge extends Model
     {
 		return array(
             'entry_id' => 'required',
-            'start_age' => 'required',
-            // 'end_age' => 'required',
-            // 'possible_ages' => 'required'
+            'start_age' => 'required|numeric|unique_with:uq_entry_config_age,start_age,entry_id,'.$id.'=id',
+            'end_age' => 'nullable|numeric'
 		);
 	}
 

@@ -17,7 +17,7 @@ use reference\EventEntries as EventEntryModel;
 
 use \Auth as Auth;
 use Config;
-
+use \HTML;
 use Image;
 
 class EventEntryController extends Controller
@@ -50,7 +50,12 @@ class EventEntryController extends Controller
      */
     public function create()
     {
-        return view($this->view_path.'.add');
+        $input = Input::all();
+
+        $data['eventId'] = $input['eventId'];
+        $data['view_path'] = $this->view_path;
+
+        return view($this->view_path.'.add', $data);
     }
 
     /**
@@ -63,14 +68,14 @@ class EventEntryController extends Controller
     {
         $input = Input::all();
 
-        $validator = Validator::make($input, EventEntryModel::rules(0));
+        $validator = Validator::make($input, EventEntryModel::$rules);
 
         if ($validator->fails())
         {
             $response = array(
                 'status' => 'error',
                 'msg' => trans('messages.error_save'),
-                'errors' => $validator->errors()
+                'errors' => html_entity_decode(HTML::ul($validator->errors()->all()))
             );
         }
         else
@@ -95,8 +100,7 @@ class EventEntryController extends Controller
 
             }
         }
-        $data['response'] = $response;
-        return view('core.alert.messages', $data);
+        return $response;
     }
 
     /**
@@ -134,15 +138,14 @@ class EventEntryController extends Controller
     public function update(Request $request, $id)
     {
         $input = Input::all();
-
-        $validator = Validator::make($input, EventEntryModel::rules($id));
+        $validator = Validator::make($input, EventEntryModel::$rules);
 
         if ($validator->fails())
 		{
         	$response = array(
                 'status' => 'error',
                 'msg' => trans('messages.error_save'),
-                'errors' => $validator->errors()
+                'errors' => html_entity_decode(HTML::ul($validator->errors()->all()))
             );
         } else {
 			try {
@@ -163,8 +166,7 @@ class EventEntryController extends Controller
 			}
 		}
 
-        $data['response'] = $response;
-        return view('core.alert.messages', $data);
+        return $response;
     }
 
     /**
@@ -176,9 +178,8 @@ class EventEntryController extends Controller
     public function destroy($id)
     {
         try {
-        
             $this->eventEntry->delete($id);
-
+            
             $response = array(
                 'status' => 'success',
                 'msg' => trans('messages.success_delete')
@@ -189,12 +190,11 @@ class EventEntryController extends Controller
             $response = array(
                 'status' => 'error',
                 'msg' => trans('messages.error_delete'),
-                'errors' => $e
+                'errors' => $e->getMessage()
             );
         }
 
-        $data['response'] = $response;
-        return view('core.alert.messages', $data);
+        return $response;
     }
 
     public function getDatatableList(Request $request)

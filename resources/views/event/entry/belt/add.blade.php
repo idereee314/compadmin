@@ -1,9 +1,3 @@
-<link rel="stylesheet" href="{{asset('assets/js/plugins/custom/jasny-bootstrap-fileinput/css/jasny-bootstrap-fileinput.min.css')}}">
-<link rel="stylesheet" href="{{asset('assets/js/plugins/custom/bootstrap-tagsinput/dist/bootstrap-tagsinput.css')}}">
-<link rel="stylesheet" href="{{asset('assets/js/plugins/custom/select2-ng/select2.css')}}">
-<link rel="stylesheet" href="{{asset('assets/js/plugins/custom/select2-ng/select2-bootstrap.css')}}">
-<link rel="stylesheet" href="{{asset('assets/js/plugins/custom/select2-ng/select2-custom.css')}}">
-
 <form class="form" method="POST" id="create-event-entry-belt-form" action="{{ route('event.entry.belt.store') }}">
     <div class="modal-header bg-gray-100">
         <h5 class="modal-title" id="exampleModalLabel">{{trans('display.general_new')}}</h5>
@@ -16,11 +10,12 @@
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">Төрөл: <span class="text-danger">*</span></label>
             <div class="col-md-6">
-                <select class="form-control kt-selectpicker" data-live-search="true" data-size="7" name="entry_id" id="entry_id">
+                <select class="form-control selectpicker" data-live-search="true"  name="entry_id" id="entry_id">
                     <option value="">-- {{ trans('display.general_select') }} --</option>
-                    @foreach(@$eventEntries as $entry)
+                    @forelse(@$eventEntries as $entry)
                     <option value="{{ $entry->id }}">{{ $entry->name }}</option>
-                    @endforeach
+                    @empty
+                    @endforelse
                 </select>
             </div>
         </div>
@@ -42,7 +37,7 @@
         </div>
 
         <div class="form-group row">
-            <label class="col-md-3 col-form-label text-right">{{trans('display.possible_belts')}}: <span class="text-danger">*</span></label>
+            <label class="col-md-3 col-form-label text-right">{{trans('display.possible_belts')}}: </label>
             <div class="col-md-9 col-lg-6">
                 <input type="text" class="form-control" autocomplete="off" name="possible_belts" />
             </div>

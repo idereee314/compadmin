@@ -17,5 +17,6 @@ class VerifyCsrfToken extends Middleware
         'member*',
         'academy*',
         'event/*',
+        'event/config/*',
     ];
 }

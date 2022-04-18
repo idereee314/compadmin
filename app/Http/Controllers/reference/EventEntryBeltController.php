@@ -53,6 +53,8 @@ class EventEntryBeltController extends Controller
         $input = Input::all();
 
         $data['eventEntries'] = $this->eventEntry->getEntryByEventId($input['eventId']);
+        $data['eventId'] = $input['eventId'];
+
         return view($this->view_path.'.add', $data);
     }
 
@@ -65,29 +67,25 @@ class EventEntryBeltController extends Controller
     public function store(Request $request)
     {
         $input = Input::all();
-
-        $validator = Validator::make($input, EventEntryBeltModel::rules(0));
+        $validator = Validator::make($input, EventEntryBeltModel::$rules);
 
         if ($validator->fails())
         {
             $response = array(
                 'status' => 'error',
                 'msg' => trans('messages.error_save'),
-                'errors' => $validator->errors()
+                'errors' => html_entity_decode(HTML::ul($validator->errors()->all()))
             );
         }
         else
         {
             try
             {
-  
                 $event = $this->eventEntryBelt->create($input);
-
                 $response = array(
                     'status' => 'success',
                     'msg' => trans('messages.success_save')
                 );
-
             }
             catch(\Illuminate\Database\QueryException $e)
             {
@@ -96,11 +94,9 @@ class EventEntryBeltController extends Controller
                     'msg' => trans('messages.error_save'),
                     'errors' => $e->getMessage()
                 );
-
             }
         }
-        $data['response'] = $response;
-        return view('core.alert.messages', $data);
+        return $response;
     }
 
     /**
@@ -123,8 +119,10 @@ class EventEntryBeltController extends Controller
     public function edit($id)
     {
         $input = Input::all();
-        $data['eventEntries'] = $this->eventEntry->getEntryByEventId($input['eventId']);
         $eventEntryBelt = $this->eventEntryBelt->find($id);
+        $eventEntries = $this->eventEntry->getEntryByEventId(@$input['eventId']);
+
+        $data['eventEntries'] = $eventEntries;
         $data['eventEntryBelt'] = $eventEntryBelt;
 
         return view($this->view_path.'.edit', $data);
@@ -141,14 +139,14 @@ class EventEntryBeltController extends Controller
     {
         $input = Input::all();
 
-        $validator = Validator::make($input, EventEntryBeltModel::rules($id));
+        $validator = Validator::make($input, EventEntryBeltModel::$rules);
 
         if ($validator->fails())
 		{
         	$response = array(
                 'status' => 'error',
                 'msg' => trans('messages.error_save'),
-                'errors' => $validator->errors()
+                'errors' => html_entity_decode(HTML::ul($validator->errors()->all()))
             );
         } else {
 			try {
@@ -169,8 +167,7 @@ class EventEntryBeltController extends Controller
 			}
 		}
 
-        $data['response'] = $response;
-        return view('core.alert.messages', $data);
+        return $response;
     }
 
     /**
@@ -199,8 +196,7 @@ class EventEntryBeltController extends Controller
             );
         }
 
-        $data['response'] = $response;
-        return view('core.alert.messages', $data);
+        return $response;
     }
 
     public function getDatatableList(Request $request)

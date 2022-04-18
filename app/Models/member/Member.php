@@ -22,7 +22,7 @@ class Member extends Model
     {
 		return array(
             // 'user_id' => 'required',
-            'register_number' => 'required|unique:uq_member,register_number,'.@$id.',id',
+            'register_number' => 'required|unique:uq_member,register_number,'.$id.',id',
             'firstname' => 'required',
             'lastname' => 'required',
             'contact_phone' => 'required',

@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Input;
 use Validator;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\URL;
 
 //Repositories
 use reference\EventEntriesRepository as EventEntries;
@@ -16,6 +18,7 @@ use reference\EntryConfigWeightRepository as EntryConfigWeight;
 
 use event\EventRegistrationRepository as EventRegistration;
 use event\EventConfigRepository as EventConfig;
+use event\EventRepository as Event;
 use academy\AcademyRepository as Academy;
 use member\MemberRepository as Member;
 
@@ -25,16 +28,17 @@ use event\EventRegistration as EventRegistrationModel;
 use \Auth as Auth;
 use Config;
 use Illuminate\Support\Str;
-
+use \Redirect as Redirect;
 use Image;
 
 class EventRegistrationController extends Controller
 {
     public $restful = true;
 
-    public function __construct(EventRegistration $eventRegistration, EventConfig $eventConfig, Academy $academy, EventEntries $eventEntries, EntryConfigAge $configAge, EntryConfigBelt $configBelt, EntryConfigWeight $configWeight, Member $member)
+    public function __construct(Event $event, EventRegistration $eventRegistration, EventConfig $eventConfig, Academy $academy, EventEntries $eventEntries, EntryConfigAge $configAge, EntryConfigBelt $configBelt, EntryConfigWeight $configWeight, Member $member)
     {
         $this->view_path = 'event.registration';
+        $this->event = $event;
         $this->eventRegistration = $eventRegistration;
         $this->eventConfig = $eventConfig;
         $this->academy = $academy;
@@ -43,6 +47,7 @@ class EventRegistrationController extends Controller
         $this->configBelt = $configBelt;
         $this->configWeight = $configWeight;
         $this->member = $member;
+        $this->view_path = "event.registration";
     }
 
     /**
@@ -52,24 +57,27 @@ class EventRegistrationController extends Controller
      */
     public function index()
     {
-        $competitions = $this->eventConfig->getEventConfig();
-        $eventEntries = $this->eventEntries->all();
-        $configAges = $this->configAge->all();
-        $configBelts = $this->configBelt->all();
-        $configWeights = $this->configWeight->all();
-        $eventRegStatusCount = $this->eventRegistration->getEventRegStatusCount(263)->pluck('total', 'status')->toArray();
-        $academies = $this->academy->all();
-
-        $data['competitions'] = $competitions;
-        $data['eventEntries'] = $eventEntries;
-        $data['configAges'] = $configAges;
-        $data['configBelts'] = $configBelts;
-        $data['configWeights'] = $configWeights;
-        $data['eventRegStatusCount'] = $eventRegStatusCount;
-        $data['academies'] = $academies;
-        $data['view_path'] = $this->view_path;
-
-        return view($this->view_path.'.index', $data);
+        $input = Input::all();
+        if(@$input['event_id'])
+        {
+            $event = $this->event->find(@$input['event_id']);
+        
+            $eventEntries = $event->entries;
+            $eventRegStatusCount = $this->eventRegistration->getEventRegStatusCount($event->id)->pluck('total', 'status')->toArray();
+            $academies = $this->academy->all();
+    
+            $data['event'] = $event;
+            $data['eventEntries'] = $event->entries;
+            $data['eventRegStatusCount'] = $eventRegStatusCount;
+            $data['academies'] = $academies;
+            $data['view_path'] = $this->view_path;
+    
+            return view($this->view_path.'.index', $data);
+        }
+        else 
+        {
+            return Redirect::route('event.competition.card');
+        }
     }
 
     /**
@@ -79,13 +87,12 @@ class EventRegistrationController extends Controller
      */
     public function create()
     {
-        //$now = Carbon\Carbon::now()->toDateTimeString();
-        $competitions = $this->eventConfig->getRegistringComp(@$now);
-        //$members = $this->member->all();
+        $input = Input::all();
+        $entries = $this->eventEntries->getEntryByEventId(@$input['event_id']);
         $academy = $this->academy->all();
 
-        $data['competitions'] = $competitions;
-        //$data['members'] = $members;
+        $data['event_id'] = @$input['event_id'];
+        $data['entries'] = $entries;
         $data['academies'] = $academy;
 
         return view($this->view_path.'.add', $data);
@@ -107,7 +114,7 @@ class EventRegistrationController extends Controller
             $response = array(
                 'status' => 'error',
                 'msg' => trans('messages.error_save'),
-                'errors' => $validator->errors()
+                'errors' => html_entity_decode(HTML::ul($validator->errors()->all()))
             );
         }
         else
@@ -131,8 +138,7 @@ class EventRegistrationController extends Controller
 
             }
         }
-        $data['response'] = $response;
-        return view('core.alert.messages', $data);
+        return $response;
     }
 
     /**
@@ -200,7 +206,7 @@ class EventRegistrationController extends Controller
         	$response = array(
                 'status' => 'error',
                 'msg' => trans('messages.error_save'),
-                'errors' => $validator->errors()
+                'errors' => html_entity_decode(HTML::ul($validator->errors()->all()))
             );
         } else {
 			try {
@@ -221,8 +227,7 @@ class EventRegistrationController extends Controller
 			}
 		}
 
-        $data['response'] = $response;
-        return view('core.alert.messages', $data);
+        return $response;
     }
 
     /**
@@ -250,7 +255,8 @@ class EventRegistrationController extends Controller
                 {
                     $response = array(
                         'status' => 'warning',
-                        'msg' => 'Баталгаажуулсан хэрэглэгч устгах боломжгүй'                    );
+                        'msg' => 'Баталгаажуулсан хэрэглэгч устгах боломжгүй'                    
+                    );
                 }
             }
           
@@ -259,12 +265,11 @@ class EventRegistrationController extends Controller
             $response = array(
                 'status' => 'error',
                 'msg' => trans('messages.error_delete'),
-                'errors' => $e
+                'errors' => $e->getMessage()
             );
         }
 
-        $data['response'] = $response;
-        return view('core.alert.messages', $data);
+        return $response;
     }
 
     public function getDatatableList(Request $request)
@@ -328,7 +333,22 @@ class EventRegistrationController extends Controller
 
         }
 
-        $data['response'] = $response;
-        return view('core.alert.messages', $data);
+        return $response;
+    }
+
+    public function showCard()
+    {
+        $eventPage = $this->event->getEventByPage(6);
+        $event = json_decode($eventPage, true);
+        
+        $data['view_path'] = $this->view_path;
+        $data['events'] = $event['data'];
+        //dd($event);
+        $pagination = new LengthAwarePaginator($event['data'], @$event['total'], @$event['per_page'], @$event['current_page'], [
+            'path'  => URL::current(),
+            'query' => @$searchData,
+        ]);
+
+        return view($this->view_path.'.card', $data)->with('pagination', @$pagination);
     }
 }

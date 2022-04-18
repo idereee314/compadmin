@@ -15,15 +15,12 @@ class EntryConfigBelt extends Model
     protected $table = 'uq_entry_config_belt';
     protected $primaryKey = 'id';
     
-    public static function rules($id) 
-    {
-		return array(
-            'entry_id' => 'required',
-            'name' => 'required',
-            'name_en' => 'required',
-            // 'possible_belts' => 'required'
-		);
-	}
+    public static $rules = array(
+        'entry_id' => 'required',
+        'name' => 'required',
+        'name_en' => 'required',
+        // 'possible_belts' => 'required'
+    );
 
     public function entry()
     {

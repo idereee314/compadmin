@@ -23,7 +23,7 @@ use event\EventConfig as EventConfigModel;
 
 use \Auth as Auth;
 use Config;
-
+use \HTML;
 use Image;
 
 class EventConfigController extends Controller
@@ -82,7 +82,7 @@ class EventConfigController extends Controller
             $response = array(
                 'status' => 'error',
                 'msg' => trans('messages.error_save'),
-                'errors' => $validator->errors()
+                'errors' => html_entity_decode(HTML::ul($validator->errors()->all()))
             );
         }
         else
@@ -106,8 +106,7 @@ class EventConfigController extends Controller
 
             }
         }
-        $data['response'] = $response;
-        return view('core.alert.messages', $data);
+        return $response;
     }
 
     /**
@@ -129,11 +128,11 @@ class EventConfigController extends Controller
      */
     public function edit($id)
     {
+        $eventConfig = $this->eventConfig->find($id);
+
         $data['tabs'] = collect(Config::get("enums.event_config"))->sortBy('order')->toArray();
         $data['event_config_id'] = $id;
         $data['tab_id'] = 'tab1-1';
-
-        $eventConfig = $this->eventConfig->find($id);
         $data['eventConfig'] = $eventConfig;
         $data['view_path'] = $this->view_path;
 
@@ -158,7 +157,7 @@ class EventConfigController extends Controller
         	$response = array(
                 'status' => 'error',
                 'msg' => trans('messages.error_save'),
-                'errors' => $validator->errors()
+                'errors' => html_entity_decode(HTML::ul($validator->errors()->all()))
             );
         } else {
 			try {
@@ -179,8 +178,7 @@ class EventConfigController extends Controller
 			}
 		}
 
-        $data['response'] = $response;
-        return view('core.alert.messages', $data);
+        return $response;
     }
 
     /**
@@ -209,8 +207,7 @@ class EventConfigController extends Controller
             );
         }
 
-        $data['response'] = $response;
-        return view('core.alert.messages', $data);
+        return $response;
     }
 
     public function getDatatableList(Request $request)
@@ -237,14 +234,14 @@ class EventConfigController extends Controller
     public function configCopyExecute($eventConfigId)
     {
         $input = Input::all();
-        $validator = Validator::make($input, EventConfigModel::rules($eventConfigId));
+        $validator = Validator::make($input, EventConfigModel::rules(0));
         
         if ($validator->fails())
 		{
         	$response = array(
                 'status' => 'error',
                 'msg' => trans('messages.error_save'),
-                'errors' => $validator->errors()
+                'errors' => html_entity_decode(HTML::ul($validator->errors()->all()))
             );
         } else {
             try {
@@ -303,50 +300,42 @@ class EventConfigController extends Controller
             }
         }
 
-        $data['response'] = $response;
-        return view('core.alert.messages', $data);
+        return $response;
     }
 
     public function includeTab()
     {
 		$input = Input::all();
         $eventConfig = $this->eventConfig->find($input['event_config_id']);
-        $entries = $this->eventEntries->getEntryByEventId($eventConfig->event_id);
-        $configEntries = $entries->pluck('id')->toArray();
+        
+        $data['eventConfig'] = $eventConfig;
 
-        if($input['code'] == 'general')
-        {    
-            $data['eventConfig'] = $eventConfig;
-        }
-
-        else if($input['code'] == 'event_entries') 
+        if($input['code'] == 'event_entries') 
         {
-           $data['entries'] = $entries;
+           $data['entries'] = $eventConfig->event->entries;
         }
 
         else if($input['code'] == 'entry_config_belt') 
         {
-           $configBelsts = $this->entryConfigBelt->getConfigBeltByEntryId($configEntries);
+           $configBelsts = $this->entryConfigBelt->getConfigBeltByEventId($eventConfig->event_id);
            $data['configBelsts'] = $configBelsts;
         }
 
         else if($input['code'] == 'entry_config_age') 
         {
-            $configAges = $this->entryConfigAge->getConfigAgeByEntryId($configEntries);;
+            $configAges = $this->entryConfigAge->getConfigAgeByEventId($eventConfig->event_id);
             $data['configAges'] = $configAges;
         }
 
         else if($input['code'] == 'entry_config_weight') 
         {
-            $configAges = $this->entryConfigAge->getConfigAgeByEntryId($configEntries);
-            $configAges = $configAges->pluck('id')->toArray();
-            $configWeights = $this->entryConfigWeight->getEntryConfigWeightByEntryId($configEntries, $configAges);
+            $configWeights = $this->entryConfigWeight->getConfigWeightByEventId($eventConfig->event_id);
             $data['configWeights'] = $configWeights;
         }
 
         else if($input['code'] == 'event_entries_fee') 
         {   
-            $configEntriesFees = $this->eventEntriesFee->getEntriesFeeByEntryId($configEntries);
+            $configEntriesFees = $this->eventEntriesFee->getEntriesFeeByEventId($eventConfig->event_id);
             $data['configEntriesFees'] = $configEntriesFees;
         }
 

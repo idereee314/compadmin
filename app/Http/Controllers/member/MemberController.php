@@ -18,8 +18,9 @@ use member\Member as MemberModel;
 
 use \Auth as Auth;
 use Config;
-
+use \HTML;
 use Image;
+use Str;
 
 class MemberController extends Controller
 {
@@ -67,15 +68,15 @@ class MemberController extends Controller
     public function store(Request $request)
     {
         $input = Input::all();
+        $input['register_number'] = Str::upper($input['register_number']);
 
         $validator = Validator::make($input, MemberModel::rules(0));
-
         if ($validator->fails())
         {
             $response = array(
                 'status' => 'error',
                 'msg' => trans('messages.error_save'),
-                'errors' => $validator->errors()
+                'errors' => html_entity_decode(HTML::ul($validator->errors()->all()))
             );
         }
         else
@@ -83,8 +84,6 @@ class MemberController extends Controller
             try
             {       
                 $member = $this->member->create($input);
-                //$member = $this->member->find(264);
-
                 $response = array(
                     'status' => 'success',
                     'msg' => trans('messages.success_save')
@@ -147,8 +146,7 @@ class MemberController extends Controller
 
             }
         }
-        $data['response'] = $response;
-        return view('core.alert.messages', $data);
+        return @$response;
     }
 
     /**
@@ -197,7 +195,7 @@ class MemberController extends Controller
         	$response = array(
                 'status' => 'error',
                 'msg' => trans('messages.error_save'),
-                'errors' => $validator->errors()
+                'errors' => html_entity_decode(HTML::ul($validator->errors()->all()))
             );
         } else {
 			try {
@@ -263,8 +261,7 @@ class MemberController extends Controller
 			}
 		}
 
-        $data['response'] = $response;
-        return view('core.alert.messages', $data);
+        return $response;
     }
 
     /**
@@ -289,12 +286,11 @@ class MemberController extends Controller
             $response = array(
                 'status' => 'error',
                 'msg' => trans('messages.error_delete'),
-                'errors' => $e
+                'errors' => $e->getMessage()
             );
         }
 
-        $data['response'] = $response;
-        return view('core.alert.messages', $data);
+        return $response;
     }
 
     public function getDatatableList(Request $request)
@@ -366,12 +362,11 @@ class MemberController extends Controller
             $response = array(
                 'status' => 'error',
                 'msg' => trans('messages.error_delete'),
-                'errors' => $e
+                'errors' => $e->getMessage()
             );
         }
 
-        $data['response'] = $response;
-        return view('core.alert.messages', $data);
+        return $response;
     }
 
     public function searchMember()
@@ -399,37 +394,6 @@ class MemberController extends Controller
         $returnValue['view'] = strval(view($this->view_path.'.member_status', $data));
 
         return $returnValue;
-    }
-    
-    public function updateMemberStatus($memberId)
-    {
-        $input = Input::all();
-        try {
-           
-            $member = $this->member->find($memberId);
-
-            if(!empty($input['status']))
-            {
-                $member->status = $input['status'];
-                $member->save();
-
-                $response = array(
-                    'status' => 'success',
-                    'msg' => trans('messages.success_save')
-                );
-            }
-    
-        } catch(\Illuminate\Database\QueryException $e)
-        {
-            $response = array(
-                'status' => 'error',
-                'msg' => trans('messages.error_delete'),
-                'errors' => $e
-            );
-        }
-
-        $data['response'] = $response;
-        return view('core.alert.messages', $data);
     }
 
     public function memberListByEvent($memberId)

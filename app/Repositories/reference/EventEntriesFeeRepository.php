@@ -15,8 +15,6 @@ interface EventEntriesFeeRepository
   public function update($id, $input);
 
   public function delete($id);
-
-  public function getEntriesFeeByEntryId($entries);
   
   public function getDatatableList($searchData);
 }

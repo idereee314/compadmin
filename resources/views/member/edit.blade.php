@@ -122,7 +122,7 @@
             <div class="col-md-9">
                 <select class="form-control selectpicker" id="status" name="status" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}">
                     <option value="">-- {{ trans('display.general_select') }} --</option>
-                    @forelse(@Config::get("enums.member_status") as $key => $status)
+                    @forelse(@Config::get('enums.member_status') as $key => $status)
                     <option value="{{ $key }}" {{$member->status == $key ? 'selected' : ''}}>{{ $status }}</option>
                     @empty
                     @endforelse

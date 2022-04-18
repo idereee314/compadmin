@@ -1,221 +1,228 @@
 @extends('default')
 
-@section('styles')
+@section('css')
 <link rel="stylesheet" href="{{asset('assets/js/plugins/custom/datatables/datatables.bundle.css')}}">
 @endsection
 
 @section('content')
-
-<section id="kt_body" class="header-fixed header-mobile-fixed subheader-enabled subheader-fixed aside-enabled aside-fixed page-loading">
-    <!--begin::Main-->
-    <!--begin::Header Mobile-->
-        @include('layouts.mobile')
-    <!--end::Header Mobile-->
-        <!--begin::Aside-->
-        @include('layouts.aside')
-        <!--end::Aside-->
-        <!--begin::Wrapper-->
-            <div class="d-flex flex-column flex-row-fluid wrapper" id="kt_wrapper">
-                <!--begin::Header-->
-                @include('layouts.header')
-                
-                <div class="d-flex flex-column-fluid">
-                    <!--begin::Container-->
-                    <div class="container">
-                        <!--begin::Card-->
-                        <div class="card card-custom">
-                            <div class="card-header flex-wrap py-5">
-                                <div class="card-title">
-                                    <h3 class="card-label">Гишүүдийн жагсаалт 
-                                    <span class="d-block text-muted pt-2 font-size-sm">Гишүүд</span></h3>
+<!--begin::Main-->
+<!--begin::Header Mobile-->
+@include('layouts.mobile')
+<!--end::Header Mobile-->
+<!--begin::Aside-->
+@include('layouts.aside')
+<!--end::Aside-->
+<!--begin::Wrapper-->
+<div class="d-flex flex-column flex-row-fluid wrapper" id="kt_wrapper">
+    <!--begin::Header-->
+    @include('layouts.header')
+    <!--begin::Content-->
+    <div class="content d-flex flex-column flex-column-fluid">
+        <!--begin::Subheader-->
+        <div class="subheader py-2 py-lg-4 subheader-transparent" id="kt_subheader">
+            <div class="container d-flex align-items-center justify-content-between flex-wrap flex-sm-nowrap">
+                <!--begin::Details-->
+                <div class="d-flex align-items-center flex-wrap mr-2">
+                    <!--begin::Title-->
+                    <h2 class="d-flex align-items-center text-dark font-weight-bold my-1 mr-3">Гишүүдийн жагсаалт</h2>
+                    <!--end::Title-->
+                    <!--begin::Breadcrumb-->
+                    <ul class="breadcrumb breadcrumb-transparent breadcrumb-dot font-weight-bold my-2 p-0">
+                        <li class="breadcrumb-item text-muted">
+                            <a href="javascript:;" class="text-muted">Бүртгэл</a>
+                        </li>
+                        <li class="breadcrumb-item text-muted">
+                            <a href="{{ route('member.index') }}" class="text-muted">Оролцогч</a>
+                        </li>
+                    </ul>
+                    <!--end::Breadcrumb-->
+                </div>
+                <!--end::Details-->
+            </div>
+        </div>
+        <!--end::Subheader-->
+        <!--begin::Entry-->
+        <div class="d-flex flex-column-fluid">
+            <!--begin::Container-->
+            <div class="container">
+                <!--begin::Card-->
+                <div class="card card-custom">
+                    <div class="card-body">
+                        <!--begin: Items-->
+                        <div class="d-flex align-items-center flex-wrap pb-5 border-bottom">
+                            <!--begin: Item-->
+                            <div class="d-flex align-items-center flex-lg-fill mr-5 my-1">
+                                <span class="mr-4">
+                                    <i class="flaticon-file-2 icon-2x text-muted font-weight-bold"></i>
+                                </span>
+                                <div class="d-flex flex-column flex-lg-fill">
+                                    <span class="text-dark-75 font-weight-bolder font-size-sm">{{ array_sum(@$memberGenderCount) }} {{ trans('display.general_all') }}</span>
+                                    <a href="javascript:;" class="text-primary font-weight-bolder filter-gender-count" data-status="">Харах</a>
                                 </div>
                             </div>
-                            <div class="card-body">
-                                <!--begin: Items-->
-                                <div class="d-flex align-items-center flex-wrap pb-5 border-bottom">
-                                    <!--begin: Item-->
-                                    <div class="d-flex align-items-center flex-lg-fill mr-5 my-1">
-                                        <span class="mr-4">
-                                            <i class="flaticon-file-2 icon-2x text-muted font-weight-bold"></i>
+                            <!--end: Item-->
+                            @forelse(@$memberGenderCount as $key => $count)
+                            <!--begin: Item-->
+                            <div class="d-flex align-items-center flex-lg-fill mr-5 my-1">
+                                <span class="mr-4">
+                                    <i class="flaticon-file-2 icon-2x text-muted font-weight-bold"></i>
+                                </span>
+                                <div class="d-flex flex-column flex-lg-fill">
+                                    <span class="text-dark-75 font-weight-bolder font-size-sm">{{ $count }} {{ @Config::get('enums.gender_code')[$key] }}</span>
+                                    <a href="javascript:;" class="text-primary font-weight-bolder filter-gender-count" data-gendercode="{{ $key }}">Харах</a>
+                                </div>
+                            </div>
+                            <!--end: Item-->
+                            @empty
+                            @endforelse
+                        </div>
+                        <!--begin: Items-->
+                        <!--begin::Accordion-->
+                        <div class="accordion accordion-light accordion-light-borderless accordion-svg-toggle" id="search">
+                            <div class="card">
+                                <div class="card-header">
+                                    <div class="card-title collapsed" data-toggle="collapse" data-target="#search-member">
+                                        <span class="svg-icon svg-icon-primary">
+                                            <!--begin::Svg Icon | path:assets/media/svg/icons/Navigation/Angle-double-right.svg-->
+                                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                    <polygon points="0 0 24 0 24 24 0 24" />
+                                                    <path d="M12.2928955,6.70710318 C11.9023712,6.31657888 11.9023712,5.68341391 12.2928955,5.29288961 C12.6834198,4.90236532 13.3165848,4.90236532 13.7071091,5.29288961 L19.7071091,11.2928896 C20.085688,11.6714686 20.0989336,12.281055 19.7371564,12.675721 L14.2371564,18.675721 C13.863964,19.08284 13.2313966,19.1103429 12.8242777,18.7371505 C12.4171587,18.3639581 12.3896557,17.7313908 12.7628481,17.3242718 L17.6158645,12.0300721 L12.2928955,6.70710318 Z" fill="#000000" fill-rule="nonzero" />
+                                                    <path d="M3.70710678,15.7071068 C3.31658249,16.0976311 2.68341751,16.0976311 2.29289322,15.7071068 C1.90236893,15.3165825 1.90236893,14.6834175 2.29289322,14.2928932 L8.29289322,8.29289322 C8.67147216,7.91431428 9.28105859,7.90106866 9.67572463,8.26284586 L15.6757246,13.7628459 C16.0828436,14.1360383 16.1103465,14.7686056 15.7371541,15.1757246 C15.3639617,15.5828436 14.7313944,15.6103465 14.3242754,15.2371541 L9.03007575,10.3841378 L3.70710678,15.7071068 Z" fill="#000000" fill-rule="nonzero" opacity="0.3" transform="translate(9.000003, 11.999999) rotate(-270.000000) translate(-9.000003, -11.999999)" />
+                                                </g>
+                                            </svg>
+                                            <!--end::Svg Icon-->
                                         </span>
-                                        <div class="d-flex flex-column flex-lg-fill">
-                                            <span class="text-dark-75 font-weight-bolder font-size-sm">{{ array_sum(@$memberGenderCount) }} {{ trans('display.general_all') }}</span>
-                                            <a href="javascript:;" class="text-primary font-weight-bolder filter-gender-count" data-status="">Харах</a>
-                                        </div>
+                                        <div class="card-label pl-4">Хайлт</div>
                                     </div>
-                                    <!--end: Item-->
-                                    @forelse(@$memberGenderCount as $key => $count)
-                                    <!--begin: Item-->
-                                    <div class="d-flex align-items-center flex-lg-fill mr-5 my-1">
-                                        <span class="mr-4">
-                                            <i class="flaticon-file-2 icon-2x text-muted font-weight-bold"></i>
-                                        </span>
-                                        <div class="d-flex flex-column flex-lg-fill">
-                                            <span class="text-dark-75 font-weight-bolder font-size-sm">{{ $count }} {{ @Config::get('enums.gender_code')[$key] }}</span>
-                                            <a href="javascript:;" class="text-primary font-weight-bolder filter-gender-count" data-gendercode="{{ $key }}">Харах</a>
-                                        </div>
-                                    </div>
-                                    <!--end: Item-->
-                                    @empty
-                                    @endforelse
                                 </div>
-                                <!--begin: Items-->
-                                <!--begin::Accordion-->
-                                <div class="accordion accordion-light accordion-light-borderless accordion-svg-toggle" id="search">
-                                    <div class="card">
-                                        <div class="card-header">
-                                            <div class="card-title collapsed" data-toggle="collapse" data-target="#search-member">
-                                                <span class="svg-icon svg-icon-primary">
-                                                    <!--begin::Svg Icon | path:assets/media/svg/icons/Navigation/Angle-double-right.svg-->
-                                                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
-                                                        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                                            <polygon points="0 0 24 0 24 24 0 24" />
-                                                            <path d="M12.2928955,6.70710318 C11.9023712,6.31657888 11.9023712,5.68341391 12.2928955,5.29288961 C12.6834198,4.90236532 13.3165848,4.90236532 13.7071091,5.29288961 L19.7071091,11.2928896 C20.085688,11.6714686 20.0989336,12.281055 19.7371564,12.675721 L14.2371564,18.675721 C13.863964,19.08284 13.2313966,19.1103429 12.8242777,18.7371505 C12.4171587,18.3639581 12.3896557,17.7313908 12.7628481,17.3242718 L17.6158645,12.0300721 L12.2928955,6.70710318 Z" fill="#000000" fill-rule="nonzero" />
-                                                            <path d="M3.70710678,15.7071068 C3.31658249,16.0976311 2.68341751,16.0976311 2.29289322,15.7071068 C1.90236893,15.3165825 1.90236893,14.6834175 2.29289322,14.2928932 L8.29289322,8.29289322 C8.67147216,7.91431428 9.28105859,7.90106866 9.67572463,8.26284586 L15.6757246,13.7628459 C16.0828436,14.1360383 16.1103465,14.7686056 15.7371541,15.1757246 C15.3639617,15.5828436 14.7313944,15.6103465 14.3242754,15.2371541 L9.03007575,10.3841378 L3.70710678,15.7071068 Z" fill="#000000" fill-rule="nonzero" opacity="0.3" transform="translate(9.000003, 11.999999) rotate(-270.000000) translate(-9.000003, -11.999999)" />
-                                                        </g>
-                                                    </svg>
-                                                    <!--end::Svg Icon-->
-                                                </span>
-                                                <div class="card-label pl-4">Хайлт</div>
+                                <div id="search-member" class="collapse" data-parent="#search">
+                                    <div class="card-body">
+                                        <!--begin: Search Form-->
+                                        <form class="mb-10" id="member-search-form" method="POST">
+                                            <div class="row mb-6">
+                                                <div class="col-lg-2 mb-lg-0 mb-6">
+                                                    <label>{{trans('display.human_register_number')}}</label>
+                                                    <input type="text" class="form-control datatable-input" name="search_register_number" id="search_register_number" data-col-index="1">
+                                                </div>
+                                                <div class="col-lg-2 mb-lg-0 mb-6">
+                                                    <label>{{trans('display.human_lastname')}}</label>
+                                                    <input type="text" class="form-control datatable-input" name="search_lastname" id="search_lastname" data-col-index="2">
+                                                </div>
+                                                <div class="col-lg-2 mb-lg-0 mb-6">
+                                                    <label>{{trans('display.human_firstname')}}</label>
+                                                    <input type="text" class="form-control datatable-input" name="search_firstname" id="search_firstname" data-col-index="3">
+                                                </div>
+                                                <div class="col-lg-2 mb-lg-0 mb-6">
+                                                    <label>{{trans('display.human_phone_number')}}</label>
+                                                    <input type="tel" class="form-control datatable-input" name="search_phone_number" id="search_phone_number" data-col-index="4">
+                                                </div>
+                                                <div class="col-lg-2 mb-lg-0 mb-6">
+                                                    <label>{{trans('display.human_gender_code')}}</label>
+                                                    <select class="form-control selectpicker datatable-input" name="search_gender_code" id="search_gender_code" data-col-index="5">
+                                                        <option value="">-- {{ trans('display.general_all') }} --</option>
+                                                        @forelse(@Config::get('enums.gender_code') as $key => $gender)
+                                                        <option value="{{ $key }}">{{ $gender }}</option>
+                                                        @empty
+                                                        @endforelse
+                                                    </select>
+                                                </div>
+                                                <div class="col-lg-2 mb-lg-0 mb-6">
+                                                    <label>{{ trans('display.general_status') }}:</label>
+                                                    <select class="form-control selectpicker datatable-input" name="search_status" id="search_status" data-col-index="6">
+                                                        <option value="">-- {{ trans('display.general_all') }} --</option>
+                                                        @forelse(@Config::get('enums.member_status') as $key => $status)
+                                                        <option value="{{ $key }}">{{ $status }}</option>
+                                                        @empty
+                                                        @endforelse
+                                                    </select>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div id="search-member" class="collapse" data-parent="#search">
-                                            <div class="card-body">
-                                                <!--begin: Search Form-->
-                                                <form class="mb-10" id="member-search-form" method="POST">
-                                                    <div class="row mb-6">
-                                                        <div class="col-lg-2 mb-lg-0 mb-6">
-                                                            <label>{{trans('display.human_register_number')}}</label>
-                                                            <input type="text" class="form-control datatable-input" name="search_register_number" id="search_register_number" data-col-index="1">
+                                            <div class="row mb-6">
+                                                <div class="col-lg-3 mb-lg-0 mb-6">
+                                                    <label>{{ trans('display.comp_entry_age') }}:</label>
+                                                    <div class="input-daterange input-group" id="kt_datepicker">
+                                                        <input type="number" min="1" max="100" class="form-control datatable-input" name="search_age[]" id="start" placeholder="From" data-col-index="7" />
+                                                        <div class="input-group-append">
+                                                            <span class="input-group-text">
+                                                                <i class="la la-ellipsis-h"></i>
+                                                            </span>
                                                         </div>
-                                                        <div class="col-lg-2 mb-lg-0 mb-6">
-                                                            <label>{{trans('display.human_lastname')}}</label>
-                                                            <input type="text" class="form-control datatable-input" name="search_lastname" id="search_lastname" data-col-index="2">
-                                                        </div>
-                                                        <div class="col-lg-2 mb-lg-0 mb-6">
-                                                            <label>{{trans('display.human_firstname')}}</label>
-                                                            <input type="text" class="form-control datatable-input" name="search_firstname" id="search_firstname" data-col-index="3">
-                                                        </div>
-                                                        <div class="col-lg-2 mb-lg-0 mb-6">
-                                                            <label>{{trans('display.human_phone_number')}}</label>
-                                                            <input type="tel" class="form-control datatable-input" name="search_phone_number" id="search_phone_number" data-col-index="4">
-                                                        </div>
-                                                        <div class="col-lg-2 mb-lg-0 mb-6">
-                                                            <label>{{trans('display.human_gender_code')}}</label>
-                                                            <select class="form-control selectpicker datatable-input" name="search_gender_code" id="search_gender_code" data-col-index="5">
-                                                                <option value="">-- {{ trans('display.general_all') }} --</option>
-                                                                @forelse(@Config::get('enums.gender_code') as $key => $gender)
-                                                                <option value="{{ $key }}">{{ $gender }}</option>
-                                                                @empty
-                                                                @endforelse
-                                                            </select>
-                                                        </div>
-                                                        <div class="col-lg-2 mb-lg-0 mb-6">
-                                                            <label>{{ trans('display.general_status') }}:</label>
-                                                            <select class="form-control selectpicker datatable-input" name="search_status" id="search_status" data-col-index="6">
-                                                                <option value="">-- {{ trans('display.general_all') }} --</option>
-                                                                @forelse(@Config::get('enums.member_status') as $key => $status)
-                                                                <option value="{{ $key }}">{{ $status }}</option>
-                                                                @empty
-                                                                @endforelse
-                                                            </select>
-                                                        </div>
+                                                        <input type="number" min="1" max="100" class="form-control datatable-input" name="search_age[]" id="end" placeholder="To" data-col-index="7" />
                                                     </div>
-                                                    <div class="row mb-6">
-                                                        <div class="col-lg-3 mb-lg-0 mb-6">
-                                                            <label>{{ trans('display.comp_entry_age') }}:</label>
-                                                            <div class="input-daterange input-group" id="kt_datepicker">
-                                                                <input type="number" min="1" max="100" class="form-control datatable-input" name="search_age[]" id="start" placeholder="From" data-col-index="7" />
-                                                                <div class="input-group-append">
-                                                                    <span class="input-group-text">
-                                                                        <i class="la la-ellipsis-h"></i>
-                                                                    </span>
-                                                                </div>
-                                                                <input type="number" min="1" max="100" class="form-control datatable-input" name="search_age[]" id="end" placeholder="To" data-col-index="7" />
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row mt-8">
-                                                        <div class="col-lg-12">
-                                                            <button type="submit" class="btn btn-primary btn-primary--icon">
-                                                                <span>
-                                                                    <i class="la la-search"></i>
-                                                                    <span>{{ trans('display.general_search') }}</span>
-                                                                </span>
-                                                            </button>
-                                                            <button type="reset" class="btn btn-secondary btn-secondary--icon" id="kt_reset">
-                                                                <span>
-                                                                    <i class="la la-close"></i>
-                                                                    <span>{{ trans('display.general_reset') }}</span>
-                                                                </span>
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                </form>
+                                                </div>
                                             </div>
-                                        </div>
+                                            <div class="row mt-8">
+                                                <div class="col-lg-12">
+                                                    <button type="submit" class="btn btn-primary btn-primary--icon">
+                                                        <span>
+                                                            <i class="la la-search"></i>
+                                                            <span>{{ trans('display.general_search') }}</span>
+                                                        </span>
+                                                    </button>
+                                                    <button type="reset" class="btn btn-secondary btn-secondary--icon" id="kt_reset">
+                                                        <span>
+                                                            <i class="la la-close"></i>
+                                                            <span>{{ trans('display.general_reset') }}</span>
+                                                        </span>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </form>
                                     </div>
                                 </div>
-                                <!--end::Accordion-->
-                                <!--begin: Datatable-->
-                                <div id="kt_datatable_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
-                                    <div class="panel-sub-heading">
-
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-sm-12">
-                                            <table class="table table-separate table-head-custom table-checkable dataTable no-footer dtr-inline" id="member-datatable" role="grid" aria-describedby="kt_datatable_info" style="width: 1235px;">
-                                                <thead>
-                                                    <tr role="row">
-                                                        <th>No.</th>
-                                                        {{-- <th>{{trans('display.username')}}</th> --}}
-                                                        <th>{{trans('display.profile_photo')}}</th>
-                                                        <th>{{trans('display.human_register_number')}}</th>
-                                                        <th>{{trans('display.human_lastname')}}</th>
-                                                        <th>{{trans('display.human_firstname')}}</th>
-                                                        <th>{{trans('display.human_contact_phone')}}</th>
-                                                        <th>{{trans('display.human_birth')}}</th>
-                                                        <th>{{trans('display.id_photo')}}</th>
-                                                        <th>{{trans('display.general_connect')}}</th>
-                                                        <th>{{trans('display.general_status')}}</th>
-                                                        <th>{{trans('display.general_created_at')}}</th>
-                                                        <th width="8%">{{trans('display.general_manage')}}</th>
-                                                    </tr>
-                                                </thead>
-                                            </table>    
-                                        </div>
-                                    </div>
-                                </div>
-                                <!--end: Datatable-->
                             </div>
                         </div>
-                        <!--end::Card-->
+                        <!--end::Accordion-->
+                        <!--begin: Datatable-->
+                        <table class="table table-separate table-head-custom" id="member-datatable" style="margin-top: 13px !important">
+                            <thead>
+                            <tr>
+                                <th width="5%">No.</th>
+                                <th width="8%">{{trans('display.profile_photo')}}</th>
+                                <th width="10%">{{trans('display.human_register_number')}}</th>
+                                <th width="10%">{{trans('display.human_lastname')}}</th>
+                                <th width="10%">{{trans('display.human_firstname')}}</th>
+                                <th width="10%">{{trans('display.human_contact_phone')}}</th>
+                                <th width="8%">{{trans('display.human_birth')}}</th>
+                                <th width="5%">{{trans('display.id_photo')}}</th>
+                                <th width="5%">{{trans('display.profile_title')}}</th>
+                                <th width="5%">{{trans('display.general_status')}}</th>
+                                <th width="10%">{{trans('display.general_created_at')}}</th>
+                                <th width="10%">{{trans('display.general_manage')}}</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                        <!--end: Datatable-->
                     </div>
-                    <!--end::Container-->
                 </div>
-                <!--begin::Footer-->
-                @include('layouts.footer')
-                <!--end::Footer-->
+                <!--end::Card-->
             </div>
-            @include ($view_path.'.modals')
-            <!--end::Wrapper-->
-        <!--end::Main-->
-</section>
-
+            <!--end::Container-->
+        </div>
+        <!--end::Entry-->
+    </div>
+    <!--end::Content-->
+    <!--begin::Footer-->
+    @include('layouts.footer')
+    <!--end::Footer-->
+</div>
+@include ($view_path.'.modals')
+<!--end::Wrapper-->
+<!--end::Main-->
 @section('javascript')
 <script src="{{asset('assets/js/plugins/custom/datatables/datatables.bundle.js')}}"></script>
-<script src="{{asset('assets/js/plugins/custom/datatables/datatables.js')}}"></script>
-<script src="{{asset('assets/js/plugins/custom/select2-ng/select2.min.js')}}"></script>
-<script src="{{asset('assets/js/smart.js')}}"></script>
 
 <script>
 $(document).ready(function() {
     memberTable = $("#member-datatable").DataTable({
         processing:     true,
         serverSide:     true,
-        deferRender:    true,
-        autoWidth:      true,
-        filter:         false,
+        //deferRender:    true,
+        //autoWidth:      true,
+        //filter:         false,
         responsive:     false,
         dataType: 'json',
         paginationType: "full_numbers",
@@ -235,9 +242,6 @@ $(document).ready(function() {
                 d.status = $('#member-search-form select[id="search_status"]').val();
                 d.age = ageArr;
             },
-        },
-        "fnCreatedRow": function( nRow, aData, iDataIndex ) {
-            $(nRow).attr('id', aData[0]);
         },
         columns: [
             {
@@ -263,7 +267,7 @@ $(document).ready(function() {
         {
             searchable: false,
             orderable: false,
-            targets: [0]
+            targets: [0,1,7,8,11]
         },{
             class: "text-center",
             targets: [0, 6, 7, 8, 9, 10]
@@ -276,22 +280,6 @@ $(document).ready(function() {
             className: "btn btn-light-danger font-weight-bolder mb-2",
             action: function ( e, dt, node, config ) {
                 $.get('{!! route('member.create') !!}', showAddModal);
-            }
-        },
-        {
-            extend: 'excelHtml5',
-            text: '<i class="fa fa-print"></i> {!! trans('display.general_excel') !!}',
-            className: "btn btn-light-warning font-weight-bolder mb-2",
-            title: 'Оролцогчийн бүртгэл',
-            customize: function ( xlsx ) {
-                var sheet = xlsx.xl.worksheets['sheet1.xml'];
-                $('c[r=A1] t', sheet).text( 'Оролцогчид' );
-            },
-            exportOptions: {
-                columns: [ 0,2,3,4,5,6,9,10 ]
-            },
-            modifier: {
-                page: 'all'
             }
         }]
 	});
@@ -326,8 +314,18 @@ $(document).ready(function() {
                     url: 'member/' + id,
                     type: 'DELETE',
                     success: function(response) {
-                        $('.panel-sub-heading').html(response).fadeIn().delay(5000).fadeOut();
-                        memberTable.draw();
+                        if(response.status == 'success')
+                        {
+                            toastr.success(response.msg);
+                            memberTable.draw('page');
+                        }
+                        else {
+                            toastr.error(response.errors, response.msg, {
+                                "closeButton": true,
+                                "timeOut": "0",
+                                "extendedTimeOut": "0",
+                            });
+                        }
                     },
                     error: function (xhr, textStatus, error) {
                         console.log(xhr.statusText);
@@ -392,11 +390,12 @@ function showAddModal( data ) {
             rtl: KTUtil.isRTL(),
             todayHighlight: true,
             orientation: "bottom left",
+            format: 'yyyy-mm-dd',
             templates: {
                 leftArrow: '<i class="la la-angle-right"></i>',
                 rightArrow: '<i class="la la-angle-left"></i>'
             }
-        })
+        });
 
         $('#add-member-form').validate({
             ignore: [],
@@ -412,9 +411,19 @@ function showAddModal( data ) {
                     type: form.method,
                     data: new FormData(form),
                     success: function(response) {
-                        $('#memberAddModal').find("#close").trigger('click');
-                        $('.panel-sub-heading').html(response).fadeIn().delay(5000).fadeOut();
-                        memberTable.draw();
+                        if(response.status == 'success')
+                        {
+                            $('#memberAddModal').find("#close").trigger('click');
+                            toastr.success(response.msg);
+                            memberTable.draw('page');
+                        }
+                        else {
+                            toastr.error(response.errors, response.msg, {
+                                "closeButton": true,
+                                "timeOut": "0",
+                                "extendedTimeOut": "0",
+                            });
+                        }
                     },
                     error: function (xhr, textStatus, error) {
                         console.log(xhr.statusText);
@@ -448,9 +457,20 @@ function memberEditModal(data)
     $('#memberEditModal').modal();
     $('#memberEditModal').on('shown.bs.modal', function(){
         $('#memberEditModal .modal-content').html(data);
-
+        $('.selectpicker').selectpicker();
         $("#register_number").inputmask();
         $('.only-phone').inputmask("99 99 99 99");
+
+        $('#birth').datepicker({
+            rtl: KTUtil.isRTL(),
+            todayHighlight: true,
+            orientation: "bottom left",
+            format: 'yyyy-mm-dd',
+            templates: {
+                leftArrow: '<i class="la la-angle-right"></i>',
+                rightArrow: '<i class="la la-angle-left"></i>'
+            }
+        });
 
         $('#edit-member-form').validate({
             ignore: [],
@@ -467,10 +487,19 @@ function memberEditModal(data)
                     data:  new FormData(form),
                     success: function(response) {
                         var page = memberTable.page.info().page;
-
-                        $('#memberEditModal').find("#close").trigger('click');
-                        $('.panel-sub-heading').html(response).fadeIn().delay(5000).fadeOut();
-                        memberTable.page(page).draw('page');
+                        if(response.status == 'success')
+                        {
+                            $('#memberEditModal').find("#close").trigger('click');
+                            toastr.success(response.msg);
+                            memberTable.draw('page');
+                        }
+                        else {
+                            toastr.error(response.errors, response.msg, {
+                                "closeButton": true,
+                                "timeOut": "0",
+                                "extendedTimeOut": "0",
+                            });
+                        }
                     },
                     error: function (xhr, textStatus, error) {
                         console.log(xhr.statusText);
@@ -506,34 +535,35 @@ function connectUser(id)
             $('#connetUserModal').modal();
             $('#connetUserModal').on('shown.bs.modal', function(){
                 $('#connetUserModal .modal-content').html(data.view);
-                
-                $('#connect-user-form input[name=user_id]').select2({
+
+                $('#connect-user-form select[name=user_id]').select2({
                     width: 'resolve',
                     dropdownAutoWidth : true,
                     dropdownParent: $('#connetUserModal'),
                     placeholder: "-- {{ trans('display.general_select') }} --",
+                    minimumInputLength: 3,
                     ajax: {
-                        type: 'GET',
                         url: '{!! route('user.search') !!}',
+                        delay: 1500,
                         data: function (params) {
-                            return {
-                                q: params
-                            };
+                            var query = {
+                                q: params.term
+                            }
+                            return query;
                         },
+
                         processResults: function (data) {
-                            return {results: data}
+                            return {
+                                results: JSON.parse(data)
+                            };
                         },
                         cache: true
                     },
-                    id: 'id',
-                    closeOnSelect: true,
-                    allowClear: true,
-                    minimumInputLength: 8,
-                    formatSelection: function (item) {
-                        return item.firstname + ": " + item.lastname;
+                    templateSelection: function (item) {
+                        return item.firstname;
                     },
-                    formatResult: function (item) {
-                        return item.firstname + ": " + item.lastname;
+                    templateResult: function (item) {
+                        return item.firstname;
                     }
                 });
 
@@ -552,9 +582,19 @@ function connectUser(id)
                             data: new FormData(form),
                             success: function(response) {
                                 var page = memberTable.page.info().page;
-                                $('#connetUserModal').find("#close").trigger('click');
-                                $('.panel-sub-heading').html(response).fadeIn().delay(5000).fadeOut();
-                                memberTable.page(page).draw('page');
+                                if(response.status == 'success')
+                                {
+                                    $('#connetUserModal').find("#close").trigger('click');
+                                    toastr.success(response.msg);
+                                    memberTable.page(page).draw('page');
+                                }
+                                else {
+                                    toastr.error(response.errors, response.msg, {
+                                        "closeButton": true,
+                                        "timeOut": "0",
+                                        "extendedTimeOut": "0",
+                                    });
+                                }
                             },
                             error: function (xhr, textStatus, error) {
                                 console.log(xhr.statusText);
@@ -582,67 +622,9 @@ function connectUser(id)
         {
             $('.panel-sub-heading').html(data.view).fadeIn().delay(5000).fadeOut();
         }
-    });
-}
-
-function chnageMemberStatus(id)
-{
-    $.get('/member/create/status/'+id, function( data ) {
-        if (data.status) {
-            $('#memberStatusModal').modal();
-            $('#memberStatusModal').on('shown.bs.modal', function(){
-                $('#memberStatusModal .modal-content').html(data.view);
-
-                $('#member-status-form').validate({
-                    ignore: [],
-                    highlight:function(element) {
-                        $(element).parents('.form-group').addClass('has-error has-feedback');
-                    },
-                    unhighlight: function(element) {
-                        $(element).parents('.form-group').removeClass('has-error');
-                    },
-                    submitHandler: function(form) {
-                        $.ajax({
-                            url: form.action,
-                            type: form.method,
-                            data: new FormData(form),
-                            success: function(response) {
-                                $('#memberStatusModal').find("#close").trigger('click');
-                                $('.panel-sub-heading').html(response).fadeIn().delay(5000).fadeOut();
-                                memberTable.draw();
-                            },
-                            error: function (xhr, textStatus, error) {
-                                console.log(xhr.statusText);
-                                console.log(textStatus);
-                                console.log(error);
-                            },
-                            async: false,
-                            processData: false,
-                            contentType: false
-                        });
-                    },
-                    errorPlacement: function(error, element) {
-                        if($(element).parents('.form-group').find(".error-here")){
-                            error.appendTo($(element).parents('.form-group').find(".error-here"));
-                        } else {
-                            error.insertAfter(element);
-                        }
-                    }
-                });
-
-                $(this).off('shown.bs.modal');
-            });
-        }
-        else
-        {
-            $('.panel-sub-heading').html(data.view).fadeIn().delay(5000).fadeOut();
-        }
-    });
-
-    $('#memberStatusModal').on('hidden.bs.modal', function(){
-        $('#memberStatusModal .modal-body').empty();
     });
 }
 
 </script>
 @endsection
+@stop

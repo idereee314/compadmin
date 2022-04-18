@@ -37,13 +37,11 @@ class EloquentEntryConfigBeltRepository implements EntryConfigBeltRepository {
 	public function create($input)
 	{
 		$entryConfigBelt = new EntryConfigBelt;
-
 		$entryConfigBelt->entry_id = $input['entry_id'];
 		$entryConfigBelt->name = $input['name'];
 		$entryConfigBelt->name_en = $input['name_en'];
 
 		$entryConfigBelt->save();
-
 		return $entryConfigBelt;
 	}
 
@@ -126,15 +124,16 @@ class EloquentEntryConfigBeltRepository implements EntryConfigBeltRepository {
 		return $belts;
 	}
 
-	public function getConfigBeltByEntryId($entries)
+	public function getConfigBeltByEventId($eventId)
 	{
-		$Configbelts = "";
-		if(@count($entries) > 0)
+		$configbelts = "";
+		if(@$eventId)
 		{
-			$qry = EntryConfigBelt::whereIn('entry_id', $entries);
-			$Configbelts = $qry->get();
+			$qry = EntryConfigBelt::select('uq_entry_config_belt.*')->join('uq_event_entries', 'uq_event_entries.id', '=', 'uq_entry_config_belt.entry_id')
+				->where('event_id', $eventId);
+			$configbelts = $qry->get();
 		}
 
-		return $Configbelts;
+		return $configbelts;
 	}
 }

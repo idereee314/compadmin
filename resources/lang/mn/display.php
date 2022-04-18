@@ -156,9 +156,8 @@ return [
     "general_parent" => "Харьяа",
     "general_value" => "Утга",
     'general_retry' => 'Дахин оролдох',
-    "general_contract_exam" => "Шалгалт сонгох",
-    "general_package" => "Багцаар",
     'general_entry_text' => 'Оруулах мэдээлэл',
+    'general_no_record' => 'Бичлэг байхгүй',
 
     // Search
     "general_search_list" => "Хайлт",
@@ -280,13 +279,23 @@ return [
     "organization" => "Байгууллага",
 
     //Event
-    'event_name' => 'Эвент',
+    'event_title' => 'Эвент',
     'reg_start_date' => 'Эхлэх огноо',
     'reg_end_date' => 'Дуусах огноо',
+    'reg_date' => 'Бүртгэлийн огноо',
 
     //Event-entries
     'entrance_fee' => 'Төлбөр',
 
     //Event-config-belt
-    'possible_belts' => 'Боломжит бүс'
+    'possible_belts' => 'Боломжит бүс',
+
+    //Event-config-age
+    'start_age' => 'Доод нас',
+    'end_age' => 'Дээд нас',
+    'possible_age' => 'Боломжит нас',
+    'age_title' => 'Нас',
+
+    //Event-config-weight
+    'weight' => 'Жин'
 ];
