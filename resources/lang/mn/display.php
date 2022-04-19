@@ -178,7 +178,9 @@ return [
     "general_season" => "Улирал",
     "general_confirm" => "Баталгаажуулах",
 
-
+    //Menu
+    'menu_title' => 'Цэс',
+    
     // User
     "username" => "Хэрэглэгчийн нэр",
     "user_password" => "Нууц үг",
@@ -298,5 +300,7 @@ return [
     'age_title' => 'Нас',
 
     //Event-config-weight
-    'weight' => 'Жин'
+    'weight' => 'Жин',
+
+
 ];
