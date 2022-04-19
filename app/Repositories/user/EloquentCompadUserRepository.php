@@ -79,6 +79,26 @@ class EloquentCompadUserRepository implements CompadUserRepository {
 		$user->delete();
 	}
 
+	public function findByUserIdPassword($userId, $password)
+    {
+        $query = User::where('password', md5($password))->where('id', $userId);
+
+        if ($query->count() == 1) {
+          return true;
+        }
+
+        return false;
+    }
+
+    public function updateUserPassword($id, $input)
+    {
+        $user = User::find($id);
+
+        $user->password = md5($input['password']);
+
+        $user->save();
+    }
+
     public function getDatatableList($searchData)
     {
 		$qry = User::select('*');

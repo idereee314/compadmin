@@ -155,7 +155,7 @@
                         </li>
                         <li class="navi-separator my-3"></li>
                         <li class="navi-item">
-                            <a href="#" class="navi-link">
+                            <a href="{{route('user.change.my.password')}}" class="navi-link">
                                 <span class="navi-text">{{trans('display.user_password_change')}}</span>
                             </a>
                         </li>

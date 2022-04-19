@@ -289,6 +289,7 @@ return [
 
     //Event-config-belt
     'possible_belts' => 'Боломжит бүс',
+    'event_role' => "Хэрэглэгч тохируулах",
 
     //Event-config-age
     'start_age' => 'Доод нас',

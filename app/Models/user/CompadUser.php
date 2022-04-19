@@ -22,6 +22,17 @@ class CompadUser extends Model implements \Illuminate\Contracts\Auth\Authenticat
             'phone_number' => 'numeric',
 		);
 	}
+
+    public function roles()
+    {
+        return $this->belongsToMany('user\CompadRole', 'uq_compad_user_role', 'user_id', 'role_id');
+    }
+
+    public function user()
+    {
+        return $this->hasMany('event\EventUser', 'user_id');
+    }
+
     /**
      * The attributes that should be hidden for serialization.
      *

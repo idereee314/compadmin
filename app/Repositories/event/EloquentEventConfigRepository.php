@@ -101,7 +101,7 @@ class EloquentEventConfigRepository implements EventConfigRepository {
 
 	public function getDatatableList($searchData)
     {
-		$qry = EventConfig::select('*')->with('event:id,name');
+		$qry = EventConfig::select('*')->with('event:id,name', 'event.users');
 
         $data = Datatables::make($qry)
             ->filter(function ($qry) use ($searchData) {
@@ -115,12 +115,14 @@ class EloquentEventConfigRepository implements EventConfigRepository {
 				return $qry->created_at;
 			})
             ->addColumn('action', function ($qry) {
-				$actionHtml = "";
-				$actionHtml .= 	'<a class="btn btn-icon btn-light btn-hover-primary btn-sm mr-3 edit" href="'.route('event.config.edit', $qry->id).'" title="'.trans('display.general_edit').'"><i class="la la-edit"></i></a>';
-				$actionHtml .= 	'<a class="btn btn-icon btn-light btn-hover-primary btn-sm delete mr-3" href="javascript:;" data-configid="'.$qry->id.'" title="'.trans('display.general_delete').'"><i class="la la-trash"></i></li>';
-				$actionHtml .= 	'<a class="btn btn-icon btn-light btn-hover-primary btn-sm copy" href="javascript:;" data-configid="'.$qry->id.'" title="'.trans('display.general_copy').'"><i class="far fa-copy"></i></li>';
-				return $actionHtml;
-
+				if($qry->event->users->contains(Auth::user()->id) || Auth::user()->username == 'superadmin')
+				{
+					$actionHtml = "";
+					$actionHtml .= 	'<a class="btn btn-icon btn-light btn-hover-primary btn-sm mr-3 edit" href="'.route('event.config.edit', $qry->id).'" title="'.trans('display.general_edit').'"><i class="la la-edit"></i></a>';
+					$actionHtml .= 	'<a class="btn btn-icon btn-light btn-hover-primary btn-sm delete mr-3" href="javascript:;" data-configid="'.$qry->id.'" title="'.trans('display.general_delete').'"><i class="la la-trash"></i></li>';
+					$actionHtml .= 	'<a class="btn btn-icon btn-light btn-hover-primary btn-sm copy mr-3" href="javascript:;" data-configid="'.$qry->id.'" title="'.trans('display.general_copy').'"><i class="far fa-copy"></i></li>';
+					return $actionHtml;
+				}
             })->rawColumns(['action'])
             ->make(true);
 

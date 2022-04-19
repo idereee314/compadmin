@@ -380,7 +380,6 @@ class MemberController extends Controller
     public function searchUser()
     {
         $input = Input::all();
-
         $users = $this->user->searchUser(@$input['q']);
         return json_encode($users);
     }

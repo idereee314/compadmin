@@ -42,6 +42,16 @@ class Event extends Model
         return $this->hasMany('reference\EventEntries', 'event_id');
     }
 
+    public function users()
+    {
+        return $this->belongsToMany('user\CompadUser', 'uq_event_user', 'event_id', 'user_id');
+    }
+
+    public function eventUsers()
+    {
+        return $this->hasMany('event\EventUser', 'event_id');
+    }
+
 	public static function boot()
     {
         parent::boot();    

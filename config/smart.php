@@ -48,16 +48,16 @@ return array(
 			'icon' => 'flaticon2-architecture-and-city', 
 			'url' => '/home',
 			'label' => 'Нүүр хуудас',
-			// 'permission' => [ 'visit']
+			'permission' => [ 'visit']
 		 ],
 		'user_management' => [
 			'icon' => 'flaticon2-laptop',
-			'label' => 'Системийн удирдлага',
+			'label' => 'Удирдлага',
 			'children' => [
 				 'uq_compad_user' => [
 					 'url' => '/user', 
 					 'label' => 'Хэрэглэгч', 
-					//  'permission' => [ 'visit', 'editable']
+					 'permission' => [ 'visit', 'editable']
 				 ],
 			]
 		],
@@ -67,8 +67,8 @@ return array(
 			'children' => [
 				 'uq_academy' => [
 					 'url' => '/academy', 
-					 'label' => 'Асадеми',
-					//  'permission' => [ 'visit', 'editable']
+					 'label' => 'Академи',
+					 'permission' => [ 'visit', 'editable']
 				 ],
 			]
 		],
@@ -79,13 +79,18 @@ return array(
 				 'uq_member' => [
 					 'url' => '/member', 
 					 'label' => 'Оролцогч',
-					//  'permission' => [ 'visit', 'editable']
+					 'permission' => [ 'visit', 'editable']
 				 ],
 				 'uq_event_registration' => [
 					 'url' => '/event/registration', 
 					 'label' => 'Тэмцээн',
-					//  'permission' => [ 'visit', 'editable']
+					 'permission' => [ 'visit', 'editable']
 				 ],
+				 'uq_event_config' => [
+					'url' => '/event/config', 
+					'label' => 'Тэмцээний тохиргоо',
+					'permission' => [ 'visit', 'editable']
+				],
 			 ]
 		 ],
 	 ],

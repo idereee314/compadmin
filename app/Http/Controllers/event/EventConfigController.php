@@ -339,6 +339,12 @@ class EventConfigController extends Controller
             $data['configEntriesFees'] = $configEntriesFees;
         }
 
+        else if($input['code'] == 'event_event_user') 
+        {   
+            $event = $this->event->find($eventConfig->event_id);
+            $data['eventUsers'] = $event->eventUsers;
+        }
+
         $data['tab_id'] = $input['tab_id'];
         $data['view_path'] = $this->view_path;
 

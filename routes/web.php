@@ -51,6 +51,10 @@ Route::group([
 
     //User
     Route::resource('/user', 'core\CompadUserController', ['names' => 'user']);
+    Route::get('/system/um/user/change/password', 'core\CompadUserController@changePassword')->name('user.change.my.password');
+    Route::post('/system/um/user/check/password',  'core\CompadUserController@checkUserPassword')->name('user.check.password');
+    Route::get('/system/user/search/data', 'core\CompadUserController@searchUser')->name('system.user.search');
+    Route::post('/user/update/{id}/password', 'core\CompadUserController@updateUserPassword')->name('user.update.password');
     Route::any('/user/data/list', [CompadUserController::class, 'getDatatableList'])->name('user.data.list');
 
     //Member
@@ -81,6 +85,8 @@ Route::group([
     Route::post('/event/config/copy/store/{eventConfigId}', 'event\EventConfigController@configCopyExecute')->name('event.config.copy.store');
     Route::get('/event/config-tabs', 'event\EventConfigController@includeTab')->name('event.config.tabs');
 
+    Route::resource('/event/user', 'event\EventUserController', ['names' => 'event.user']);
+
     //Entry
     Route::resource('/event/entry', 'reference\EventEntryController', ['names' => 'event.entry']);
     Route::any('/event/entry/data/list', 'reference\EventEntryController@getDatatableList')->name('event.entry.data.list');
@@ -104,7 +110,6 @@ Route::group([
 
     //Entry Fee
     Route::resource('/event/entry/fee', 'reference\EventEntryFeeController', ['names' => 'event.entry.fee']);
-  
 
     //Academy
     Route::resource('/academy', 'academy\AcademyController', ['names' => 'academy']);
