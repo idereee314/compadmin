@@ -127,7 +127,7 @@ $(document).ready(function() {
         buttons: [
         {
             text: '<i class="la la-plus"></i> Шинээр нэмэх',
-            className: "btn btn-light-danger font-weight-bolder mb-2",
+            className: "btn btn-light-danger font-weight-bolder mb-2 {{ SecurityHelper::checkPermission(@Config::get('permission.academy'), Config::get('permission.editable')) ? '' : 'd-none' }}",
             action: function ( e, dt, node, config ) {
                 $.get('{!! route('academy.create') !!}', showAddModal);
             }

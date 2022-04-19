@@ -117,7 +117,7 @@ $(document).ready(function() {
         buttons: [
         {
             text: '<i class="la la-plus"></i> Шинээр нэмэх',
-            className: "btn btn-light-danger font-weight-bolder",
+            className: "btn btn-light-danger font-weight-bolder {{ SecurityHelper::checkPermission(@Config::get('permission.role'), Config::get('permission.editable')) && Auth::user()->roles->first()->code == 'admin' ? '' : 'd-none' }}",
             action: function ( e, dt, node, config ) {
                 $.get('{!! route('role.create') !!}', showAddModal);
             }

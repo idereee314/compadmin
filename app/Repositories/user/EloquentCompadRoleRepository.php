@@ -102,7 +102,8 @@ class EloquentCompadRoleRepository implements CompadRoleRepository {
             return $role->created_at;
         })
         ->addColumn('action', function ($role) {
-            // $permissionEdit = SecurityHelper::checkPermission(@Config::get('permission.role'), Config::get('permission.editable'));
+            $permissionEdit = SecurityHelper::checkPermission(@Config::get('permission.role'), Config::get('permission.editable'));
+
             $actionHtml = "";
 
             $actionHtml .=  '<div class="dropdown dropdown-inline">';
@@ -110,11 +111,12 @@ class EloquentCompadRoleRepository implements CompadRoleRepository {
             $actionHtml .=  '<i class="fas fa-server"></i> </a>';
             $actionHtml .=  '<div class="dropdown-menu dropdown-menu-sm dropdown-menu-right">';
             $actionHtml .=  '<ul class="nav nav-hoverable flex-column">';
-            // if($permissionEdit && $role->type == @config::get('smart.role_type')['cms'])
-            // {
+
+            if($permissionEdit && Auth::user()->roles->first()->code == 'admin')
+            {
                 $actionHtml .=  '<li class="nav-item"><a class="nav-link edit" href="javascript:;" data-roleid="'.$role->id.'"><i class="nav-icon flaticon-edit-1"></i><span class="nav-text">Засварлах</span></a></li>';
                 $actionHtml .=  '<li class="nav-item"><a class="nav-link delete" href="javascript:;" data-roleid="'.$role->id.'"><i class="nav-icon flaticon2-trash"></i><span class="nav-text">Устгах</span></a></li>';
-          //  }
+          	}
 
             $actionHtml .=  '</ul>';
             $actionHtml .=  '</div>';

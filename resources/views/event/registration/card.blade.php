@@ -168,6 +168,7 @@
                                             <a href="#" class="font-weight-bolder text-primary ml-2">{{ @$event['status_approved'] }} {{ @Config::get('enums.event_registeation_status')['approved'] }}</a>
                                         </div>
                                     </div>
+                                    {{-- {{Auth::user()->id}} --}}
                                     <a href="/event/registration?event_id={{@$event['id']}}" class="btn btn-primary btn-sm text-uppercase font-weight-bolder mt-5 mt-sm-0 mr-auto mr-sm-0 ml-sm-auto">{{ trans('display.general_detail') }}</a>
                                 </div>
                                 <!--end::Footer-->

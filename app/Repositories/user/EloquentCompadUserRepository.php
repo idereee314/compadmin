@@ -125,6 +125,7 @@ class EloquentCompadUserRepository implements CompadUserRepository {
 				return $qry->created_at;
 			})
             ->addColumn('action', function ($compaduser) {
+				$permissionEdit = SecurityHelper::checkPermission(@Config::get('permission.user'), Config::get('permission.editable'));
 
 				$actionHtml = '<div class="dropdown dropdown-inline">';
 				$actionHtml .= '<a href="javascript:;" class="btn btn-sm btn-clean btn-icon" data-toggle="dropdown">';
@@ -133,14 +134,15 @@ class EloquentCompadUserRepository implements CompadUserRepository {
 				$actionHtml .= '<div class="dropdown-menu dropdown-menu-sm dropdown-menu-right">';
 				$actionHtml .= '<ul class="nav nav-hoverable flex-column">';
 
-				//dd
-
 				if($compaduser->username != 'superadmin')
 				{
-					$actionHtml .= 	'<li class="nav-item"><a class="nav-link" href="#" onclick="compadUserEdit('.$compaduser->id.')"><i class="nav-icon flaticon-edit-1"></i><span class="nav-text">'.trans('display.general_edit').'</span></a></li>';
-					if(Auth::user()->id != $compaduser->id)
+					if($permissionEdit)
 					{
-						$actionHtml .= 	'<li class="nav-item"><a class="nav-link" href="#" onclick="compadUserDelete('.$compaduser->id.')"><i class="nav-icon flaticon-delete"></i><span class="nav-text">'.trans('display.general_delete').'</span></a></li>';
+						$actionHtml .= 	'<li class="nav-item"><a class="nav-link" href="#" onclick="compadUserEdit('.$compaduser->id.')"><i class="nav-icon flaticon-edit-1"></i><span class="nav-text">'.trans('display.general_edit').'</span></a></li>';
+						if(Auth::user()->id != $compaduser->id)
+						{
+							$actionHtml .= 	'<li class="nav-item"><a class="nav-link" href="#" onclick="compadUserDelete('.$compaduser->id.')"><i class="nav-icon flaticon-delete"></i><span class="nav-text">'.trans('display.general_delete').'</span></a></li>';
+						}
 					}
 				}
 				$actionHtml .= '</ul>';
