@@ -353,7 +353,7 @@ $(document).ready(function() {
         buttons: [
             {
                 text: '<i class="la la-plus"></i> Шинээр нэмэх',
-                className: "btn btn-light-danger font-weight-bolder mb-2",
+                className: "btn btn-light-danger font-weight-bolder mb-2 {{ SecurityHelper::checkPermission(@Config::get('permission.event_registration'), Config::get('permission.editable')) ? '' : 'd-none' }}",
                 action: function ( e, dt, node, config ) {
                     $.get('{!! route('event.registration.create') !!}?event_id='+$('#event-registration-search-form input[id="search_event"]').val(), showAddModal);
                 }

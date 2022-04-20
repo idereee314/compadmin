@@ -5,6 +5,8 @@ namespace user;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Model;
+use user\CompadRoleMenu;
+use user\CompadUser;
 
 use Auth;
 use Carbon;
@@ -20,7 +22,17 @@ class CompadRole extends Model
             'code' => 'required|unique:uq_compad_role,code,'.@$id.',id',
 		);
 	}
-    
+
+    public function users()
+    {
+        return $this->belongsToMany(CompadUser::class, 'uq_compad_user_role', 'role_id', 'user_id');
+    }
+
+    public function menus()
+    {
+        return $this->hasMany(CompadRoleMenu::class, 'role_id');
+    }
+
     public static function boot()
     {
         parent::boot();

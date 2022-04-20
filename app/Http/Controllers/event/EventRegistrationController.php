@@ -58,21 +58,31 @@ class EventRegistrationController extends Controller
     public function index()
     {
         $input = Input::all();
+
         if(@$input['event_id'])
         {
             $event = $this->event->find(@$input['event_id']);
+
+            $permission = $event->users->contains(Auth::user()->id);
+            if($permission || Auth::user()->roles->first()->code == 'admin')
+            {
+                $eventEntries = $event->entries;
+                $eventRegStatusCount = $this->eventRegistration->getEventRegStatusCount($event->id)->pluck('total', 'status')->toArray();
+                $academies = $this->academy->all();
         
-            $eventEntries = $event->entries;
-            $eventRegStatusCount = $this->eventRegistration->getEventRegStatusCount($event->id)->pluck('total', 'status')->toArray();
-            $academies = $this->academy->all();
-    
-            $data['event'] = $event;
-            $data['eventEntries'] = $event->entries;
-            $data['eventRegStatusCount'] = $eventRegStatusCount;
-            $data['academies'] = $academies;
-            $data['view_path'] = $this->view_path;
-    
-            return view($this->view_path.'.index', $data);
+                $data['event'] = $event;
+                $data['eventEntries'] = $event->entries;
+                $data['eventRegStatusCount'] = $eventRegStatusCount;
+                $data['academies'] = $academies;
+                $data['view_path'] = $this->view_path;
+        
+                return view($this->view_path.'.index', $data);
+            }
+            else 
+            {
+                return Redirect::route('event.competition.card');
+            }
+        
         }
         else 
         {

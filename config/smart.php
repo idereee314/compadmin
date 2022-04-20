@@ -59,6 +59,11 @@ return array(
 					 'label' => 'Хэрэглэгч', 
 					 'permission' => [ 'visit', 'editable']
 				 ],
+				 'uq_compad_role' => [
+					'url' => '/role', 
+					'label' => 'Дүр', 
+					'permission' => [ 'visit', 'editable']
+				],
 			]
 		],
 		'reference' => [

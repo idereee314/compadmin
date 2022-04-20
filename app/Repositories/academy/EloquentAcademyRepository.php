@@ -100,6 +100,7 @@ class EloquentAcademyRepository implements AcademyRepository {
 				return $qry->created_at;
 			})
             ->addColumn('action', function ($academy) {
+				$permissionEdit = SecurityHelper::checkPermission(@Config::get('permission.academy'), Config::get('permission.editable'));
 
 				$actionHtml = '<div class="dropdown dropdown-inline">';
 				$actionHtml .= '<a href="javascript:;" class="btn btn-sm btn-clean btn-icon" data-toggle="dropdown">';
@@ -107,8 +108,11 @@ class EloquentAcademyRepository implements AcademyRepository {
 				$actionHtml .= '</a>';
 				$actionHtml .= '<div class="dropdown-menu dropdown-menu-sm dropdown-menu-right">';
 				$actionHtml .= '<ul class="nav nav-hoverable flex-column">';
-				$actionHtml .= 	'<li class="nav-item"><a class="nav-link" href="#" onclick="academyEdit('.$academy->id.')"><i class="nav-icon flaticon-edit-1"></i><span class="nav-text">'.trans('display.general_edit').'</span></a></li>';
-				$actionHtml .= 	'<li class="nav-item"><a class="nav-link" href="#" onclick="academyDelete('.$academy->id.')"><i class="nav-icon flaticon-delete"></i><span class="nav-text">'.trans('display.general_delete').'</span></a></li>';
+				if($permissionEdit)
+				{
+					$actionHtml .= 	'<li class="nav-item"><a class="nav-link" href="#" onclick="academyEdit('.$academy->id.')"><i class="nav-icon flaticon-edit-1"></i><span class="nav-text">'.trans('display.general_edit').'</span></a></li>';
+					$actionHtml .= 	'<li class="nav-item"><a class="nav-link" href="#" onclick="academyDelete('.$academy->id.')"><i class="nav-icon flaticon-delete"></i><span class="nav-text">'.trans('display.general_delete').'</span></a></li>';
+				}
 				$actionHtml .= '</ul>';
 				$actionHtml .= '</div>';
 				$actionHtml .= '</div>';

@@ -125,7 +125,7 @@ $(document).ready(function() {
         buttons: [
         {
             text: '<i class="la la-plus"></i> Шинээр нэмэх',
-            className: "btn btn-light-danger font-weight-bolder",
+            className: "btn btn-light-danger font-weight-bolder {{ SecurityHelper::checkPermission(@Config::get('permission.user'), Config::get('permission.editable')) ? '' : 'd-none' }}",
             action: function ( e, dt, node, config ) {
                 $.get('{!! route('user.create') !!}', showAddModal);
             }

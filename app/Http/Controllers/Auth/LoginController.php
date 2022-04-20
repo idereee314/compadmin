@@ -82,6 +82,17 @@ class LoginController extends Controller
 				Session::put('firstname', $foundUser->firstname);
 				Session::put('lastname', @$foundUser->lastname);
 
+				$roleMenus = $foundUser->roles->where('code', 'admin')->load('menus');
+				foreach($roleMenus as $role)
+				{
+					foreach($role->menus as $menu)
+					{
+						$menuArr[$menu->menu] = $menu->operation;
+					}
+				}
+
+				Session::put('userMenus', @$menuArr);
+
 				return Redirect::intended('/event/competition');
 
 			} else {

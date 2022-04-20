@@ -153,11 +153,15 @@ class EloquentMemberRepository implements MemberRepository {
 				return $qry->created_at;
 			})
             ->addColumn('action', function ($member) {
+				$permissionEdit = SecurityHelper::checkPermission(@Config::get('permission.member'), Config::get('permission.editable'));
 				$actionHtml = "";
-				$actionHtml .= 	'<a class="btn btn-sm btn-clean btn-icon edit" href="javascript:;" data-id="'.$member->id.'" title="'.trans('display.general_edit').'"><i class="la la-edit"></i></a>';
-				if(@$member->status == @Config::get('smart.member_status')['created'])
+				if($permissionEdit)
 				{
-					$actionHtml .= 	'<a class="btn btn-sm btn-clean btn-icon delete" href="javascript:;" data-id="'.$member->id.'" title="'.trans('display.general_delete').'"><i class="la la-trash"></i></li>';
+					$actionHtml .= 	'<a class="btn btn-sm btn-clean btn-icon edit" href="javascript:;" data-id="'.$member->id.'" title="'.trans('display.general_edit').'"><i class="la la-edit"></i></a>';
+					if(@$member->status == @Config::get('smart.member_status')['created'])
+					{
+						$actionHtml .= 	'<a class="btn btn-sm btn-clean btn-icon delete" href="javascript:;" data-id="'.$member->id.'" title="'.trans('display.general_delete').'"><i class="la la-trash"></i></li>';
+					}
 				}
 
 				return $actionHtml;

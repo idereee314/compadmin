@@ -18,6 +18,7 @@ class VerifyCsrfToken extends Middleware
         'academy*',
         'event/*',
         'event/config/*',
-        'system/um/user/check/password*'
+        'system/um/user/check/password*',
+        'role*'
     ];
 }
