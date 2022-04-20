@@ -27,8 +27,7 @@
             <table class="table table-separate table-head-custom dtr-inline">
                 <thead>
                     <tr>
-                        <th class="w-40px text-center">#</th>
-                        <th class="min-w-200px text-left">{{trans('display.general_type')}}</th>
+                        <th class="w-55px text-center">#</th>
                         <th class="min-w-200px text-left">{{trans('display.start_age')}}</th> 
                         <th class="min-w-100px text-left">{{trans('display.end_age')}}</th>
                         <th class="min-w-125px text-center">{{trans('display.possible_belts')}}</th>
@@ -37,12 +36,15 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse(@$configAges as $age)
+                    @forelse(@$configAges as $key => $group)
+                    <tr class="table-secondary">
+                        <td colspan="6" class="text-primary font-weight-bolder"><i class="mr-5"></i>{{++$loop->index}}. {{ @$entries->where('id', @$key)->first()->fullname }}</td>
+                    </tr>
+                    @foreach($group as $age)
                     <tr>
-                        <td class="pl-0 py-4 text-center">{{++$loop->index}}</td>
-                        <td class="pl-0">{{@$age->entry->name}} - {{Config::get('enums.gender_code')[@$age->entry->gender_code]}}</td>
-                        <td class="pl-0">{{$age->start_age}}</td>
-                        <td class="text-left">{{$age->end_age}}</td>
+                        <td class="text-center">{{$loop->parent->index+1}}. {{++$loop->index}}</td>
+                        <td>{{$age->start_age}}</td>
+                        <td>{{$age->end_age}}</td>
                         <td class="text-center">{{$age->possible_belts}}</td>
                         <td class="text-center">{{$age->created_at}}</td>
                         <td class="text-center pr-0">
@@ -74,6 +76,7 @@
                             </a>
                         </td>
                     </tr>
+                    @endforeach
                     @empty
                     <tr>
                         <td colspan="7" class="text-center">{{ trans('display.general_no_record') }}</td>

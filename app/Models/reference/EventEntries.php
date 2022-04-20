@@ -8,11 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 
 use Auth;
 use Carbon;
+use Config;
 
 class EventEntries extends Model
 {
     protected $table = 'uq_event_entries';
     protected $primaryKey = 'id';
+
+    protected $appends = array('fullname');
     
     public static $rules = array(
         'name' => 'required',
@@ -21,6 +24,13 @@ class EventEntries extends Model
         'entrance_fee' => 'required',
         'event_id' => 'required'
     );
+
+    public function getFullnameAttribute()
+    {
+        $fullname = $this->name.' - '.@Config::get('enums.gender_code')[$this->gender_code];
+        return $fullname;
+    }
+
 
     public function configBelts()
     {

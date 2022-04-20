@@ -24,11 +24,10 @@
         </div>
         <div class="card-body">
             <!--begin::Table-->
-            <table class="table table-borderless table-vertical-center">
+            <table class="table table-separate table-head-custom dtr-inline">
                 <thead>
                     <tr>
-                        <th class="w-40px text-center">#</th>
-                        <th class="min-w-200px text-left">{{trans('display.general_type')}}</th> 
+                        <th class="w-75px text-center">#</th>
                         <th class="min-w-200px text-left">{{trans('display.age_title')}}</th> 
                         <th class="min-w-100px text-left">{{trans('display.weight')}}</th>
                         <th class="min-w-110px text-center">{{trans('display.general_created_at')}}</th>
@@ -36,12 +35,19 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse(@$configWeights as $weight)
+                    @forelse(@$configWeights as $key => $group)
+                    <tr class="table-secondary">
+                        <td colspan="6" class="text-primary font-weight-bolder"><i class="mr-5"></i>{{++$loop->index}}. {{ @$entries->where('id', @$key)->first()->fullname }}</td>
+                    </tr>
+                    @foreach($group as $keyAge => $age)
+                    <tr class="table-secondary">
+                        <td colspan="6" class="text-primary font-weight-bolder"><i class="mr-5"></i>{{$loop->parent->index+1}}.{{++$loop->index}}. {{ @$configAges[$key]->where('id', $keyAge)->first()->name }}</td>
+                    </tr>
+                    @foreach($age as $weight)
                     <tr>
-                        <td class="pl-0 py-4 text-center">{{++$loop->index}}</td>
-                        <td class="pl-0">{{$weight->entry->name}} - {{Config::get('enums.gender_code')[$weight->entry->gender_code]}}</td>
-                        <td class="text-left">{{$weight->age->name}}</td>
-                        <td class="pl-0">{{$weight->weight}}</td>
+                        <td class="text-center">{{$loop->parent->parent->index+1}}. {{$loop->parent->index+1}}. {{++$loop->index}}</td>
+                        <td>{{$weight->age->name}}</td>
+                        <td>{{$weight->weight}}</td>
                         <td class="text-center">{{$weight->created_at}}</td>
                         <td class="text-center pr-0">
                             <a href="javascript:;" class="btn btn-icon btn-light btn-hover-primary btn-sm mx-3 edit-weight" data-weightid="{{$weight->id}}">
@@ -72,6 +78,8 @@
                             </a>
                         </td>
                     </tr>
+                    @endforeach
+                    @endforeach
                     @empty
                     <tr>
                         <td colspan="7" class="text-center">{{ trans('display.general_no_record') }}</td>

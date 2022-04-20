@@ -307,42 +307,47 @@ class EventConfigController extends Controller
     {
 		$input = Input::all();
         $eventConfig = $this->eventConfig->find($input['event_config_id']);
+        $configBelsts = $this->entryConfigBelt->getConfigBeltByEventId($eventConfig->event_id);
+        $configAges = $this->entryConfigAge->getConfigAgeByEventId($eventConfig->event_id);
+        $configWeights = $this->entryConfigWeight->getConfigWeightByEventId($eventConfig->event_id);
+        $configEntriesFees = $this->eventEntriesFee->getEntriesFeeByEventId($eventConfig->event_id);
+        $event = $this->event->find($eventConfig->event_id);
         
         $data['eventConfig'] = $eventConfig;
+        $data['entries'] = $eventConfig->event->entries;
+        $data['configBelsts'] = $configBelsts->groupBy('entry_id');
+        $data['configAges'] = $configAges->groupBy('entry_id');
+        $data['configWeights'] = $configWeights->groupBy(['entry_id', 'entry_age_id']);
+        $data['configEntriesFees'] = $configEntriesFees->groupBy('entry_id');
+        $data['eventUsers'] = $event->eventUsers;
 
-        if($input['code'] == 'event_entries') 
+        if($input['code'] == 'entry_config_belt') 
         {
-           $data['entries'] = $eventConfig->event->entries;
-        }
-
-        else if($input['code'] == 'entry_config_belt') 
-        {
-           $configBelsts = $this->entryConfigBelt->getConfigBeltByEventId($eventConfig->event_id);
-           $data['configBelsts'] = $configBelsts;
+           
         }
 
         else if($input['code'] == 'entry_config_age') 
         {
-            $configAges = $this->entryConfigAge->getConfigAgeByEventId($eventConfig->event_id);
-            $data['configAges'] = $configAges;
+            
+            
         }
 
         else if($input['code'] == 'entry_config_weight') 
         {
-            $configWeights = $this->entryConfigWeight->getConfigWeightByEventId($eventConfig->event_id);
-            $data['configWeights'] = $configWeights;
+            
+            
         }
 
         else if($input['code'] == 'event_entries_fee') 
         {   
-            $configEntriesFees = $this->eventEntriesFee->getEntriesFeeByEventId($eventConfig->event_id);
-            $data['configEntriesFees'] = $configEntriesFees;
+            
+            
         }
 
         else if($input['code'] == 'event_event_user') 
         {   
-            $event = $this->event->find($eventConfig->event_id);
-            $data['eventUsers'] = $event->eventUsers;
+            
+            
         }
 
         $data['tab_id'] = $input['tab_id'];

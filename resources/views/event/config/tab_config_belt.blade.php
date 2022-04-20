@@ -27,8 +27,7 @@
             <table class="table table-separate table-head-custom dtr-inline">
                 <thead>
                     <tr>
-                        <th class="w-40px text-center">#</th>
-                        <th class="min-w-200px text-left">Төрөл</th> 
+                        <th class="w-55px text-center">#</th>
                         <th class="min-w-200px text-left">{{trans('display.general_name')}}</th> 
                         <th class="min-w-100px text-left">{{trans('display.general_name_en')}}</th>
                         <th class="min-w-125px text-center">{{trans('display.possible_belts')}}</th>
@@ -37,15 +36,18 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse(@$configBelsts as $belt)
+                    @forelse(@$configBelsts as $key => $group)
+                    <tr class="table-secondary">
+                        <td colspan="6" class="text-primary font-weight-bolder"><i class="mr-5"></i>{{++$loop->index}}. {{ @$entries->where('id', @$key)->first()->fullname }}</td>
+                    </tr>
+                    @foreach(@$group as $belt)
                     <tr>
-                        <td class="pl-0 py-4 text-center">{{++$loop->index}}</td>
-                        <td class="pl-0">{{$belt->entry->name}} - {{@Config::get('enums.gender_code')[$belt->entry->gender_code]}}</td>
-                        <td class="pl-0">{{$belt->name}}</td>
-                        <td class="text-left">{{$belt->name_en}}</td>
+                        <td class="text-center">{{$loop->parent->index+1}}. {{++$loop->index}}</td>
+                        <td>{{$belt->name}}</td>
+                        <td>{{$belt->name_en}}</td>
                         <td class="text-center">{{$belt->possible_belts}}</td>
                         <td class="text-center">{{$belt->created_at}}</td>
-                        <td class="text-center pr-0">
+                        <td class="text-center">
                             <a href="javascript:;" class="btn btn-icon btn-light btn-hover-primary btn-sm mx-3 edit-belt" data-beltid="{{$belt->id}}">
                                 <span class="svg-icon svg-icon-md svg-icon-primary">
                                     <!--begin::Svg Icon | path:assets/media/svg/icons/Communication/Write.svg-->
@@ -74,6 +76,7 @@
                             </a>
                         </td>
                     </tr>
+                    @endforeach
                     @empty
                     <tr>
                         <td colspan="7" class="text-center">{{ trans('display.general_no_record') }}</td>
