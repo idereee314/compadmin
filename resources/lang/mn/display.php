@@ -16,6 +16,7 @@ return [
     "general_see_all" => "Бүгдийг харах",
     "general_share" => "Хуваалцах",
     "general_operation" => "Үйлдэл",
+    "general_see" => 'Харах',
 
     // Button
     "general_new" => "Шинээр нэмэх",
@@ -180,6 +181,8 @@ return [
 
     //Menu
     'menu_title' => 'Цэс',
+    'menus_count' => 'Цэсний тоо',
+
     
     // User
     "username" => "Хэрэглэгчийн нэр",

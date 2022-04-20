@@ -44,6 +44,7 @@
                                                         <th class="text-center border-right" width="15px">No.</th>
                                                         <th width="">{{trans('display.general_name')}}</th>
                                                         <th width="">{{trans('display.general_code')}}</th>
+                                                        <th width="">{{trans('display.menus_count')}}</th>
                                                         <th width="20%">{{trans('display.general_created_at')}}</th>
                                                         <th width="5">{{trans('display.general_manage')}}</th>
                                                     </tr>
@@ -100,6 +101,7 @@ $(document).ready(function() {
             },
             {data: 'name'},
             {data: 'code'},
+            {data: 'menu_count'},
             {data: 'created_at'},
             {data: 'action'},
         ],
@@ -110,9 +112,9 @@ $(document).ready(function() {
             targets: [0]
         },{
             class: "text-center",
-            targets: [0, 3, 4]
+            targets: [0, 3, 4, 5]
         }],
-        order: [[ 3, "desc" ]],
+        order: [[ 4, "desc" ]],
         dom: "<'top'B><'row'<'col-sm-12'tr>><'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7 dataTables_pager'lp>>",
         buttons: [
         {
@@ -291,6 +293,22 @@ $(document).ready(function() {
 
 }).ajaxStart($.blockUI).ajaxStop($.unblockUI);
 
+function viewMenuModal(data){
+    $('#roleModal').modal();
+        $('#roleModal').on('shown.bs.modal', function(){
+            $('#roleModal .modal-body').html(data);
 
+        $(this).off('shown.bs.modal');
+    });
+
+    $('#roleModal').on('hidden.bs.modal', function(){
+        $('#roleModal .modal-body').empty();
+    });
+}
+
+function showMenu(id)
+{
+    $.get('role/'+id+'/view/menu', viewMenuModal);
+}
 </script>
 @endsection

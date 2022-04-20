@@ -192,6 +192,14 @@ class CompadRoleController extends Controller
         return view('core.alert.messages', $data);
     }
 
+    public function viewMenu($id)
+    {
+        $role = $this->role->find($id);
+        $data['menus'] = $role->menus;
+
+        return view($this->view_path.'.view_menu', $data);
+    }
+
     public function getDatatableList(Request $request)
     {
         return $this->role->getDataList($request);

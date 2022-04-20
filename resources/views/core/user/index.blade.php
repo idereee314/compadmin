@@ -41,12 +41,13 @@
                                             <table class="table table-separate table-head-custom" id="user-datatable" style="margin-top: 13px !important">
                                                 <thead>
                                                     <tr>
-                                                        <th width="15px">No.</th>
+                                                        <th width="5px">No.</th>
                                                         <th width="15%">{{trans('display.username')}}</th>
-                                                        <th width="20%">{{trans('display.human_email')}}</th>
+                                                        <th width="10%">{{trans('display.human_email')}}</th>
                                                         <th width="15%">{{trans('display.human_firstname')}}</th>
                                                         <th width="15%">{{trans('display.human_lastname')}}</th>
                                                         <th width="10%">{{trans('display.human_phone_number')}}</th>
+                                                        <th width="25%">{{trans('display.role')}}</th>
                                                         <th width="10%">{{trans('display.general_created_at')}}</th>
                                                         <th width="5">{{trans('display.general_manage')}}</th>
                                                     </tr>
@@ -108,6 +109,7 @@ $(document).ready(function() {
             {data: 'firstname'},
             {data: 'lastname'},
             {data: 'phone_number'},
+            {data: 'role'},
             {data: 'created_at'},
             {data: 'action'},
         ],
@@ -120,7 +122,7 @@ $(document).ready(function() {
             class: "text-center",
             targets: [0, 6, 7]
         }],
-        order: [[ 6, "desc" ]],
+        order: [[ 7, "desc" ]],
         dom: "<'top'B><'row'<'col-sm-12'tr>><'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7 dataTables_pager'lp>>",
         buttons: [
         {
@@ -278,6 +280,56 @@ function compadUserDelete(id)
 function compadUserEdit(id)
 {
     $.get('/user/' + id + '/edit', compadUserEditModal);
+}
+
+function editRole(id)
+{
+    $.get('/user-role/' + id + '/edit', roleEditModal);
+}
+
+
+function roleEditModal(data){
+    $('#roleEditModal').modal();
+        $('#roleEditModal').on('shown.bs.modal', function(){
+            $('#roleEditModal .modal-content').html(data);
+
+            $('#edit-role-form').validate({
+            submitHandler: function(form) {
+                $.ajax({
+                    url: form.action,
+                    type: form.method,
+                    data: new FormData(form),
+                    success: function(response) {
+                        $('#roleEditModal').find("#close").trigger('click');
+                        $('.panel-sub-heading').html(response).fadeIn().delay(5000).fadeOut();
+                        userTable.draw();
+                    },
+                    error: function (xhr, textStatus, error) {
+                        console.log(xhr.statusText);
+                        console.log(textStatus);
+                        console.log(error);
+                    },
+                    async: false,
+                    processData: false,
+                    contentType: false
+                });
+            },
+            errorPlacement: function(error, element) {
+                if($(element).parents('.form-group').find(".error-here")){
+                    error.appendTo($(element).parents('.form-group').find(".error-here"));
+                } else {
+                    error.insertAfter(element);
+                }
+            }
+        });
+
+        $(this).off('shown.bs.modal');
+    });
+
+    $('#roleEditModal').on('hidden.bs.modal', function(){
+        $('#roleEditModal .modal-body').empty();
+    });
+
 }
 
 </script>

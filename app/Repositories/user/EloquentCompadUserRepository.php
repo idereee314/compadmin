@@ -101,7 +101,7 @@ class EloquentCompadUserRepository implements CompadUserRepository {
 
     public function getDatatableList($searchData)
     {
-		$qry = User::select('*');
+		$qry = User::select('*')->with('roles');
 
         $data = Datatables::make($qry)
             ->filter(function ($qry) use ($searchData) {
@@ -120,6 +120,15 @@ class EloquentCompadUserRepository implements CompadUserRepository {
                     $qry->whereRaw('LOWER(sd_user.email) like ?', array('%'.mb_strtolower($searchData->get('user_mail')).'%'));
                 }
             })
+			->editColumn('role', function ($user)
+			{
+				if(count($user->roles) > 0)
+				{
+					$roles = $user->roles->implode('name', ', ');
+				}
+				$html = '<div>'.@$roles.'&nbsp;<i onclick="editRole('.$user->id.')" class="far fa-edit" style="cursor:pointer"></i></div>';
+				return $html;
+			})
 			->editColumn('created_at', function($qry)
 			{
 				return $qry->created_at;
@@ -151,7 +160,7 @@ class EloquentCompadUserRepository implements CompadUserRepository {
 
 				return $actionHtml;
 
-            })->rawColumns(['action'])
+            })->rawColumns(['action', 'role'])
             ->make(true);
 
         return $data;

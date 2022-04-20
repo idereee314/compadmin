@@ -94,12 +94,16 @@ class EloquentCompadRoleRepository implements CompadRoleRepository {
 
     public function getDataList($searchData)
     {
-        $qry = CompadRole::select('*');
+        $qry = CompadRole::select('*')->with('menus');
 
         $data = DataTables::make($qry)
         ->editColumn('created_at', function($role)
         {
             return $role->created_at;
+        })
+        ->addColumn('menu_count', function($role)
+        {
+            return '<span style="cursor:pointer" onclick="showMenu('.$role->id.')" class="label label-lg font-weight-bolder label-rounded label-success">'.count($role->menus).'</span>';
         })
         ->addColumn('action', function ($role) {
             $permissionEdit = SecurityHelper::checkPermission(@Config::get('permission.role'), Config::get('permission.editable'));
@@ -124,7 +128,7 @@ class EloquentCompadRoleRepository implements CompadRoleRepository {
 
             return $actionHtml;
         })
-        ->rawColumns(['action'])
+        ->rawColumns(['action', 'menu_count'])
         ->make(true);
 
         return $data;

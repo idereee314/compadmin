@@ -22,4 +22,13 @@ return array (
 	"content" => "Агуулга",
 	'news' => 'Мэдээ',
 
+
+	'home' => 'Нүүр',
+    'uq_compad_role' => 'Дүр',
+    'uq_compad_user' => 'Хэрэглэгч',
+    'uq_academy' => 'Академи',
+    'uq_member' => 'Оролцогч',
+    'uq_event_registration' => 'Тэмцээн',
+    'uq_event_config' => 'Тэмцээний тохиргоо',
+
 );
