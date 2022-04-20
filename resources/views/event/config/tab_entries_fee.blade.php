@@ -24,24 +24,26 @@
         </div>
         <div class="card-body">
             <!--begin::Table-->
-                <table class="table table-borderless table-vertical-center">
+                <table class="table table-separate table-head-custom dtr-inline">
                 <thead>
                     <tr>
-                        <th class="p-0 w-40px text-center">#</th>
-                        <th class="p-0 min-w-200px text-left">{{trans('display.general_type')}}</th> 
-                        <th class="p-0 min-w-200px text-left">Дуусах хугацаа</th> 
-                        <th class="p-0 min-w-200px text-left">Төлбөр</th> 
-                        <th class="p-0 min-w-110px text-center">{{trans('display.general_created_at')}}</th>
-                        <th class="p-0 min-w-150px text-center">{{trans('display.general_manage')}}</th>
+                        <th class="w-40px text-center">#</th>
+                        <th class="min-w-200px text-left">Дуусах хугацаа</th> 
+                        <th class="min-w-200px text-left">Төлбөр</th> 
+                        <th class="min-w-110px text-center">{{trans('display.general_created_at')}}</th>
+                        <th class="min-w-150px text-center">{{trans('display.general_manage')}}</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse(@$configEntriesFees as $fee)
+                    @forelse(@$configEntriesFees as $key => $group)
+                    <tr class="table-secondary">
+                        <td colspan="6" class="text-primary font-weight-bolder"><i class="mr-5"></i>{{++$loop->index}}. {{ @$entries->where('id', @$key)->first()->fullname }}</td>
+                    </tr>
+                    @foreach($group as $fee)
                     <tr>
-                        <td class="pl-0 py-4 text-center">{{++$loop->index}}</td>
-                        <td class="pl-0">{{@$fee->entry->name}} - {{Config::get('enums.gender_code')[@$fee->entry->gender_code]}}</td>
-                        <td class="pl-0">{{$fee->end_date}}</td>
-                        <td class="text-left">{{$fee->entrance_fee}}</td>
+                        <td class="text-center">{{++$loop->index}}</td>
+                        <td>{{$fee->end_date}}</td>
+                        <td>{{$fee->entrance_fee}}</td>
                         <td class="text-center">{{$fee->created_at}}</td>
                         <td class="text-center pr-0">
                             <a href="javascript:;" class="btn btn-icon btn-light btn-hover-primary btn-sm mx-3 edit-fee" data-feeid="{{$fee->id}}">
@@ -72,6 +74,7 @@
                             </a>
                         </td>
                     </tr>
+                    @endforeach
                     @empty
                     <tr>
                         <td colspan="6" class="text-center">{{ trans('display.general_no_record') }}</td>
