@@ -45,56 +45,134 @@
         <div class="d-flex flex-column-fluid">
             <!--begin::Container-->
             <div class="container">
-                <!--begin::Notice-->
-                <div class="alert alert-custom alert-white alert-shadow fade show gutter-b" role="alert">
-                    <div class="alert-icon">
-                        <span class="svg-icon svg-icon-primary svg-icon-xl">
-                            <!--begin::Svg Icon | path:/metronic/theme/html/demo5/dist/assets/media/svg/icons/Tools/Compass.svg-->
-                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
-                                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                    <rect x="0" y="0" width="24" height="24"></rect>
-                                    <path d="M7.07744993,12.3040451 C7.72444571,13.0716094 8.54044565,13.6920474 9.46808594,14.1079953 L5,23 L4.5,18 L7.07744993,12.3040451 Z M14.5865511,14.2597864 C15.5319561,13.9019016 16.375416,13.3366121 17.0614026,12.6194459 L19.5,18 L19,23 L14.5865511,14.2597864 Z M12,3.55271368e-14 C12.8284271,3.53749572e-14 13.5,0.671572875 13.5,1.5 L13.5,4 L10.5,4 L10.5,1.5 C10.5,0.671572875 11.1715729,3.56793164e-14 12,3.55271368e-14 Z" fill="#000000" opacity="0.3"></path>
-                                    <path d="M12,10 C13.1045695,10 14,9.1045695 14,8 C14,6.8954305 13.1045695,6 12,6 C10.8954305,6 10,6.8954305 10,8 C10,9.1045695 10.8954305,10 12,10 Z M12,13 C9.23857625,13 7,10.7614237 7,8 C7,5.23857625 9.23857625,3 12,3 C14.7614237,3 17,5.23857625 17,8 C17,10.7614237 14.7614237,13 12,13 Z" fill="#000000" fill-rule="nonzero"></path>
-                                </g>
-                            </svg>
-                            <!--end::Svg Icon-->
-                        </span>
-                    </div>
-                    <div class="alert-text"><h5 class="text-success">{!! @$event->name !!}</h5>Бүртгэлийн хугацаа: <label class="text-primary">{{ @$event->config->reg_start_date }} / {{ @$event->config->reg_end_date }}</label></div>
-                </div>
-                <!--end::Notice-->
-                <!--begin::Card-->
-                <div class="card card-custom">
+                <div class="card card-custom gutter-b">
                     <div class="card-body">
-                        <!--begin: Items-->
-                        <div class="d-flex align-items-center flex-wrap pb-5 border-bottom">
+                        <!--begin::Top-->
+                        <div class="d-flex">
+                            <!--begin::Pic-->
+                            <div class="flex-shrink-0 mr-7">
+                                <div class="symbol symbol-50 symbol-lg-120">
+                                    <img alt="Pic" src="{{ \Storage::disk('s3')->url(@$event->picturesMobileCover->first()->dir_url.'/thumbnail/'.@$event->picturesMobileCover->first()->url) }}">
+                                </div>
+                            </div>
+                            <!--end::Pic-->
+                            <!--begin: Info-->
+                            <div class="flex-grow-1">
+                                <!--begin::Title-->
+                                <div class="d-flex align-items-center justify-content-between flex-wrap mt-2">
+                                    <!--begin::User-->
+                                    <div class="mr-3">
+                                        <!--begin::Name-->
+                                        <a href="javascript:;" class="d-flex align-items-center text-dark text-hover-primary font-size-h5 font-weight-bold mr-3">{{@$event->name}} 
+                                        <i class="flaticon2-correct text-success icon-md ml-2"></i></a>
+                                        <!--end::Name-->
+                                        <!--begin::Contacts-->
+                                        <div class="d-flex flex-wrap my-2">
+                                            <a href="javascript:;" class="text-muted text-hover-primary font-weight-bold mr-lg-8 mr-5 mb-lg-0 mb-2">
+                                            <span class="svg-icon svg-icon-md svg-icon-gray-500 mr-1">
+                                                <!--begin::Svg Icon | path:/metronic/theme/html/demo5/dist/assets/media/svg/icons/Communication/Mail-notification.svg-->
+                                                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                        <rect x="0" y="0" width="24" height="24"/>
+                                                        <path d="M8,3 L8,3.5 C8,4.32842712 8.67157288,5 9.5,5 L14.5,5 C15.3284271,5 16,4.32842712 16,3.5 L16,3 L18,3 C19.1045695,3 20,3.8954305 20,5 L20,21 C20,22.1045695 19.1045695,23 18,23 L6,23 C4.8954305,23 4,22.1045695 4,21 L4,5 C4,3.8954305 4.8954305,3 6,3 L8,3 Z" fill="#000000" opacity="0.3"/>
+                                                        <path d="M11,2 C11,1.44771525 11.4477153,1 12,1 C12.5522847,1 13,1.44771525 13,2 L14.5,2 C14.7761424,2 15,2.22385763 15,2.5 L15,3.5 C15,3.77614237 14.7761424,4 14.5,4 L9.5,4 C9.22385763,4 9,3.77614237 9,3.5 L9,2.5 C9,2.22385763 9.22385763,2 9.5,2 L11,2 Z" fill="#000000"/>
+                                                        <rect fill="#000000" opacity="0.3" x="10" y="9" width="7" height="2" rx="1"/>
+                                                        <rect fill="#000000" opacity="0.3" x="7" y="9" width="2" height="2" rx="1"/>
+                                                        <rect fill="#000000" opacity="0.3" x="7" y="13" width="2" height="2" rx="1"/>
+                                                        <rect fill="#000000" opacity="0.3" x="10" y="13" width="7" height="2" rx="1"/>
+                                                        <rect fill="#000000" opacity="0.3" x="7" y="17" width="2" height="2" rx="1"/>
+                                                        <rect fill="#000000" opacity="0.3" x="10" y="17" width="7" height="2" rx="1"/>
+                                                    </g>
+                                                </svg>
+                                                <!--end::Svg Icon-->
+                                            </span>{{ @$event->config->reg_start_date }} / {{ @$event->config->reg_end_date }}</a>
+                                        </div>
+                                        <!--end::Contacts-->
+                                    </div>
+                                    <!--begin::User-->
+                                    <!--begin::Actions-->
+                                    <div class="my-lg-0 my-1">
+                                        <a href="#" class="btn btn-sm btn-light-primary font-weight-bolder text-uppercase mr-2">Ask</a>
+                                        <a href="#" class="btn btn-sm btn-primary font-weight-bolder text-uppercase">Hire</a>
+                                    </div>
+                                    <!--end::Actions-->
+                                </div>
+                                <!--end::Title-->
+                                <!--begin::Content-->
+                                <div class="d-flex align-items-center flex-wrap justify-content-between row">
+                                    <div class="col-md-7">
+                                        <!--begin::Description-->
+                                        <div class="flex-grow-1 font-weight-bold text-dark-50 py-2 py-lg-2 mr-5">{{ Str::words(strip_tags(@$event->description), 20, '...') }}</div>
+                                        <!--end::Description-->
+                                    </div>
+                                    <div class="col-md-5">
+                                        <!--begin::Progress-->
+                                        <div class="d-flex mt-4 mt-sm-0 float-right">
+                                            <span class="font-weight-bold mr-4">Бүртгэлийн явц</span>
+                                            <div class="progress progress-xs mt-2 mb-2 flex-shrink-0 w-150px w-xl-250px">
+                                                <div class="progress-bar bg-success" role="progressbar" style="width: {{@$progressPercent}}%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                                            </div>
+                                            <span class="font-weight-bolder text-dark ml-4">{{ @$progressPercent }}%</span>
+                                        </div>
+                                        <!--end::Progress-->
+                                    </div>
+                                </div>
+                                <!--end::Content-->
+                            </div>
+                            <!--end::Info-->
+                        </div>
+                        <!--end::Top-->
+                        <!--begin::Separator-->
+                        <div class="separator separator-solid my-7"></div>
+                        <!--end::Separator-->
+                        <!--begin::Bottom-->
+                        <div class="d-flex align-items-center flex-wrap">
+                            @forelse($eventFees as $key => $fee)
                             <!--begin: Item-->
                             <div class="d-flex align-items-center flex-lg-fill mr-5 my-1">
                                 <span class="mr-4">
-                                    <i class="flaticon-file-2 icon-2x text-muted font-weight-bold"></i>
+                                    <i class="flaticon-piggy-bank icon-2x text-muted font-weight-bold"></i>
+                                </span>
+                                <div class="d-flex flex-column text-dark-75">
+                                    <span class="font-weight-bolder font-size-sm">{{ number_format($key, 0) }}/{{ count($fee) }}</span>
+                                    <span class="font-weight-bolder font-size-h5">
+                                    <span class="text-dark-50 font-weight-bold">{{ trans('display.general_tug') }}</span>{{ number_format($fee->sum('amount'), 0) }}</span>
+                                </div>
+                            </div>
+                            <!--end: Item-->
+                            @empty
+                            @endforelse
+                            <!--begin: Item-->
+                            <div class="d-flex align-items-center flex-lg-fill mr-5 my-1">
+                                <span class="mr-4">
+                                    <i class="fas fa-users icon-2x"></i>
                                 </span>
                                 <div class="d-flex flex-column flex-lg-fill">
                                     <span class="text-dark-75 font-weight-bolder font-size-sm">{{ array_sum(@$eventRegStatusCount) }} {{ trans('display.general_all') }}</span>
                                     <a href="javascript:;" class="text-primary font-weight-bolder filter-status-count" data-status="">Харах</a>
                                 </div>
-                            </div>
-                            <!--end: Item-->
+                            </div>                           
                             @forelse(@$eventRegStatusCount as $key => $count)
                             <!--begin: Item-->
                             <div class="d-flex align-items-center flex-lg-fill mr-5 my-1">
                                 <span class="mr-4">
-                                    <i class="flaticon-file-2 icon-2x text-muted font-weight-bold"></i>
+                                    <i class="fas fa-user icon-2x"></i>
                                 </span>
-                                <div class="d-flex flex-column flex-lg-fill">
+                                <div class="d-flex flex-column">
                                     <span class="text-dark-75 font-weight-bolder font-size-sm">{{ $count }} {{ @Config::get('enums.event_registeation_status')[$key] }}</span>
-                                    <a href="javascript:;" class="text-primary font-weight-bolder filter-status-count" data-status="{{ $key }}">Харах</a>
+                                    <a href="#" class="text-primary font-weight-bolder filter-status-count" data-status="{{ $key }}">Харах</a>
                                 </div>
                             </div>
                             <!--end: Item-->
                             @empty
                             @endforelse
                         </div>
-                        <!--begin: Items-->
+                        <!--end::Bottom-->
+                    </div>
+                </div>
+                <!--begin::Card-->
+                <div class="card card-custom">
+                    <div class="card-body">
                         <!--begin::Accordion-->
                         <div class="accordion accordion-light accordion-light-borderless accordion-svg-toggle" id="search">
                             <div class="card">
@@ -996,6 +1074,20 @@ function showEditModal(data){
                 },
                 async: false
             });
+        });
+
+        $('#update-event-registration-form select[name=status]').on('change', function(){
+            var status = $(this).val(); 
+            if(status == '{{ @Config::get('smart.event_registeation_status')['approved']}}')
+            {
+                $(".payment").show();
+                $(".payment").find(':input').prop('disabled', false);
+            }
+            else 
+            {
+                $(".payment").hide();
+                $(".payment").find(':input').prop('disabled', true);
+            }
         }) 
 
         $('#update-event-registration-form').validate({
@@ -1045,6 +1137,8 @@ function showEditModal(data){
                 }
             }
         });
+
+        $('#update-event-registration-form select[name=status]').trigger('change');
 
         $(this).off('shown.bs.modal');
     });

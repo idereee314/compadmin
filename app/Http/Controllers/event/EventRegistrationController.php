@@ -63,25 +63,21 @@ class EventRegistrationController extends Controller
         {
             $event = $this->event->find(@$input['event_id']);
 
-            $permission = $event->users->contains(Auth::user()->id);
-            if($permission || Auth::user()->roles->first()->code == 'admin')
-            {
-                $eventEntries = $event->entries;
-                $eventRegStatusCount = $this->eventRegistration->getEventRegStatusCount($event->id)->pluck('total', 'status')->toArray();
-                $academies = $this->academy->all();
-        
-                $data['event'] = $event;
-                $data['eventEntries'] = $event->entries;
-                $data['eventRegStatusCount'] = $eventRegStatusCount;
-                $data['academies'] = $academies;
-                $data['view_path'] = $this->view_path;
-        
-                return view($this->view_path.'.index', $data);
-            }
-            else 
-            {
-                return Redirect::route('event.competition.card');
-            }
+            $eventEntries = $event->entries;
+            $eventRegStatusCount = $this->eventRegistration->getEventRegStatusCount($event->id)->pluck('total', 'status')->toArray();
+            $academies = $this->academy->all();
+            $eventFees = $this->eventRegistration->getPaymentByEventId(@$input['event_id'])->groupBy('amount');
+            //dd($eventFees);
+    
+            $data['event'] = $event;
+            $data['eventEntries'] = $event->entries;
+            $data['eventRegStatusCount'] = $eventRegStatusCount;
+            $data['progressPercent'] = round(@$eventRegStatusCount[@Config::get('smart.event_registeation_status')['approved']] ? @$eventRegStatusCount[@Config::get('smart.event_registeation_status')['approved']] / array_sum(@$eventRegStatusCount) * 100 : 0);
+            $data['eventFees'] = $eventFees;
+            $data['academies'] = $academies;
+            $data['view_path'] = $this->view_path;
+    
+            return view($this->view_path.'.index', $data);
         
         }
         else 
@@ -132,6 +128,16 @@ class EventRegistrationController extends Controller
             try
             {
                 $event = $this->eventRegistration->create($input);
+
+                if(@$input['amount'])
+                {
+                    $paymentArr['member_id'] = $event->member_id;
+                    $paymentArr['register_number'] = $event->member->register_number;
+                    $paymentArr['status'] = true;
+                    $paymentArr['amount'] = $input['amount'];
+
+                    $event->payment->create($paymentArr);
+                }
                 $response = array(
                     'status' => 'success',
                     'msg' => trans('messages.success_save')

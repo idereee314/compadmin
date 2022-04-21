@@ -49,50 +49,33 @@
             <!--begin::Container-->
             <div class="container">
                 <!--begin::Card-->
-                <div class="card card-custom m-4">
-                    @if( $errors->count() > 0 )
-                    <div class="panel-sub-heading">
-                        <div class="callout callout-danger">
-                            <p>
-                                @if (Session::has('message'))
-                                    {{ Session::get('message') }}
-                                @endif
-
-                                {{ HTML::ul($errors->all()) }}
-                            </p>
-                        </div>
-                    </div>
-                    @endif
-
+                <div class="card card-custom">
                     <input type="hidden" name="tab_id" id="tab_id" value="{{ isset($tab_id)? $tab_id: 'tab1-1'}}"/>
                     <input type="hidden" name="event_config_id" id="event_config_id" value="{{ @$eventConfig->id }}"/>
                     <input type="hidden" name="event_id" id="event_id" value="{{ @$eventConfig->event->id }}"/>
-
-                    <div class="card-header card-header-tabs-line">
-                        <div class="pull-left">
-                            @if(empty(@$tabs))
-                            <div class="alert alert-info no-margin">
-                                {!! trans('messages.warning_no_app_type_tab') !!}
-                            </div>
-                            @else
-                            <ul class="nav nav-tabs nav-tabs-line" id="config_tabs">
-                                @foreach($tabs as $tab)
-                                    <li class="nav-item {{@$tab_id == $tab['number'] ? 'active' : '' }}">
-                                        <a href="#{{$tab['number']}}" data-toggle="tab" name="{{$tab['number']}}" class="nav-link app_tab" data-tabid="{{$tab['number']}}"  data-tabcode="{{$tab['code']}}" data-tabname="{{$tab['name']}}">
-                                            <i class="{{ $tab['icon'] }}"></i>
-                                            <div>
-                                                <span>{{ $tab['title'] }}</span>
-                                            </div>
-                                        </a>
-                                    </li>
-                                @endforeach
+                    <!--begin::Card header-->
+                    <div class="card-header card-header-tabs-line nav-tabs-line-3x">
+                        <!--begin::Toolbar-->
+                        <div class="card-toolbar">
+                            <ul class="nav nav-tabs nav-bold nav-tabs-line nav-tabs-line-3x" id="config_tabs">
+                                @forelse(@$tabs as $tab)
+                                <li class="nav-item mr-3 {{@$tab_id == $tab['number'] ? 'active' : '' }}">
+                                    <a href="#{{$tab['number']}}" data-toggle="tab" name="{{$tab['number']}}" class="nav-link app_tab" data-tabid="{{$tab['number']}}"  data-tabcode="{{$tab['code']}}" data-tabname="{{$tab['name']}}">
+                                        <span class="nav-icon">
+                                            <i class="fas {{ @$tab['icon'] }}"></i>
+                                        </span>
+                                        <span class="nav-text font-size-lg">{{ $tab['title'] }}</span>
+                                    </a>
+                                </li>
+                                @empty
+                                @endforelse
                             </ul>
-                            @endif
                         </div>
                         <div class="pull-right">
                         </div>
                         <div class="clearfix"></div>
                     </div>
+                    <!--end::Card header-->
                     <div class="card-body p-0">
                         @if(empty(@$tabs))
                         <div class="alert alert-info no-margin">

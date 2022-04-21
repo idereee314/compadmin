@@ -1,7 +1,7 @@
 <?php namespace event;
 
 use event\EventRegistration;
-use core\sessions\Sessions;
+use event\EventPayment;
 
 use Hash;
 use Log;
@@ -202,12 +202,14 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 			})
             ->addColumn('action', function ($qry) {
 				$permissionEdit = SecurityHelper::checkPermission(@Config::get('permission.event_registration'), Config::get('permission.editable'));
+				$actionHtml = "";
+				
+				if ($qry->member->id_url) {
+					$actionHtml .= '<a class="btn btn-icon btn-clean btn-sm mr-3 show-image" data-id="'.$qry->member->id.'" data-type="id" title="'.trans('display.id_photo').'"><i class="far fas fa-paperclip text-warning"></i></a>';
+				}
+
 				if($permissionEdit)
 				{
-					$actionHtml = "";
-					if ($qry->member->id_url) {
-						$actionHtml .= '<a class="btn btn-icon btn-clean btn-sm mr-3 show-image" data-id="'.$qry->member->id.'" data-type="id" title="'.trans('display.id_photo').'"><i class="far fas fa-paperclip text-warning"></i></a>';
-					}
 					if($qry->event->due_date <= Carbon\Carbon::now())
 					{
 						if(@$qry->award)
@@ -220,13 +222,13 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 						}
 					}
 					
-					if($qry->event->due_date > Carbon\Carbon::now()){
+					//if($qry->event->due_date > Carbon\Carbon::now()){
 						$actionHtml .= 	'<a class="btn btn-icon btn-light btn-hover-primary btn-sm mr-3 edit" href="javascript:;" data-registrationid="'.$qry->id.'" title="'.trans('display.general_edit').'"><i class="la la-edit"></i></a>';
 						if($qry->status == @Config::get('smart.event_registeation_status')['created'])
 						{
 							$actionHtml .= 	'<a class="btn btn-icon btn-light btn-hover-primary btn-sm delete" href="javascript:;" data-registrationid="'.$qry->id.'" title="'.trans('display.general_delete').'"><i class="la la-trash"></i></li>';
 						}
-					}
+					//}
 					return $actionHtml;
 				}
 
@@ -246,5 +248,42 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 		}
 
 		return $count;
+	}
+
+	public function getEventFeesByEventId($eventId)
+	{
+		$fees = "";
+		if(@$eventId)
+		{
+			$qry = EventRegistration::selectRaw('distinct on (uq_event_registration.id) uq_event_registration.id, uq_event_entries_fee.end_date, uq_event_entries_fee.entrance_fee, uq_event_payment.amount')
+				->join('uq_event_payment', 'uq_event_registration.id', '=', 'uq_event_payment.registration_id')
+				->join('uq_event_entries_fee', 'uq_event_registration.entry_id', '=', 'uq_event_entries_fee.entry_id')
+				->where('uq_event_registration.event_id', $eventId)
+				->where('uq_event_payment.status', true)
+				->where('uq_event_registration.status', @Config::get('smart.event_registeation_status')['approved']);
+				/*
+				->groupBy('uq_event_entries_fee.end_date', 'uq_event_entries_fee.entrance_fee')
+				
+				*/
+			$fees = $qry->get();
+		}
+
+		return $fees;
+	}
+
+	public function getPaymentByEventId($eventId)
+	{
+		$fees = "";
+		if(@$eventId)
+		{
+			$qry = EventPayment::selectRaw('distinct on (uq_event_registration.id) uq_event_registration.id, uq_event_entries_fee.entrance_fee, round(uq_event_payment.amount*0.99) as amount')
+				->join('uq_event_registration', 'uq_event_registration.id', '=', 'uq_event_payment.registration_id')
+				->join('uq_event_entries_fee', 'uq_event_registration.entry_id', '=', 'uq_event_entries_fee.entry_id')
+				->where('uq_event_registration.event_id', $eventId)
+				->where('uq_event_payment.status', true);
+			$fees = $qry->get();
+		}
+
+		return $fees;
 	}
 }
