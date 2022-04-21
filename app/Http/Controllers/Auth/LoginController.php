@@ -82,7 +82,7 @@ class LoginController extends Controller
 				Session::put('firstname', $foundUser->firstname);
 				Session::put('lastname', @$foundUser->lastname);
 
-				$roleMenus = $foundUser->roles->where('code', 'admin')->load('menus');
+				$roleMenus = $foundUser->roles->load('menus');
 				foreach($roleMenus as $role)
 				{
 					foreach($role->menus as $menu)

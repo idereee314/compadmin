@@ -203,12 +203,12 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
             ->addColumn('action', function ($qry) {
 				$permissionEdit = SecurityHelper::checkPermission(@Config::get('permission.event_registration'), Config::get('permission.editable'));
 				$actionHtml = "";
-				
+
 				if ($qry->member->id_url) {
 					$actionHtml .= '<a class="btn btn-icon btn-clean btn-sm mr-3 show-image" data-id="'.$qry->member->id.'" data-type="id" title="'.trans('display.id_photo').'"><i class="far fas fa-paperclip text-warning"></i></a>';
 				}
 
-				if($permissionEdit)
+				if($permissionEdit && ($qry->event->users->contains(Auth::user()->id) || Auth::user()->roles->first()->code == 'admin'))
 				{
 					if($qry->event->due_date <= Carbon\Carbon::now())
 					{
@@ -221,7 +221,6 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 							$actionHtml .= 	'<a class="btn btn-icon btn-light btn-hover-primary btn-sm mr-3 win-place" href="javascript:;" data-registrationid="'.$qry->id.'" title="'.trans('display.comp_award_place').'"><i class="nav-icon la la-award"></i></a>';
 						}
 					}
-					
 					//if($qry->event->due_date > Carbon\Carbon::now()){
 						$actionHtml .= 	'<a class="btn btn-icon btn-light btn-hover-primary btn-sm mr-3 edit" href="javascript:;" data-registrationid="'.$qry->id.'" title="'.trans('display.general_edit').'"><i class="la la-edit"></i></a>';
 						if($qry->status == @Config::get('smart.event_registeation_status')['created'])
