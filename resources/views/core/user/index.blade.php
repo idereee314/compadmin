@@ -244,6 +244,57 @@ $('#compadUserEditModal').on('hidden.bs.modal', function(){
 
 }
 
+function changePassModal(data){
+    $('#userchangePasswordModal').modal();
+    $('#userchangePasswordModal').on('shown.bs.modal', function(){
+    $('#userchangePasswordModal .modal-content').html(data);
+
+    $(":input").inputmask();
+
+    $('#change-password-form').validate({
+        ignore: [],
+        highlight:function(element) {
+            $(element).parents('.form-group').addClass('has-error has-feedback');
+        },
+        unhighlight: function(element) {
+            $(element).parents('.form-group').removeClass('has-error');
+        },
+        submitHandler: function(form) {
+            $.ajax({
+                url: form.action,
+                type: form.method,
+                data: $(form).serialize(),
+                success: function(response) {
+                    $('#change-password-form').find("#close").trigger('click');
+                    $('.panel-sub-heading').html(response).fadeIn().delay(5000).fadeOut();
+                    userTable.draw();
+                },
+                error: function (xhr, textStatus, error) {
+                    console.log(xhr.statusText);
+                    console.log(textStatus);
+                    console.log(error);
+                },
+                async: false
+            }).done(function(data) {
+                //submitButton.prop('disabled', false);
+            });
+        },
+        errorPlacement: function(error, element) {
+            if($(element).parents('.form-group').find(".error-here")){
+                error.appendTo($(element).parents('.form-group').find(".error-here"));
+            } else {
+                error.insertAfter(element);
+            }
+        }
+    });
+
+    $(this).off('shown.bs.modal');
+    });
+        $('#userChangePasswordModal').on('hidden.bs.modal', function(){
+        $('#userChangePasswordModal .modal-body').empty();
+    });
+}
+
 //UserDelete
 function compadUserDelete(id)
 {
@@ -280,6 +331,11 @@ function compadUserDelete(id)
 function compadUserEdit(id)
 {
     $.get('/user/' + id + '/edit', compadUserEditModal);
+}
+
+function changePassword(id)
+{
+    $.get('/user/change/' + id + '/password', changePassModal);
 }
 
 function editRole(id)

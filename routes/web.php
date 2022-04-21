@@ -57,6 +57,9 @@ Route::group([
     Route::post('/user/update/{id}/password', 'core\CompadUserController@updateUserPassword')->name('user.update.password');
     Route::any('/user/data/list', [CompadUserController::class, 'getDatatableList'])->name('user.data.list');
 
+    Route::get('/user/change/{id}/password', 'core\CompadUserController@changeUserPassword')->name('user.change.password');
+    Route::post('/user/update/{id}/password', 'core\CompadUserController@updateCompadUserPassword')->name('compad.user.update.password');
+
     Route::get('/user-role/{id}/edit', 'core\CompadUserController@roleEdit')->name('user.role.edit');
     Route::post('/role/{id}/roleUpdate', 'core\CompadUserController@roleUpdate')->name('user.role.update');
 

@@ -259,6 +259,54 @@ class CompadUserController extends Controller
         return view('core.alert.messages', $data);
     }
 
+    public function changeUserPassword($id)
+    {
+        $data['id'] = $id;
+        return view($this->view_path.'.form_password', $data);
+    }
+
+    public function updateCompadUserPassword($id)
+    {
+        $input = Input::all();
+
+        $rules = array(
+            'password' => 'required|min:8'
+        );
+
+        $validator = Validator::make($input, $rules);
+
+        if ($validator->fails())
+		{
+        	$response = array(
+                'status' => 'error',
+                'msg' => trans('messages.error_save'),
+                'errors' => $validator->errors()
+            );
+        } else {
+			try {
+
+				$this->compadUser->updateUserPassword($id, $input);
+
+				$response = array(
+					'status' => 'success',
+					'msg' => trans('messages.success_update')
+				);
+
+			}
+			catch(Exception $e)
+			{
+				$response = array(
+					'status' => 'error',
+					'msg' => trans('messages.error_save'),
+					'errors' => $e->getMessage()
+				);
+			}
+		}
+
+        $data['response'] = $response;
+        return view('core.alert.messages', $data);
+    }
+
     public function searchUser()
     {
         $input = Input::all();
