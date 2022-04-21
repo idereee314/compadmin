@@ -12,6 +12,8 @@ class EventPayment extends Model
     protected $table = 'uq_event_payment';
     protected $primaryKey = 'id';
 
+    protected $fillable = ['registration_id', 'member_id', 'register_number', 'status', 'amount', 'created_by', 'updated_by', 'created_at', 'updated_at'];
+
     public function eventRegistration()
     {
         return $this->belongsTo('event\EventRegistration', 'registration_id');
@@ -19,6 +21,18 @@ class EventPayment extends Model
 
 	public static function boot()
     {
-        parent::boot();    
+        parent::boot();   
+        
+        static::updating(function($payment)
+        {
+            $payment->updated_by = Auth::id();
+			$payment->updated_at = Carbon\Carbon::now()->toDateTimeString();
+        });
+
+        static::creating(function($payment)
+        {
+            $payment->created_by = Auth::id();
+			$payment->created_at = Carbon\Carbon::now()->toDateTimeString();
+        });
     }
 }

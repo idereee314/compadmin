@@ -71,6 +71,11 @@ class EventRegistration extends Model
     {
         return $this->hasMany('event\EventPayment', 'registration_id');
     }
+
+    public function payment()
+    {
+        return $this->hasOne('event\EventPayment', 'registration_id', 'id');
+    }
     
     public static function boot()
     {

@@ -95,6 +95,13 @@
                 </select>
             </div>
         </div>
+
+        <div class="form-group row payment" style="display: none;">
+            <label class="col-md-3 col-form-label text-right">{{ trans('display.general_amount') }}: <span class="text-danger">*</span></label>
+            <div class="col-md-9 col-lg-5">
+                <input class="form-control" id="amount" name="amount" value="{{ @$eventRegistration->payment ? $eventRegistration->payment->amount : '0'}}" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}"/>
+            </div>
+        </div>
         
         @if($eventRegistration->status == @Config::get('smart.event_registeation_status')['approved'])
         <div class="form-group row">
@@ -108,13 +115,6 @@
             </div>
         </div>
         @endif
-
-        <div class="form-group row payment" style="display: none;">
-            <label class="col-md-3 col-form-label text-right">{{ trans('display.general_amount') }}: <span class="text-danger">*</span></label>
-            <div class="col-md-9 col-lg-5">
-                <input class="form-control" id="amount" name="amount" value="{{ @$eventRegistration->payment->amount ? $eventRegistration->payment->amount : '0'}}" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}"/>
-            </div>
-        </div>
     </div>
 
     <div class="modal-footer text-right bg-gray-100 border-top-0">

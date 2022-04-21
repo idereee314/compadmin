@@ -128,15 +128,17 @@ class EventRegistrationController extends Controller
             try
             {
                 $event = $this->eventRegistration->create($input);
-
                 if(@$input['amount'])
                 {
+                    $paymentUnq['registration_id'] = $event->id;
+
+                    $paymentArr['registration_id'] = $event->id;
                     $paymentArr['member_id'] = $event->member_id;
                     $paymentArr['register_number'] = $event->member->register_number;
                     $paymentArr['status'] = true;
                     $paymentArr['amount'] = $input['amount'];
 
-                    $event->payment->create($paymentArr);
+                    $event->payment->updateOrCreate($paymentUnq, $paymentArr);
                 }
                 $response = array(
                     'status' => 'success',
@@ -227,6 +229,18 @@ class EventRegistrationController extends Controller
         } else {
 			try {
                 $event = $this->eventRegistration->update($id, $input);
+                if(@$input['amount'])
+                {
+                    $paymentUnq['registration_id'] = $event->id;
+
+                    $paymentArr['registration_id'] = $event->id;
+                    $paymentArr['member_id'] = $event->member_id;
+                    $paymentArr['register_number'] = $event->member->register_number;
+                    $paymentArr['status'] = true;
+                    $paymentArr['amount'] = $input['amount'];
+
+                    $event->payment()->updateOrCreate($paymentUnq, $paymentArr);
+                }
 
 				$response = array(
 					'status' => 'success',
