@@ -303,4 +303,18 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 
 		return $fees;
 	}
+
+	public function getRegistrationByStatus($evntId, $status)
+	{
+		$registrations = "";
+		if(@$status)
+		{
+			$qry = EventRegistration::selectRaw('id, status')
+			->where('uq_event_registration.status', $status);
+
+			$registrations = $qry->get();
+		}
+		
+		return $registrations;
+	}
 }

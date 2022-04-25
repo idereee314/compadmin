@@ -178,7 +178,6 @@ class EventRegistrationController extends Controller
     public function edit($id)
     {
         $eventRegistration = $this->eventRegistration->find($id);
-        $competitions = $this->eventConfig->getRegistringComp(@$now);
         $academy = $this->academy->all();
         $eventEntries = $this->eventEntries->getEntryByEventId($eventRegistration->event_id);
         $configBelts = $this->configBelt->getEntryBeltByEntryId($eventRegistration->entry_id);
@@ -186,7 +185,6 @@ class EventRegistrationController extends Controller
         $configWeights = $this->configWeight->getEntryWeightByAgeId($eventRegistration->entry_age_id);   
 
         $data['eventRegistration'] = $eventRegistration;
-        $data['competitions'] = $competitions;
         $data['eventEntries'] = $eventEntries;
         $data['configBelts'] = $configBelts;
         $data['configAges'] = $configAges;
@@ -367,17 +365,25 @@ class EventRegistrationController extends Controller
 
     public function showCard()
     {
-        $eventPage = $this->event->getEventByPage(6);
+        $eventPage = $this->event->getEventByPage(12);
         $event = json_decode($eventPage, true);
         
         $data['view_path'] = $this->view_path;
         $data['events'] = $event['data'];
+        
         //dd($event);
         $pagination = new LengthAwarePaginator($event['data'], @$event['total'], @$event['per_page'], @$event['current_page'], [
-            'path'  => URL::current(),
-            'query' => @$searchData,
+            'path'  => URL::current()
         ]);
 
         return view($this->view_path.'.card', $data)->with('pagination', @$pagination);
     }
+/*
+    public function printMandateByEventAndStatus($eventId, $status, $chunk)
+    {
+        $list = $this->eventRegistration->getRegistrationByStatus($eventId, $status);
+        
+        return $list;
+    }
+    */
 }

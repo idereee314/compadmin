@@ -48,7 +48,7 @@
                 <option value="50">50</option>
                 <option value="100">100</option>
             </select>
-            <span class="text-muted">Дэлгэцэнд {{ $paginator->total }} аас 230 бичлэг</span>
+            <span class="text-muted">Дэлгэцэнд {{ $paginator->total() }} аас {{ $paginator->count() }} бичлэг</span>
         </div>
     </div>
 @endif
