@@ -278,6 +278,7 @@ return [
     'comp_title' => 'Тэмцээн',
     'comp_award_place' => 'Байр эзлүүлэх',
     'comp_place_nuber' => 'Байр',
+    'comp_org_type' => 'Оролцох харъялалын төрөл',
 
     //Academy
 

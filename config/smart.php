@@ -108,6 +108,12 @@ return array(
 			'cropped' => [1200, 1200],
 		]
 	],
+
+	'org_type' => [
+		'academy' => 'academy',
+		'highschool' => 'highschool',
+		'university' => 'university'
+	]
  
 )
 

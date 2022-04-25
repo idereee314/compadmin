@@ -152,6 +152,21 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 						->orWhereRaw("LOWER(contact_phone) like ?", array('%'.mb_strtolower($searchData->get('member')).'%'));
 					});
                 }
+
+				if($searchData->has('amount') && $searchData->get('amount') !== null)
+                {
+					if($searchData->get('amount') > 0)
+					{
+						$qry->whereHas('payments', function($q) use($searchData){
+							$q->where('amount', $searchData->get('amount'));
+						});
+					}
+					else 
+					{
+						$qry->whereDoesntHave('payments');
+					}
+					
+				}
             })
 			->setRowAttr([
 				'class' => function($qry) {
@@ -275,12 +290,15 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 		$fees = "";
 		if(@$eventId)
 		{
-			$qry = EventPayment::selectRaw('distinct on (uq_event_registration.id) uq_event_registration.id, uq_event_entries_fee.entrance_fee, round(uq_event_payment.amount*0.99) as amount')
-				->join('uq_event_registration', 'uq_event_registration.id', '=', 'uq_event_payment.registration_id')
+			$qry = EventRegistration::selectRaw('distinct on (uq_event_registration.id) uq_event_registration.id, uq_event_entries_fee.entrance_fee, COALESCE(amount, amount, 0) as amount, round(uq_event_payment.amount*0.99) as fee_amount')
+				->leftJoin('uq_event_payment', function($join){
+					$join->on('uq_event_registration.id', '=', 'uq_event_payment.registration_id')
+						->where('uq_event_payment.status', true);
+				})
 				->join('uq_event_entries_fee', 'uq_event_registration.entry_id', '=', 'uq_event_entries_fee.entry_id')
 				->where('uq_event_registration.event_id', $eventId)
-				->where('uq_event_payment.status', true);
-			$fees = $qry->get();
+				->where('uq_event_registration.status', @Config::get('smart.event_registeation_status')['approved']);
+			$fees = $qry->get()->sortBy('amount');
 		}
 
 		return $fees;

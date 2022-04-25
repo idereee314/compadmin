@@ -1,5 +1,5 @@
-<form class="form" method="POST" id="update-event-config-form" action="{{ route('event.config.update', $eventConfig->id) }}">
-    <input type="hidden" name="_method" value="put" />
+<form class="form" method="post" id="update-event-config-form" action="{{ route('event.config.update', $eventConfig->id) }}">
+    <input type="hidden" name="_method" value="put"/>
     <div class="card-body">
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.event_title')}}: <span class="text-danger">*</span></label>
@@ -22,10 +22,33 @@
                 <div class="error-here"></div>
             </div>
         </div>
+        <div class="form-group row">
+            <label class="col-md-3 col-form-label text-right">{{trans('display.comp_org_type')}}: <span class="text-danger">*</span></label>
+            <div class="col-md-9 col-lg-6">
+                <select class="form-control select2" id="org_types" name="org_types[]" multiple="multiple" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}">
+                    <option value="0">-- {{ trans('display.general_select') }} --</option>
+                    @forelse(@Config::get('enums.org_type') as $key => $type)
+                    <option value="{{ $key }}" {{ \Illuminate\Support\Str::contains(@$eventConfig->org_types, $key) ? 'selected="selected"' : '' }}>{{ $type }}</option>
+                    @empty
+                    @endforelse
+                </select>
+                <div class="error-here"></div>
+            </div>
+        </div> 
+        <div class="form-group row">
+            <label class="col-md-3 col-form-label text-right"></label>
+            <div class="col-md-9 col-lg-6">
+                <label class="checkbox">
+                    <input type="checkbox" name="is_active" {{ @$eventConfig->is_active ? 'checked="checked"' : '' }}>
+                    <span></span>&nbsp;
+                    {{ trans('display.general_active') }}
+                </label>
+            </div>
+        </div>
     </div>
 
     <div class="modal-footer text-right">
-        <button type="button" id="close" class="btn btn-light-primary font-weight-bold" data-dismiss="modal">{{trans('display.general_close')}}</button>
+        <a href="{{ route('event.config.index') }}" class="btn btn-light-primary font-weight-bold">{{trans('display.general_back')}}</a>
         <button type="submit" class="btn btn-primary font-weight-bold">{{trans('display.general_save')}}</button>
     </div>
 </form>
@@ -45,6 +68,8 @@ $(document).ready(function() {
         $('#kt_reg_date .form-control').val( start.format('YYYY-MM-DD H:mm') + ' / ' + end.format('YYYY-MM-DD H:mm'));
     });
 
+    $('#update-event-config-form select[id=org_types]').select2({});
+
     $('#update-event-config-form').validate({
         ignore: [],
         highlight:function(element) {
@@ -59,11 +84,20 @@ $(document).ready(function() {
                 type: form.method,
                 data: new FormData(form),
                 success: function(response) {
-                    var tab_id = $("#config_tabs").find("li.active a").data("tabid");
-                    $(".tab-content").find("#" + tab_id).empty();
-
-                    $("#config_tabs").find("li.active a").trigger('click');
-                    $('.form-sub-heading').html(response).fadeIn().delay(5000).fadeOut();
+                    if(response.status == 'success')
+                    {
+                        $(".tab-content").find("div.active").empty();
+                        $("#config_tabs").find("li.active a").trigger('click');
+                        toastr.success(response.msg);
+                    }
+                    else {
+                        toastr.error(response.errors, response.msg, {
+                            "closeButton": true,
+                            "timeOut": "0",
+                            "extendedTimeOut": "0",
+                        });
+                    }
+                    
                 },
                 error: function (xhr, textStatus, error) {
                     console.log(xhr.statusText);

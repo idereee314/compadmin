@@ -302,7 +302,7 @@ $(document).ready(function() {
         {
             searchable: false,
             orderable: false,
-            targets: [0,1,2,3,4,5]
+            targets: [0,5]
         },{
             class: "text-center",
             targets: [0,2,3,4,5]
@@ -411,6 +411,7 @@ function showAddModal( data ) {
         }, function(start, end, label) {
             $('#kt_reg_date .form-control').val( start.format('YYYY-MM-DD H:mm') + ' / ' + end.format('YYYY-MM-DD H:mm'));
         });
+        $('#create-event-config-form select[name=org_types]').select2({});
 
         $('#create-event-config-form select[name=event_id]').select2({
             width: 'resolve',
@@ -601,101 +602,6 @@ function showCopyModal(data){
         $('#eventConfigModal .modal-content').empty();
     });
 }
-
-// function showConfigRoleModal(data){
-
-//     $('#eventConfigModal').modal();
-//     $('#eventConfigModal').on('shown.bs.modal', function(){
-//         $('#eventConfigModal .modal-content').html(data);
-//         $('.selectpicker').selectpicker();
-
-//         $('#create-event-config-role-form select[name=user_id]').select2();
-
-//         $('#create-event-config-role-form select[name=user_id]').select2({
-//             width: 'resolve',
-//             dropdownAutoWidth : true,
-//             dropdownParent: $('#eventConfigModal'),
-//             placeholder: "-- {{ trans('display.general_select') }} --",
-//             minimumInputLength: 3,
-//             ajax: {
-//                 url: '{!! route('system.user.search') !!}',
-//                 delay: 1500,
-//                 data: function (params) {
-//                     var query = {
-//                         q: params.term
-//                     }
-//                     return query;
-//                 },
-
-//                 processResults: function (data) {
-//                     return {
-//                         results: JSON.parse(data)
-//                     };
-//                 },
-//                 cache: true
-//             },
-//             templateSelection: function (item) {
-//                 return item.firstname;
-//             },
-//             templateResult: function (item) {
-//                 return item.firstname;
-//             }
-//         });
-
-//         $('#create-event-config-role-form').validate({
-//             ignore: [],
-//             highlight:function(element) {
-//                 $(element).parents('.form-group').addClass('has-error has-feedback');
-//             },
-//             unhighlight: function(element) {
-//                 $(element).parents('.form-group').removeClass('has-error');
-//             },
-//             submitHandler: function(form) {
-//                 $.ajax({
-//                     url: form.action,
-//                     type: form.method,
-//                     data: new FormData(form),
-//                     success: function(response) {
-//                         if(response.status == 'success')
-//                         {
-//                             $('#eventConfigModal').find("#close").trigger('click');
-//                             toastr.success(response.msg);
-//                             eventConfigTable.draw();
-//                         }
-//                         else {
-//                             toastr.error(response.errors, response.msg, {
-//                                 "closeButton": true,
-//                                 "timeOut": "0",
-//                                 "extendedTimeOut": "0",
-//                             });
-//                         }
-//                     },
-//                     error: function (xhr, textStatus, error) {
-//                         console.log(xhr.statusText);
-//                         console.log(textStatus);
-//                         console.log(error);
-//                     },
-//                     async: false,
-//                     processData: false,
-//                     contentType: false
-//                 });
-//             },
-//             errorPlacement: function(error, element) {
-//                 if($(element).parents('.form-group').find(".error-here")){
-//                     error.appendTo($(element).parents('.form-group').find(".error-here"));
-//                 } else {
-//                     error.insertAfter(element);
-//                 }
-//             }
-//         });
-//         $(this).off('shown.bs.modal');
-//     });
-
-//     $('#eventConfigModal').on('hidden.bs.modal', function(){
-//         $('#eventConfigModal .modal-content').empty();
-//     });
-// }
-
 </script>
 @endsection
 @stop

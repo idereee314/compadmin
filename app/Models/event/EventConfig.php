@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Auth;
 use Carbon;
 use Config;
+use DB;
 
 class EventConfig extends Model
 {

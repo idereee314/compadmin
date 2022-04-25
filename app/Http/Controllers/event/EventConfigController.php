@@ -149,7 +149,6 @@ class EventConfigController extends Controller
     public function update(Request $request, $id)
     {
         $input = Input::all();
-
         $validator = Validator::make($input, EventConfigModel::rules($id));
 
         if ($validator->fails())
@@ -203,7 +202,7 @@ class EventConfigController extends Controller
             $response = array(
                 'status' => 'error',
                 'msg' => trans('messages.error_delete'),
-                'errors' => $e
+                'errors' => $e->getMessage()
             );
         }
 

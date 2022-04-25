@@ -46,6 +46,12 @@ return array(
 		'5' => array('title' => "Төлбөр",'code' => 'event_entries_fee','name' => "tab_entries_fee", 'icon' => "fa-money-bill",'number' => 'tab1-6'),
 		'6' => array('title' => "Хэрэглэгч",'code' => 'event_event_user','name' => "tab_event_user", 'icon' => "fa-user-check",'number' => 'tab1-7'),
     ],
+
+	'org_type' => [
+		'academy' => 'Академи',
+		'highschool' => 'Дунд сургууль',
+		'university' => 'Их, дээд сургууль, коллеж'
+	]
 )
 
 ?>

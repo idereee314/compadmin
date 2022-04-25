@@ -91,10 +91,12 @@
                                     </div>
                                     <!--begin::User-->
                                     <!--begin::Actions-->
+                                    <!--
                                     <div class="my-lg-0 my-1">
                                         <a href="#" class="btn btn-sm btn-light-primary font-weight-bolder text-uppercase mr-2">Ask</a>
                                         <a href="#" class="btn btn-sm btn-primary font-weight-bolder text-uppercase">Hire</a>
                                     </div>
+                                    -->
                                     <!--end::Actions-->
                                 </div>
                                 <!--end::Title-->
@@ -122,57 +124,76 @@
                             <!--end::Info-->
                         </div>
                         <!--end::Top-->
+                        @if(!@$eventFees->isEmpty())
                         <!--begin::Separator-->
                         <div class="separator separator-solid my-7"></div>
                         <!--end::Separator-->
                         <!--begin::Bottom-->
                         <div class="d-flex align-items-center flex-wrap">
+                            <!--begin: Item-->
+                            <div class="d-flex align-items-center flex-lg-fill mr-10 my-1 btn btn-light-success btn-hover-success btn-filter-amount" data-amount="">
+                                <span class="mr-4">
+                                    <i class="flaticon-piggy-bank text-success icon-3x font-weight-bold"></i>
+                                </span>
+                                <div class="d-flex flex-column">
+                                    <span class="font-weight-bolder font-size-sm">{{ trans('display.general_total') }}/{{ $eventFees->flatten(1)->count() }}</span>
+                                    <span class="font-weight-bolder font-size-h5">
+                                    <span class="font-weight-bold">{{ trans('display.general_tug') }}</span>{{ number_format($eventFees->flatten(1)->sum('fee_amount'), 0) }}</span>
+                                </div>
+                            </div>
+                            <!--end: Item-->
                             @forelse($eventFees as $key => $fee)
                             <!--begin: Item-->
-                            <div class="d-flex align-items-center flex-lg-fill mr-5 my-1">
+                            <div class="d-flex align-items-center flex-lg-fill mr-5 my-1 btn btn-hover-light-success btn-filter-amount" data-amount="{{ $key }}">
                                 <span class="mr-4">
-                                    <i class="flaticon-piggy-bank icon-2x text-muted font-weight-bold"></i>
+                                    <i class="flaticon-pie-chart text-success icon-3x font-weight-bold"></i>
                                 </span>
-                                <div class="d-flex flex-column text-dark-75">
+                                <div class="d-flex flex-column">
                                     <span class="font-weight-bolder font-size-sm">{{ number_format($key, 0) }}/{{ count($fee) }}</span>
                                     <span class="font-weight-bolder font-size-h5">
-                                    <span class="text-dark-50 font-weight-bold">{{ trans('display.general_tug') }}</span>{{ number_format($fee->sum('amount'), 0) }}</span>
+                                    <span class="text-success font-weight-bold">{{ trans('display.general_tug') }}</span>{{ number_format($fee->sum('fee_amount'), 0) }}</span>
                                 </div>
                             </div>
                             <!--end: Item-->
                             @empty
                             @endforelse
+                        </div>                        
+                        <!--end::Bottom-->
+                        @endif
+                    </div>
+                </div>
+                <!--begin::Card-->
+                <div class="card card-custom">
+                    <div class="card-body">
+                        @if(@$eventRegStatusCount)
+                        <div class="d-flex align-items-center flex-wrap">
                             <!--begin: Item-->
                             <div class="d-flex align-items-center flex-lg-fill mr-5 my-1">
                                 <span class="mr-4">
-                                    <i class="fas fa-users icon-2x"></i>
+                                    <i class="flaticon-users icon-2x"></i>
                                 </span>
                                 <div class="d-flex flex-column flex-lg-fill">
                                     <span class="text-dark-75 font-weight-bolder font-size-sm">{{ array_sum(@$eventRegStatusCount) }} {{ trans('display.general_all') }}</span>
-                                    <a href="javascript:;" class="text-primary font-weight-bolder filter-status-count" data-status="">Харах</a>
+                                    <a href="javascript:;" class="text-primary font-weight-bolder btn-filter-status-count" data-status="">Харах</a>
                                 </div>
                             </div>                           
                             @forelse(@$eventRegStatusCount as $key => $count)
                             <!--begin: Item-->
                             <div class="d-flex align-items-center flex-lg-fill mr-5 my-1">
                                 <span class="mr-4">
-                                    <i class="fas fa-user icon-2x"></i>
+                                    <i class="flaticon-user-add icon-2x"></i>
                                 </span>
                                 <div class="d-flex flex-column">
                                     <span class="text-dark-75 font-weight-bolder font-size-sm">{{ $count }} {{ @Config::get('enums.event_registeation_status')[$key] }}</span>
-                                    <a href="#" class="text-primary font-weight-bolder filter-status-count" data-status="{{ $key }}">Харах</a>
+                                    <a href="#" class="text-primary font-weight-bolder btn-filter-status-count" data-status="{{ $key }}">Харах</a>
                                 </div>
                             </div>
                             <!--end: Item-->
                             @empty
                             @endforelse
                         </div>
-                        <!--end::Bottom-->
-                    </div>
-                </div>
-                <!--begin::Card-->
-                <div class="card card-custom">
-                    <div class="card-body">
+                        <div class="separator separator-solid mt-5"></div>
+                        @endif
                         <!--begin::Accordion-->
                         <div class="accordion accordion-light accordion-light-borderless accordion-svg-toggle" id="search">
                             <div class="card">
@@ -195,7 +216,7 @@
                                 <div id="search-registration" class="collapse" data-parent="#search">
                                     <div class="card-body">
                                         <!--begin: Search Form-->
-                                        <form class="mb-10" id="event-registration-search-form" method="POST">
+                                        <form class="mb-5" id="event-registration-search-form" method="POST">
                                             <input type="hidden" name="search_event" id="search_event" value="{{ @$event->id }}"/>
                                             <div class="row mb-6">
                                                 <div class="col-lg-3 mb-lg-0 mb-6">
@@ -277,9 +298,19 @@
                                                         @endforelse
                                                     </select>
                                                 </div>
+                                                <div class="col-lg-3 mb-lg-0 mb-6">
+                                                    <label>{{ trans('display.general_amount') }}:</label>
+                                                    <select class="form-control selectpicker datatable-input" name="search_amount" id="search_amount" data-col-index="11">
+                                                        <option value="">-- {{ trans('display.general_all') }} --</option>
+                                                        @forelse($eventFees as $key => $amount)
+                                                        <option value="{{ $key }}">{{ $key }}</option>
+                                                        @empty
+                                                        @endforelse
+                                                    </select>
+                                                </div>
                                             </div>
                                             <div class="row mt-8">
-                                                <div class="col-lg-12">
+                                                <div class="col-lg-12 float-right">
                                                     <button type="submit" class="btn btn-primary btn-primary--icon">
                                                         <span>
                                                             <i class="la la-search"></i>
@@ -300,6 +331,7 @@
                             </div>
                         </div>
                         <!--end::Accordion-->
+                        <div class="separator separator-solid mb-5"></div>
                         <!--begin: Datatable-->
                         <table class="table table-separate table-head-custom" id="event-registration-datatable" style="margin-top: 13px !important">
                             <thead>
@@ -347,6 +379,7 @@ $(document).ready(function() {
         //deferRender:    true,
         //autoWidth:      true,
         //filter:         false,
+        select: true,
         responsive:     true,
         dataType: 'json',
         paginationType: "full_numbers",
@@ -368,6 +401,7 @@ $(document).ready(function() {
                 d.gender = $('#event-registration-search-form select[id="search_gender"]').val();
                 d.academy = $('#event-registration-search-form select[id="search_academy"]').val();
                 d.is_weight = $('#event-registration-search-form select[id="search_is_weight"]').val();
+                d.amount = $('#event-registration-search-form select[id="search_amount"]').val();
                 d.date = dateArr;
             },
         },
@@ -713,10 +747,18 @@ $(document).ready(function() {
         });
     });
 
-    $(".filter-status-count").on('click', function(){
+    $(".btn-filter-status-count").on('click', function(){
         var status = $(this).data('status');
 
         $('#event-registration-search-form select[name=search_status]').val(status);
+        $('#event-registration-search-form').submit();
+    });
+
+    $(".btn-filter-amount").on('click', function(){
+        var amount = $(this).data('amount');
+
+        $('#event-registration-search-form select[name=search_status]').val('{{ @Config::get('smart.event_registeation_status')['approved'] }}');
+        $('#event-registration-search-form select[name=search_amount]').val(amount);
         $('#event-registration-search-form').submit();
     });
 

@@ -67,7 +67,6 @@ class EventRegistrationController extends Controller
             $eventRegStatusCount = $this->eventRegistration->getEventRegStatusCount($event->id)->pluck('total', 'status')->toArray();
             $academies = $this->academy->all();
             $eventFees = $this->eventRegistration->getPaymentByEventId(@$input['event_id'])->groupBy('amount');
-            //dd($eventFees);
     
             $data['event'] = $event;
             $data['eventEntries'] = $event->entries;
