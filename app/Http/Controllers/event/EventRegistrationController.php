@@ -30,6 +30,7 @@ use Config;
 use Illuminate\Support\Str;
 use \Redirect as Redirect;
 use Image;
+use PDF;
 
 class EventRegistrationController extends Controller
 {
@@ -378,12 +379,22 @@ class EventRegistrationController extends Controller
 
         return view($this->view_path.'.card', $data)->with('pagination', @$pagination);
     }
-/*
-    public function printMandateByEventAndStatus($eventId, $status, $chunk)
+
+    public function printMandateByEventAndStatus()
     {
-        $list = $this->eventRegistration->getRegistrationByStatus($eventId, $status);
-        
-        return $list;
+        $input = Input::all();
+        $list = $this->eventRegistration->getRegistrationByStatus(@$input['search_event'], @Config::get('smart.event_registeation_status')['approved'], $input);
+
+        $data['regs'] = $list->load(['academy:id,name,is_other','member:id,lastname,firstname,profile_url', 'weight:id,weight', 'entry:id,name'])->take(32)->chunk(4);
+        return view($this->view_path.'.mandat_html', $data);
+        /*
+        $pdf = PDF::loadView($this->view_path.'.mandat_cm', $data, [], [
+            'format' => 'A4-P'
+        ]);
+
+        return $pdf->stream('mandat.pdf');
+        return $pdf->download('mandat.pdf');
+        */
     }
-    */
+    
 }

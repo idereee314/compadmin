@@ -411,7 +411,7 @@ function showAddModal( data ) {
         }, function(start, end, label) {
             $('#kt_reg_date .form-control').val( start.format('YYYY-MM-DD H:mm') + ' / ' + end.format('YYYY-MM-DD H:mm'));
         });
-        $('#create-event-config-form select[name=org_types]').select2({});
+        $('#create-event-config-form select[id=org_types]').select2({});
 
         $('#create-event-config-form select[name=event_id]').select2({
             width: 'resolve',

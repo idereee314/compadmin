@@ -5,7 +5,7 @@
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => '386de891098e1d1da331064fd0cbbd0272fbeb8d',
+        'reference' => 'edf436043a1ae54880f8a061af4654154b138587',
         'name' => 'laravel/laravel',
         'dev' => true,
     ),
@@ -445,7 +445,7 @@
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => '386de891098e1d1da331064fd0cbbd0272fbeb8d',
+            'reference' => 'edf436043a1ae54880f8a061af4654154b138587',
             'dev_requirement' => false,
         ),
         'laravel/sail' => array(
@@ -601,6 +601,15 @@
             'reference' => 'd7fd7450628561ba697b7097d86db72662f54aef',
             'dev_requirement' => false,
         ),
+        'mpdf/mpdf' => array(
+            'pretty_version' => 'v8.1.1',
+            'version' => '8.1.1.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../mpdf/mpdf',
+            'aliases' => array(),
+            'reference' => 'e511e89a66bdb066e3fbf352f00f4734d5064cbf',
+            'dev_requirement' => false,
+        ),
         'mtdowling/cron-expression' => array(
             'dev_requirement' => false,
             'replaced' => array(
@@ -623,7 +632,7 @@
             'install_path' => __DIR__ . '/../myclabs/deep-copy',
             'aliases' => array(),
             'reference' => '14daed4296fae74d9e3201d2c4925d1acb7aa614',
-            'dev_requirement' => true,
+            'dev_requirement' => false,
         ),
         'myclabs/php-enum' => array(
             'pretty_version' => '1.8.3',
@@ -652,6 +661,15 @@
             'reference' => '210577fe3cf7badcc5814d99455df46564f3c077',
             'dev_requirement' => false,
         ),
+        'niklasravnsborg/laravel-pdf' => array(
+            'pretty_version' => 'v4.1.0',
+            'version' => '4.1.0.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../niklasravnsborg/laravel-pdf',
+            'aliases' => array(),
+            'reference' => 'a5f5c22dd5e10d8f536102cec01c21282e18ebae',
+            'dev_requirement' => false,
+        ),
         'nunomaduro/collision' => array(
             'pretty_version' => 'v5.11.0',
             'version' => '5.11.0.0',
@@ -668,6 +686,15 @@
             'install_path' => __DIR__ . '/../opis/closure',
             'aliases' => array(),
             'reference' => '3d81e4309d2a927abbe66df935f4bb60082805ad',
+            'dev_requirement' => false,
+        ),
+        'paragonie/random_compat' => array(
+            'pretty_version' => 'v9.99.100',
+            'version' => '9.99.100.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../paragonie/random_compat',
+            'aliases' => array(),
+            'reference' => '996434e5492cb4c3edcb9168db6fbb1359ef965a',
             'dev_requirement' => false,
         ),
         'phar-io/manifest' => array(
@@ -687,6 +714,15 @@
             'aliases' => array(),
             'reference' => '4f7fd7836c6f332bb2933569e566a0d6c4cbed74',
             'dev_requirement' => true,
+        ),
+        'php-http/message-factory' => array(
+            'pretty_version' => 'v1.0.2',
+            'version' => '1.0.2.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../php-http/message-factory',
+            'aliases' => array(),
+            'reference' => 'a478cb11f66a6ac48d8954216cfed9aa06a501a1',
+            'dev_requirement' => false,
         ),
         'phpdocumentor/reflection-common' => array(
             'pretty_version' => '2.2.0',
@@ -1087,6 +1123,15 @@
             'aliases' => array(),
             'reference' => 'c6c1022351a901512170118436c764e473f6de8c',
             'dev_requirement' => true,
+        ),
+        'setasign/fpdi' => array(
+            'pretty_version' => 'v2.3.6',
+            'version' => '2.3.6.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../setasign/fpdi',
+            'aliases' => array(),
+            'reference' => '6231e315f73e4f62d72b73f3d6d78ff0eed93c31',
+            'dev_requirement' => false,
         ),
         'swiftmailer/swiftmailer' => array(
             'pretty_version' => 'v6.3.0',

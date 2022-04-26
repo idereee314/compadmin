@@ -41,7 +41,7 @@ class EloquentEventConfigRepository implements EventConfigRepository {
 		$eventConfig->event_id = $input['event_id'];
 		$eventConfig->reg_start_date = @$dates[0];
 		$eventConfig->reg_end_date = @$dates[1];
-		$eventConfig->org_types = '{'.implode(", ", @$data['org_types']).'}';
+		$eventConfig->org_types = '{'.implode(", ", @$input['org_types']).'}';
 		$eventConfig->is_active = @$input['is_active'] ? $input['is_active'] : false;
 
 		$eventConfig->save();

@@ -88,6 +88,7 @@ Route::group([
     Route::get('/event/registration/create/award', 'event\EventRegistrationController@createPlace')->name('event.registration.create.award');
     Route::post('/event/registration/take/award', 'event\EventRegistrationController@takePlace')->name('event.registration.take.award');
     Route::get('/event/competition', 'event\EventRegistrationController@showCard')->name('event.competition.card');
+    Route::get('/event/registration/print/mandat', 'event\EventRegistrationController@printMandateByEventAndStatus')->name('event.registration.print.mandat');
 
     Route::resource('/event/config', 'event\EventConfigController', ['names' => 'event.config']);
     Route::any('/event/config/data/list', 'event\EventConfigController@getDatatableList')->name('event.config.data.list');

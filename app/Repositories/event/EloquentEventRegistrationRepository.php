@@ -304,13 +304,48 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 		return $fees;
 	}
 
-	public function getRegistrationByStatus($evntId, $status)
+	public function getRegistrationByStatus($evntId, $status, $searchData)
 	{
 		$registrations = "";
-		if(@$status)
+		if(@$evntId && @$status)
 		{
-			$qry = EventRegistration::selectRaw('id, status')
+			$qry = EventRegistration::selectRaw('id, status, member_id, academy_id, entry_id, entry_weight_id, academy_name')
 			->where('uq_event_registration.status', $status);
+
+			if(@$searchData['search_entry'])
+			{
+				$qry->where('entry_id', $searchData['search_entry']);
+			}
+
+			if(@$searchData['search_entry_age'])
+			{
+				$qry->where('entry_age_id', $searchData['search_entry_age']);
+			}
+
+			if(@$searchData['search_entry_belt'])
+			{
+				$qry->where('entry_belt_id', $searchData['search_entry_belt']);
+			}
+
+			if(@$searchData['search_entry_weight'])
+			{
+				$qry->where('entry_weight_id', $searchData['search_entry_weight']);
+			}
+
+			if(@$searchData['search_academy'])
+			{
+				$qry->where('academy_id', $searchData['search_academy']);
+			}
+
+			if(@$searchData['search_member'])
+			{
+				$qry->whereHas('member', function($q) use($searchData){
+					$q->whereRaw("LOWER(register_number) like ?", array('%'.mb_strtolower($searchData['search_member']).'%'))
+					->orWhereRaw("LOWER(firstname) like ?", array('%'.mb_strtolower($searchData['search_member']).'%'))
+					->orWhereRaw("LOWER(lastname) like ?", array('%'.mb_strtolower($searchData['search_member']).'%'))
+					->orWhereRaw("LOWER(contact_phone) like ?", array('%'.mb_strtolower($searchData['search_member']).'%'));
+				});
+			}
 
 			$registrations = $qry->get();
 		}

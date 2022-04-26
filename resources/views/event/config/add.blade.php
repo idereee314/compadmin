@@ -35,7 +35,7 @@
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.comp_org_type')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9 col-lg-6">
-                <select class="form-control select2" id="org_types" name="org_types" multiple="multiple" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}">
+                <select class="form-control select2" id="org_types" name="org_types[]" multiple="multiple" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}">
                     <option value="0">-- {{ trans('display.general_select') }} --</option>
                     @forelse(@Config::get('enums.org_type') as $key => $type)
                     <option value="{{ $key }}">{{ $type }}</option>
