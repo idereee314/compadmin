@@ -310,6 +310,7 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 		if(@$evntId && @$status)
 		{
 			$qry = EventRegistration::selectRaw('id, status, member_id, academy_id, entry_id, entry_weight_id, academy_name')
+			->where('event_id', $evntId)
 			->where('uq_event_registration.status', $status);
 
 			if(@$searchData['search_entry'])
