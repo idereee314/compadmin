@@ -385,7 +385,7 @@ class EventRegistrationController extends Controller
         $input = Input::all();
         $list = $this->eventRegistration->getRegistrationByStatus(@$input['search_event'], @Config::get('smart.event_registeation_status')['approved'], $input);
 
-        $data['regs'] = $list->load(['academy:id,name,is_other','member:id,lastname,firstname,profile_url', 'weight:id,weight', 'entry:id,name'])->take(32)->chunk(4);
+        $data['regs'] = $list->load(['academy:id,name,is_other','member:id,lastname,firstname,profile_url', 'weight:id,weight', 'entry:id,name'])->chunk(4);
         return view($this->view_path.'.mandat_html', $data);
         /*
         $pdf = PDF::loadView($this->view_path.'.mandat_cm', $data, [], [
