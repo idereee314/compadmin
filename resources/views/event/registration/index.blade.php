@@ -184,7 +184,7 @@
                                     <i class="flaticon-user-add icon-2x"></i>
                                 </span>
                                 <div class="d-flex flex-column">
-                                    <span class="text-dark-75 font-weight-bolder font-size-sm">{{ $count }} {{ @Config::get('enums.event_registeation_status')[$key] }}</span>
+                                    <span class="text-dark-75 font-weight-bolder font-size-sm">{{ $count }} {{ @Config::get('enums.event_registration_status')[$key] }}</span>
                                     <a href="#" class="text-primary font-weight-bolder btn-filter-status-count" data-status="{{ $key }}">Харах</a>
                                 </div>
                             </div>
@@ -292,7 +292,7 @@
                                                     <label>{{ trans('display.general_status') }}:</label>
                                                     <select class="form-control selectpicker datatable-input" name="search_status" id="search_status" data-col-index="10">
                                                         <option value="">-- {{ trans('display.general_all') }} --</option>
-                                                        @forelse(@Config::get('enums.event_registeation_status') as $key => $status)
+                                                        @forelse(@Config::get('enums.event_registration_status') as $key => $status)
                                                         <option value="{{ $key }}">{{ $status }}</option>
                                                         @empty
                                                         @endforelse
@@ -517,6 +517,12 @@ $(document).ready(function() {
         var id = $(this).data("registrationid");
 
         $.get('registration/'+id+'/edit', showEditModal);
+    });
+
+    $('#event-registration-datatable tbody').on( 'click', 'tr td button.btn-status', function () {
+        var id = $(this).data("registrationid");
+
+        $.get('registration/change/status?reg_id='+id, showStatusModal);
     });
 
     $('#event-registration-datatable tbody').on( 'click', 'tr td a.show-image', function () 
@@ -764,7 +770,7 @@ $(document).ready(function() {
     $(".btn-filter-amount").on('click', function(){
         var amount = $(this).data('amount');
 
-        $('#event-registration-search-form select[name=search_status]').val('{{ @Config::get('smart.event_registeation_status')['approved'] }}');
+        $('#event-registration-search-form select[name=search_status]').val('{{ @Config::get('smart.event_registration_status')['approved'] }}');
         $('#event-registration-search-form select[name=search_amount]').val(amount);
         $('#event-registration-search-form').submit();
     });
@@ -787,6 +793,7 @@ function showAddModal( data ) {
     $('#memberModal').on('shown.bs.modal', function(){
         $('#memberModal .modal-content').html(data);
         $('.selectpicker').selectpicker();
+
         $('#create-event-registration-form select[name=member_id]').select2();
         $('#create-event-registration-form input[name=entry_age_id]').select2({data: ""});
         $('#create-event-registration-form input[name=entry_belt_id]').select2({data: ""});
@@ -1125,20 +1132,6 @@ function showEditModal(data){
             });
         });
 
-        $('#update-event-registration-form select[name=status]').on('change', function(){
-            var status = $(this).val(); 
-            if(status == '{{ @Config::get('smart.event_registeation_status')['approved']}}')
-            {
-                $(".payment").show();
-                $(".payment").find(':input').prop('disabled', false);
-            }
-            else 
-            {
-                $(".payment").hide();
-                $(".payment").find(':input').prop('disabled', true);
-            }
-        }) 
-
         $('#update-event-registration-form').validate({
             ignore: [],
             highlight:function(element) {
@@ -1188,6 +1181,92 @@ function showEditModal(data){
         });
 
         $('#update-event-registration-form select[name=status]').trigger('change');
+
+        $(this).off('shown.bs.modal');
+    });
+
+    $('#memberModal').on('hidden.bs.modal', function(){
+        $('#memberModal .modal-content').empty();
+    });
+}
+
+function showStatusModal(data){
+    $('#memberModal').modal();
+    $('#memberModal').on('shown.bs.modal', function(){
+        $('#memberModal .modal-content').html(data);
+        $('.selectpicker').selectpicker();
+
+        $('#change-status-form select[name=status]').on('change', function(){
+            var status = $(this).val(); 
+            
+            if(status == '{{ @Config::get('smart.event_registration_status')['created']}}')
+            {
+                $(".payment").hide();
+                $(".payment").find(':input').prop('disabled', true);
+            }
+            else 
+            {
+                $(".payment").show();
+                $(".payment").find(':input').prop('disabled', false);
+
+                if(status == '{{ @Config::get('smart.event_registration_status')['approved']}}')
+                {
+                    $('#change-status-form input[name=payment_status]').prop("checked", true);
+                }
+                else 
+                {
+                    $('#change-status-form input[name=payment_status]').prop("checked", false)
+                }
+            }
+        }) 
+
+        $('#change-status-form').validate({
+            ignore: [],
+            highlight:function(element) {
+                $(element).parents('.form-group').addClass('has-error has-feedback');
+            },
+            unhighlight: function(element) {
+                $(element).parents('.form-group').removeClass('has-error');
+            },
+            submitHandler: function(form) {
+                $.ajax({
+                    url: form.action,
+                    type: form.method,
+                    data: new FormData(form),
+                    success: function(response) {
+                        var page = eventTable.page.info().page;
+                        if(response.status == 'success')
+                        {
+                            $('#memberModal').find("#close").trigger('click');
+                            toastr.success(response.msg);
+                            eventTable.page(page).draw('page');
+                        }
+                        else {
+                            toastr.error(response.errors, response.msg, {
+                                "closeButton": true,
+                                "timeOut": "0",
+                                "extendedTimeOut": "0",
+                            });
+                        }
+                    },
+                    error: function (xhr, textStatus, error) {
+                        console.log(xhr.statusText);
+                        console.log(textStatus);
+                        console.log(error);
+                    },
+                    async: false,
+                    processData: false,
+                    contentType: false
+                });
+            },
+            errorPlacement: function(error, element) {
+                if($(element).parents('.form-group').find(".error-here")){
+                    error.appendTo($(element).parents('.form-group').find(".error-here"));
+                } else {
+                    error.insertAfter(element);
+                }
+            }
+        });
 
         $(this).off('shown.bs.modal');
     });

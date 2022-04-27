@@ -159,6 +159,8 @@ return [
     'general_retry' => 'Дахин оролдох',
     'general_entry_text' => 'Оруулах мэдээлэл',
     'general_no_record' => 'Бичлэг байхгүй',
+    'general_current_status' => 'Одоогийн төлөв',
+    'general_next_status' => 'Шилжүүлэх төлөв',
 
     // Search
     "general_search_list" => "Хайлт",

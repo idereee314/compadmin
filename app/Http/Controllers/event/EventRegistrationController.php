@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Input;
 use Validator;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\URL;
+use HTML;
 
 //Repositories
 use reference\EventEntriesRepository as EventEntries;
@@ -48,7 +49,6 @@ class EventRegistrationController extends Controller
         $this->configBelt = $configBelt;
         $this->configWeight = $configWeight;
         $this->member = $member;
-        $this->view_path = "event.registration";
     }
 
     /**
@@ -72,7 +72,7 @@ class EventRegistrationController extends Controller
             $data['event'] = $event;
             $data['eventEntries'] = $event->entries;
             $data['eventRegStatusCount'] = $eventRegStatusCount;
-            $data['progressPercent'] = round(@$eventRegStatusCount[@Config::get('smart.event_registeation_status')['approved']] ? @$eventRegStatusCount[@Config::get('smart.event_registeation_status')['approved']] / array_sum(@$eventRegStatusCount) * 100 : 0);
+            $data['progressPercent'] = round(@$eventRegStatusCount[@Config::get('smart.event_registeration_status')['approved']] ? @$eventRegStatusCount[@Config::get('smart.event_registeration_status')['approved']] / array_sum(@$eventRegStatusCount) * 100 : 0);
             $data['eventFees'] = $eventFees;
             $data['academies'] = $academies;
             $data['view_path'] = $this->view_path;
@@ -128,18 +128,7 @@ class EventRegistrationController extends Controller
             try
             {
                 $event = $this->eventRegistration->create($input);
-                if(@$input['amount'])
-                {
-                    $paymentUnq['registration_id'] = $event->id;
 
-                    $paymentArr['registration_id'] = $event->id;
-                    $paymentArr['member_id'] = $event->member_id;
-                    $paymentArr['register_number'] = $event->member->register_number;
-                    $paymentArr['status'] = true;
-                    $paymentArr['amount'] = $input['amount'];
-
-                    $event->payment->updateOrCreate($paymentUnq, $paymentArr);
-                }
                 $response = array(
                     'status' => 'success',
                     'msg' => trans('messages.success_save')
@@ -227,18 +216,6 @@ class EventRegistrationController extends Controller
         } else {
 			try {
                 $event = $this->eventRegistration->update($id, $input);
-                if(@$input['amount'])
-                {
-                    $paymentUnq['registration_id'] = $event->id;
-
-                    $paymentArr['registration_id'] = $event->id;
-                    $paymentArr['member_id'] = $event->member_id;
-                    $paymentArr['register_number'] = $event->member->register_number;
-                    $paymentArr['status'] = true;
-                    $paymentArr['amount'] = $input['amount'];
-
-                    $event->payment()->updateOrCreate($paymentUnq, $paymentArr);
-                }
 
 				$response = array(
 					'status' => 'success',
@@ -268,9 +245,10 @@ class EventRegistrationController extends Controller
     {
         try {
             $eventRegistration = $this->eventRegistration->find($id);
+
             if(!empty($eventRegistration))
             {
-                if($eventRegistration->status == 'created')
+                if(empty($eventRegistration->status) || $eventRegistration->status == 'created')
                 {
                     $this->eventRegistration->delete($id);
 
@@ -286,6 +264,13 @@ class EventRegistrationController extends Controller
                         'msg' => 'Баталгаажуулсан хэрэглэгч устгах боломжгүй'                    
                     );
                 }
+            }
+            else 
+            {
+                $response = array(
+                    'status' => 'error',
+                    'msg' => trans('messages.no_record'),
+                );
             }
           
         } catch(\Illuminate\Database\QueryException $e)
@@ -383,7 +368,7 @@ class EventRegistrationController extends Controller
     public function printMandateByEventAndStatus()
     {
         $input = Input::all();
-        $list = $this->eventRegistration->getRegistrationByStatus(@$input['search_event'], @Config::get('smart.event_registeation_status')['approved'], $input);
+        $list = $this->eventRegistration->getRegistrationByStatus(@$input['search_event'], @Config::get('smart.event_registration_status')['approved'], $input);
 
         $data['regs'] = $list->load(['academy:id,name,is_other','member:id,lastname,firstname,profile_url', 'weight:id,weight', 'entry:id,name'])->chunk(4);
         return view($this->view_path.'.mandat_html', $data);

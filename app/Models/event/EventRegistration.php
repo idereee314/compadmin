@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 
 use Auth;
 use Carbon;
+use Config;
 
 class EventRegistration extends Model
 {
@@ -23,7 +24,7 @@ class EventRegistration extends Model
             'entry_belt_id' => 'required',
             'entry_weight_id' => 'required',
             'academy_id' => 'required',
-            'status' => 'required'
+            //'status' => 'required'
 		);
 	}
 
@@ -76,6 +77,11 @@ class EventRegistration extends Model
     {
         return $this->hasOne('event\EventPayment', 'registration_id', 'id');
     }
+
+    public function statuses()
+    {
+        return $this->hasMany('event\EventRegistrationStatus', 'event_registration_id');
+    }
     
     public static function boot()
     {
@@ -96,7 +102,11 @@ class EventRegistration extends Model
 
         static::created(function($eventRegistration)
         {
-            //
+            $statusArr['status'] = @Config::get('smart.event_registration_status')['created'];
+            $statusArr['changed_by'] = Auth::id();
+			$statusArr['changed_at'] = Carbon\Carbon::now()->toDateTimeString();
+
+            $eventRegistration->statuses()->create($statusArr);
         });
 
         static::deleting(function($member)

@@ -82,28 +82,8 @@
                 <input class="form-control" id="academy_name" name="academy_name" {{ $eventRegistration->academy->is_other == 0 ? 'disabled' : '' }} value="{{$eventRegistration->academy_name}}" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}"/>
             </div>
         </div>
-
-        <div class="form-group row">
-            <label class="col-md-3 col-form-label text-right">{{trans('display.general_status')}}: <span class="text-danger">*</span></label>
-            <div class="col-md-9 col-lg-5">
-                <select class="form-control selectpicker" id="status" name="status" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}">
-                    <option value="">-- {{ trans('display.general_select') }} --</option>
-                    @forelse(@Config::get("enums.event_registeation_status") as $key => $status)
-                    <option value="{{ $key }}" {{$eventRegistration->status == $key ? 'selected' : ''}}>{{ $status }}</option>
-                    @empty
-                    @endforelse
-                </select>
-            </div>
-        </div>
-
-        <div class="form-group row payment" style="display: none;">
-            <label class="col-md-3 col-form-label text-right">{{ trans('display.general_amount') }}: <span class="text-danger">*</span></label>
-            <div class="col-md-9 col-lg-5">
-                <input class="form-control" id="amount" name="amount" value="{{ @$eventRegistration->payment ? $eventRegistration->payment->amount : '0'}}" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}"/>
-            </div>
-        </div>
         
-        @if($eventRegistration->status == @Config::get('smart.event_registeation_status')['approved'])
+        @if($eventRegistration->status == @Config::get('smart.event_registration_status')['approved'])
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right"></label>
             <div class="col-md-9 col-lg-5">

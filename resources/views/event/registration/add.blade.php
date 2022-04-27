@@ -73,20 +73,6 @@
                 <div class="error-here"></div>
             </div>
         </div>
-
-        <div class="form-group row">
-            <label class="col-md-3 col-form-label text-right">{{trans('display.general_status')}}: <span class="text-danger">*</span></label>
-            <div class="col-md-9">
-                <select class="form-control selectpicker" id="status" name="status" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}">
-                    <option value="">-- {{ trans('display.general_select') }} --</option>
-                    @forelse(@Config::get("enums.event_registeation_status") as $key => $status)
-                    <option value="{{ $key }}">{{ $status }}</option>
-                    @empty
-                    @endforelse
-                </select>
-                <div class="error-here"></div>
-            </div>
-        </div>
     </div>
 
     <div class="modal-footer text-right bg-gray-100 border-top-0">

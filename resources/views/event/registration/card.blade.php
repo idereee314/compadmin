@@ -150,7 +150,7 @@
                                                     </g>
                                                 </svg><!--end::Svg Icon-->
                                             </span>
-                                            <a href="#" class="font-weight-bolder text-primary ml-2">{{ @$event['registration_count'] }} {{ @Config::get('enums.event_registeation_status')['created'] }}</a>
+                                            <a href="#" class="font-weight-bolder text-primary ml-2">{{ @$event['registration_count'] }} {{ @Config::get('enums.event_registration_status')['created'] }}</a>
                                         </div>
                                         <div class="d-flex align-items-center mr-7">
                                             <span class="svg-icon svg-icon-gray-500">
@@ -165,7 +165,7 @@
                                                 </svg>
                                                 <!--end::Svg Icon-->
                                             </span>
-                                            <a href="#" class="font-weight-bolder text-primary ml-2">{{ @$event['status_approved'] }} {{ @Config::get('enums.event_registeation_status')['approved'] }}</a>
+                                            <a href="#" class="font-weight-bolder text-primary ml-2">{{ @$event['status_approved'] }} {{ @Config::get('enums.event_registration_status')['approved'] }}</a>
                                         </div>
                                     </div>
                                     {{-- {{Auth::user()->id}} --}}

@@ -13,7 +13,7 @@ return array(
 		2 => 'Эмэгтэй'
 	],
 
-	'event_registeation_status' => [
+	'event_registration_status' => [
 		'created' => 'Илгээсэн',
 		//'registered' => 'Бүртгэсэн',
 		'approved' => 'Баталгаажсан',

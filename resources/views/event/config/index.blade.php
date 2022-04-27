@@ -68,7 +68,7 @@
                                     <i class="flaticon-file-2 icon-2x text-muted font-weight-bold"></i>
                                 </span>
                                 <div class="d-flex flex-column flex-lg-fill">
-                                    <span class="text-dark-75 font-weight-bolder font-size-sm">{{ $count }} {{ @Config::get('enums.event_registeation_status')[$key] }}</span>
+                                    <span class="text-dark-75 font-weight-bolder font-size-sm">{{ $count }} {{ @Config::get('enums.event_registration_status')[$key] }}</span>
                                     <a href="javascript:;" class="text-primary font-weight-bolder filter-status-count" data-status="{{ $key }}">Харах</a>
                                 </div>
                             </div>
@@ -193,7 +193,7 @@
                                                     <label>{{ trans('display.general_status') }}:</label>
                                                     <select class="form-control selectpicker datatable-input" name="search_status" id="search_status" data-col-index="10">
                                                         <option value="">-- {{ trans('display.general_all') }} --</option>
-                                                        @forelse(@Config::get('enums.event_registeation_status') as $key => $status)
+                                                        @forelse(@Config::get('enums.event_registration_status') as $key => $status)
                                                         <option value="{{ $key }}">{{ $status }}</option>
                                                         @empty
                                                         @endforelse

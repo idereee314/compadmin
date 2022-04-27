@@ -55,7 +55,7 @@ class EloquentEventRepository implements EventRepository {
 			->join('uq_event_config', 'uq_event_config.event_id', '=', 'rti_event.id')
 			->with(['picturesMobileCover:event_id,dir_url,url', 'members:id,profile_url,firstname,lastname,gender_code'])
 			->withCount(['registration', 'registration as status_approved' => function ($q) {
-				$q->where('uq_event_registration.status', @Config::get('smart.event_registeation_status')['approved']);
+				$q->where('uq_event_registration.status', @Config::get('smart.event_registration_status')['approved']);
 			}]);
 
 		$eventConfig = $qry->orderBy('uq_event_config.created_at', 'desc')->paginate($perPage);

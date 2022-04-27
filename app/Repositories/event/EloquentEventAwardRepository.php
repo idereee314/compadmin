@@ -132,7 +132,7 @@ class EloquentEventAwardRepository implements EventAwardRepository {
             })
 			->editColumn('status', function($qry)
 			{
-				$status = '<span class="label label-lg font-weight-bold label-light-'.@Config::get('smart.event_registeation_status_class')[$qry->status].' label-inline">'.@Config::get('enums.event_registeation_status')[$qry->status].'</span>';
+				$status = '<span class="label label-lg font-weight-bold label-light-'.@Config::get('smart.event_registration_status_class')[$qry->status].' label-inline">'.@Config::get('enums.event_registration_status')[$qry->status].'</span>';
 				return $status;
 			})
 			->addColumn('profile_url', function ($qry) {
@@ -173,7 +173,7 @@ class EloquentEventAwardRepository implements EventAwardRepository {
 					$actionHtml .= '</div>';
 				$actionHtml .= '</div>';
 				$actionHtml .= 	'<a class="btn btn-sm btn-clean btn-icon edit" href="javascript:;" data-registrationid="'.$qry->id.'" title="'.trans('display.general_edit').'"><i class="la la-edit"></i></a>';
-				if($qry->status == @Config::get('smart.event_registeation_status')['created'])
+				if($qry->status == @Config::get('smart.event_registration_status')['created'])
 				{
 					$actionHtml .= 	'<a class="btn btn-sm btn-clean btn-icon delete" href="javascript:;" data-registrationid="'.$qry->id.'" title="'.trans('display.general_delete').'"><i class="la la-trash"></i></li>';
 				}

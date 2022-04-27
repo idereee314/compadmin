@@ -12,7 +12,7 @@ class EventPayment extends Model
     protected $table = 'uq_event_payment';
     protected $primaryKey = 'id';
 
-    protected $fillable = ['registration_id', 'member_id', 'register_number', 'status', 'amount', 'created_by', 'updated_by', 'created_at', 'updated_at'];
+    protected $fillable = ['registration_id', 'member_id', 'register_number', 'status', 'amount', 'from_type', 'created_by', 'updated_by', 'created_at', 'updated_at'];
 
     public function eventRegistration()
     {
@@ -31,6 +31,7 @@ class EventPayment extends Model
 
         static::creating(function($payment)
         {
+            $payment->from_type = 'admin';
             $payment->created_by = Auth::id();
 			$payment->created_at = Carbon\Carbon::now()->toDateTimeString();
         });

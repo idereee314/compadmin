@@ -16,18 +16,29 @@ return array(
 		2 => 'эмэгтэй'
 	],
 
-	'event_registeation_status' => [
+	'event_registration_status' => [
 		'created' => 'created',
 		'approved' => 'approved',
-		'checked' => 'Шалгасан',
 		'canceled' => 'canceled',
 	],
 
-	'event_registeation_status_class' => [
+	'event_registration_status_class' => [
 		'created' => 'primary',
 		'approved' => 'success',
 		'checked' => 'info',
 		'canceled' => 'danger ',
+	],
+
+	'event_registration_status_flow' => [
+		'' => ['created'],
+		'created' => ['approved', 'canceled'],
+		'approved' => ['canceled'],
+		'canceled' => [],
+	],
+
+	'event_registration_source_type' => [
+		'app' => 'app',
+		'admin' => 'admin'
 	],
 
 	'member_status_class' => [
