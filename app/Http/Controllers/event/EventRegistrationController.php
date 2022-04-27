@@ -68,11 +68,11 @@ class EventRegistrationController extends Controller
             $eventRegStatusCount = $this->eventRegistration->getEventRegStatusCount($event->id)->pluck('total', 'status')->toArray();
             $academies = $this->academy->all();
             $eventFees = $this->eventRegistration->getPaymentByEventId(@$input['event_id'])->groupBy('amount');
-    
+
             $data['event'] = $event;
             $data['eventEntries'] = $event->entries;
             $data['eventRegStatusCount'] = $eventRegStatusCount;
-            $data['progressPercent'] = round(@$eventRegStatusCount[@Config::get('smart.event_registeration_status')['approved']] ? @$eventRegStatusCount[@Config::get('smart.event_registeration_status')['approved']] / array_sum(@$eventRegStatusCount) * 100 : 0);
+            $data['progressPercent'] = round(@$eventRegStatusCount[@Config::get('smart.event_registration_status')['approved']] ? @$eventRegStatusCount[@Config::get('smart.event_registration_status')['approved']] / array_sum(@$eventRegStatusCount) * 100 : 0);
             $data['eventFees'] = $eventFees;
             $data['academies'] = $academies;
             $data['view_path'] = $this->view_path;

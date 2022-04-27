@@ -32,7 +32,7 @@
                             </label>
                         </span>
                     </div>
-                    <input type="number" class="form-control" id="amount" name="amount" value="{{ @$eventRegistration->payment->amount }}" {{ empty(@$eventRegistration->payment) || $eventRegistration->payment->from_type == 'admin' ? '' : 'readonly'}} min="0" max="{{ @$entryFees->max('entrance_fee')}}" step="1000" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}"/>
+                    <input type="number" class="form-control" id="amount" name="amount" value="{{ @$eventRegistration->payment->amount }}" {{ empty(@$eventRegistration->payment) || $eventRegistration->payment->from_type == 'admin' ? '' : 'readonly'}} min="0" max="{{ @$entryFees->max('entrance_fee')}}" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}"/>
                 </div>
             </div>
         </div>

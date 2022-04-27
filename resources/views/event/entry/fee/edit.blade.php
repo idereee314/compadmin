@@ -38,7 +38,7 @@
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">Төлбөр: <span class="text-danger">*</span></label>
             <div class="col-md-9 col-lg-6">
-                <input type="number" class="form-control" value="{{$eventEntryFee->entrance_fee}}" min="5000" step="5000" autocomplete="off" name="entrance_fee"  data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}"/>
+                <input type="number" class="form-control" value="{{$eventEntryFee->entrance_fee}}" min="0" step="5000" autocomplete="off" name="entrance_fee"  data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}"/>
                 <div class="error-here"></div>
             </div>
         </div>
