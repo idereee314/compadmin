@@ -12,7 +12,7 @@
             <label class="col-md-3 col-form-label text-right">{{trans('display.reg_date')}}<span class="text-danger"> *</span></label>
             <div class="col-md-9 col-lg-6">
                 <div class="input-group" id="kt_reg_date">
-                    <input type="text" name="reg_date" id="reg_date" class="form-control" readonly="readonly" value="{{ Carbon\Carbon::parse(@$eventConfig->reg_start_date)->format('Y-m-d H:i') }} / {{ Carbon\Carbon::parse(@$eventConfig->reg_end_date)->format('Y-m-d H:i') }}" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}">
+                    <input type="text" name="reg_date" id="reg_date" class="form-control" readonly="readonly" value="{{ Carbon\Carbon::parse(@$eventConfig->reg_start_date)->format('Y-m-d H:i:s') }} / {{ Carbon\Carbon::parse(@$eventConfig->reg_end_date)->format('Y-m-d H:i:s') }}" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}">
                     <div class="input-group-append">
                         <span class="input-group-text">
                             <i class="la la-calendar-check-o"></i>
@@ -59,13 +59,15 @@ $(document).ready(function() {
         buttonClasses: ' btn',
         applyClass: 'btn-primary',
         cancelClass: 'btn-secondary',
+        startDate: '{{ @$eventConfig->reg_start_date ? Carbon\Carbon::parse($eventConfig->reg_start_date)->format('Y-m-d g:i A') : '' }}',
+        endDate: '{{ @$eventConfig->reg_end_date ? Carbon\Carbon::parse(@$eventConfig->reg_end_date)->format('Y-m-d g:i A') : '' }}',
         timePicker: true,
         timePickerIncrement: 30,
         locale: {
-            format: 'YYYY-MM-DD H:mm'
+            format: 'YYYY-MM-DD hh:mm A'
         }
     }, function(start, end, label) {
-        $('#kt_reg_date .form-control').val( start.format('YYYY-MM-DD H:mm') + ' / ' + end.format('YYYY-MM-DD H:mm'));
+        $('#kt_reg_date .form-control').val( start.format('YYYY-MM-DD hh:mm A') + ' / ' + end.format('YYYY-MM-DD hh:mm A'));
     });
 
     $('#update-event-config-form select[id=org_types]').select2({});
