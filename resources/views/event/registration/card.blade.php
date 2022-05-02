@@ -61,7 +61,7 @@
                                         <!--begin::Info-->
                                         <div class="d-flex flex-column mr-auto">
                                             <!--begin: Title-->
-                                            <a href="#" class="card-title text-hover-primary font-weight-bolder font-size-h5 text-dark mb-1">{{ @$event['name'] }}</a>
+                                            <a href="/event/registration?event_id={{@$event['id']}}" class="card-title text-hover-primary font-weight-bolder font-size-h5 text-dark mb-1">{{ @$event['name'] }}</a>
                                             <span class="text-muted font-weight-bold">{{ Carbon\Carbon::parse(@$event['event_date'])->format('Y M d') }} - {{ Carbon\Carbon::parse(@$event['due_date'])->format('Y M d') }}</span>
                                             <!--end::Title-->
                                         </div>

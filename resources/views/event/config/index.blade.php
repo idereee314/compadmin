@@ -227,11 +227,15 @@
                             <thead>
                             <tr>
                                 <th width="5%">No.</th>
-                                <th width="35%">{{trans('display.general_name')}}</th>
-                                <th width="15%">{{trans('display.reg_start_date')}}</th>
-                                <th width="15%">{{trans('display.reg_end_date')}}</th>
-                                <th width="15%">{{trans('display.general_created_at')}}</th>
-                                <th width="15%">{{trans('display.general_manage')}}</th>
+                                <th width="25%">{{trans('display.general_name')}}</th>
+                                <th width="10%">{{trans('display.reg_start_date')}}</th>
+                                <th width="10%">{{trans('display.reg_end_date')}}</th>
+                                <th width="5%">{{trans('display.general_type')}}</th>
+                                <th width="5%">{{trans('display.comp_entry_belt')}}</th>
+                                <th width="5%">{{trans('display.comp_entry_age')}}</th>
+                                <th width="5%">{{trans('display.comp_entry_weight')}}</th>
+                                <th width="13%">{{trans('display.general_created_at')}}</th>
+                                <th width="12%">{{trans('display.general_manage')}}</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -288,8 +292,12 @@ $(document).ready(function() {
                 width: "30px"
             },
             {data: 'event.name', "defaultContent": ""},
-            {data: 'reg_start_date'},
-            {data: 'reg_end_date'},
+            {data: 'reg_start_date', "defaultContent": ""},
+            {data: 'reg_end_date', "defaultContent": ""},
+            {data: 'entries_count', "defaultContent": ""},
+            {data: 'config_belts_count', "defaultContent": ""},
+            {data: 'config_ages_count', "defaultContent": ""},
+            {data: 'config_weights_count', "defaultContent": ""},
             {data: 'created_at'},
             {data: 'action'},
         ],
@@ -302,12 +310,12 @@ $(document).ready(function() {
         {
             searchable: false,
             orderable: false,
-            targets: [0,5]
+            targets: [0,9]
         },{
             class: "text-center",
-            targets: [0,2,3,4,5]
+            targets: [0,2,3,4,5,6,7,8,9]
         }],
-        order: [[ 4, "desc" ]],
+        order: [[ 8, "desc" ]],
         dom: "<'row'<'col-sm-6 text-left'B><'col-sm-6 text-right'<'#colvis'>>><'row'<'col-sm-12'tr>><'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7 dataTables_pager'lp>>",
         buttons: [
             {

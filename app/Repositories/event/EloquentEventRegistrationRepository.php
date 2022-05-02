@@ -225,7 +225,7 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 
 				if($permissionEdit && ($qry->event->users->contains(Auth::user()->id) || Auth::user()->roles->first()->code == 'admin'))
 				{
-					if($qry->event->due_date <= Carbon\Carbon::now())
+					if($qry->event->due_date <= Carbon\Carbon::now() && $qry->status == @Config::get('smart.event_registration_status')['approved'])
 					{
 						if(@$qry->award)
 						{

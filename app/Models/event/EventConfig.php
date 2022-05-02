@@ -36,6 +36,26 @@ class EventConfig extends Model
         return $this->hasMany('event\EventRegistration', 'event_id', 'event_id')->orderBy('uq_event_registration.created_at', 'asc')->limit(10);
     }
 
+    public function entries()
+    {
+        return $this->hasMany('reference\EventEntries', 'event_id', 'event_id');
+    }
+
+    function configBelts()
+    {
+        return $this->hasManyThrough('reference\EntryConfigBelt', 'reference\EventEntries', 'event_id', 'entry_id', 'event_id', 'id');
+    }
+
+    function configAges()
+    {
+        return $this->hasManyThrough('reference\EntryConfigAge', 'reference\EventEntries', 'event_id', 'entry_id', 'event_id', 'id');
+    }
+
+    function configWeights()
+    {
+        return $this->hasManyThrough('reference\EntryConfigWeight', 'reference\EventEntries', 'event_id', 'entry_id', 'event_id', 'id');
+    }
+    
 	public static function boot()
     {
         parent::boot();    
