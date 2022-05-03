@@ -34,4 +34,22 @@ class EloquentOrganizationRepository implements OrganizationRepository {
 		return Organization::find($id);
 	}
 
+	public function findOrganizationByName($orgName)
+    {
+        //DB::enableQueryLog();
+        $organization = "";
+
+        if(!empty(@$orgName))
+		{
+			$qry = Organization::select('*');
+			$qry->whereRaw("LOWER(name) like ?", array('%'.mb_strtolower(@$orgName).'%'));
+			$organization = $qry->orderBy('name', 'asc')->get();
+        }
+        /*
+        $queries = DB::getQueryLog();
+        dd($queries);
+        */
+		return $organization;
+    }
+
 }

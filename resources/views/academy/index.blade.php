@@ -41,13 +41,14 @@
                                             <table class="table table-separate table-head-custom table-checkable dataTable no-footer dtr-inline" id="academy_datatable" role="grid" aria-describedby="kt_datatable_info" style="width: 1235px;">
                                                 <thead>
                                                     <tr role="row">
-                                                        <th class="sorting sorting_asc">No.</th>
-                                                        <th>{{trans('display.organization')}}</th>
-                                                        <th>{{trans('display.general_name')}}</th>
-                                                        <th>{{trans('display.general_name_en')}}</th>
-                                                        <th>{{trans('display.general_sort_order')}}</th>
-                                                        <th>{{trans('display.general_created_at')}}</th>
-                                                        <th>{{trans('display.general_manage')}}</th>
+                                                        <th>No.</th>
+                                                        <th width="15%">{{trans('display.general_type')}}</th>
+                                                        <th width="20%">{{trans('display.organization')}}</th>
+                                                        <th width="20%">{{trans('display.general_name')}}</th>
+                                                        <th width="20%">{{trans('display.general_name_en')}}</th>
+                                                        <th width="5%">{{trans('display.general_sort_order')}}</th>
+                                                        <th width="10%">{{trans('display.general_created_at')}}</th>
+                                                        <th width="5%">{{trans('display.general_manage')}}</th>
                                                     </tr>
                                                 </thead>
                                             </table>    
@@ -76,7 +77,6 @@
 
 <script>
 $(document).ready(function() {
-    $('.kt-selectpicker').selectpicker();
     academyTable = $("#academy_datatable").DataTable({
         processing:     true,
         serverSide:     true,
@@ -95,9 +95,6 @@ $(document).ready(function() {
                 d.role = $('#user-search-form select[id="role"]').val();
             },
         },
-        "fnCreatedRow": function( nRow, aData, iDataIndex ) {
-            $(nRow).attr('id', aData[0]);
-        },
         columns: [
             {
                 data: null,
@@ -106,6 +103,7 @@ $(document).ready(function() {
                 },
                 width: "30px"
             },
+            {data: 'type', "defaultContent": ""},
             {data: 'organization.name', "defaultContent": ""},
             {data: 'name'},
             {data: 'name_en'},
@@ -120,9 +118,9 @@ $(document).ready(function() {
             targets: [0]
         },{
             class: "text-center",
-            targets: [0, 4, 5]
+            targets: [0,5,7]
         }],
-        order: [[ 5, "desc" ]],
+        order: [[ 6, "desc" ]],
         dom: "<'top'B><'row'<'col-sm-12'tr>><'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7 dataTables_pager'lp>>",
         buttons: [
         {
@@ -144,15 +142,43 @@ $(document).ready(function() {
 //Modal
 function showAddModal( data ) {
 
-    $('#academyAddModal').modal();
-    $('#academyAddModal').on('shown.bs.modal', function(){
-        $('#academyAddModal .modal-content').html(data);
+    $('#academyModal').modal();
+    $('#academyModal').on('shown.bs.modal', function(){
+        $('#academyModal .modal-content').html(data);
+        $('.selectpicker').selectpicker();      
 
-        //$(".only-number").inputmask('Regex', { regex: "\\d+(\\.\\d+)?" });
-       // $(".only-number").inputmask('Regex', { regex: "^[0-9]{256}" });
-      
+        $('#create-academy-form select[name=organization_id]').select2({
+            width: 'resolve',
+            dropdownAutoWidth : true,
+            dropdownParent: $('#academyModal'),
+            placeholder: "-- {{ trans('display.general_select') }} --",
+            minimumInputLength: 3,
+            ajax: {
+                url: '{!! route('academy.search.org') !!}',
+                delay: 500,
+                data: function (params) {
+                    var query = {
+                        q: params.term
+                    }
+                    return query;
+                },
 
-        $('#add-academy-form').validate({
+                processResults: function (data) {
+                    return {
+                        results: JSON.parse(data)
+                    };
+                },
+                cache: true
+            },
+            templateSelection: function (item) {
+                return item.name;
+            },
+            templateResult: function (item) {
+                return item.name;
+            }
+        });
+
+        $('#create-academy-form').validate({
             ignore: [],
             highlight:function(element) {
                 $(element).parents('.form-group').addClass('has-error has-feedback');
@@ -166,7 +192,7 @@ function showAddModal( data ) {
                     type: form.method,
                     data: new FormData(form),
                     success: function(response) {
-                        $('#academyAddModal').find("#close").trigger('click');
+                        $('#academyModal').find("#close").trigger('click');
                         $('.panel-sub-heading').html(response).fadeIn().delay(5000).fadeOut();
                         academyTable.draw();
                     },
@@ -192,15 +218,47 @@ function showAddModal( data ) {
         $(this).off('shown.bs.modal');
     });
 
-    $('#academyAddModal').on('hidden.bs.modal', function(){
-        $('#academyAddModal .modal-body').empty();
+    $('#academyModal').on('hidden.bs.modal', function(){
+        $('#academyModal .modal-content').empty();
     });
 }
 
-function academyEditModal(data){
-    $('#academyEditModal').modal();
-        $('#academyEditModal').on('shown.bs.modal', function(){
-            $('#academyEditModal .modal-content').html(data);
+function academyModal(data){
+    $('#academyModal').modal();
+        $('#academyModal').on('shown.bs.modal', function(){
+            $('#academyModal .modal-content').html(data);
+            $('.selectpicker').selectpicker();      
+
+            $('#edit-academy-form select[name=new_organization_id]').select2({
+                width: 'resolve',
+                dropdownAutoWidth : true,
+                dropdownParent: $('#academyModal'),
+                placeholder: "-- {{ trans('display.general_select') }} --",
+                minimumInputLength: 3,
+                ajax: {
+                    url: '{!! route('academy.search.org') !!}',
+                    delay: 500,
+                    data: function (params) {
+                        var query = {
+                            q: params.term
+                        }
+                        return query;
+                    },
+
+                    processResults: function (data) {
+                        return {
+                            results: JSON.parse(data)
+                        };
+                    },
+                    cache: true
+                },
+                templateSelection: function (item) {
+                    return item.name;
+                },
+                templateResult: function (item) {
+                    return item.name;
+                }
+            });
 
             $('#edit-academy-form').validate({
             ignore: [],
@@ -216,7 +274,7 @@ function academyEditModal(data){
                     type: form.method,
                     data:  new FormData(form),
                     success: function(response) {
-                        $('#academyEditModal').find("#close").trigger('click');
+                        $('#academyModal').find("#close").trigger('click');
                         $('.panel-sub-heading').html(response).fadeIn().delay(5000).fadeOut();
                         academyTable.draw();
                     },
@@ -242,8 +300,8 @@ function academyEditModal(data){
         $(this).off('shown.bs.modal');
 });
 
-$('#academyEditModal').on('hidden.bs.modal', function(){
-    $('#academyEditModal .modal-body').empty();
+$('#academyModal').on('hidden.bs.modal', function(){
+    $('#academyModal .modal-content').empty();
 });
 
 }
@@ -283,7 +341,7 @@ function academyDelete(id)
 
 function academyEdit(id)
 {
-    $.get('/academy/' + id + '/edit', academyEditModal);
+    $.get('/academy/' + id + '/edit', academyModal);
 }
 
 </script>

@@ -130,5 +130,6 @@ Route::group([
     Route::resource('/academy', 'academy\AcademyController', ['names' => 'academy']);
     Route::any('/academy/data/list', 'academy\AcademyController@getDatatableList')->name('academy.data.list');
     Route::post('/academy/isother', 'academy\AcademyController@getIsOther')->name('academy.isother');
+    Route::get('/academy/search/org', 'academy\AcademyController@findOrganizationByName')->name('academy.search.org');
 });
 

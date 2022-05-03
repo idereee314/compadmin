@@ -50,7 +50,7 @@ class AcademyController extends Controller
      */
     public function create()
     {
-        $data['organizations'] = $this->organization->all();
+        $data['view_path'] = $this->view_path;
 
         return view($this->view_path.'.add', $data);
     }
@@ -121,7 +121,6 @@ class AcademyController extends Controller
     public function edit($id)
     {
         $academy = $this->academy->find($id);
-        $data['organizations'] = $this->organization->all();
         $data['academy'] = $academy;
 
         return view($this->view_path.'.edit', $data);
@@ -211,5 +210,13 @@ class AcademyController extends Controller
 
         $academy = $this->academy->find($input['academy_id']);
         return json_encode($academy->is_other);
+    }
+
+    public function findOrganizationByName()
+    {
+        $input = Input::all();
+        $organization = $this->organization->findOrganizationByName($input['q']);
+
+        return json_encode($organization);
     }
 }

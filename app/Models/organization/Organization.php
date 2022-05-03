@@ -12,6 +12,21 @@ use Carbon;
 class Organization extends Model
 {
     protected $table = 'rti_organization';
+
+    public function parent()
+    {
+        return $this->belongsTo('organization\Organization', 'parent_id');
+    }
+
+    public function child()
+	{
+		return $this->hasMany('organization\Organization', 'parent_id')->orderBy('id', 'asc');
+	}
+
+    public function children()
+    {
+        return $this->child()->with('children')->orderBy('id', 'asc');
+    }
     
     public static function boot()
     {
