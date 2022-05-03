@@ -153,6 +153,7 @@ function showAddModal( data ) {
             dropdownParent: $('#academyModal'),
             placeholder: "-- {{ trans('display.general_select') }} --",
             minimumInputLength: 3,
+            allowClear: true,
             ajax: {
                 url: '{!! route('academy.search.org') !!}',
                 delay: 500,
@@ -176,6 +177,9 @@ function showAddModal( data ) {
             templateResult: function (item) {
                 return item.name;
             }
+        }).on('select2:select', function(e){
+            $('#create-academy-form input[name=name]').val(e.params.data.name);
+            $('#create-academy-form input[name=name_en]').val(e.params.data.name_en);
         });
 
         $('#create-academy-form').validate({
@@ -258,6 +262,9 @@ function academyModal(data){
                 templateResult: function (item) {
                     return item.name;
                 }
+            }).on('select2:select', function(e){
+                $('#create-academy-form input[name=name]').val(e.params.data.name);
+                $('#create-academy-form input[name=name_en]').val(e.params.data.name_en);
             });
 
             $('#edit-academy-form').validate({

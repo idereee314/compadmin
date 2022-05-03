@@ -201,7 +201,7 @@ class EventRegistrationController extends Controller
             'entry_belt_id' => 'required',
             'entry_weight_id' => 'required',
             'academy_id' => 'required',
-            'status' => 'required'
+            //'status' => 'required'
         ];
 
         $validator = Validator::make($input, $rules);

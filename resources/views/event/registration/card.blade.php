@@ -55,7 +55,10 @@
                                     <div class="d-flex align-items-center">
                                         <!--begin::Pic-->
                                         <div class="flex-shrink-0 mr-4 symbol symbol-65 symbol-circle">
-                                            <img src="{{ \Storage::disk('s3')->url(@$event['pictures_mobile_cover'][0]['dir_url'].'/thumbnail/'.@$event['pictures_mobile_cover'][0]['url']) }}" alt="image" />
+                                            @php
+                                                $imgSrc = @$event['pictures_mobile_cover'][0] ? \Storage::disk('s3')->url(@$event['pictures_mobile_cover'][0]['dir_url'].'/thumbnail/'.@$event['pictures_mobile_cover'][0]['url']) : '/assets/images/no_image_cover.jpg';
+                                            @endphp
+                                            <img src="{{ $imgSrc }}" alt="image" />
                                         </div>
                                         <!--end::Pic-->
                                         <!--begin::Info-->

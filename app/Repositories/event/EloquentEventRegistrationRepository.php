@@ -193,9 +193,16 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 			->addColumn('member', function($qry){
 				$member = "";
 				$member .= '<div class="d-flex align-items-center">';
-                	$member .= '<a href="javascript:;" class="show-image" data-id="'.$qry->member->id.'" data-type="profile"><div class="symbol symbol-50 flex-shrink-0">';
-						$member .= '<img src="'.\Storage::disk('s3')->url($qry->member->profile_url).'" alt="Profile">';
-					$member .= '</div></a>';
+					if(@$qry->member->profile_url && \Storage::disk('s3')->exists($qry->member->profile_url))
+					{
+						$member .= '<a href="javascript:;" class="show-image" data-id="'.$qry->member->id.'" data-type="profile"><div class="symbol symbol-50 flex-shrink-0">';
+							$member .= '<img src="'.\Storage::disk('s3')->url($qry->member->profile_url).'" alt="Profile">';
+						$member .= '</div></a>';
+					}
+					else 
+					{
+						$member .= '<div class="symbol symbol-50 flex-shrink-0"><img src="/assets/images/default_profile.jpg" alt="Profile"></div>';
+					}
 					$member .= '<div class="ml-3">';
 						$member .= '<span class="text-dark-75 line-height-sm d-block pb-3" style="white-space: nowrap;">'.$qry->member->lastname.' <strong>'.$qry->member->firstname.'</strong></span>';
                         $member .= '<span class="text-dark-75 line-height-sm d-block pb-2"><i class="la la-address-book"></i>'.$qry->member->register_number.', <i class="la la-phone"></i>'.$qry->member->contact_phone.'</span>';
