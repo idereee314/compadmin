@@ -53,7 +53,7 @@ class EloquentAcademyRepository implements AcademyRepository {
 		$academy = $this->find($id);
 		if(array_key_exists('new_organization_id', $input))
 		{
-			$academy->organization_id = @$input['organization_id'];
+			$academy->organization_id = @$input['new_organization_id'];
 		}
 		$academy->name = $input['name'];
 		$academy->name_en = $input['name_en'];

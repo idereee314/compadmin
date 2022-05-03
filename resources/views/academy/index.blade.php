@@ -263,8 +263,8 @@ function academyModal(data){
                     return item.name;
                 }
             }).on('select2:select', function(e){
-                $('#create-academy-form input[name=name]').val(e.params.data.name);
-                $('#create-academy-form input[name=name_en]').val(e.params.data.name_en);
+                $('#edit-academy-form input[name=name]').val(e.params.data.name);
+                $('#edit-academy-form input[name=name_en]').val(e.params.data.name_en);
             });
 
             $('#edit-academy-form').validate({

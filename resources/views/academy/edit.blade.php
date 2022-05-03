@@ -24,7 +24,9 @@
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.organization')}}: </label>
             <div class="col-md-9">
+                @if(@$academy->organization)
                 <p class="form-control-plaintext text-muted">{{ @$academy->organization->name }}</p>
+                @endif
                 <select class="form-control" name="new_organization_id" id="new_organization_id">
                     <option value="">-- {{ trans('display.general_select') }} --</option>
                 </select>
