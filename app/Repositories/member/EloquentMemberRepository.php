@@ -129,12 +129,12 @@ class EloquentMemberRepository implements MemberRepository {
 				}
 			})
 			->editColumn('profile_photo', function ($qry) {
-				if (@$qry->profile_url && ((@env('production') && \Storage::disk('s3')->exists($qry->profile_url)) || @env('local'))) {
-					return '<a href="javascript:;" class="show-image" data-id="'.$qry->id.'" data-type="profile"><img class="align-self-end" alt="Profile" src="'.\Storage::disk('s3')->url($qry->profile_url).'" style="max-width: 50px;"></a>';
+				if (@$qry->profile_url xor ((@env('production') && \Storage::disk('s3')->exists($qry->profile_url)) || @env('local'))) {
+					return '<a href="javascript:;" class="show-image" data-id="'.$qry->id.'" data-type="profile"><div class="symbol symbol-50 flex-shrink-0"><img class="align-self-end" alt="Profile" src="'.\Storage::disk('s3')->url($qry->profile_url).'" style="max-width: 50px;"></div></a>';
 				}
 				else 
 				{
-					return '<img class="align-self-end" alt="Profile" src="/assets/images/default_profile.jpg" style="max-width: 50px;">';
+					return '<div class="symbol symbol-50 flex-shrink-0"><img class="align-self-end" alt="Profile" src="/assets/images/default_profile.jpg" style="max-width: 50px;"></div>';
 				}
 			})
 			->editColumn('id_photo', function ($qry) {

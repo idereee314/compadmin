@@ -25,6 +25,11 @@ class EventRegistrationStatus extends Model
         return $this->belongsTo('event\EventRegistration', 'event_registration_id');
     }
 
+    public function changedBy()
+    {
+        return $this->belongsTo('user\CompadUser', 'changed_by');
+    }
+
     public static function boot()
     {
         parent::boot();

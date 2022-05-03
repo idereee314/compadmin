@@ -85,7 +85,7 @@
                                                     </g>
                                                 </svg>
                                                 <!--end::Svg Icon-->
-                                            </span>{{ @$event->config->reg_start_date }} / {{ @$event->config->reg_end_date }}</a>
+                                            </span>{{ @Carbon\Carbon::parse($event->config->reg_start_date)->format('y M, d g:i A') }} / {{ @Carbon\Carbon::parse(@$event->config->reg_end_date)->format('y M, d g:i A') }}</a>
                                         </div>
                                         <!--end::Contacts-->
                                     </div>

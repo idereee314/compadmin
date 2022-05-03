@@ -193,7 +193,7 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 			->addColumn('member', function($qry){
 				$member = "";
 				$member .= '<div class="d-flex align-items-center">';
-					if(@$qry->member->profile_url && \Storage::disk('s3')->exists($qry->member->profile_url))
+					if(@$qry->member->profile_url xor ((@env('production') && \Storage::disk('s3')->exists($qry->member->profile_url)) || @env('local')))
 					{
 						$member .= '<a href="javascript:;" class="show-image" data-id="'.$qry->member->id.'" data-type="profile"><div class="symbol symbol-50 flex-shrink-0">';
 							$member .= '<img src="'.\Storage::disk('s3')->url($qry->member->profile_url).'" alt="Profile">';
