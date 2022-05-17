@@ -49,8 +49,12 @@
                         <div class="col-xl-6">
                             <!--begin::Card-->
                             <div class="card card-custom gutter-b card-stretch">
-                                <!--begin::Body-->
-                                <div class="card-body">
+                                <div class="card-header ribbon ribbon-top ribbon-ver p-7">
+                                    @if(Carbon\Carbon::now() <= @$event['reg_end_date'])
+                                    <div class="ribbon-target bg-success" style="top: -2px; right: 20px;">
+                                        <i class="fa fa-star text-white"></i>
+                                    </div>
+                                    @endif
                                     <!--begin::Section-->
                                     <div class="d-flex align-items-center">
                                         <!--begin::Pic-->
@@ -71,8 +75,11 @@
                                         <!--end::Info-->
                                     </div>
                                     <!--end::Section-->
+                                </div>
+                                <!--begin::Body-->
+                                <div class="card-body">
                                     <!--begin::Content-->
-                                    <div class="d-flex flex-wrap mt-14">
+                                    <div class="d-flex flex-wrap">
                                         <div class="mr-12 d-flex flex-column mb-7">
                                             <span class="d-block font-weight-bold mb-4">Эхлэх</span>
                                             <span class="btn btn-light-primary btn-sm font-weight-bold btn-upper btn-text">{{ Carbon\Carbon::parse(@$event['reg_start_date'])->format('y M, d') }}</span>
@@ -100,21 +107,21 @@
                                     <!--begin::Blog-->
                                     <div class="d-flex flex-wrap">
                                         <!--begin: Item-->
-                                        <div class="mr-12 d-flex flex-column mb-7">
+                                        <div class="mr-12 d-flex flex-column">
                                             <span class="font-weight-bolder mb-4">{{ @Config::get('enums.gender_code')[2] }}</span>
                                             <span class="font-weight-bolder font-size-h5 pt-1">
                                             <span class="font-weight-bold text-dark-50"><i class="icon-md fas fa-female"></i></span> {{ @$event['members'][2] ? array_count_values(array_column(@$event['members'], 'gender_code'))[2] : '0' }}</span>
                                         </div>
                                         <!--end::Item-->
                                         <!--begin::Item-->
-                                        <div class="mr-12 d-flex flex-column mb-7">
+                                        <div class="mr-12 d-flex flex-column">
                                             <span class="font-weight-bolder mb-4">{{ @Config::get('enums.gender_code')[1] }}</span>
                                             <span class="font-weight-bolder font-size-h5 pt-1">
                                             <span class="font-weight-bold text-dark-50"><i class="icon-md fas fa-male"></i></span> {{ @$event['members'][1] ? array_count_values(array_column(@$event['members'], 'gender_code'))[1] : '0' }}</span>
                                         </div>
                                         <!--end::Item-->
                                         <!--begin::Item-->
-                                        <div class="d-flex flex-column flex-lg-fill float-left mb-7">
+                                        <div class="d-flex flex-column flex-lg-fill float-left">
                                             <span class="font-weight-bolder mb-4">Оролцогч</span>
                                             <div class="symbol-group symbol-hover">
                                                 @php $count = 0; @endphp
@@ -140,7 +147,7 @@
                                 </div>
                                 <!--end::Body-->
                                 <!--begin::Footer-->
-                                <div class="card-footer d-flex align-items-center">
+                                <div class="card-footer d-flex align-items-center p-7">
                                     <div class="d-flex">
                                         <div class="d-flex align-items-center mr-7">
                                             <span class="svg-icon svg-icon-gray-500">
