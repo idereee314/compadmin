@@ -85,12 +85,18 @@
         
         @if($eventRegistration->status == @Config::get('smart.event_registration_status')['approved'])
         <div class="form-group row">
-            <label class="col-md-3 col-form-label text-right"></label>
+            <label class="col-md-3 col-form-label text-right">Жингийн мэдээлэл </label>
             <div class="col-md-9 col-lg-5">
-                <div class="checkbox-inline">
-                    <label class="checkbox checkbox-success"> 
-                    <input type="checkbox" name="is_weight_checked" id="is_weight_checked" {{ @$eventRegistration->is_weight_checked ? 'checked' : ''}}> 
-                    <span></span>Жин шалгасан эсэх</label>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                            <label class="checkbox checkbox-inline">
+                                <input type="checkbox" name="is_weight_checked" id="is_weight_checked" {{ @$eventRegistration->is_weight_checked ? 'checked' : ''}}> 
+                                <span></span>
+                            </label>
+                        </span>
+                    </div>
+                    <input type="number" min="1" class="form-control" name="current_weight" id="current_weight" {{ @$eventRegistration->is_weight_checked ? '' : 'disabled'}} value="{{ @$eventRegistration->current_weight }}">
                 </div>
             </div>
         </div>
