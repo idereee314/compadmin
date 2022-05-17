@@ -502,4 +502,13 @@ class EventRegistrationController extends Controller
             }
         }
     }    
+
+    public function bracketShow($eventId, $entryId, $entryAgeId, $entryBeltId, $entryWeightId)
+    {
+        $input = Input::all();
+
+        $members = $this->eventRegistration->getBracketGenerationFromEvent($eventId, $entryId, $entryAgeId, $entryBeltId, $entryWeightId);
+
+        dd($members);
+    }
 }
