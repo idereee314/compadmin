@@ -64,6 +64,7 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 		$eventRegistraion->academy_name = @$input['academy_name'];
 		//$eventRegistraion->status = @$input['status'];
 		$eventRegistraion->is_weight_checked = @$input['is_weight_checked'] ? true: false ;
+		$eventRegistraion->current_weight = @$input['current_weight'];
 
 		$eventRegistraion->save();
 		return $eventRegistraion;

@@ -1132,6 +1132,17 @@ function showEditModal(data){
             });
         });
 
+        $('#update-event-registration-form input[name=is_weight_checked]').on('click', function(el){
+            if($(this).is(':checked'))
+            {
+                $('#update-event-registration-form input[name=current_weight]').prop('disabled', false);
+            }
+            else 
+            {
+                $('#update-event-registration-form input[name=current_weight]').prop('disabled', true);
+            }
+        });
+
         $('#update-event-registration-form').validate({
             ignore: [],
             highlight:function(element) {
