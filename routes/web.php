@@ -102,6 +102,8 @@ Route::group([
 
     Route::resource('/event/user', 'event\EventUserController', ['names' => 'event.user']);
 
+    Route::get('/event/registration/bracket/generation', 'event\EventRegistrationController@bracketGeneration')->name('event.registration.bracket.generation');
+
     //Entry
     Route::resource('/event/entry', 'reference\EventEntryController', ['names' => 'event.entry']);
     Route::any('/event/entry/data/list', 'reference\EventEntryController@getDatatableList')->name('event.entry.data.list');
@@ -131,5 +133,6 @@ Route::group([
     Route::any('/academy/data/list', 'academy\AcademyController@getDatatableList')->name('academy.data.list');
     Route::post('/academy/isother', 'academy\AcademyController@getIsOther')->name('academy.isother');
     Route::get('/academy/search/org', 'academy\AcademyController@findOrganizationByName')->name('academy.search.org');
+
 });
 

@@ -2,6 +2,7 @@
 
 use event\EventRegistration;
 use event\EventPayment;
+use event\EventBrackets;
 
 use Hash;
 use Log;
@@ -359,5 +360,60 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 		}
 		
 		return $registrations;
+	}
+
+	public function getAllEntriesFromEvent($eventId)
+	{
+		return DB::select("select r.entry_id, r.entry_age_id, r.entry_belt_id, r.entry_weight_id  
+								from uq_comp.uq_event_registration r
+								where event_id = ".$eventId."
+								group by r.entry_id, r.entry_age_id, r.entry_belt_id, r.entry_weight_id
+								order by r.entry_id, r.entry_age_id, r.entry_belt_id, r.entry_weight_id");
+	}
+
+	public function getBracketMembersFromEvent($eventId, $entryId, $entryAgeId, $entryBeltId, $entryWeightId, $isWeightChecked = false)
+	{
+		return DB::select("select r.id, r.member_id, r.academy_id, case when a.is_other = 1 then r.academy_name else a.name end as acname 
+								from uq_comp.uq_event_registration r
+								inner join uq_comp.uq_academy a on r.academy_id = a.id 
+								where status = 'approved' and event_id = ".$eventId." 
+								and is_weight_checked = false
+								and r.entry_id = ".$entryId." and r.entry_age_id = ".$entryAgeId." 
+								and r.entry_belt_id = ".$entryBeltId." and r.entry_weight_id = ".$entryWeightId."
+								order by r.academy_id, r.academy_name, r.id");
+	}
+
+	public function deleteEventBracket($eventId, $entryId, $entryAgeId, $entryBeltId, $entryWeightId)
+	{
+		return EventBrackets::where('event_id', $eventId)->where('entry_id', $entryId)
+					->where('entry_age_id', $entryAgeId)->where('entry_belt_id', $entryBeltId)
+					->where('entry_weight_id', $entryWeightId)->delete();
+	}
+
+	public function createEventBracket($eventId, $entryId, $entryAgeId, $entryBeltId, $entryWeightId, $regOneId, $regTwoId)
+	{
+		$eventBrackets = new EventBrackets;
+
+		$eventBrackets->event_id = $eventId;
+		$eventBrackets->entry_id = $entryId;
+		$eventBrackets->entry_age_id = $entryAgeId;
+		$eventBrackets->entry_belt_id = $entryBeltId;
+		$eventBrackets->entry_weight_id = $entryWeightId;
+		$eventBrackets->reg_one_id = $regOneId;
+		$eventBrackets->reg_two_id = $regTwoId;
+		$winnerId = null;
+		if($regOneId != null && $regTwoId == null)
+		{
+			$winnerId = $regOneId;
+		}
+
+		if($regOneId == null && $regTwoId != null)
+		{
+			$winnerId = $regTwoId;
+		}
+
+		$eventBrackets->reg_winner_id = $winnerId;
+
+		return $eventBrackets->save();
 	}
 }
