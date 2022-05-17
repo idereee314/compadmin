@@ -372,6 +372,17 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 								order by r.entry_id, r.entry_age_id, r.entry_belt_id, r.entry_weight_id");
 	}
 
+	public function getAllEntriesFromEventById($eventId, $entryId, $entryAgeId, $entryBeltId, $entryWeightId)
+	{
+		return DB::select("select r.entry_id, r.entry_age_id, r.entry_belt_id, r.entry_weight_id  
+								from uq_comp.uq_event_registration r
+								where r.event_id = ".$eventId."
+								and r.entry_id = ".$entryId." and r.entry_age_id = ".$entryAgeId." 
+								and r.entry_belt_id = ".$entryBeltId." and r.entry_weight_id = ".$entryWeightId."
+								group by r.entry_id, r.entry_age_id, r.entry_belt_id, r.entry_weight_id
+								order by r.entry_id, r.entry_age_id, r.entry_belt_id, r.entry_weight_id");
+	}
+
 	public function getBracketMembersFromEvent($eventId, $entryId, $entryAgeId, $entryBeltId, $entryWeightId, $isWeightChecked = false)
 	{
 		return DB::select("select r.id, r.member_id, r.academy_id, case when a.is_other = 1 then r.academy_name else a.name end as acname 
