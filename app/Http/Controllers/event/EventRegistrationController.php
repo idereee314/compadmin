@@ -415,4 +415,142 @@ class EventRegistrationController extends Controller
         return view($this->view_path.'.bracket', $data);
     }
     
+    public function bracketGeneration()
+    {
+        $input = Input::all();
+
+        $eventId = 395;
+
+        $entries = $this->eventRegistration->getAllEntriesFromEvent($eventId);
+        //$entries = $this->eventRegistration->getAllEntriesFromEventById($eventId, 35, 42, 44, 277);
+
+        $brackets = array();
+
+        foreach($entries as $entry)
+        {
+            $members = $this->eventRegistration->getBracketMembersFromEvent($eventId, $entry->entry_id, $entry->entry_age_id, $entry->entry_belt_id, $entry->entry_weight_id, false);
+            
+            $participants = range(1, count($members));
+
+            $participantsCount = count($participants);              
+            $rounds = ceil(log($participantsCount)/log(2));
+            $bracketSize = pow(2, $rounds);
+            $requiredByes = $bracketSize - $participantsCount;
+
+            if($participantsCount > 2)
+            {
+                $firstZone = array();
+                $secondZone = array();
+
+                $isFirst = true;
+                $i = 0;
+                $j = 0;
+                for($k = 0; $k < $bracketSize; $k++)
+                {
+                    $zoneSize =  $bracketSize / 2;
+                    if($isFirst)
+                    {
+                        $firstZone[$i] = array_key_exists($k, $members)? $members[$k]->id: null;
+                        $isFirst = false;                    
+
+                        if($zoneSize > 2)
+                        {
+                            if($i + 2 == $zoneSize)
+                            {
+                                $i = 1;
+                            }
+                            else
+                            {
+                                $i = $i + 2;
+                            }
+                        }
+                        else
+                        {
+                            $i++;
+                        }
+                    }
+                    else
+                    {
+                        $secondZone[$j] = array_key_exists($k, $members)? $members[$k]->id: null;
+                        $isFirst = true;
+
+                        if($zoneSize > 2)
+                        {
+                            if($j + 2 == $zoneSize)
+                            {
+                                $j = 1;
+                            }
+                            else
+                            {
+                                $j = $j + 2;
+                            }
+                        }
+                        else
+                        {
+                            $j++;
+                        }
+                    }
+                }
+                ksort($firstZone);
+                ksort($secondZone);
+                array_push($brackets, array('eventId' => $eventId, 'entryId' => $entry->entry_id, 
+                            'ageId' => $entry->entry_age_id, 'beltId' => $entry->entry_belt_id, 
+                            'weightId' => $entry->entry_weight_id, 'bracketSize' => $bracketSize,
+                            'participantsCount' => $participantsCount, 'rounds' => $rounds,
+                            'firstZone' => $firstZone, 'secondZone' => $secondZone));
+            }
+            else if($participantsCount == 2)
+            {
+                $firstZone = array();
+
+                for($k = 0; $k < $participantsCount; $k++)
+                {
+                    $firstZone[$k] = array_key_exists($k, $members)? $members[$k]->id: null;
+                }
+
+                array_push($brackets, array('eventId' => $eventId, 'entryId' => $entry->entry_id, 
+                            'ageId' => $entry->entry_age_id, 'beltId' => $entry->entry_belt_id, 
+                            'weightId' => $entry->entry_weight_id, 'bracketSize' => $bracketSize,
+                            'participantsCount' => $participantsCount, 'rounds' => $rounds,
+                            'firstZone' => $firstZone, 'secondZone' => null));
+            }
+        }
+        
+        foreach($brackets as $bracket)
+        {
+            $status = $this->eventRegistration->deleteEventBracket($bracket['eventId'], $bracket['entryId'], $bracket['ageId'], $bracket['beltId'], $bracket['weightId']);
+
+            if($bracket['firstZone'] != null)
+            {
+                for($i = 0; $i < $bracket['bracketSize'] / 2; $i = $i + 2)
+                {
+                    if(array_key_exists($i, $bracket['firstZone'])) 
+                    {
+                        $this->eventRegistration->createEventBracket($bracket['eventId'], $bracket['entryId'], $bracket['ageId'], $bracket['beltId'], $bracket['weightId'], $bracket['firstZone'][$i], $bracket['firstZone'][$i + 1]);
+                    }
+                    
+                }
+            }
+            
+            if($bracket['secondZone'] != null)
+            {
+                for($i = 0; $i < $bracket['bracketSize'] / 2; $i = $i + 2)
+                {
+                    if(array_key_exists($i, $bracket['secondZone'])) 
+                    {
+                        $this->eventRegistration->createEventBracket($bracket['eventId'], $bracket['entryId'], $bracket['ageId'], $bracket['beltId'], $bracket['weightId'], $bracket['secondZone'][$i], $bracket['secondZone'][$i + 1]);
+                    }
+                }
+            }
+        }
+    }    
+
+    public function bracketShow($eventId, $entryId, $entryAgeId, $entryBeltId, $entryWeightId)
+    {
+        $input = Input::all();
+
+        $members = $this->eventRegistration->getBracketGenerationFromEvent($eventId, $entryId, $entryAgeId, $entryBeltId, $entryWeightId);
+
+        dd($members);
+    }
 }

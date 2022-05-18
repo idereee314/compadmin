@@ -126,7 +126,17 @@ class EloquentCompadUserRepository implements CompadUserRepository {
 				{
 					$roles = $user->roles->implode('name', ', ');
 				}
-				$html = '<div>'.@$roles.'&nbsp;<i onclick="editRole('.$user->id.')" class="far fa-edit" style="cursor:pointer"></i></div>';
+
+				$permissionEdit = SecurityHelper::checkPermission(@Config::get('permission.user'), Config::get('permission.editable'));
+				if($permissionEdit)
+				{
+					$html = '<div>'.@$roles.'&nbsp;<i onclick="editRole('.$user->id.')" class="far fa-edit" style="cursor:pointer"></i></div>';	
+				}
+				else
+				{
+					$html = '<div>'.@$roles.'&nbsp;</div>';	
+				}
+
 				return $html;
 			})
 			->editColumn('created_at', function($qry)
@@ -176,7 +186,8 @@ class EloquentCompadUserRepository implements CompadUserRepository {
         if(!empty(@$data))
 		{
 			$qry->whereRaw("LOWER(firstname) like ?", array('%'.mb_strtolower(@$data).'%'))
-				->orWhereRaw("LOWER(lastname) like ?", array('%'.mb_strtolower(@$data).'%'));
+				->orWhereRaw("LOWER(lastname) like ?", array('%'.mb_strtolower(@$data).'%'))
+				->orWhereRaw("LOWER(username) like ?", array('%'.mb_strtolower(@$data).'%'));
 				// ->where("phone_number", @$data);
         }
         $user = $qry->orderBy('firstname', 'asc')->get();
