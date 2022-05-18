@@ -144,7 +144,11 @@ class EloquentMemberRepository implements MemberRepository {
 				return "";
 			})
 			->editColumn('connect_user', function ($qry) {
+				$permissionEdit = SecurityHelper::checkPermission(@Config::get('permission.member'), Config::get('permission.editable'));
+				if($permissionEdit)
+				{
 					return '<button type="button" onclick="connectUser('.$qry->id.')" class="btn btn-outline-secondary">Холбох</button>';
+				}
 			})
 			->editColumn('status', function($qry)
 			{

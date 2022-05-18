@@ -149,4 +149,16 @@ class EloquentEventConfigRepository implements EventConfigRepository {
 		$eventConfig = $qry->orderBy('created_at', 'desc')->paginate($perPage);
 		return $eventConfig->toJson();
 	}
+
+	public function findByEventId($eventId)
+	{
+		$config = "";
+		if($eventId)
+		{
+			$qry = EventConfig::where('event_id', $eventId);
+			$config = $qry->first();
+		}
+
+		return $config;
+	}
 }
