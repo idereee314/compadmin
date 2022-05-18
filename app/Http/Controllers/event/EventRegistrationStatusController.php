@@ -90,7 +90,6 @@ class EventRegistrationStatusController extends Controller
         }
         else
         {
-            
             if($eventRegistration->status != @$input['status'])
             {
                 $statusArr['status'] = $input['status'];

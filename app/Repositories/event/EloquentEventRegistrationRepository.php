@@ -317,7 +317,7 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 		$registrations = "";
 		if(@$evntId && @$status)
 		{
-			$qry = EventRegistration::selectRaw('id, status, member_id, academy_id, entry_id, entry_weight_id, academy_name')
+			$qry = EventRegistration::selectRaw('id, status, member_id, academy_id, entry_id, entry_belt_id, entry_weight_id, academy_name')
 			->where('event_id', $evntId)
 			->where('uq_event_registration.status', $status);
 
@@ -360,5 +360,19 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 		}
 		
 		return $registrations;
+	}
+
+	public  function getEventRegByGroup($eventId)
+	{
+		$regs = "";
+		if(@$eventId)
+		{
+			$qry = EventRegistration::selectRaw('*')
+				->where('event_id', $eventId)
+				->orderByRaw('entry_id, entry_belt_id, entry_age_id, entry_weight_id');
+			$regs = $qry->get()->load(['entry:id,name', 'belt:id,name', 'age:id,start_age,end_age', 'weight:id,weight']);
+		}
+
+		return $regs;
 	}
 }

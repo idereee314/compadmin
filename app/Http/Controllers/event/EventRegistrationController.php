@@ -368,10 +368,21 @@ class EventRegistrationController extends Controller
     public function printMandateByEventAndStatus()
     {
         $input = Input::all();
+        $eventConfig = $this->eventConfig->findByEventId(@$input['search_event']);
         $list = $this->eventRegistration->getRegistrationByStatus(@$input['search_event'], @Config::get('smart.event_registration_status')['approved'], $input);
 
-        $data['regs'] = $list->load(['academy:id,name,is_other','member:id,lastname,firstname,profile_url', 'weight:id,weight', 'entry:id,name'])->chunk(4);
-        return view($this->view_path.'.mandat_html', $data);
+        $data['regs'] = $list->load(['academy:id,name,is_other','member:id,lastname,firstname,profile_url', 'weight:id,weight', 'entry:id,name', 'belt:id,name'])->chunk(4);
+        $view = $this->view_path.'.mandat_'.@$eventConfig->mandat_template;
+        
+        if(\View::exists($view))
+        {
+            return view($view, $data);
+        }
+        else 
+        {
+
+        }
+        
         /*
         $pdf = PDF::loadView($this->view_path.'.mandat_cm', $data, [], [
             'format' => 'A4-P'
@@ -380,6 +391,28 @@ class EventRegistrationController extends Controller
         return $pdf->stream('mandat.pdf');
         return $pdf->download('mandat.pdf');
         */
+    }
+
+    public function treeBracket($eventId)
+    {
+        $event = $this->event->find($eventId);
+        $eventRegistration = $this->eventRegistration->getEventRegByGroup($eventId);
+        $eventRegStatusCount = $this->eventRegistration->getEventRegStatusCount($event->id)->pluck('total', 'status')->toArray();
+
+        $data['event'] = $event;
+        $data['progressPercent'] = round(@$eventRegStatusCount[@Config::get('smart.event_registration_status')['approved']] ? @$eventRegStatusCount[@Config::get('smart.event_registration_status')['approved']] / array_sum(@$eventRegStatusCount) * 100 : 0);
+        $data['eventRegistration'] = $eventRegistration->groupBy(['entry.name', 'belt.name', 'age.name', 'weight.weight']);
+        $data['view_path'] = $this->view_path;
+        //dd($data['eventRegistration']);
+
+        return view($this->view_path.'.bracket_tree', $data);
+    }
+
+    public function showBracket($eventId)
+    {
+        $data['view_path'] = $this->view_path;
+
+        return view($this->view_path.'.bracket', $data);
     }
     
 }

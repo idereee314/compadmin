@@ -48,8 +48,8 @@
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <span class="input-group-text">
-                                    <label class="checkbox checkbox-inline checkbox-success">
-                                        <input type="checkbox" name="payment_status" id="payment_status" value="1" {{ @$eventRegistration->payment && $eventRegistration->payment->status ? 'checked="checked"' : ''}}>
+                                    <label class="checkbox checkbox-inline checkbox-success {{ $eventRegistration->payment->from_type == 'admin' ? '' : 'checkbox-disabled'}}">
+                                        <input type="checkbox" name="payment_status" id="payment_status" value="1" {{ @$eventRegistration->payment && $eventRegistration->payment->status ? 'checked=checked' : ''}} {{ $eventRegistration->payment->from_type == 'admin' ? '' : 'readonly'}}>
                                         <span></span>
                                     </label>
                                 </span>
