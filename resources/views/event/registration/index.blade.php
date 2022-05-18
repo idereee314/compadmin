@@ -479,7 +479,7 @@ $(document).ready(function() {
             },
             {
                 extend: 'excelHtml5',
-                text: '<i class="fa fa-print"></i> {!! trans('display.general_excel') !!}',
+                text: '<i class="fa fa-print"></i> Оролцогчдын жагсаалт {!! trans('display.general_excel') !!}',
                 className: "btn btn-light-warning font-weight-bolder mb-2",
                 title: 'Оролцогчийн жагсаалт',
                 customize: function ( xlsx ) {
@@ -494,6 +494,13 @@ $(document).ready(function() {
                         focused: undefined,
                         selected: undefined
                     }
+                }
+            },
+            {
+                text: '<i class="far fa-address-card"></i> Оноолт үүсгэх',
+                className: "btn btn-light-success font-weight-bolder mb-2 {{ SecurityHelper::checkPermission(@Config::get('permission.event_registration'), Config::get('permission.editable')) ? '' : 'd-none' }}",
+                action: function ( e, dt, node, config ) {
+                    window.open('{!! route('event.registration.bracket.generation') !!}?event_id={{@$event->id}}', '_blank');
                 }
             },
         ]
