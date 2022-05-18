@@ -370,6 +370,7 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 		{
 			$qry = EventRegistration::selectRaw('*')
 				->where('event_id', $eventId)
+				->where('status', @Config::get('smart.event_registration_status')['approved'])
 				->orderByRaw('entry_id, entry_belt_id, entry_age_id, entry_weight_id');
 			$regs = $qry->get()->load(['entry:id,name', 'belt:id,name', 'age:id,start_age,end_age', 'weight:id,weight']);
 		}
