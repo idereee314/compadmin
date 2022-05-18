@@ -15,7 +15,7 @@
 </div>
 
 <div class="modal fade" id="bracketModal" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdrop" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-dialog modal-lg" role="document" style="min-width: 80%">
         <div class="modal-content">
         <div class="modal-header bg-gray-100">
             <h5 class="modal-title" id="exampleModalLabel">UniQ Bracket System</h5>
