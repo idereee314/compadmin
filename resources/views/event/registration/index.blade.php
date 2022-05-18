@@ -495,14 +495,7 @@ $(document).ready(function() {
                         selected: undefined
                     }
                 }
-            },
-            {
-                text: '<i class="far fa-address-card"></i> Оноолт үүсгэх',
-                className: "btn btn-light-success font-weight-bolder mb-2 {{ SecurityHelper::checkPermission(@Config::get('permission.event_registration'), Config::get('permission.editable')) ? '' : 'd-none' }}",
-                action: function ( e, dt, node, config ) {
-                    window.open('{!! route('event.registration.bracket.generation') !!}?event_id={{@$event->id}}', '_blank');
-                }
-            },
+            }
         ]
 	});
 

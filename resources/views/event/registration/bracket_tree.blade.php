@@ -199,6 +199,19 @@ function showBracketModal( data ) {
 $('#bracketModal').modal();
 $('#bracketModal').on('shown.bs.modal', function(){
     $('#bracketModal .card-body').html(data);
+    $("#print").on('click', function(){
+        var divToPrint=document.getElementById('div-print');
+
+        var newWin=window.open('','Print-Window');
+
+        newWin.document.open();
+
+        newWin.document.write('<html><body onload="window.print()">'+divToPrint.innerHTML+'</body></html>');
+
+        newWin.document.close();
+
+        //setTimeout(function(){newWin.close();},10);
+    });
 
     $(this).off('shown.bs.modal');
 });

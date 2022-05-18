@@ -86,11 +86,19 @@
                                                             <span class="text-primary text-uppercase font-weight-bold font-size-sm">Үйлдэл:</span>
                                                         </li>
                                                         <li class="navi-item">
+                                                            <a href="javascript:;" class="navi-link" id="generate-bracket" data-eventid="{{ @$event['id'] }}">
+                                                                <span class="navi-icon">
+                                                                    <i class="flaticon-network"></i>
+                                                                </span>
+                                                                <span class="navi-text">Оноолт үүгэх</span>
+                                                            </a>
+                                                        </li>
+                                                        <li class="navi-item">
                                                             <a href="{{ route('event.bracket', @$event['id']) }}" class="navi-link">
                                                                 <span class="navi-icon">
-                                                                    <i class="flaticon2-calendar-8"></i>
+                                                                    <i class="flaticon-calendar-1"></i>
                                                                 </span>
-                                                                <span class="navi-text">Оноолт</span>
+                                                                <span class="navi-text">Оноолт харах</span>
                                                             </a>
                                                         </li>
                                                         <li class="navi-item">
@@ -239,11 +247,39 @@
     <!--end::Wrapper-->
 <!--end::Main-->
 @section('javascript')
-<script src="{{asset('assets/js/plugins/custom/datatables/datatables.bundle.js')}}"></script>
+<script src="{{ asset('assets/js/plugins/custom/datatables/datatables.bundle.js') }}"></script>
 
 <script>
 $(document).ready(function() {
+    $(".navi-item #generate-bracket").on('click', function(){
+        var eventId = $(this).data('eventid');
 
+        $.ajax({
+            url: '{!! route('event.registration.bracket.generation') !!}?event_id='+eventId,
+            type: 'GET',
+            success: function(response) {
+                if(response.status == 'success')
+                {
+                    toastr.success(response.msg);
+                }
+                else {
+                    toastr.error(response.errors, response.msg, {
+                        "closeButton": true,
+                        "timeOut": "0",
+                        "extendedTimeOut": "0",
+                    });
+                }
+            },
+            error: function (xhr, textStatus, error) {
+                console.log(xhr.statusText);
+                console.log(textStatus);
+                console.log(error);
+            },
+            async: false,
+            processData: false,
+            contentType: false
+        });
+    });
 }).ajaxStart($.blockUI).ajaxStop($.unblockUI);
 </script>
 @endsection

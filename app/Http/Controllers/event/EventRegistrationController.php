@@ -418,7 +418,6 @@ class EventRegistrationController extends Controller
     public function bracketGeneration()
     {
         $input = Input::all();
-
         $eventId = @$input['event_id'];
 
         try
@@ -546,13 +545,21 @@ class EventRegistrationController extends Controller
                 }
             }
             
-            echo "Амжилттай оноолтыг үүсгэлээ. Оноолтын хэсгээс харна уу.";
+            $response = array(
+                'status' => 'success',
+                'msg' => "Амжилттай оноолтыг үүсгэлээ. Оноолтын хэсгээс харна уу."
+            );
         } 
         catch (\Exception $ex)
         {
-            echo "Алдаа гарлаа<br>";
-            print_r($ex->getMessage());
+            $response = array(
+                'status' => 'error',
+                'msg' => "Алдаа гарлаа",
+                'errors' => $e->getMessage()
+            );
         }
+
+        return $response;
     }    
 
     public function bracketShow($eventId, $entryId, $entryAgeId, $entryBeltId, $entryWeightId)
