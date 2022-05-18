@@ -1,5 +1,4 @@
-<form class="form" method="POST" id="add-academy-form" action="{{route('academy.store')}}">
-    @csrf
+<form class="form" method="POST" id="create-academy-form" action="{{route('academy.store')}}">
     <div class="modal-header bg-gray-100">
         <h5 class="modal-title" id="exampleModalLabel">{{trans('display.general_new')}}</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -9,13 +8,24 @@
 
     <div class="card-body">
         <div class="form-group row">
-            <label class="col-md-3 col-form-label text-right">{{trans('display.organization')}}: <span class="text-danger">*</span></label>
+            <label class="col-md-3 col-form-label text-right">{{trans('display.general_type')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9">
-                <select class="form-control kt-selectpicker" data-live-search="true" data-size="7" name="organization_id" id="organization_id">
+                <select class="form-control selectpicker" id="type" name="type" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}">
+                    <option value="0">-- {{ trans('display.general_select') }} --</option>
+                    @forelse(@Config::get('enums.org_type') as $key => $type)
+                    <option value="{{ $key }}">{{ $type }}</option>
+                    @empty
+                    @endforelse
+                </select>
+                <div class="error-here"></div>
+            </div>
+        </div> 
+
+        <div class="form-group row">
+            <label class="col-md-3 col-form-label text-right">{{trans('display.organization')}}: </label>
+            <div class="col-md-9">
+                <select class="form-control" name="organization_id" id="organization_id">
                     <option value="">-- {{ trans('display.general_select') }} --</option>
-                    @foreach(@$organizations as $organization)
-                    <option value="{{ $organization->id }}">{{ $organization->name }}</option>
-                    @endforeach
                 </select>
             </div>
         </div>
@@ -39,7 +49,7 @@
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.general_sort_order')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9">
-                <input type="text" class="form-control only-number" autocomplete="off" name="sort_order"  data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}"/>
+                <input type="text" class="form-control" autocomplete="off" min="1" max="5000" step="1" name="sort_order"  data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}"/>
                 <div class="error-here"></div>
             </div>
         </div> 
@@ -50,12 +60,3 @@
         <button type="submit" class="btn btn-primary font-weight-bold">{{trans('display.general_save')}}</button>
     </div>
 </form>
-
-<script>
-    function numberOnly(input)
-    {
-        var num =  /[^0-9]/gi;
-        input.value = input.value.replace(num, '');
-    }
-    $('.kt-selectpicker').selectpicker();
-</script>

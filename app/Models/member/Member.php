@@ -34,7 +34,7 @@ class Member extends Model
 
     public function getFullnameAttribute()
     {
-		return Str::slug($this->lastname).'. '.$this->firstname;
+		return Str::substr($this->lastname,0,1).'.'.$this->firstname;
     }
 
     public function user()

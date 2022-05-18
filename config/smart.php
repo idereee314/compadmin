@@ -23,9 +23,8 @@ return array(
 	],
 
 	'event_registration_status_class' => [
-		'created' => 'primary',
+		'created' => 'warning',
 		'approved' => 'success',
-		'checked' => 'info',
 		'canceled' => 'danger ',
 	],
 

@@ -42,22 +42,25 @@ class EloquentAcademyRepository implements AcademyRepository {
 		$academy->name = $input['name'];
 		$academy->name_en = $input['name_en'];
 		$academy->sort_order = $input['sort_order'];
+		$academy->type = $input['type'];
 
 		$academy->save();
-
 		return $academy;
 	}
 
  	public function update($id, $input)
 	{
 		$academy = $this->find($id);
-		$academy->organization_id = @$input['organization_id'];
+		if(array_key_exists('new_organization_id', $input))
+		{
+			$academy->organization_id = @$input['new_organization_id'];
+		}
 		$academy->name = $input['name'];
 		$academy->name_en = $input['name_en'];
 		$academy->sort_order = $input['sort_order'];
+		$academy->type = $input['type'];
 
 		$academy->save();
-
 		return $academy;
 	}
 
@@ -94,7 +97,10 @@ class EloquentAcademyRepository implements AcademyRepository {
                     $qry->whereRaw('LOWER(phone_number) like ?', array('%'.mb_strtolower($searchData->get('phone_number')).'%'));
                 }
             })
-
+			->editColumn('type', function($qry)
+			{
+				return @Config::get('enums.org_type')[$qry->type];
+			})
 			->editColumn('created_at', function($qry)
 			{
 				return $qry->created_at;

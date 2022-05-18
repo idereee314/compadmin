@@ -85,7 +85,7 @@
                                                     </g>
                                                 </svg>
                                                 <!--end::Svg Icon-->
-                                            </span>{{ @$event->config->reg_start_date }} / {{ @$event->config->reg_end_date }}</a>
+                                            </span>{{ @Carbon\Carbon::parse($event->config->reg_start_date)->format('y M, d g:i A') }} / {{ @Carbon\Carbon::parse(@$event->config->reg_end_date)->format('y M, d g:i A') }}</a>
                                         </div>
                                         <!--end::Contacts-->
                                     </div>
@@ -1130,6 +1130,17 @@ function showEditModal(data){
                 },
                 async: false
             });
+        });
+
+        $('#update-event-registration-form input[name=is_weight_checked]').on('click', function(el){
+            if($(this).is(':checked'))
+            {
+                $('#update-event-registration-form input[name=current_weight]').prop('disabled', false);
+            }
+            else 
+            {
+                $('#update-event-registration-form input[name=current_weight]').prop('disabled', true);
+            }
         });
 
         $('#update-event-registration-form').validate({
