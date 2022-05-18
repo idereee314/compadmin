@@ -188,8 +188,7 @@ $(document).ready(function() {
         //console.log(data.node.data.jstree.type);
         if(typeof elData.type !== 'undefined' && elData.type == 'file')
         {
-            console.log(elData.entry_id, elData.belt_id, elData.age_id, elData.weight_id);
-            $.get('/event/{{@$event->id}}/bracket/show', showBracketModal);
+            $.get('/bracket/{{@$event->id}}/'+elData.entry_id+'/'+elData.age_id+'/'+elData.belt_id+'/'+elData.weight_id+'', showBracketModal);
         }
     });
 }).ajaxStart($.blockUI).ajaxStop($.unblockUI);
@@ -199,13 +198,13 @@ function showBracketModal( data ) {
 
 $('#bracketModal').modal();
 $('#bracketModal').on('shown.bs.modal', function(){
-    $('#bracketModal .modal-content').html(data);
+    $('#bracketModal .card-body').html(data);
 
     $(this).off('shown.bs.modal');
 });
 
 $('#bracketModal').on('hidden.bs.modal', function(){
-    $('#bracketModal .modal-content').empty();
+    $('#bracketModal .card-body').empty();
 });
 }
 </script>
