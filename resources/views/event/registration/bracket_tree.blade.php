@@ -198,23 +198,7 @@ function showBracketModal( data ) {
 
 $('#bracketModal').modal();
 $('#bracketModal').on('shown.bs.modal', function(){
-    $('#bracketModal .card-body').html(data.html);
-    $("#print").on('click', function(){
-
-        window.open('/bracket/print/'+data.eventId+'/'+data.entryId+'/'+data.entryAgeId+'/'+data.entryBeltId+'/'+data.entryWeightId+''); 
-
-        /*var divToPrint=document.getElementById('div-print');
-
-        var newWin=window.open('','Print-Window');
-
-        newWin.document.open();
-
-        newWin.document.write('<html><body onload="window.print()">'+divToPrint.innerHTML+'</body></html>');
-
-        newWin.document.close();*/
-
-        //setTimeout(function(){newWin.close();},10);
-    });
+    $('#bracketModal .card-body').html(data);
 
     $(this).off('shown.bs.modal');
 });

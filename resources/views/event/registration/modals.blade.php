@@ -28,8 +28,7 @@
             
         </div>
 
-        <div class="modal-footer text-right bg-gray-100 border-top-0">
-            <button type="button" id="print" class="btn btn-primary font-weight-bold">{{trans('display.general_print')}}</button>
+        <div class="modal-footer text-right bg-gray-100 border-top-0">            
             <button type="button" id="close" class="btn btn-light-primary font-weight-bold" data-dismiss="modal">{{trans('display.general_close')}}</button>
         </div>
         </div>

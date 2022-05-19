@@ -572,14 +572,19 @@ class EventRegistrationController extends Controller
 
         $data['total'] = $total;
         $data['members'] = $members;
+        $data['eventId'] = $eventId;
+        $data['entryId'] = $entryId;
+        $data['entryAgeId'] = $entryAgeId;
+        $data['entryBeltId'] = $entryBeltId;
+        $data['entryWeightId'] = $entryWeightId;
         if($total > 0)
         {
             $data['round'] = intval(log($total, 2)) + 1;
         }
         
-        $html = view('event.bracket.generation', $data)->render();        
+        return view('event.bracket.generation', $data)->render();        
 
-        return response()->json(['html' => $html, 'eventId' => $eventId, 'entryId' => $entryId, 'entryAgeId' => $entryAgeId, 'entryBeltId' => $entryBeltId, 'entryWeightId' => $entryWeightId]); 
+        //return response()->json(['html' => $html, 'eventId' => $eventId, 'entryId' => $entryId, 'entryAgeId' => $entryAgeId, 'entryBeltId' => $entryBeltId, 'entryWeightId' => $entryWeightId]); 
     }
 
     public function bracketPrint($eventId, $entryId, $entryAgeId, $entryBeltId, $entryWeightId)

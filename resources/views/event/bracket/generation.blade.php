@@ -76,10 +76,11 @@
 			@endif
     	</div>
 		@endfor
-	@endif
-    
+	@endif    
   </div>
-  
+  <div style="padding-top:50px">	  
+  	<a id="print" class="btn btn-primary font-weight-bold" href="/bracket/print/{{ $eventId }}/{{ $entryId }}/{{ $entryAgeId }}/{{ $entryBeltId }}/{{ $entryWeightId }}" target="_blank">{{trans('display.general_print')}}</a>
+  </div>
 </div>
 
 @stop
