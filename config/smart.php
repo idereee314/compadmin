@@ -32,7 +32,7 @@ return array(
 		'' => ['created'],
 		'created' => ['approved', 'canceled'],
 		'approved' => ['canceled'],
-		'canceled' => [],
+		'canceled' => ['approved'],
 	],
 
 	'event_registration_source_type' => [
