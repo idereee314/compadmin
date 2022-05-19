@@ -116,6 +116,22 @@ class EloquentEventConfigRepository implements EventConfigRepository {
 			{
 				return $qry->created_at;
 			})
+			->editColumn('entries_count', function($qry)
+			{
+				return '<a href="javascript:;" class="show-count" data-configid="'.$qry->id.'" data-tabid="tab1-2">'.$qry->entries_count.'</a>';
+			})
+			->editColumn('config_belts_count', function($qry)
+			{
+				return '<a href="javascript:;" class="show-count" data-configid="'.$qry->id.'" data-tabid="tab1-3">'.$qry->config_belts_count.'</a>';
+			})
+			->editColumn('config_ages_count', function($qry)
+			{
+				return '<a href="javascript:;" class="show-count" data-configid="'.$qry->id.'" data-tabid="tab1-4">'.$qry->config_ages_count.'</a>';
+			})
+			->editColumn('config_weights_count', function($qry)
+			{
+				return '<a href="javascript:;" class="show-count" data-configid="'.$qry->id.'" data-tabid="tab1-5">'.$qry->config_weights_count.'</a>';
+			})
             ->addColumn('action', function ($qry) {
 				$permissionEdit = SecurityHelper::checkPermission(@Config::get('permission.event_config'), Config::get('permission.editable'));
 				if($permissionEdit)
@@ -132,7 +148,7 @@ class EloquentEventConfigRepository implements EventConfigRepository {
 						return $actionHtml;
 					}
 				}
-            })->rawColumns(['action'])
+            })->rawColumns(['action', 'entries_count', 'config_belts_count', 'config_ages_count', 'config_ages_count', 'config_weights_count'])
             ->make(true);
 
         return $data;

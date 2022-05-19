@@ -401,7 +401,7 @@ class EventRegistrationController extends Controller
 
         $data['event'] = $event;
         $data['progressPercent'] = round(@$eventRegStatusCount[@Config::get('smart.event_registration_status')['approved']] ? @$eventRegStatusCount[@Config::get('smart.event_registration_status')['approved']] / array_sum(@$eventRegStatusCount) * 100 : 0);
-        $data['eventRegistration'] = $eventRegistration->groupBy(['entry.name', 'belt.name', 'age.name', 'weight.weight']);
+        $data['eventRegistration'] = $eventRegistration->groupBy(['entry.fullname', 'belt.name', 'age.name', 'weight.weight']);
         $data['view_path'] = $this->view_path;
         //dd($data['eventRegistration']);
 
