@@ -90,7 +90,7 @@
                                                                 <span class="navi-icon">
                                                                     <i class="flaticon-network"></i>
                                                                 </span>
-                                                                <span class="navi-text">Оноолт үүгэх</span>
+                                                                <span class="navi-text">Оноолт үүсгэх</span>
                                                             </a>
                                                         </li>
                                                         <li class="navi-item">

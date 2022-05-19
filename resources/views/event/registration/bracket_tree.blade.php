@@ -42,7 +42,7 @@
                                         <!--begin::User-->
                                         <div class="mr-3">
                                             <!--begin::Name-->
-                                            <a href="javascript:;" class="d-flex align-items-center text-dark text-hover-primary font-size-h5 font-weight-bold mr-3">{{@$event->name}} 
+                                            <a href="{{ route('event.registration.index').'?event_id='.@$event->id }}" class="d-flex align-items-center text-dark text-hover-primary font-size-h5 font-weight-bold mr-3">{{@$event->name}} 
                                             <i class="flaticon2-correct text-success icon-md ml-2"></i></a>
                                             <!--end::Name-->
                                             <!--begin::Contacts-->

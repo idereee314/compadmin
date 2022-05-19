@@ -95,7 +95,7 @@
                         </div>
                         @endif
                     </div>
-                    </div>
+                </div>
                 <!--end::Card-->
             </div>
             <!--end::Container-->

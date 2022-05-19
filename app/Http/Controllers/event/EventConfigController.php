@@ -117,7 +117,28 @@ class EventConfigController extends Controller
      */
     public function show($id)
     {
-        //
+        $input = Input::all();
+        $eventConfig = $this->eventConfig->find($id);
+        $configBelsts = $this->entryConfigBelt->getConfigBeltByEventId($eventConfig->event_id);
+        $configAges = $this->entryConfigAge->getConfigAgeByEventId($eventConfig->event_id);
+        $configWeights = $this->entryConfigWeight->getConfigWeightByEventId($eventConfig->event_id);
+        $configEntriesFees = $this->eventEntriesFee->getEntriesFeeByEventId($eventConfig->event_id);
+        $event = $this->event->find($eventConfig->event_id);
+        
+        $data['eventConfig'] = $eventConfig;
+        $data['entries'] = $eventConfig->event->entries;
+        $data['configBelsts'] = $configBelsts->groupBy('entry_id');
+        $data['configAges'] = $configAges->groupBy('entry_id');
+        $data['configWeights'] = $configWeights->groupBy(['entry_id', 'entry_age_id']);
+        $data['configEntriesFees'] = $configEntriesFees->groupBy('entry_id');
+        $data['eventUsers'] = $event->eventUsers;
+
+        $data['tabs'] = collect(Config::get("enums.event_config"))->sortBy('order')->toArray();
+        $data['tab_id'] = @$input['tab_id'] ? @$input['tab_id'] : 'tab1-1';
+        $data['eventConfig'] = $eventConfig;
+        $data['view_path'] = $this->view_path;
+
+        return view($this->view_path.'.show', $data);
     }
 
     /**
