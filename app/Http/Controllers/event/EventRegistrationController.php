@@ -587,7 +587,7 @@ class EventRegistrationController extends Controller
         $input = Input::all();
 
         $members = $this->eventRegistration->getBracketGenerationFromEvent($eventId, $entryId, $entryAgeId, $entryBeltId, $entryWeightId);
-        
+
         $eventConfig =  $this->eventConfig->findByEventId($eventId);
         $entry = $this->eventEntries->find($entryId);
         $age = $this->configAge->find($entryAgeId);
@@ -603,7 +603,7 @@ class EventRegistrationController extends Controller
         $data['age'] = $age;
         $data['belt'] = $belt;
         $data['weight'] = $weight;
-        
+
         if($total > 0)
         {
             $data['round'] = intval(log($total, 2)) + 1;
