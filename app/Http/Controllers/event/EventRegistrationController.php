@@ -577,6 +577,38 @@ class EventRegistrationController extends Controller
             $data['round'] = intval(log($total, 2)) + 1;
         }
         
-        return view('event.bracket.generation', $data);        
+        $html = view('event.bracket.generation', $data)->render();        
+
+        return response()->json(['html' => $html, 'eventId' => $eventId, 'entryId' => $entryId, 'entryAgeId' => $entryAgeId, 'entryBeltId' => $entryBeltId, 'entryWeightId' => $entryWeightId]); 
+    }
+
+    public function bracketPrint($eventId, $entryId, $entryAgeId, $entryBeltId, $entryWeightId)
+    {
+        $input = Input::all();
+
+        $members = $this->eventRegistration->getBracketGenerationFromEvent($eventId, $entryId, $entryAgeId, $entryBeltId, $entryWeightId);
+        
+        $eventConfig =  $this->eventConfig->findByEventId($eventId);
+        $entry = $this->eventEntries->find($entryId);
+        $age = $this->configAge->find($entryAgeId);
+        $belt = $this->configBelt->find($entryBeltId);
+        $weight = $this->configWeight->find($entryWeightId);
+
+        $total = count($members);
+
+        $data['total'] = $total;
+        $data['members'] = $members;
+        $data['eventConfig'] = $eventConfig;
+        $data['entry'] = $entry;
+        $data['age'] = $age;
+        $data['belt'] = $belt;
+        $data['weight'] = $weight;
+        
+        if($total > 0)
+        {
+            $data['round'] = intval(log($total, 2)) + 1;
+        }
+        
+        return view('event.bracket.print', $data);        
     }
 }

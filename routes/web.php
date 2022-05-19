@@ -42,7 +42,8 @@ Route::get('logout', [LoginController::class, 'doLogout'])->name('system.logout'
 //     return view('welcome');
 // });
 
-Route::get('/bracket/{eventId}/{entryId}/{entryAgeId}/{entryBeltId}/{entryWeightId}', 'event\EventRegistrationController@bracketShow')->name('event.registration.bracket.print');
+Route::get('/bracket/{eventId}/{entryId}/{entryAgeId}/{entryBeltId}/{entryWeightId}', 'event\EventRegistrationController@bracketShow')->name('event.registration.bracket.show');
+Route::get('/bracket/print/{eventId}/{entryId}/{entryAgeId}/{entryBeltId}/{entryWeightId}', 'event\EventRegistrationController@bracketPrint')->name('event.registration.bracket.print');
 
 Route::group([
     'prefix' => '',

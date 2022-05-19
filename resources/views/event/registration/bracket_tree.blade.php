@@ -198,9 +198,12 @@ function showBracketModal( data ) {
 
 $('#bracketModal').modal();
 $('#bracketModal').on('shown.bs.modal', function(){
-    $('#bracketModal .card-body').html(data);
+    $('#bracketModal .card-body').html(data.html);
     $("#print").on('click', function(){
-        var divToPrint=document.getElementById('div-print');
+
+        window.open('/bracket/print/'+data.eventId+'/'+data.entryId+'/'+data.entryAgeId+'/'+data.entryBeltId+'/'+data.entryWeightId+''); 
+
+        /*var divToPrint=document.getElementById('div-print');
 
         var newWin=window.open('','Print-Window');
 
@@ -208,7 +211,7 @@ $('#bracketModal').on('shown.bs.modal', function(){
 
         newWin.document.write('<html><body onload="window.print()">'+divToPrint.innerHTML+'</body></html>');
 
-        newWin.document.close();
+        newWin.document.close();*/
 
         //setTimeout(function(){newWin.close();},10);
     });
