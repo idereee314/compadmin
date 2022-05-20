@@ -23,7 +23,26 @@
             <th style="padding-bottom: 10px;" width="{{100/$round}}%">Тойрог {{ $i + 1 }}</th>
             @endfor
         </tr>
-        <?php $k = 0; ?>
+        <?php 
+            $k = 0; 
+            $byeList = array();
+
+            foreach($members as $key => $member)
+            {
+                if($member->lastname_one != null && $member->lastname_two == null)
+                {
+                    $byeList[$key] = array('lastname'=> $member->lastname_one, 'firstname'=> $member->firstname_one, 'academy'=> $member->acname_one);
+                }
+                else if($member->lastname_one == null && $member->lastname_two != null)
+                {
+                    $byeList[$key] = array('lastname'=> $member->lastname_two, 'firstname'=> $member->firstname_two, 'academy'=> $member->acname_two);
+                }
+                else
+                {
+                    $byeList[$key] = array('lastname'=> null);
+                }
+            } 
+        ?>
         @foreach($members as $member)
         <tr>
             @for($i = 0; $i < $round; $i++)
@@ -54,12 +73,23 @@
                             <div class="linebox_two"></div>
                             <table width="100%" style="width:100%;" id="table1" border="1">
                                 <tr>
+                                    @if($i == 1)
+                                    <td width="50%" align="center" style="font-size: 11px;border-right: 1px solid #cdd0d4;">
+                                        {!! @$byeList[$k]['lastname'] != null? @$byeList[$k]['lastname'].' <strong>'.@$byeList[$k]['firstname'].'</strong>': 'TBD'!!}<br>
+                                        {{@$byeList[$k]['academy']}}
+                                    </td>
+                                    <td width="50%" align="center" style="font-size: 11px;">
+                                        {!! @$byeList[$k + 1]['lastname'] != null? @$byeList[$k + 1]['lastname'].' <strong>'.@$byeList[$k + 1]['firstname'].'</strong>': 'TBD'!!}<br>
+                                        {{@$byeList[$k + 1]['academy']}}
+                                    </td>
+                                    @else
                                     <td width="50%" align="center" style="font-size: 11px;border-right: 1px solid #cdd0d4;">
                                     
                                     </td>
                                     <td width="50%" align="center" style="font-size: 11px;">
                                     
                                     </td>
+                                    @endif
                                 </tr>
                             </table>
                         </div>
