@@ -55,10 +55,10 @@
                             <table width="100%" style="width:100%;" id="table1" border="1">
                                 <tr>
                                     <td width="50%" align="center" style="font-size: 11px;border-right: 1px solid #cdd0d4;">
-                                    TBD
+                                    
                                     </td>
                                     <td width="50%" align="center" style="font-size: 11px;">
-                                    TBD
+                                    
                                     </td>
                                 </tr>
                             </table>
