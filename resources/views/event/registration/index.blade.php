@@ -310,7 +310,7 @@
                                                 </div>
                                             </div>
                                             <div class="row mt-8">
-                                                <div class="col-lg-12 float-right">
+                                                <div class="col-lg-12">
                                                     <button type="submit" class="btn btn-primary btn-primary--icon">
                                                         <span>
                                                             <i class="la la-search"></i>
