@@ -780,6 +780,16 @@ $(document).ready(function() {
         $('.datatable-input').each(function() {
             $(this).val('');
             eventTable.column($(this).data('col-index')).search('', false, false);
+
+            $("#search_entry").val('').selectpicker("refresh");            
+            $('#event-registration-search-form select[name=search_entry_age]').select2({data: ""});
+            $('#event-registration-search-form select[name=search_entry_belt]').select2({data: ""});
+            $('#event-registration-search-form select[name=search_entry_weight]').select2({data: ""});
+            $("#search_academy").val('').selectpicker("refresh"); 
+            $("#search_is_weight").val('').selectpicker("refresh");
+            $("#search_status").val('').selectpicker("refresh");
+            $("#search_amount").val('').selectpicker("refresh");
+            
         });
         eventTable.draw();
     });
