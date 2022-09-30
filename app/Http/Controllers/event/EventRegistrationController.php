@@ -368,10 +368,21 @@ class EventRegistrationController extends Controller
     public function printMandateByEventAndStatus()
     {
         $input = Input::all();
+        $eventConfig = $this->eventConfig->findByEventId(@$input['search_event']);
         $list = $this->eventRegistration->getRegistrationByStatus(@$input['search_event'], @Config::get('smart.event_registration_status')['approved'], $input);
 
-        $data['regs'] = $list->load(['academy:id,name,is_other','member:id,lastname,firstname,profile_url', 'weight:id,weight', 'entry:id,name'])->chunk(4);
-        return view($this->view_path.'.mandat_html', $data);
+        $data['regs'] = $list->load(['academy:id,name,is_other','member:id,lastname,firstname,profile_url', 'weight:id,weight', 'entry:id,name', 'belt:id,name'])->chunk(4);
+        $view = $this->view_path.'.mandat_'.@$eventConfig->mandat_template;
+        
+        if(\View::exists($view))
+        {
+            return view($view, $data);
+        }
+        else 
+        {
+
+        }
+        
         /*
         $pdf = PDF::loadView($this->view_path.'.mandat_cm', $data, [], [
             'format' => 'A4-P'
@@ -381,5 +392,228 @@ class EventRegistrationController extends Controller
         return $pdf->download('mandat.pdf');
         */
     }
+
+    public function treeBracket($eventId)
+    {
+        $event = $this->event->find($eventId);
+        $eventRegistration = $this->eventRegistration->getEventRegByGroup($eventId);
+        $eventRegStatusCount = $this->eventRegistration->getEventRegStatusCount($event->id)->pluck('total', 'status')->toArray();
+
+        $data['event'] = $event;
+        $data['progressPercent'] = round(@$eventRegStatusCount[@Config::get('smart.event_registration_status')['approved']] ? @$eventRegStatusCount[@Config::get('smart.event_registration_status')['approved']] / array_sum(@$eventRegStatusCount) * 100 : 0);
+        $data['eventRegistration'] = $eventRegistration->groupBy(['entry.fullname', 'belt.name', 'age.name', 'weight.weight']);
+        $data['view_path'] = $this->view_path;
+        //dd($data['eventRegistration']);
+
+        return view($this->view_path.'.bracket_tree', $data);
+    }
+
+    public function showBracket($eventId)
+    {
+        $data['view_path'] = $this->view_path;
+
+        return view($this->view_path.'.bracket', $data);
+    }
     
+    public function bracketGeneration()
+    {
+        $input = Input::all();
+        $eventId = @$input['event_id'];
+
+        try
+        {
+            $entries = $this->eventRegistration->getAllEntriesFromEvent($eventId);
+            //$entries = $this->eventRegistration->getAllEntriesFromEventById($eventId, 35, 42, 44, 277);
+
+            $brackets = array();
+
+            foreach($entries as $entry)
+            {
+                $members = $this->eventRegistration->getBracketMembersFromEvent($eventId, $entry->entry_id, $entry->entry_age_id, $entry->entry_belt_id, $entry->entry_weight_id, false);
+                
+                $participants = range(1, count($members));
+
+                $participantsCount = count($participants);              
+                $rounds = ceil(log($participantsCount)/log(2));
+                $bracketSize = pow(2, $rounds);
+                $requiredByes = $bracketSize - $participantsCount;
+
+                if($participantsCount > 2)
+                {
+                    $firstZone = array();
+                    $secondZone = array();
+
+                    $isFirst = true;
+                    $i = 0;
+                    $j = 0;
+                    for($k = 0; $k < $bracketSize; $k++)
+                    {
+                        $zoneSize =  $bracketSize / 2;
+                        if($isFirst)
+                        {
+                            $firstZone[$i] = array_key_exists($k, $members)? $members[$k]->id: null;
+                            $isFirst = false;                    
+
+                            if($zoneSize > 2)
+                            {
+                                if($i + 2 == $zoneSize)
+                                {
+                                    $i = 1;
+                                }
+                                else
+                                {
+                                    $i = $i + 2;
+                                }
+                            }
+                            else
+                            {
+                                $i++;
+                            }
+                        }
+                        else
+                        {
+                            $secondZone[$j] = array_key_exists($k, $members)? $members[$k]->id: null;
+                            $isFirst = true;
+
+                            if($zoneSize > 2)
+                            {
+                                if($j + 2 == $zoneSize)
+                                {
+                                    $j = 1;
+                                }
+                                else
+                                {
+                                    $j = $j + 2;
+                                }
+                            }
+                            else
+                            {
+                                $j++;
+                            }
+                        }
+                    }
+                    ksort($firstZone);
+                    ksort($secondZone);
+                    array_push($brackets, array('eventId' => $eventId, 'entryId' => $entry->entry_id, 
+                                'ageId' => $entry->entry_age_id, 'beltId' => $entry->entry_belt_id, 
+                                'weightId' => $entry->entry_weight_id, 'bracketSize' => $bracketSize,
+                                'participantsCount' => $participantsCount, 'rounds' => $rounds,
+                                'firstZone' => $firstZone, 'secondZone' => $secondZone));
+                }
+                else if($participantsCount == 2)
+                {
+                    $firstZone = array();
+
+                    for($k = 0; $k < $participantsCount; $k++)
+                    {
+                        $firstZone[$k] = array_key_exists($k, $members)? $members[$k]->id: null;
+                    }
+
+                    array_push($brackets, array('eventId' => $eventId, 'entryId' => $entry->entry_id, 
+                                'ageId' => $entry->entry_age_id, 'beltId' => $entry->entry_belt_id, 
+                                'weightId' => $entry->entry_weight_id, 'bracketSize' => $bracketSize,
+                                'participantsCount' => $participantsCount, 'rounds' => $rounds,
+                                'firstZone' => $firstZone, 'secondZone' => null));
+                }
+            }
+            
+            foreach($brackets as $bracket)
+            {
+                $status = $this->eventRegistration->deleteEventBracket($bracket['eventId'], $bracket['entryId'], $bracket['ageId'], $bracket['beltId'], $bracket['weightId']);
+
+                if($bracket['firstZone'] != null)
+                {
+                    for($i = 0; $i < $bracket['bracketSize'] / 2; $i = $i + 2)
+                    {
+                        if(array_key_exists($i, $bracket['firstZone'])) 
+                        {
+                            $this->eventRegistration->createEventBracket($bracket['eventId'], $bracket['entryId'], $bracket['ageId'], $bracket['beltId'], $bracket['weightId'], $bracket['firstZone'][$i], $bracket['firstZone'][$i + 1]);
+                        }
+                        
+                    }
+                }
+                
+                if($bracket['secondZone'] != null)
+                {
+                    for($i = 0; $i < $bracket['bracketSize'] / 2; $i = $i + 2)
+                    {
+                        if(array_key_exists($i, $bracket['secondZone'])) 
+                        {
+                            $this->eventRegistration->createEventBracket($bracket['eventId'], $bracket['entryId'], $bracket['ageId'], $bracket['beltId'], $bracket['weightId'], $bracket['secondZone'][$i], $bracket['secondZone'][$i + 1]);
+                        }
+                    }
+                }
+            }
+            
+            $response = array(
+                'status' => 'success',
+                'msg' => "Амжилттай оноолтыг үүсгэлээ. Оноолтын хэсгээс харна уу."
+            );
+        } 
+        catch (\Exception $ex)
+        {
+            $response = array(
+                'status' => 'error',
+                'msg' => "Алдаа гарлаа",
+                'errors' => $e->getMessage()
+            );
+        }
+
+        return $response;
+    }    
+
+    public function bracketShow($eventId, $entryId, $entryAgeId, $entryBeltId, $entryWeightId)
+    {
+        $input = Input::all();
+
+        $members = $this->eventRegistration->getBracketGenerationFromEvent($eventId, $entryId, $entryAgeId, $entryBeltId, $entryWeightId);
+
+        $total = count($members);
+
+        $data['total'] = $total;
+        $data['members'] = $members;
+        $data['eventId'] = $eventId;
+        $data['entryId'] = $entryId;
+        $data['entryAgeId'] = $entryAgeId;
+        $data['entryBeltId'] = $entryBeltId;
+        $data['entryWeightId'] = $entryWeightId;
+        if($total > 0)
+        {
+            $data['round'] = intval(log($total, 2)) + 1;
+        }
+        
+        return view('event.bracket.generation', $data)->render();        
+
+        //return response()->json(['html' => $html, 'eventId' => $eventId, 'entryId' => $entryId, 'entryAgeId' => $entryAgeId, 'entryBeltId' => $entryBeltId, 'entryWeightId' => $entryWeightId]); 
+    }
+
+    public function bracketPrint($eventId, $entryId, $entryAgeId, $entryBeltId, $entryWeightId)
+    {
+        $input = Input::all();
+
+        $members = $this->eventRegistration->getBracketGenerationFromEvent($eventId, $entryId, $entryAgeId, $entryBeltId, $entryWeightId);
+
+        $eventConfig =  $this->eventConfig->findByEventId($eventId);
+        $entry = $this->eventEntries->find($entryId);
+        $age = $this->configAge->find($entryAgeId);
+        $belt = $this->configBelt->find($entryBeltId);
+        $weight = $this->configWeight->find($entryWeightId);
+
+        $total = count($members);
+
+        $data['total'] = $total;
+        $data['members'] = $members;
+        $data['eventConfig'] = $eventConfig;
+        $data['entry'] = $entry;
+        $data['age'] = $age;
+        $data['belt'] = $belt;
+        $data['weight'] = $weight;
+
+        if($total > 0)
+        {
+            $data['round'] = intval(log($total, 2)) + 1;
+        }
+        
+        return view('event.bracket.print', $data);        
+    }
 }

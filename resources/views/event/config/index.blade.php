@@ -335,6 +335,14 @@ $(document).ready(function() {
             rightArrow: '<i class="la la-angle-right"></i>',
         },
     });
+
+    $('#event-config-datatable tbody').on( 'click', 'tr td a.show-count', function () {
+        var configId = $(this).data('configid');
+        var tabId = $(this).data('tabid');
+
+        $.get('/event/config/'+configId+'?tab_id='+tabId, showCountModal);
+    });
+
     $('#event-config-datatable tbody').on( 'click', 'tr td a.delete', function () {
         var id = $(this).data("configid");
 
@@ -602,6 +610,19 @@ function showCopyModal(data){
                 }
             }
         });
+
+        $(this).off('shown.bs.modal');
+    });
+
+    $('#eventConfigModal').on('hidden.bs.modal', function(){
+        $('#eventConfigModal .modal-content').empty();
+    });
+}
+
+function showCountModal(data){
+    $('#eventConfigModal').modal();
+    $('#eventConfigModal').on('shown.bs.modal', function(){
+        $('#eventConfigModal .modal-content').html(data);
 
         $(this).off('shown.bs.modal');
     });

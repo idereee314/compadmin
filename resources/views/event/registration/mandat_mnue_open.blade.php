@@ -30,20 +30,21 @@
                 position: relative;
                 padding: 0;
                 margin: 0;
-                background: url('/assets/images/bg.jpg') no-repeat center center;
+                background: url('/assets/images/bg_mnue_open.jpg') no-repeat center center;
                 background-size: contain;
+                border-top: 2px solid #fff;
             }
             .content{
                 position: relative;
-                margin-top: 742px;
+                margin-top: 738px;
             }
             .image_container{
                 position: absolute;
-                width: 132px;
-                height: 235px;
+                width: 161px;
+                height: 218px;
                 background: #222;
-                bottom: 42px;
-                left: 58px;
+                bottom: 72px;
+                left: 35px;
                 border-radius: 8px;
             }
             .image_container img{
@@ -51,42 +52,47 @@
             }
             .org{
                 position: absolute;
-                width: 155px;
+                width: 250px;
                 height: 20px;
                 bottom: 216px;
-                right: 50px;
-                border-radius: 8px;
-                font-family: 'Times New Roman', Times, serif;
-                font-style: italic;
-                font-weight: bold;
-                font-size: 14px;
-                color: #222;
-            }
-            .name{
-                position: absolute;
-                width: 248px;
-                height: 20px;
-                bottom: 143px;
-                right: 50px;
+                left: 221px;
                 border-radius: 8px;
                 font-family: 'Times New Roman', Times, serif;
                 font-style: italic;
                 font-weight: bold;
                 font-size: 18px;
                 color: #222;
+                text-align: center;
             }
-            .weight{
+            .name{
                 position: absolute;
-                width: 105px;
-                height: 20px;
-                bottom: 71px;
-                right: 190px;
+                width: 250px;
+                height: 40px;
+                bottom: 133px;
+                right: 50px;
                 border-radius: 8px;
                 font-family: 'Times New Roman', Times, serif;
                 font-style: italic;
                 font-weight: bold;
-                font-size: 22px;
+                font-size: 14px;
+                line-height: 14px;
                 color: #222;
+                text-align: center;
+            }
+            .weight{
+                position: absolute;
+                width: 250px;
+                height: 40px;
+                bottom: 70px;
+                left: 220px;
+                border-radius: 8px;
+                font-family: 'Times New Roman', Times, serif;
+                font-style: italic;
+                font-weight: bold;
+                font-size: 14px;
+                color: #222;
+                line-height: 14px;
+                text-align: center;
             }
             .category{
                 position: absolute;
@@ -117,23 +123,17 @@
                         <img src="{{ \Storage::disk('s3')->url($reg->member->profile_url) }}" width="100%" height="100%" />
                     </div>
                     <div class="org">
-                        {{ @$reg->academy->is_other ? @$reg->academy_name : @$reg->academy->name }}
-                    </div>
-                    <div class="name">
                         {{ @$reg->member->lastname }} {{ @$reg->member->firstname }}
                     </div>
-                    <div class="weight">
-                        {{ @$reg->weight->weight }}кг
+                    <div class="name">
+                        {{ @$reg->academy->is_other ? @$reg->academy_name : @$reg->academy->name }}
                     </div>
-                    <div class="category">
-                        {{ @$reg->entry->name }}
+                    <div class="weight">
+                        {{$reg->entry->name}} /{{@$reg->belt->name}}/ {{ @$reg->weight->weight }}кг
                     </div>
                 </div>
             </div>
-            
-            @endforeach           
-               
-                   
+            @endforeach                              
         </div>
         <div style="break-after:always; clear:both"></div> 
         @empty

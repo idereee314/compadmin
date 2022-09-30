@@ -310,7 +310,7 @@
                                                 </div>
                                             </div>
                                             <div class="row mt-8">
-                                                <div class="col-lg-12 float-right">
+                                                <div class="col-lg-12">
                                                     <button type="submit" class="btn btn-primary btn-primary--icon">
                                                         <span>
                                                             <i class="la la-search"></i>
@@ -479,7 +479,7 @@ $(document).ready(function() {
             },
             {
                 extend: 'excelHtml5',
-                text: '<i class="fa fa-print"></i> {!! trans('display.general_excel') !!}',
+                text: '<i class="fa fa-print"></i> Оролцогчдын жагсаалт {!! trans('display.general_excel') !!}',
                 className: "btn btn-light-warning font-weight-bolder mb-2",
                 title: 'Оролцогчийн жагсаалт',
                 customize: function ( xlsx ) {
@@ -495,7 +495,7 @@ $(document).ready(function() {
                         selected: undefined
                     }
                 }
-            },
+            }
         ]
 	});
 
@@ -780,6 +780,16 @@ $(document).ready(function() {
         $('.datatable-input').each(function() {
             $(this).val('');
             eventTable.column($(this).data('col-index')).search('', false, false);
+
+            $("#search_entry").val('').selectpicker("refresh");            
+            $('#event-registration-search-form select[name=search_entry_age]').select2({data: ""});
+            $('#event-registration-search-form select[name=search_entry_belt]').select2({data: ""});
+            $('#event-registration-search-form select[name=search_entry_weight]').select2({data: ""});
+            $("#search_academy").val('').selectpicker("refresh"); 
+            $("#search_is_weight").val('').selectpicker("refresh");
+            $("#search_status").val('').selectpicker("refresh");
+            $("#search_amount").val('').selectpicker("refresh");
+            
         });
         eventTable.draw();
     });
@@ -1130,6 +1140,17 @@ function showEditModal(data){
                 },
                 async: false
             });
+        });
+
+        $('#update-event-registration-form input[name=is_weight_checked]').on('click', function(el){
+            if($(this).is(':checked'))
+            {
+                $('#update-event-registration-form input[name=current_weight]').prop('disabled', false);
+            }
+            else 
+            {
+                $('#update-event-registration-form input[name=current_weight]').prop('disabled', true);
+            }
         });
 
         $('#update-event-registration-form').validate({

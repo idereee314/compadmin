@@ -2,6 +2,7 @@
 
 use event\EventRegistration;
 use event\EventPayment;
+use event\EventBrackets;
 
 use Hash;
 use Log;
@@ -63,6 +64,7 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 		$eventRegistraion->academy_name = @$input['academy_name'];
 		//$eventRegistraion->status = @$input['status'];
 		$eventRegistraion->is_weight_checked = @$input['is_weight_checked'] ? true: false ;
+		$eventRegistraion->current_weight = @$input['current_weight'];
 
 		$eventRegistraion->save();
 		return $eventRegistraion;
@@ -316,7 +318,7 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 		$registrations = "";
 		if(@$evntId && @$status)
 		{
-			$qry = EventRegistration::selectRaw('id, status, member_id, academy_id, entry_id, entry_weight_id, academy_name')
+			$qry = EventRegistration::selectRaw('id, status, member_id, academy_id, entry_id, entry_belt_id, entry_weight_id, academy_name')
 			->where('event_id', $evntId)
 			->where('uq_event_registration.status', $status);
 
@@ -359,5 +361,109 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 		}
 		
 		return $registrations;
+	}
+
+	public  function getEventRegByGroup($eventId)
+	{
+		$regs = "";
+		if(@$eventId)
+		{
+			$qry = EventRegistration::selectRaw('*')
+				->where('event_id', $eventId)
+				->where('status', @Config::get('smart.event_registration_status')['approved'])
+				->orderByRaw('entry_id, entry_belt_id, entry_age_id, entry_weight_id');
+			$regs = $qry->get()->load(['entry:id,name,gender_code', 'belt:id,name', 'age:id,start_age,end_age', 'weight:id,weight']);
+		}
+
+		return $regs;
+	}
+	public function getAllEntriesFromEvent($eventId)
+	{
+		return DB::select("select r.entry_id, r.entry_age_id, r.entry_belt_id, r.entry_weight_id  
+								from uq_comp.uq_event_registration r
+								where event_id = ".$eventId."
+								group by r.entry_id, r.entry_age_id, r.entry_belt_id, r.entry_weight_id
+								order by r.entry_id, r.entry_age_id, r.entry_belt_id, r.entry_weight_id");
+	}
+
+	public function getAllEntriesFromEventById($eventId, $entryId, $entryAgeId, $entryBeltId, $entryWeightId)
+	{
+		return DB::select("select r.entry_id, r.entry_age_id, r.entry_belt_id, r.entry_weight_id  
+								from uq_comp.uq_event_registration r
+								where r.event_id = ".$eventId."
+								and r.entry_id = ".$entryId." and r.entry_age_id = ".$entryAgeId." 
+								and r.entry_belt_id = ".$entryBeltId." and r.entry_weight_id = ".$entryWeightId."
+								group by r.entry_id, r.entry_age_id, r.entry_belt_id, r.entry_weight_id
+								order by r.entry_id, r.entry_age_id, r.entry_belt_id, r.entry_weight_id");
+	}
+
+	public function getBracketMembersFromEvent($eventId, $entryId, $entryAgeId, $entryBeltId, $entryWeightId, $isWeightChecked = false)
+	{
+		return DB::select("select r.id, r.member_id, r.academy_id, case when a.is_other = 1 then r.academy_name else a.name end as acname 
+								from uq_comp.uq_event_registration r
+								inner join uq_comp.uq_academy a on r.academy_id = a.id 
+								where status = 'approved' and event_id = ".$eventId." 
+								and is_weight_checked = false
+								and r.entry_id = ".$entryId." and r.entry_age_id = ".$entryAgeId." 
+								and r.entry_belt_id = ".$entryBeltId." and r.entry_weight_id = ".$entryWeightId."
+								order by r.academy_id, r.academy_name, r.id");
+	}
+
+	public function getBracketGenerationFromEvent($eventId, $entryId, $entryAgeId, $entryBeltId, $entryWeightId)
+	{
+		return DB::select("select ro.id as ro, um.firstname as firstname_one, um.lastname as lastname_one, case when ao.is_other = 1 then ro.academy_name else ao.name end as acname_one, 
+								rt.id as rt, umt.firstname as firstname_two, umt.lastname as lastname_two, case when aot.is_other = 1 then rt.academy_name else aot.name end as acname_two,
+								rw.id as rw, umw.firstname as firstname_win, umw.lastname as lastname_win, case when aow.is_other = 1 then rw.academy_name else aow.name end as acname_win
+								from uq_comp.uq_event_brackets b
+								inner join uq_comp.uq_event_entries e on b.entry_id = e.id 
+								inner join uq_comp.uq_entry_config_age a on b.entry_age_id  = a.id 
+								inner join uq_comp.uq_entry_config_belt be on b.entry_belt_id = be.id 
+								inner join uq_comp.uq_entry_config_weight w on b.entry_weight_id = w.id 
+								left join uq_comp.uq_event_registration ro on b.reg_one_id = ro.id 
+								left join uq_comp.uq_member um on ro.member_id = um.id 
+								left join uq_comp.uq_academy ao on ro.academy_id = ao.id 
+								left join uq_comp.uq_event_registration rt on b.reg_two_id = rt.id 
+								left join uq_comp.uq_member umt on rt.member_id = umt.id 
+								left join uq_comp.uq_academy aot on rt.academy_id = aot.id 
+								left join uq_comp.uq_event_registration rw on b.reg_winner_id = rw.id 
+								left join uq_comp.uq_member umw on rw.member_id = umw.id 
+								left join uq_comp.uq_academy aow on rw.academy_id = aow.id 
+								where b.event_id = ".$eventId."  and b.entry_id = ".$entryId." and b.entry_age_id = ".$entryAgeId."  
+								and b.entry_belt_id = ".$entryBeltId." and b.entry_weight_id = ".$entryWeightId."
+								order by b.id");
+	}
+
+	public function deleteEventBracket($eventId, $entryId, $entryAgeId, $entryBeltId, $entryWeightId)
+	{
+		return EventBrackets::where('event_id', $eventId)->where('entry_id', $entryId)
+					->where('entry_age_id', $entryAgeId)->where('entry_belt_id', $entryBeltId)
+					->where('entry_weight_id', $entryWeightId)->delete();
+	}
+
+	public function createEventBracket($eventId, $entryId, $entryAgeId, $entryBeltId, $entryWeightId, $regOneId, $regTwoId)
+	{
+		$eventBrackets = new EventBrackets;
+
+		$eventBrackets->event_id = $eventId;
+		$eventBrackets->entry_id = $entryId;
+		$eventBrackets->entry_age_id = $entryAgeId;
+		$eventBrackets->entry_belt_id = $entryBeltId;
+		$eventBrackets->entry_weight_id = $entryWeightId;
+		$eventBrackets->reg_one_id = $regOneId;
+		$eventBrackets->reg_two_id = $regTwoId;
+		$winnerId = null;
+		if($regOneId != null && $regTwoId == null)
+		{
+			$winnerId = $regOneId;
+		}
+
+		if($regOneId == null && $regTwoId != null)
+		{
+			$winnerId = $regTwoId;
+		}
+
+		$eventBrackets->reg_winner_id = $winnerId;
+
+		return $eventBrackets->save();
 	}
 }

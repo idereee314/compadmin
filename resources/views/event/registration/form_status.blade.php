@@ -49,12 +49,13 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text">
                                     <label class="checkbox checkbox-inline checkbox-success">
-                                        <input type="checkbox" name="payment_status" id="payment_status" value="1" {{ @$eventRegistration->payment && $eventRegistration->payment->status ? 'checked="checked"' : ''}}>
+                                        <input type="checkbox" name="payment_status" id="payment_status" value="1" {{ @$eventRegistration->payment && @$eventRegistration->payment->status ? 'checked=checked' : ''}}>
                                         <span></span>
                                     </label>
                                 </span>
                             </div>
-                            <input type="number" class="form-control" id="amount" name="amount" value="{{ @$eventRegistration->payment->amount }}" {{ empty(@$eventRegistration->payment) || $eventRegistration->payment->from_type == 'admin' ? '' : 'readonly'}} min="0" max="{{ @$entryFees->max('entrance_fee')}}" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}"/>
+                            <input type="number" class="form-control" id="amount" name="amount" value="{{ @$eventRegistration->payment->amount }}" min="0" max="{{ @$entryFees->max('entrance_fee')}}" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}"/>
+                            {{-- empty(@$eventRegistration->payment) || $eventRegistration->payment->from_type == 'admin' ? '' : 'readonly' --}}
                         </div>
                     </div>
                 </div>

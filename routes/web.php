@@ -42,6 +42,9 @@ Route::get('logout', [LoginController::class, 'doLogout'])->name('system.logout'
 //     return view('welcome');
 // });
 
+Route::get('/bracket/{eventId}/{entryId}/{entryAgeId}/{entryBeltId}/{entryWeightId}', 'event\EventRegistrationController@bracketShow')->name('event.registration.bracket.show');
+Route::get('/bracket/print/{eventId}/{entryId}/{entryAgeId}/{entryBeltId}/{entryWeightId}', 'event\EventRegistrationController@bracketPrint')->name('event.registration.bracket.print');
+
 Route::group([
     'prefix' => '',
     'middleware' => 'auth'
@@ -88,10 +91,11 @@ Route::group([
     Route::get('/event/registration/create/award', 'event\EventRegistrationController@createPlace')->name('event.registration.create.award');
     Route::post('/event/registration/take/award', 'event\EventRegistrationController@takePlace')->name('event.registration.take.award');
     Route::get('/event/competition', 'event\EventRegistrationController@showCard')->name('event.competition.card');
-    Route::get('/event/registration/print/mandat', 'event\EventRegistrationController@printMandateByEventAndStatus')->name('event.registration.print.mandat');
 
     Route::get('/event/registration/change/status', 'event\EventRegistrationStatusController@change')->name('event.registration.change.status');
     Route::post('/event/registration/changed/status', 'event\EventRegistrationStatusController@changed')->name('event.registration.changed.status');
+    Route::get('/event/registration/print/mandat', 'event\EventRegistrationController@printMandateByEventAndStatus')->name('event.registration.print.mandat');
+    
 
     Route::resource('/event/config', 'event\EventConfigController', ['names' => 'event.config']);
     Route::any('/event/config/data/list', 'event\EventConfigController@getDatatableList')->name('event.config.data.list');
@@ -101,6 +105,8 @@ Route::group([
     Route::get('/event/config-tabs', 'event\EventConfigController@includeTab')->name('event.config.tabs');
 
     Route::resource('/event/user', 'event\EventUserController', ['names' => 'event.user']);
+
+    Route::get('/event/registration/bracket/generation', 'event\EventRegistrationController@bracketGeneration')->name('event.registration.bracket.generation');
 
     //Entry
     Route::resource('/event/entry', 'reference\EventEntryController', ['names' => 'event.entry']);
@@ -131,5 +137,9 @@ Route::group([
     Route::any('/academy/data/list', 'academy\AcademyController@getDatatableList')->name('academy.data.list');
     Route::post('/academy/isother', 'academy\AcademyController@getIsOther')->name('academy.isother');
     Route::get('/academy/search/org', 'academy\AcademyController@findOrganizationByName')->name('academy.search.org');
+
 });
+
+Route::get('/event/{eventId}/bracket', 'event\EventRegistrationController@treeBracket')->name('event.bracket');
+Route::get('/event/{eventId}/bracket/show', 'event\EventRegistrationController@showBracket')->name('event.show.bracket');
 

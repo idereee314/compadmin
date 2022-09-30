@@ -49,8 +49,12 @@
                         <div class="col-xl-6">
                             <!--begin::Card-->
                             <div class="card card-custom gutter-b card-stretch">
-                                <!--begin::Body-->
-                                <div class="card-body">
+                                <div class="card-header ribbon ribbon-top ribbon-ver p-7">
+                                    @if(Carbon\Carbon::now() <= @$event['reg_end_date'])
+                                    <div class="ribbon-target bg-success" style="top: -2px; right: 20px;">
+                                        <i class="fa fa-star text-white"></i>
+                                    </div>
+                                    @endif
                                     <!--begin::Section-->
                                     <div class="d-flex align-items-center">
                                         <!--begin::Pic-->
@@ -69,10 +73,55 @@
                                             <!--end::Title-->
                                         </div>
                                         <!--end::Info-->
+                                        <!--begin::Toolbar-->
+                                        <div class="card-toolbar mb-auto">
+                                            <div class="dropdown dropdown-inline" data-toggle="tooltip" title="" data-placement="left" data-original-title="Хурдан үйлдэл">
+                                                <a href="#" class="btn btn-clean btn-hover-light-primary btn-sm btn-icon" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <i class="ki ki-bold-more-hor"></i>
+                                                </a>
+                                                <div class="dropdown-menu dropdown-menu-sm dropdown-menu-right" style="">
+                                                    <!--begin::Navigation-->
+                                                    <ul class="navi navi-hover">
+                                                        <li class="navi-header pb-1">
+                                                            <span class="text-primary text-uppercase font-weight-bold font-size-sm">Үйлдэл:</span>
+                                                        </li>
+                                                        <li class="navi-item">
+                                                            <a href="javascript:;" class="navi-link" id="generate-bracket" data-eventid="{{ @$event['id'] }}">
+                                                                <span class="navi-icon">
+                                                                    <i class="flaticon-network"></i>
+                                                                </span>
+                                                                <span class="navi-text">Оноолт үүсгэх</span>
+                                                            </a>
+                                                        </li>
+                                                        <li class="navi-item">
+                                                            <a href="{{ route('event.bracket', @$event['id']) }}" class="navi-link">
+                                                                <span class="navi-icon">
+                                                                    <i class="flaticon-calendar-1"></i>
+                                                                </span>
+                                                                <span class="navi-text">Оноолт харах</span>
+                                                            </a>
+                                                        </li>
+                                                        <li class="navi-item">
+                                                            <a href="javascript:;" class="navi-link">
+                                                                <span class="navi-icon">
+                                                                    <i class="flaticon2-graph-1"></i>
+                                                                </span>
+                                                                <span class="navi-text">Тайлан</span>
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                    <!--end::Navigation-->
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!--end::Toolbar-->
                                     </div>
                                     <!--end::Section-->
+                                </div>
+                                <!--begin::Body-->
+                                <div class="card-body">
                                     <!--begin::Content-->
-                                    <div class="d-flex flex-wrap mt-14">
+                                    <div class="d-flex flex-wrap">
                                         <div class="mr-12 d-flex flex-column mb-7">
                                             <span class="d-block font-weight-bold mb-4">Эхлэх</span>
                                             <span class="btn btn-light-primary btn-sm font-weight-bold btn-upper btn-text">{{ Carbon\Carbon::parse(@$event['reg_start_date'])->format('y M, d') }}</span>
@@ -100,21 +149,21 @@
                                     <!--begin::Blog-->
                                     <div class="d-flex flex-wrap">
                                         <!--begin: Item-->
-                                        <div class="mr-12 d-flex flex-column mb-7">
+                                        <div class="mr-12 d-flex flex-column">
                                             <span class="font-weight-bolder mb-4">{{ @Config::get('enums.gender_code')[2] }}</span>
                                             <span class="font-weight-bolder font-size-h5 pt-1">
                                             <span class="font-weight-bold text-dark-50"><i class="icon-md fas fa-female"></i></span> {{ @$event['members'][2] ? array_count_values(array_column(@$event['members'], 'gender_code'))[2] : '0' }}</span>
                                         </div>
                                         <!--end::Item-->
                                         <!--begin::Item-->
-                                        <div class="mr-12 d-flex flex-column mb-7">
+                                        <div class="mr-12 d-flex flex-column">
                                             <span class="font-weight-bolder mb-4">{{ @Config::get('enums.gender_code')[1] }}</span>
                                             <span class="font-weight-bolder font-size-h5 pt-1">
                                             <span class="font-weight-bold text-dark-50"><i class="icon-md fas fa-male"></i></span> {{ @$event['members'][1] ? array_count_values(array_column(@$event['members'], 'gender_code'))[1] : '0' }}</span>
                                         </div>
                                         <!--end::Item-->
                                         <!--begin::Item-->
-                                        <div class="d-flex flex-column flex-lg-fill float-left mb-7">
+                                        <div class="d-flex flex-column flex-lg-fill float-left">
                                             <span class="font-weight-bolder mb-4">Оролцогч</span>
                                             <div class="symbol-group symbol-hover">
                                                 @php $count = 0; @endphp
@@ -140,7 +189,7 @@
                                 </div>
                                 <!--end::Body-->
                                 <!--begin::Footer-->
-                                <div class="card-footer d-flex align-items-center">
+                                <div class="card-footer d-flex align-items-center p-7">
                                     <div class="d-flex">
                                         <div class="d-flex align-items-center mr-7">
                                             <span class="svg-icon svg-icon-gray-500">
@@ -195,871 +244,43 @@
         @include('layouts.footer')
         <!--end::Footer-->
     </div>
-    @include ($view_path.'.modals')
     <!--end::Wrapper-->
 <!--end::Main-->
 @section('javascript')
-<script src="{{asset('assets/js/plugins/custom/datatables/datatables.bundle.js')}}"></script>
+<script src="{{ asset('assets/js/plugins/custom/datatables/datatables.bundle.js') }}"></script>
 
 <script>
 $(document).ready(function() {
-    eventTable = $("#event-registration-datatable").DataTable({
-        processing:     true,
-        serverSide:     true,
-        //deferRender:    true,
-        //autoWidth:      true,
-        //filter:         false,
-        responsive:     true,
-        dataType: 'json',
-        paginationType: "full_numbers",
-        ajax: {
-            url: '{{route('event.registration.data.list')}}',
-            type: 'POST',
-            data: function ( d ) {
-                var dateArr = {};
-                $('#event-registration-search-form input[name^="search_date"]').map(function(){
-                    dateArr[this.id] = this.value;
-                }).get();
-                d.event = $('#event-registration-search-form select[id="search_event"]').val();
-                d.entry = $('#event-registration-search-form select[id="search_entry"]').val();
-                d.entryAge = $('#event-registration-search-form select[id="search_entry_age"]').val();
-                d.entryBelt = $('#event-registration-search-form select[id="search_entry_belt"]').val();
-                d.entryWeight = $('#event-registration-search-form select[id="search_entry_weight"]').val();
-                d.status = $('#event-registration-search-form select[id="search_status"]').val();
-                d.member = $('#event-registration-search-form input[id="search_member"]').val();
-                d.gender = $('#event-registration-search-form select[id="search_gender"]').val();
-                d.academy = $('#event-registration-search-form select[id="search_academy"]').val();
-                d.is_weight = $('#event-registration-search-form select[id="search_is_weight"]').val();
-                d.date = dateArr;
-            },
-        },
-        drawCallback: function(settings) {
-            var api = this.api();
-            var rows = api.rows({page: 'current'}).nodes();
-            var last = null;
+    $(".navi-item #generate-bracket").on('click', function(){
+        var eventId = $(this).data('eventid');
 
-            api.column(1, {page: 'current'}).data().each(function(group, i) {
-                if (last !== group) {
-                    $(rows).eq(i).before(
-                        '<tr class="group"><td colspan="14">&nbsp;' + group + '</td></tr>',
-                    );
-                    last = group;
+        $.ajax({
+            url: '{!! route('event.registration.bracket.generation') !!}?event_id='+eventId,
+            type: 'GET',
+            success: function(response) {
+                if(response.status == 'success')
+                {
+                    toastr.success(response.msg);
                 }
-            });
-        },
-        columns: [
-            {
-                data: null,
-                render: function (data, type, row, meta) {
-                    return meta.row + meta.settings._iDisplayStart + 1;
-                },
-                width: "30px"
-            },
-            
-            {data: 'event'},
-            {data: 'member', "defaultContent": ""},
-            /*
-            {data: 'profile_url', "defaultContent": ""},
-            {data: 'member.register_number'},
-            {
-                data: 'member', 
-                render: function (data, type, row, meta) {
-                    var name = data.lastname.substr(0,1) + '. ' + data.firstname;
-                    return name;
-                },
-                "defaultContent": ""
-            },
-            {data: 'member.contact_phone'},
-            */
-            {data: 'entry.name', "defaultContent": ""},
-            {
-                data: 'age',
-                render: function (data, type, row, meta) {
-                    var age;
-                    if(data.end_age != null)
-                    {
-                        age = data.start_age + '-' + data.end_age;
-                    }
-                    else 
-                    {
-                        age = data.start_age + '+';
-                    }
-                    return age;
-                },
-                name: "age.start_age", "defaultContent": ""
-            },
-            {data: 'belt.name', "defaultContent": ""},
-            {data: 'weight.weight', "defaultContent": ""},
-            {data: 'academy_name'},
-            {data: 'status', "defaultContent": ""},
-            {data: 'created_at'},
-            {data: 'action'},
-        ],
-        columnDefs: [ 
-        {
-            // hide columns by index number
-            targets: [1],
-            visible: false,
-        },
-        {
-            searchable: false,
-            orderable: false,
-            targets: [0,1,2,7,10]
-        },{
-            class: "text-center",
-            targets: [0,1]
-        }],
-        order: [[ 9, "desc" ]],
-        dom: "<'row'<'col-sm-6 text-left'B><'col-sm-6 text-right'<'#colvis'>>><'row'<'col-sm-12'tr>><'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7 dataTables_pager'lp>>",
-        buttons: [
-            {
-                text: '<i class="la la-plus"></i> Шинээр нэмэх',
-                className: "btn btn-light-danger font-weight-bolder mb-2",
-                action: function ( e, dt, node, config ) {
-                    $.get('{!! route('event.registration.create') !!}', showAddModal);
+                else {
+                    toastr.error(response.errors, response.msg, {
+                        "closeButton": true,
+                        "timeOut": "0",
+                        "extendedTimeOut": "0",
+                    });
                 }
             },
-            {
-                extend: 'excelHtml5',
-                text: '<i class="fa fa-print"></i> {!! trans('display.general_excel') !!}',
-                className: "btn btn-light-warning font-weight-bolder mb-2",
-                title: 'Оролцогчийн жагсаалт',
-                customize: function ( xlsx ) {
-                    var sheet = xlsx.xl.worksheets['sheet1.xml'];
-                    $('c[r=A1] t', sheet).text( 'Тэмцээнд оролцогчид' );
-                },
-                exportOptions: {
-                    columns: [ 0,2,3,4,5,6,7,8,9],
-                    modifier: {
-                        order: 'current',
-                        page: 'all',
-                        focused: undefined,
-                        selected: undefined
-                    }
-                }
-            },
-        ]
-	});
-
-    $('#kt_datepicker').datepicker({
-        todayHighlight: true,
-        templates: {
-            leftArrow: '<i class="la la-angle-left"></i>',
-            rightArrow: '<i class="la la-angle-right"></i>',
-        },
-    });
-
-    $('#event-registration-search-form').on('submit', function(e) {
-        eventTable.draw();
-        e.preventDefault();
-    });
-
-    $('#event-registration-datatable tbody').on( 'click', 'tr td a.edit', function () {
-        var id = $(this).data("registrationid");
-
-        $.get('registration/'+id+'/edit', showEditModal);
-    });
-
-    $('#event-registration-datatable tbody').on( 'click', 'tr td a.show-image', function () 
-    {
-        var id = $(this).data("id");
-        var type = $(this).data("type");
-
-        $.get('/member/show/image/'+type+'/'+id, function( data ) {
-            $('#showImageModal').modal();
-            $('#showImageModal').on('shown.bs.modal', function(){
-                $('#showImageModal .modal-content').html(data);
-
-                $(this).off('shown.bs.modal');
-            });
-
-            $('#showImageModal').on('hidden.bs.modal', function(){
-                $('#showImageModal .modal-content').empty();
-            });
-        });
-    });
-
-    $('#event-registration-datatable tbody').on( 'click', 'tr td a.win-place', function () 
-    {
-        var id = $(this).data("registrationid");
-
-        $.get('registration/create/award?event_reg_id='+id, function( data ) {
-            $('#memberModal').modal();
-            $('#memberModal').on('shown.bs.modal', function(){
-                $('#memberModal .modal-content').html(data);
-                $('#event-award-form').validate({
-                    ignore: [],
-                    highlight:function(element) {
-                        $(element).parents('.form-group').addClass('has-error has-feedback');
-                    },
-                    unhighlight: function(element) {
-                        $(element).parents('.form-group').removeClass('has-error');
-                    },
-                    submitHandler: function(form) {
-                        $.ajax({
-                            url: form.action,
-                            type: form.method,
-                            data: new FormData(form),
-                            success: function(response) {
-                                var page = eventTable.page.info().page;
-                                $('#memberModal').find("#close").trigger('click');
-                                $('.panel-sub-heading').html(response).fadeIn().delay(5000).fadeOut();
-                                eventTable.page(page).draw('page');
-                            },
-                            error: function (xhr, textStatus, error) {
-                                console.log(xhr.statusText);
-                                console.log(textStatus);
-                                console.log(error);
-                            },
-                            async: false,
-                            processData: false,
-                            contentType: false
-                        });
-                    },
-                    errorPlacement: function(error, element) {
-                        if($(element).parents('.form-group').find(".error-here")){
-                            error.appendTo($(element).parents('.form-group').find(".error-here"));
-                        } else {
-                            error.insertAfter(element);
-                        }
-                    }
-                });
-
-                $(this).off('shown.bs.modal');
-            });
-
-            $('#memberModal').on('hidden.bs.modal', function(){
-                $('#memberModal .modal-content').empty();
-            });
-        });
-    });
-
-    $('#event-registration-datatable tbody').on( 'click', 'tr td a.delete', function () {
-        var id = $(this).data("registrationid");
-
-        Swal.fire({
-            title: "Та устгахдаа итгэлтэй байна уу",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonText: "Тийм",
-            cancelButtonText: 'Үгүй',
-            customClass: {
-                confirmButton: "btn btn-primary",
-                cancelButton: 'btn btn-secondary'
-            },
-        }).then(function(result) {
-            if (result.value) {
-                $.ajax({
-                    url: 'registration/' + id,
-                    type: 'DELETE',
-                    success: function(response) {
-                        $('.panel-sub-heading').html(response).fadeIn().delay(5000).fadeOut();
-                        eventTable.draw();
-                    },
-                    error: function (xhr, textStatus, error) {
-                        console.log(xhr.statusText);
-                        console.log(textStatus);
-                        console.log(error);
-                    },
-                    async: false
-                });
-            }
-        });
-    });
-
-    $('#event-registration-search-form select[name=search_event]').on('change', function(){
-        var eventId = $(this).val();
-        var jsonData;
-
-        $.ajax({
-            type: 'POST',
-            url: '{!! route('event.entry.by.event') !!}',
-            data: {event_id: eventId},
-            success: function (data) {
-                jsonData = JSON.parse(data);
-            },
             error: function (xhr, textStatus, error) {
                 console.log(xhr.statusText);
                 console.log(textStatus);
                 console.log(error);
             },
-            async: false
-        });
-
-        $('#event-registration-search-form select[name=search_entry]').select2({
-            placeholder: "-- {{ trans('display.general_all') }} --",
-            data: jsonData,
-            id: 'id',
-            closeOnSelect: true,
-            allowClear: true,
-            templateSelection: function (item) {
-                return item.name;
-            },
-            templateResult: function (item) {
-                return item.name;
-            }
-        });
-
-        $('#event-registration-search-form select[name=search_entry_age]').select2({data: ""});
-        $('#event-registration-search-form select[name=search_entry_belt]').select2({data: ""});
-        $('#event-registration-search-form select[name=search_entry_weight]').select2({data: ""});
-    });
-
-    $('#event-registration-search-form select[name=search_entry]').on('change', function(){
-        var entryId = $(this).val();
-        var jsonConfig;
-        var jsonDataAge;
-        var jsonDataBelt;
-
-        $.ajax({
-            type: 'POST',
-            url: '{!! route('event.registration.take.config') !!}',
-            data: {entry_id: entryId},
-            success: function (data) {
-                jsonConfig = JSON.parse(data);
-                jsonDataAge = jsonConfig['age'];
-                jsonDataBelt = jsonConfig['belt'];
-            },
-            error: function (xhr, textStatus, error) {
-                console.log(xhr.statusText);
-                console.log(textStatus);
-                console.log(error);
-            },
-            async: false
-        });
-
-        $('#event-registration-search-form select[name=search_entry_age]').select2({
-            placeholder: "-- {{ trans('display.general_all') }} --",
-            data: jsonDataAge,
-            id: 'id',
-            closeOnSelect: true,
-            allowClear: true,
-            templateSelection: function (item) {
-                return item.age;
-            },
-            templateResult: function (item) {
-                return item.age;
-            }
-        });
-
-        $('#event-registration-search-form select[name=search_entry_belt]').select2({
-            placeholder: "-- {{ trans('display.general_all') }} --",
-            data: jsonDataBelt,
-            id: 'id',
-            closeOnSelect: true,
-            allowClear: true,
-            templateSelection: function (item) {
-                return item.name;
-            },
-            templateResult: function (item) {
-                return item.name;
-            }
-        });
-
-        $('#event-registration-search-form select[name=search_entry_weight]').select2({data: ""});
-    });
-
-    $('#event-registration-search-form select[name=search_entry_age]').on('change', function(){
-        var ageId = $(this).val();
-        var jsonDataWeight;
-
-        $.ajax({
-            type: 'POST',
-            url: '{!! route('event.entry.weight.by.age') !!}',
-            data: {entry_age_id: ageId},
-            success: function (data) {
-                jsonDataWeight = JSON.parse(data);
-            },
-            error: function (xhr, textStatus, error) {
-                console.log(xhr.statusText);
-                console.log(textStatus);
-                console.log(error);
-            },
-            async: false
-        });
-
-        $('#event-registration-search-form select[name=search_entry_weight]').select2({
-            placeholder: "-- {{ trans('display.general_all') }} --",
-            data: jsonDataWeight,
-            id: 'id',
-            closeOnSelect: true,
-            allowClear: true,
-            templateSelection: function (item) {
-                return item.weight;
-            },
-            templateResult: function (item) {
-                return item.weight;
-            }
-        }); 
-    });
-
-    $('#event-registration-search-form select[name=search_entry_age]').on('change', function(){
-        var ageId = $(this).val();
-        var jsonDataWeight;
-
-        $.ajax({
-            type: 'POST',
-            url: '{!! route('event.entry.weight.by.age') !!}',
-            data: {entry_age_id: ageId},
-            success: function (data) {
-                jsonDataWeight = JSON.parse(data);
-            },
-            error: function (xhr, textStatus, error) {
-                console.log(xhr.statusText);
-                console.log(textStatus);
-                console.log(error);
-            },
-            async: false
+            async: false,
+            processData: false,
+            contentType: false
         });
     });
-
-    $(".filter-status-count").on('click', function(){
-        var status = $(this).data('status');
-
-        $('#event-registration-search-form select[name=search_status]').val(status);
-        $('#event-registration-search-form').submit();
-    });
-
-    $("#kt_reset").click(function(e){
-        e.preventDefault();
-        $('.datatable-input').each(function() {
-            $(this).val('');
-            eventTable.column($(this).data('col-index')).search('', false, false);
-        });
-        eventTable.draw();
-    });
-
 }).ajaxStart($.blockUI).ajaxStop($.unblockUI);
-
-//Modal
-function showAddModal( data ) {
-
-    $('#memberModal').modal();
-    $('#memberModal').on('shown.bs.modal', function(){
-        $('#memberModal .modal-content').html(data);
-        $('.selectpicker').selectpicker();
-        $('#create-event-registration-form select[name=member_id]').select2();
-        $('#create-event-registration-form select[name=event_id]').select2({
-            placeholder: "-- {{ trans('display.general_select') }} --"
-        });
-        $('#create-event-registration-form input[name=entry_id]').select2({data: ""});
-        $('#create-event-registration-form input[name=entry_age_id]').select2({data: ""});
-        $('#create-event-registration-form input[name=entry_belt_id]').select2({data: ""});
-        $('#create-event-registration-form input[name=entry_weight_id]').select2({data: ""});
-        $('#create-event-registration-form input[name=academy_id]').select2({data: ""});
-
-        $('#create-event-registration-form select[name=event_id]').on('change', function(){
-            var eventId = $(this).val();
-            var jsonData;
-
-            $.ajax({
-                type: 'POST',
-                url: '{!! route('event.entry.by.event') !!}',
-                data: {event_id: eventId},
-                success: function (data) {
-                    jsonData = JSON.parse(data);
-                },
-                error: function (xhr, textStatus, error) {
-                    console.log(xhr.statusText);
-                    console.log(textStatus);
-                    console.log(error);
-                },
-                async: false
-            });
-
-            $('#create-event-registration-form input[name=entry_id]').select2({
-                placeholder: "-- {{ trans('display.general_select') }} --",
-                data: jsonData,
-                id: 'id',
-                closeOnSelect: true,
-                allowClear: true,
-                templateSelection: function (item) {
-                    return item.name;
-                },
-                templateResult: function (item) {
-                    return item.name;
-                }
-            });
-
-            $('#create-event-registration-form input[name=entry_age_id]').select2({data: ""});
-            $('#create-event-registration-form input[name=entry_belt_id]').select2({data: ""});
-            $('#create-event-registration-form input[name=entry_weight_id]').select2({data: ""});
-        });
-
-        $('#create-event-registration-form input[name=entry_id]').on('change', function(){
-            var entryId = $(this).val();
-            var jsonConfig;
-            var jsonDataAge;
-            var jsonDataBelt;
-
-            $.ajax({
-                type: 'POST',
-                url: '{!! route('event.registration.take.config') !!}',
-                data: {entry_id: entryId},
-                success: function (data) {
-                    jsonConfig = JSON.parse(data);
-                    jsonDataAge = jsonConfig['age'];
-                    jsonDataBelt = jsonConfig['belt'];
-                },
-                error: function (xhr, textStatus, error) {
-                    console.log(xhr.statusText);
-                    console.log(textStatus);
-                    console.log(error);
-                },
-                async: false
-            });
-
-            $('#create-event-registration-form input[name=entry_age_id]').select2({
-                placeholder: "-- {{ trans('display.general_select') }} --",
-                data: jsonDataAge,
-                id: 'id',
-                closeOnSelect: true,
-                allowClear: true,
-                templateSelection: function (item) {
-                    return item.age;
-                },
-                templateResult: function (item) {
-                    return item.age;
-                }
-            });
-
-            $('#create-event-registration-form input[name=entry_belt_id]').select2({
-                placeholder: "-- {{ trans('display.general_select') }} --",
-                data: jsonDataBelt,
-                id: 'id',
-                closeOnSelect: true,
-                allowClear: true,
-                templateSelection: function (item) {
-                    return item.name;
-                },
-                templateResult: function (item) {
-                    return item.name;
-                }
-            });
-
-            $('#create-event-registration-form input[name=entry_weight_id]').select2({data: ""});
-        });
-
-        $('#create-event-registration-form input[name=entry_age_id]').on('change', function(){
-            var ageId = $(this).val();
-            var jsonDataWeight;
-
-            $.ajax({
-                type: 'POST',
-                url: '{!! route('event.entry.weight.by.age') !!}',
-                data: {entry_age_id: ageId},
-                success: function (data) {
-                    jsonDataWeight = JSON.parse(data);
-                },
-                error: function (xhr, textStatus, error) {
-                    console.log(xhr.statusText);
-                    console.log(textStatus);
-                    console.log(error);
-                },
-                async: false
-            });
-
-            $('#create-event-registration-form input[name=entry_weight_id]').select2({
-                placeholder: "-- {{ trans('display.general_select') }} --",
-                data: jsonDataWeight,
-                id: 'id',
-                closeOnSelect: true,
-                allowClear: true,
-                templateSelection: function (item) {
-                    return item.weight;
-                },
-                templateResult: function (item) {
-                    return item.weight;
-                }
-            }); 
-        });
-        
-        $('#create-event-registration-form select[name=member_id]').select2({
-            width: 'resolve',
-            dropdownAutoWidth : true,
-            dropdownParent: $('#memberModal'),
-            placeholder: "-- {{ trans('display.general_select') }} --",
-            minimumInputLength: 3,
-            ajax: {
-                url: '{!! route('member.search') !!}',
-                delay: 1500,
-                data: function (params) {
-                    var query = {
-                        q: params.term
-                    }
-                    return query;
-                },
-
-                processResults: function (data) {
-                    console.log(data);
-                    return {
-                        results: JSON.parse(data)
-                    };
-                },
-                cache: true
-            },
-            templateSelection: function (item) {
-                return item.firstname + ": " + item.lastname;
-            },
-            templateResult: function (item) {
-                return item.firstname + ": " + item.lastname;
-            }
-        });
-
-        $('#create-event-registration-form select[name=academy_id]').on('change', function(){
-            var academyId = $(this).val(); 
-            $.ajax({
-                type: 'POST',
-                url: '{!! route('academy.isother') !!}',
-                data: {academy_id: academyId},
-                success: function (data) {
-                    $('#academy_name_other').addClass('d-none');
-                    $("#academy_name").attr("disabled", true);
-                    $("#academy_name").val("");
-                    jsonData = JSON.parse(data);
-
-                    if(jsonData) {
-                        $('#academy_name_other').removeClass('d-none');
-                        $("#academy_name").attr("disabled", false);
-                    }              
-                },
-                error: function (xhr, textStatus, error) {
-                    console.log(xhr.statusText);
-                    console.log(textStatus);
-                    console.log(error);
-                },
-                async: false
-            });
-        }) 
-        
-
-        $('#create-event-registration-form').validate({
-            ignore: [],
-            highlight:function(element) {
-                $(element).parents('.form-group').addClass('has-error has-feedback');
-            },
-            unhighlight: function(element) {
-                $(element).parents('.form-group').removeClass('has-error');
-            },
-            submitHandler: function(form) {
-                $.ajax({
-                    url: form.action,
-                    type: form.method,
-                    data: new FormData(form),
-                    success: function(response) {
-                        $('#memberModal').find("#close").trigger('click');
-                        $('.panel-sub-heading').html(response).fadeIn().delay(5000).fadeOut();
-                        eventTable.draw();
-                    },
-                    error: function (xhr, textStatus, error) {
-                        console.log(xhr.statusText);
-                        console.log(textStatus);
-                        console.log(error);
-                    },
-                    async: false,
-                    processData: false,
-                    contentType: false
-                });
-            },
-            errorPlacement: function(error, element) {
-                if($(element).parents('.form-group').find(".error-here")){
-                    error.appendTo($(element).parents('.form-group').find(".error-here"));
-                } else {
-                    error.insertAfter(element);
-                }
-            }
-        });
-
-        $(this).off('shown.bs.modal');
-    });
-
-    $('#memberModal').on('hidden.bs.modal', function(){
-        $('#memberModal .modal-content').empty();
-    });
-}
-
-function showEditModal(data){
-    $('#memberModal').modal();
-    $('#memberModal').on('shown.bs.modal', function(){
-        $('#memberModal .modal-content').html(data);
-        $('.selectpicker').selectpicker();
-
-        $('#update-event-registration-form select[name=event_id]').select2({
-            placeholder: "-- {{ trans('display.general_select') }} --"
-        });
-
-        $('#update-event-registration-form select[name=entry_id]').select2({
-            placeholder: "-- {{ trans('display.general_select') }} --"
-        });
-        $('#update-event-registration-form select[name=entry_age_id]').select2({
-            placeholder: "-- {{ trans('display.general_select') }} --"
-        });
-        $('#update-event-registration-form select[name=entry_belt_id]').select2({
-            placeholder: "-- {{ trans('display.general_select') }} --"
-        });
-        $('#update-event-registration-form select[name=entry_weight_id]').select2({
-            placeholder: "-- {{ trans('display.general_select') }} --"
-        });
-
-        $('#update-event-registration-form select[name=entry_id]').on('change', function(){
-            var entryId = $(this).val();
-            var jsonDataConfig;
-            var jsonDataBelt;
-            var jsonDataAge;
-
-            $.ajax({
-                type: 'POST',
-                url: '{!! route('event.registration.take.config') !!}',
-                data: {entry_id: entryId},
-                success: function (data) {
-                    jsonDataConfig = JSON.parse(data);
-                    jsonDataBelt = jsonDataConfig['belt'];
-                    jsonDataAge = jsonDataConfig['age'];
-                },
-                error: function (xhr, textStatus, error) {
-                    console.log(xhr.statusText);
-                    console.log(textStatus);
-                    console.log(error);
-                },
-                async: false
-            });
-
-            $('#update-event-registration-form select[name=entry_belt_id]').select2({
-                placeholder: "-- {{ trans('display.general_select') }} --",
-                data: jsonDataBelt,
-                id: 'id',
-                closeOnSelect: true,
-                allowClear: true,
-                templateSelection: function (item) {
-                    return item.name;
-                },
-                templateResult: function (item) {
-                    return item.name;
-                }
-            });
-
-            $('#update-event-registration-form select[name=entry_age_id]').select2({
-                placeholder: "-- {{ trans('display.general_select') }} --",
-                data:jsonDataAge,
-                id: 'id',
-                closeOnSelect: true,
-                allowClear: true,
-                templateSelection: function (item) {
-                    return item.age;
-                },
-                templateResult: function (item) {
-                    return item.age;
-                }
-            });
-
-            $('#update-event-registration-form select[name=entry_weight_id]').select({data: ''});
-        });
-
-        $('#update-event-registration-form select[name=entry_age_id]').on('change', function(){
-            var ageId = $(this).val();
-            var jsonDataWeight;
-
-            $.ajax({
-                type: 'POST',
-                url: '{!! route('event.entry.weight.by.age') !!}',
-                data: {entry_age_id: ageId},
-                success: function (data) {
-                    jsonDataWeight = JSON.parse(data);
-                },
-                error: function (xhr, textStatus, error) {
-                    console.log(xhr.statusText);
-                    console.log(textStatus);
-                    console.log(error);
-                },
-                async: false
-            });
-
-            $('#update-event-registration-form select[name=entry_weight_id]').select2({
-                placeholder: "-- {{ trans('display.general_select') }} --",
-                data: jsonDataWeight,
-                id: 'id',
-                closeOnSelect: true,
-                allowClear: true,
-                templateSelection: function (item) {
-                    return item.weight;
-                },
-                templateResult: function (item) {
-                    return item.weight;
-                }
-            }); 
-        });
-
-        $('#update-event-registration-form select[name=academy_id]').on('change', function(){
-            var academyId = $(this).val(); 
-            $.ajax({
-                type: 'POST',
-                url: '{!! route('academy.isother') !!}',
-                data: {academy_id: academyId},
-                success: function (data) {
-                    $('#academy_name_other').addClass('d-none');
-                    $("#academy_name").attr("disabled", true);
-                    $("#academy_name").val("");
-                    jsonData = JSON.parse(data);
-
-                    if(jsonData) {
-                        $('#academy_name_other').removeClass('d-none');
-                        $("#academy_name").attr("disabled", false);
-                    }              
-                },
-                error: function (xhr, textStatus, error) {
-                    console.log(xhr.statusText);
-                    console.log(textStatus);
-                    console.log(error);
-                },
-                async: false
-            });
-        }) 
-
-        $('#update-event-registration-form').validate({
-            ignore: [],
-            highlight:function(element) {
-                $(element).parents('.form-group').addClass('has-error has-feedback');
-            },
-            unhighlight: function(element) {
-                $(element).parents('.form-group').removeClass('has-error');
-            },
-            submitHandler: function(form) {
-                $.ajax({
-                    url: form.action,
-                    type: form.method,
-                    data: new FormData(form),
-                    success: function(response) {
-                        var page = eventTable.page.info().page;
-                        $('#memberModal').find("#close").trigger('click');
-                        $('.panel-sub-heading').html(response).fadeIn().delay(5000).fadeOut();
-                        eventTable.page(page).draw('page');
-                    },
-                    error: function (xhr, textStatus, error) {
-                        console.log(xhr.statusText);
-                        console.log(textStatus);
-                        console.log(error);
-                    },
-                    async: false,
-                    processData: false,
-                    contentType: false
-                });
-            },
-            errorPlacement: function(error, element) {
-                if($(element).parents('.form-group').find(".error-here")){
-                    error.appendTo($(element).parents('.form-group').find(".error-here"));
-                } else {
-                    error.insertAfter(element);
-                }
-            }
-        });
-
-        $(this).off('shown.bs.modal');
-    });
-
-    $('#memberModal').on('hidden.bs.modal', function(){
-        $('#memberModal .modal-content').empty();
-    });
-}
 </script>
 @endsection
 @stop

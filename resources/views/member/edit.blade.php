@@ -190,7 +190,5 @@
         document.getElementById("id_photo_remove").value = 'off';
         preview.src = src;
     }
-
-
     
 </script>
