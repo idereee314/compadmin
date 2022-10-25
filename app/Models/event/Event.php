@@ -39,7 +39,7 @@ class Event extends Model
 
     public function entries()
     {
-        return $this->hasMany('reference\EventEntries', 'event_id');
+        return $this->hasMany('reference\EventEntries', 'event_id')->orderBy('gender_code')->orderBy('name');
     }
 
     public function users()

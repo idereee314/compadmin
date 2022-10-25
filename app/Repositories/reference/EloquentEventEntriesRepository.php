@@ -119,7 +119,7 @@ class EloquentEventEntriesRepository implements EventEntriesRepository {
 		$entries = "";
 		if(@$eventId)
 		{
-			$qry = EventEntries::where('event_id', $eventId);
+			$qry = EventEntries::where('event_id', $eventId)->orderBy('gender_code')->orderBy('name');
 			$entries = $qry->get();
 
 			$map = $entries->map(function($items){
