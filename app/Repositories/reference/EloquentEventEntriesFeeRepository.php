@@ -119,7 +119,7 @@ class EloquentEventEntriesFeeRepository implements EventEntriesFeeRepository {
 		if(@$eventId)
 		{
 			$qry = EventEntriesFee::select('uq_event_entries_fee.*')->join('uq_event_entries', 'uq_event_entries.id', '=', 'uq_event_entries_fee.entry_id')
-				->where('event_id', $eventId);
+				->where('event_id', $eventId)->orderBy('uq_event_entries.gender_code')->orderBy('uq_event_entries.name')->orderBy('uq_event_entries_fee.entrance_fee');
 			$configFees = $qry->get();
 		}
 

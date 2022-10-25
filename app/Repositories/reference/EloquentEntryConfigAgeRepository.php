@@ -132,7 +132,7 @@ class EloquentEntryConfigAgeRepository implements EntryConfigAgeRepository {
 		{
 			$qry = EntryConfigAge::selectRaw("uq_entry_config_age.id, start_age, end_age, CASE WHEN start_age is null THEN '-' || end_age WHEN end_age is null THEN start_age || '+' else start_age || '-' || end_age END as age, entry_id, uq_entry_config_age.created_at")
 				->join('uq_event_entries', 'uq_event_entries.id', '=', 'uq_entry_config_age.entry_id')
-				->where('event_id', $eventId);
+				->where('event_id', $eventId)->orderBy('uq_event_entries.gender_code')->orderBy('uq_event_entries.name');
 			$configAges = $qry->get();
 		}
 

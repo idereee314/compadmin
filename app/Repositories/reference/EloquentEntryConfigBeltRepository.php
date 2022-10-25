@@ -130,7 +130,7 @@ class EloquentEntryConfigBeltRepository implements EntryConfigBeltRepository {
 		if(@$eventId)
 		{
 			$qry = EntryConfigBelt::select('uq_entry_config_belt.*')->join('uq_event_entries', 'uq_event_entries.id', '=', 'uq_entry_config_belt.entry_id')
-				->where('event_id', $eventId);
+				->where('event_id', $eventId)->orderBy('uq_event_entries.gender_code')->orderBy('uq_event_entries.name');
 			$configbelts = $qry->get();
 		}
 
