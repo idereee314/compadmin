@@ -149,9 +149,9 @@
                                     <i class="flaticon-pie-chart text-success icon-3x font-weight-bold"></i>
                                 </span>
                                 <div class="d-flex flex-column">
-                                    <span class="font-weight-bolder font-size-sm">{{ number_format($key, 0) }}/{{ count($fee) }}</span>
+                                    <span class="font-weight-bolder font-size-sm">1</span>
                                     <span class="font-weight-bolder font-size-h5">
-                                    <span class="text-success font-weight-bold">{{ trans('display.general_tug') }}</span>{{ number_format($fee->sum('fee_amount'), 0) }}</span>
+                                    <span class="text-success font-weight-bold">{{ trans('display.general_tug') }}</span>2</span>
                                 </div>
                             </div>
                             <!--end: Item-->
