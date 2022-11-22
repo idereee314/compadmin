@@ -113,7 +113,7 @@ class ConfigVariables
 			'collapseBlockMargins' => true,
 
 			// To interpret "px" pixel values in HTML/CSS (see img_dpi below)
-			'dpi' => 180,
+			'dpi' => 96,
 
 			// Automatically correct for tags where HTML specifies optional end tags e.g. P,LI,DD,TD
 			// If you are confident input html is valid XHTML, turning this off may make it more reliable(?)
