@@ -309,6 +309,12 @@
                                                     </select>
                                                 </div>
                                             </div>
+                                            <div class="row mb-8">
+                                                <div class="col-lg-4 mb-lg-0 mb-6">
+                                                    <label>Бүртгэлийн дугаар:</label>
+                                                    <input type="text" class="form-control datatable-input" name="search_reg_id" id="search_reg_id" placeholder="Бүртгэлийн дугаар" data-col-index="8"/>
+                                                </div>
+                                            </div>
                                             <div class="row mt-8">
                                                 <div class="col-lg-12">
                                                     <button type="submit" class="btn btn-primary btn-primary--icon">
@@ -402,6 +408,8 @@ $(document).ready(function() {
                 d.academy = $('#event-registration-search-form select[id="search_academy"]').val();
                 d.is_weight = $('#event-registration-search-form select[id="search_is_weight"]').val();
                 d.amount = $('#event-registration-search-form select[id="search_amount"]').val();
+                d.reg_id = $('#event-registration-search-form input[id="search_reg_id"]').val();
+                
                 d.date = dateArr;
             },
         },

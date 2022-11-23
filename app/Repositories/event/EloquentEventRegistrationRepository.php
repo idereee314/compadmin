@@ -92,6 +92,11 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
         $data = Datatables::make($qry)
             ->filter(function ($qry) use ($searchData) {
                 
+				if($searchData->has('reg_id') && $searchData->get('reg_id') !== null)
+                {
+					$qry->where('uq_event_registration.id', $searchData->get('reg_id'));
+				}
+
                 if($searchData->has('entry') && $searchData->get('entry') !== null)
                 {
 					$qry->where('uq_event_registration.entry_id', $searchData->get('entry'));

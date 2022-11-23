@@ -3,7 +3,7 @@
         'name' => 'laravel/laravel',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => '072abd891a319b968a4bdec9f26d76afc319fc54',
+        'reference' => '6201b7cd651423a531b1e1e3d3eaaba16fe80ec4',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -451,7 +451,7 @@
         'laravel/laravel' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '072abd891a319b968a4bdec9f26d76afc319fc54',
+            'reference' => '6201b7cd651423a531b1e1e3d3eaaba16fe80ec4',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -598,6 +598,15 @@
             'reference' => 'c66aefcafb4f6c269510e9ac46b82619a904c576',
             'type' => 'library',
             'install_path' => __DIR__ . '/../markbaker/matrix',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'milon/barcode' => array(
+            'pretty_version' => '9.0.1',
+            'version' => '9.0.1.0',
+            'reference' => 'a35005eb88d08807058dec0c4cba150ec6b432b8',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../milon/barcode',
             'aliases' => array(),
             'dev_requirement' => false,
         ),
@@ -919,8 +928,8 @@
         'psr/log-implementation' => array(
             'dev_requirement' => false,
             'provided' => array(
-                0 => '1.0|2.0',
-                1 => '1.0.0 || 2.0.0 || 3.0.0',
+                0 => '1.0.0 || 2.0.0 || 3.0.0',
+                1 => '1.0|2.0',
             ),
         ),
         'psr/simple-cache' => array(

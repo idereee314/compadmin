@@ -110,6 +110,36 @@
                 line-height: 20px;
                 text-align: left;
             }
+            .qrcode{
+                position: absolute;
+                width: 250px;
+                height: 40px;
+                bottom: 260px;
+                right: 30px;
+                border-radius: 8px;
+                font-family: 'Times New Roman', Times;
+                font-weight: bold;
+                font-style: italic;
+                font-size: 20px;
+                color: #222;
+                line-height: 20px;
+                text-align: right;
+            }
+            .regid{
+                position: absolute;
+                width: 250px;
+                height: 40px;
+                bottom: 150px;
+                right: 60px;
+                border-radius: 8px;
+                font-family: 'Times New Roman', Times;
+                font-weight: bold;
+                font-style: italic;
+                font-size: 20px;
+                color: #222;
+                line-height: 20px;
+                text-align: right;
+            }
             .category{
                 position: absolute;
                 width: 250px;
@@ -151,6 +181,13 @@
                     <div class="category">{{$reg->entry->name}}</div>
                     <div class="belt">
                         {{@$reg->belt->name}}
+                    </div>
+                    
+                    <div class="qrcode">
+                        <img src="data:image/png;base64,{{\DNS2D::getBarcodePNG(strval(@$reg->id), 'QRCODE')}}" width="100px" height="100px">
+                    </div>
+                    <div class="regid">
+                        {{@$reg->id}}
                     </div>
                 </div>
             </div>
