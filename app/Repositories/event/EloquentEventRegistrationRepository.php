@@ -177,7 +177,7 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
             })
 			->setRowAttr([
 				'class' => function($qry) {
-					return @$qry->is_weight_checked ? 'table-secondary' : '';
+					return @$qry->is_weight_checked ? 'table-success' : '';
 				}
 			])
 			->editColumn('status', function($qry)
