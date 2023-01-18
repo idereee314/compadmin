@@ -93,7 +93,7 @@
         </div>    
         
         <div class="form-group row">
-            <label class="col-md-3 col-form-label text-right">{{trans('display.human_contact_phone')}}: <span class="text-danger">*</span></label>
+            <label class="col-md-3 col-form-label text-right">{{trans('display.id_photo')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9">
                 <div class="image-input image-input-outline" id="id_photo">
                     <div class="image-input-wrapper" style="background-image: url(/assets/media/users/100_1.jpg)"></div>

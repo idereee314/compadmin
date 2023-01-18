@@ -374,6 +374,7 @@ class EventRegistrationController extends Controller
         $data['regs'] = $list->load(['academy:id,name,is_other','member:id,lastname,firstname,profile_url', 'weight:id,weight', 'entry:id,name', 'belt:id,name'])->chunk(4);
         $view = $this->view_path.'.mandat_'.@$eventConfig->mandat_template;
         
+        
         if(\View::exists($view))
         {
             return view($view, $data);
