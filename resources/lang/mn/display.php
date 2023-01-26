@@ -291,6 +291,8 @@ return [
     'reg_start_date' => 'Эхлэх огноо',
     'reg_end_date' => 'Дуусах огноо',
     'reg_date' => 'Бүртгэлийн огноо',
+    'reg_payment_date' => 'Төлбөр төлөх сүүлийн огноо',
+    'reg_update_date' => 'Бүртгэл засах сүүлийн огноо',
 
     //Event-entries
     'entrance_fee' => 'Төлбөр',

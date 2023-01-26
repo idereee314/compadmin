@@ -22,6 +22,35 @@
                 <div class="error-here"></div>
             </div>
         </div>
+
+        <div class="form-group row">
+            <label class="col-md-3 col-form-label text-right">{{trans('display.reg_payment_date')}}<span class="text-danger"> *</span></label>
+            <div class="col-md-9 col-lg-6">
+                <div class="input-group" id="kt_reg_payment_date">
+                    <input type="text" name="reg_payment_date" id="reg_payment_date" data-toggle="datetimepicker" data-target="#reg_payment_date" class="form-control datetimepicker-input" readonly="readonly" value="{{ Carbon\Carbon::parse(@$eventConfig->payment_final_date)->format('Y-m-d H:i:s') }}" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}">
+                    <div class="input-group-append">
+                        <span class="input-group-text">
+                            <i class="la la-calendar-check-o"></i>
+                        </span>
+                    </div>
+                </div>
+                <div class="error-here"></div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-md-3 col-form-label text-right">{{trans('display.reg_update_date')}}<span class="text-danger"> *</span></label>
+            <div class="col-md-9 col-lg-6">
+                <div class="input-group" id="kt_reg_update_date">
+                    <input type="" name="reg_update_date" id="reg_update_date" data-toggle="datetimepicker" data-target="#reg_update_date" class="form-control datetimepicker-input" readonly="readonly" value="{{ Carbon\Carbon::parse(@$eventConfig->update_final_date)->format('Y-m-d H:i:s') }}" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}">
+                    <div class="input-group-append">
+                        <span class="input-group-text">
+                            <i class="la la-calendar-check-o"></i>
+                        </span>
+                    </div>
+                </div>
+                <div class="error-here"></div>
+            </div>
+        </div>
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.comp_org_type')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9 col-lg-6">
@@ -68,6 +97,29 @@ $(document).ready(function() {
         }
     }, function(start, end, label) {
         $('#kt_reg_date .form-control').val( start.format('YYYY-MM-DD hh:mm A') + ' / ' + end.format('YYYY-MM-DD hh:mm A'));
+    });
+
+    $('#reg_payment_date').datetimepicker({
+        rtl: KTUtil.isRTL(),
+        todayHighlight: true,
+        orientation: "bottom left",
+        format: 'yyyy-MM-D HH:mm',
+        templates: {
+            leftArrow: '<i class="la la-angle-right"></i>',
+            rightArrow: '<i class="la la-angle-left"></i>'
+        }
+    });
+
+    $('#reg_update_date').datetimepicker({
+        rtl: KTUtil.isRTL(),
+        todayHighlight: true,
+        orientation: "bottom left",
+        format: 'yyyy-MM-D HH:mm',
+        templates: {
+            leftArrow: '<i class="la la-angle-right"></i>',
+            rightArrow: '<i class="la la-angle-left"></i>'
+        },
+        locale: 'mn',
     });
 
     $('#update-event-config-form select[id=org_types]').select2({});

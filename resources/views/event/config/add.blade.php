@@ -33,6 +33,36 @@
         </div>
 
         <div class="form-group row">
+            <label class="col-md-3 col-form-label text-right">{{trans('display.reg_payment_date')}}: <span class="text-danger">*</span></label>
+            <div class="col-md-9 col-lg-6">
+                <div class="input-group date">
+                    <input type="text" name="reg_payment_date" id="reg_payment_date" data-toggle="datetimepicker" data-target="#reg_payment_date" class="form-control datetimepicker-input" readonly="readonly" data-rule-required="true" data-msg-required="{{ trans('validation.required', ['Attribute' => '']) }}"/>
+                    <div class="input-group-append">
+                        <span class="input-group-text">
+                            <i class="la la-calendar-check-o"></i>
+                        </span>
+                    </div>
+                </div>
+                <div class="error-here"></div>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-md-3 col-form-label text-right">{{trans('display.reg_update_date')}}<span class="text-danger"> *</span></label>
+            <div class="col-md-9 col-lg-6">
+                <div class="input-group" id="kt_reg_update_date">
+                    <input type="text" name="reg_update_date" id="reg_update_date" data-toggle="datetimepicker" data-target="#reg_update_date" class="form-control datetimepicker-input" readonly="readonly" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}">
+                    <div class="input-group-append">
+                        <span class="input-group-text">
+                            <i class="la la-calendar-check-o"></i>
+                        </span>
+                    </div>
+                </div>
+                <div class="error-here"></div>
+            </div>
+        </div>
+
+        <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.comp_org_type')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9 col-lg-6">
                 <select class="form-control select2" id="org_types" name="org_types[]" multiple="multiple" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}">
@@ -51,4 +81,4 @@
         <button type="button" id="close" class="btn btn-light-primary font-weight-bold" data-dismiss="modal">{{trans('display.general_close')}}</button>
         <button type="submit" class="btn btn-primary font-weight-bold">{{trans('display.general_save')}}</button>
     </div>
-</form>
+</form> 

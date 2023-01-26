@@ -43,6 +43,8 @@ class EloquentEventConfigRepository implements EventConfigRepository {
 		$eventConfig->reg_end_date = @$dates[1];
 		$eventConfig->org_types = '{'.implode(", ", @$input['org_types']).'}';
 		$eventConfig->is_active = @$input['is_active'] ? $input['is_active'] : false;
+		$eventConfig->payment_final_date = @$input['reg_payment_date'];
+		$eventConfig->update_final_date = @$input['reg_update_date'];
 
 		$eventConfig->save();
 		return $eventConfig;
@@ -57,6 +59,8 @@ class EloquentEventConfigRepository implements EventConfigRepository {
 		$eventConfig->reg_end_date = @$dates[1];
 		$eventConfig->org_types = '{'.implode(", ", @$input['org_types']).'}';
 		$eventConfig->is_active = @$input['is_active'] ? $input['is_active'] : false;
+		$eventConfig->payment_final_date = @$input['reg_payment_date'];
+		$eventConfig->update_final_date = @$input['reg_update_date'];
 
 		$eventConfig->save();
 		return $eventConfig;

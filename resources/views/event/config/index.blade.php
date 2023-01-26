@@ -427,6 +427,31 @@ function showAddModal( data ) {
         }, function(start, end, label) {
             $('#kt_reg_date .form-control').val( start.format('YYYY-MM-DD H:mm') + ' / ' + end.format('YYYY-MM-DD H:mm'));
         });
+
+        $('#reg_payment_date').datetimepicker({
+            rtl: KTUtil.isRTL(),
+            todayHighlight: true,
+            orientation: "bottom left",
+            format: 'yyyy-MM-D HH:mm',
+            templates: {
+                leftArrow: '<i class="la la-angle-right"></i>',
+                rightArrow: '<i class="la la-angle-left"></i>'
+            },
+            locale: 'mn',
+        });
+
+        $('#reg_update_date').datetimepicker({
+            rtl: KTUtil.isRTL(),
+            todayHighlight: true,
+            orientation: "bottom left",
+            format: 'yyyy-MM-D HH:mm',
+            templates: {
+                leftArrow: '<i class="la la-angle-right"></i>',
+                rightArrow: '<i class="la la-angle-left"></i>'
+            },
+            locale: 'mn',
+        });
+
         $('#create-event-config-form select[id=org_types]').select2({});
 
         $('#create-event-config-form select[name=event_id]').select2({
