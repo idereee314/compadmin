@@ -97,8 +97,9 @@ class AcademyController extends Controller
 
             }
         }
-        $data['response'] = $response;
-        return view('core.alert.messages', $data);
+        // $data['response'] = $response;
+        // return view('core.alert.messages', $data);
+        return $response;
     }
 
     /**
@@ -165,8 +166,9 @@ class AcademyController extends Controller
 			}
 		}
 
-        $data['response'] = $response;
-        return view('core.alert.messages', $data);
+        // $data['response'] = $response;
+        // return view('core.alert.messages', $data);
+        return $response;
     }
 
     /**
@@ -195,8 +197,9 @@ class AcademyController extends Controller
             );
         }
 
-        $data['response'] = $response;
-        return view('core.alert.messages', $data);
+        // $data['response'] = $response;
+        // return view('core.alert.messages', $data);
+        return $response;
     }
 
     public function getDatatableList(Request $request)
