@@ -152,14 +152,14 @@
                                         <div class="mr-12 d-flex flex-column">
                                             <span class="font-weight-bolder mb-4">{{ @Config::get('enums.gender_code')[2] }}</span>
                                             <span class="font-weight-bolder font-size-h5 pt-1">
-                                            <span class="font-weight-bold text-dark-50"><i class="icon-md fas fa-female"></i></span> {{ @$event['members'][2] ? array_count_values(array_column(@$event['members'], 'gender_code'))[2] : '0' }}</span>
+                                            <span class="font-weight-bold text-dark-50"><i class="icon-md fas fa-female"></i></span> {{ @$event['members'][2] ? @array_count_values(array_column(@$event['members'], 'gender_code'))[2] : '0' }}</span>
                                         </div>
                                         <!--end::Item-->
                                         <!--begin::Item-->
                                         <div class="mr-12 d-flex flex-column">
                                             <span class="font-weight-bolder mb-4">{{ @Config::get('enums.gender_code')[1] }}</span>
                                             <span class="font-weight-bolder font-size-h5 pt-1">
-                                            <span class="font-weight-bold text-dark-50"><i class="icon-md fas fa-male"></i></span> {{ @$event['members'][1] ? array_count_values(array_column(@$event['members'], 'gender_code'))[1] : '0' }}</span>
+                                            <span class="font-weight-bold text-dark-50"><i class="icon-md fas fa-male"></i></span> {{ @$event['members'][1] ? @array_count_values(array_column(@$event['members'], 'gender_code'))[1] : '0' }}</span>
                                         </div>
                                         <!--end::Item-->
                                         <!--begin::Item-->
