@@ -141,6 +141,16 @@
                                     <span class="font-weight-bold">{{ trans('display.general_tug') }}</span>{{ number_format($eventFees->flatten(1)->sum('fee_amount'), 0) }}</span>
                                 </div>
                             </div>
+                            <div class="d-flex align-items-center flex-lg-fill mr-10 my-1 btn btn-light-success btn-hover-success btn-filter-amount" data-amount="">
+                                <span class="mr-4">
+                                    <i class="flaticon-piggy-bank text-success icon-3x font-weight-bold"></i>
+                                </span>
+                                <div class="d-flex flex-column">
+                                    <span class="font-weight-bolder font-size-sm">Зохион байгуулагчруу шилжих</span>
+                                    <span class="font-weight-bolder font-size-h5">
+                                    <span class="font-weight-bold">{{ trans('display.general_tug') }}</span>{{ number_format($eventFees->flatten(1)->sum('fee_amount') * 0.9, 0) }}</span>
+                                </div>
+                            </div>
                             <!--end: Item-->
                             @forelse($eventFees as $key => $fee)
                             <!--begin: Item-->
