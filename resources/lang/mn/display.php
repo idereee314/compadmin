@@ -76,6 +76,7 @@ return [
     'general_rank' => 'Зэрэглэл',
     'general_reset' => 'Цэвэрлэх',
     'general_connect' => 'Холбох',
+    'general_is_team' =>'Багийн спорт мөн эсэх',
 
     /** NOUN **/
     "general_code" => "Код",
@@ -281,6 +282,7 @@ return [
     'comp_award_place' => 'Байр эзлүүлэх',
     'comp_place_nuber' => 'Байр',
     'comp_org_type' => 'Оролцох харъялалын төрөл',
+    'comp_max_entry' => 'Оролцох хүмүүсийн лимит',
 
     //Academy
 
@@ -309,6 +311,7 @@ return [
 
     //Event-config-weight
     'weight' => 'Жин',
+    
 
 
 ];

@@ -45,6 +45,11 @@ class EloquentEventConfigRepository implements EventConfigRepository {
 		$eventConfig->is_active = @$input['is_active'] ? $input['is_active'] : false;
 		$eventConfig->payment_final_date = @$input['reg_payment_date'];
 		$eventConfig->update_final_date = @$input['reg_update_date'];
+		
+		$eventConfig->sport_id = @$input['sport_id'];
+		$eventConfig->is_team = @$input['is_team'] ? $input['is_team'] : false;
+		
+		// $eventConfig->max_entry = @$input['max_entry'];
 
 		$eventConfig->save();
 		return $eventConfig;
@@ -61,7 +66,13 @@ class EloquentEventConfigRepository implements EventConfigRepository {
 		$eventConfig->is_active = @$input['is_active'] ? $input['is_active'] : false;
 		$eventConfig->payment_final_date = @$input['reg_payment_date'];
 		$eventConfig->update_final_date = @$input['reg_update_date'];
-
+		
+		$eventConfig->sport_id = @$input['sport_id'];
+		$eventConfig->is_team = @$input['is_team'] ? $input['is_team'] : false;
+		
+		// dd($eventConfig);
+		// $eventConfig->max_entry = @$input['max_entry'];
+		
 		$eventConfig->save();
 		return $eventConfig;
 	}
@@ -164,7 +175,9 @@ class EloquentEventConfigRepository implements EventConfigRepository {
 			->with(['event:id,name,description,event_date,due_date', 'event.picturesMobileCover:event_id,dir_url,url', 'event.registration.member:id,profile_url,firstname,lastname'])
 			->withCount(['registration', 'registration as status_approved' => function ($q) {
 				$q->where('uq_event_registration.status', @Config::get('smart.event_registration_status')['approved']);
-			}]);
+			}])
+			->join('uq_event_user', 'uq_event_user.event_id', '=', 'uq_event_config.event_id')
+			->where('uq_event_user.user_id', '=', Auth::user()->id);
 
 		$eventConfig = $qry->orderBy('created_at', 'desc')->paginate($perPage);
 		return $eventConfig->toJson();

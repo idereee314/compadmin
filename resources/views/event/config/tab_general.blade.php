@@ -22,7 +22,6 @@
                 <div class="error-here"></div>
             </div>
         </div>
-
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.reg_payment_date')}}<span class="text-danger"> *</span></label>
             <div class="col-md-9 col-lg-6">
@@ -74,6 +73,17 @@
                 </label>
             </div>
         </div>
+        <div class="form-group row">
+            <label class="col-md-3 col-form-label text-right"></label>
+            <div class="col-md-9 col-lg-6">
+                <label class="checkbox">
+                    <input type="checkbox" name="is_team" {{ @$eventConfig->is_team ? 'checked="checked"' : '' }}>
+                    <span></span>&nbsp;
+                    {{ trans('display.general_is_team') }}
+                </label>
+            </div>
+        </div>
+        
     </div>
 
     <div class="modal-footer text-right">

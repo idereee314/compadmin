@@ -62,7 +62,7 @@ class EloquentCompadUserRepository implements CompadUserRepository {
 		$user->username = $input['username'];
 		$user->phone_number = @$input['phone_number'];
 		$user->email = $input['email'];
-
+		
 		$user->save();
 	}
 

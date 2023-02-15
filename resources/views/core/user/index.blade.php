@@ -162,9 +162,22 @@ function showAddModal( data ) {
                     type: form.method,
                     data: new FormData(form),
                     success: function(response) {
-                        $('#compadUserAddModal').find("#close").trigger('click');
-                        $('.panel-sub-heading').html(response).fadeIn().delay(5000).fadeOut();
-                        userTable.draw();
+                        if(response.status == 'success'){
+                            $('#compadUserAddModal').find("#close").trigger('click');
+                            toastr.success(response.msg);
+                            if(userTable != undefined)
+                            {
+                                userTable.draw();
+                            }
+                        }
+                        else 
+                        {
+                            toastr.error(response.errors, response.msg, {
+                                "closeButton": true,
+                                "timeOut": "0",
+                                "extendedTimeOut": "0",
+                            });
+                        }
                     },
                     error: function (xhr, textStatus, error) {
                         console.log(xhr.statusText);
@@ -212,9 +225,23 @@ function compadUserEditModal(data){
                     type: form.method,
                     data:  new FormData(form),
                     success: function(response) {
-                        $('#compadUserEditModal').find("#close").trigger('click');
-                        $('.panel-sub-heading').html(response).fadeIn().delay(5000).fadeOut();
-                        userTable.draw();
+                        if(response.status == 'success'){
+                        $('#compadUserEditModal').find('#close').trigger('click');
+                        toastr.success(response.msg);
+                        if(userTable != undefined)
+                        {
+                            var page = userTable.page.info().page;
+                            userTable.page(page).draw('page');
+                        }
+                        }
+                        else 
+                        {
+                        toastr.error(response.errors, response.msg, {
+                            "closeButton": true,
+                            "timeOut": "0",
+                            "extendedTimeOut": "0",
+                            });
+                        }
                     },
                     error: function (xhr, textStatus, error) {
                         console.log(xhr.statusText);

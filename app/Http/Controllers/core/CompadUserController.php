@@ -94,8 +94,9 @@ class CompadUserController extends Controller
 
             }
         }
-        $data['response'] = $response;
-        return view('core.alert.messages', $data);
+        // $data['response'] = $response;
+        // return view('core.alert.messages', $data);
+        $response;
     }
 
     /**
@@ -133,7 +134,7 @@ class CompadUserController extends Controller
     public function update(Request $request, $id)
     {
         $input = Input::all();
-
+        
         $validator = Validator::make($input, CompadUserModel::rules($id));
 
         if ($validator->fails())
@@ -145,6 +146,7 @@ class CompadUserController extends Controller
             );
         } else {
 			try {
+                
 				$users = $this->compadUser->update($id, $input);
                 
 				$response = array(
@@ -162,8 +164,9 @@ class CompadUserController extends Controller
 			}
 		}
 
-        $data['response'] = $response;
-        return view('core.alert.messages', $data);
+        // $data['response'] = $response;
+        // return view('core.alert.messages', $data);
+        return $response;
     }
 
     /**
@@ -192,8 +195,9 @@ class CompadUserController extends Controller
             );
         }
 
-        $data['response'] = $response;
-        return view('core.alert.messages', $data);
+        // $data['response'] = $response;
+        // return view('core.alert.messages', $data);
+        $response;
     }
 
     public function getDatatableList(Request $request)

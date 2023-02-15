@@ -11,7 +11,7 @@
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.human_lastname')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9">
-                <input type="text" class="form-control" autocomplete="off" name="firstname" value="{{ $compadUser->lastname }}"  data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}"/>
+                <input type="text" class="form-control" autocomplete="off" name="lastname" value="{{ $compadUser->lastname }}"  data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}"/>
                 <div class="error-here"></div>
             </div>
         </div>
@@ -19,7 +19,7 @@
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.human_firstname')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9">
-                <input type="text" class="form-control" autocomplete="off" name="lastname" value="{{ $compadUser->firstname }}" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}"/>
+                <input type="text" class="form-control" autocomplete="off" name="firstname" value="{{ $compadUser->firstname }}" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}"/>
                 <div class="error-here"></div>
             </div>
         </div>

@@ -41,6 +41,7 @@ class EloquentEntryConfigWeightRepository implements EntryConfigWeightRepository
 		$entryConfigWeight->entry_id = $input['entry_id'];
 		$entryConfigWeight->entry_age_id = $input['entry_age_id'];
 		$entryConfigWeight->weight = $input['weight'];
+		$entryConfigWeight->max_entry = $input['max_entry'];
 
 		$entryConfigWeight->save();
 
@@ -53,6 +54,7 @@ class EloquentEntryConfigWeightRepository implements EntryConfigWeightRepository
 		$entryConfigWeight->entry_id = $input['entry_id'];
 		$entryConfigWeight->entry_age_id = $input['entry_age_id'];
 		$entryConfigWeight->weight = $input['weight'];
+		$entryConfigWeight->max_entry = $input['max_entry'];
 
 		$entryConfigWeight->save();
 

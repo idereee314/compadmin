@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Input;
 use Validator;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\URL;
 
 //Repositories
 use event\EventConfigRepository as EventConfig;
@@ -49,7 +51,15 @@ class EventConfigController extends Controller
      */
     public function index()
     {
+        // $eventConfigPage = $this->eventConfig->getEventConfigByPage(12);
+        // $eventConfig = json_decode($eventConfigPage, true);
+
+        // $data['eventConfig'] = $eventConfig['data'];
         $data['view_path'] = $this->view_path;
+        // dd($eventConfig);
+        // $pagination = new LengthAwarePaginator($eventConfig['data'], @$eventConfig['total'], @$eventConfig['per_page'], @$eventConfig['current_page'], [
+        //     'path'  => URL::current()
+        // ]);
 
         return view($this->view_path.'.index', $data);
     }

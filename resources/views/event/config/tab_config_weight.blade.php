@@ -30,6 +30,7 @@
                         <th class="w-75px text-center">#</th>
                         <th class="min-w-200px text-left">{{trans('display.age_title')}}</th> 
                         <th class="min-w-100px text-left">{{trans('display.weight')}}</th>
+                        <th class="min-w-100px text-center">{{trans('display.comp_max_entry')}}</th>
                         <th class="min-w-110px text-center">{{trans('display.general_created_at')}}</th>
                         <th class="min-w-150px text-center">{{trans('display.general_manage')}}</th>
                     </tr>
@@ -48,6 +49,7 @@
                         <td class="text-center">{{$loop->parent->parent->index+1}}. {{$loop->parent->index+1}}. {{++$loop->index}}</td>
                         <td>{{$weight->age->name}}</td>
                         <td>{{$weight->weight}}</td>
+                        <td>{{$weight->max_entry}}</td>
                         <td class="text-center">{{$weight->created_at}}</td>
                         <td class="text-center pr-0">
                             <a href="javascript:;" class="btn btn-icon btn-light btn-hover-primary btn-sm mx-3 edit-weight" data-weightid="{{$weight->id}}">

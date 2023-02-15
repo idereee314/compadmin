@@ -175,24 +175,23 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 					
 				}
             })
-			->setRowAttr([
-				'class' => function($qry) {
-					return @$qry->is_weight_checked ? 'table-success' : '';
-				}
-			])
 			// ->setRowAttr([
 			// 	'class' => function($qry) {
-			// 		if (@$qry->is_weight_checked == true ){
-			// 			if (@$qry->entry_weight_id->weight < @$qry->current_weight){
-			// 				return 'table-success';
-			// 			}else{
-			// 				return 'table-warning';
-							
-			// 			}
-			// 		}
-					
+			// 		return @$qry->is_weight_checked ? 'table-success' : '';
 			// 	}
 			// ])
+			->setRowAttr([
+				'class' => function($qry) {
+					if (@$qry->is_weight_checked == true ){
+						if (@$qry->entry_weight_id->weight <= @$qry->current_weight){
+							return 'table-success';
+						}else{
+							return 'table-warning';
+							
+						}
+					}
+				}
+			])
 			->editColumn('status', function($qry)
 			{
 				$status = '<button type="button" class="btn btn-light-'.@Config::get('smart.event_registration_status_class')[$qry->status].' btn-sm btn-status" data-registrationid="'.$qry->id.'">'.@Config::get('enums.event_registration_status')[$qry->status].'</button>';
