@@ -19,9 +19,9 @@
                 </ul>
             </div>
             
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <i aria-hidden="true" class="ki ki-close"></i>
-            </button>
+            </button> -->
         </div>
         <!--end::Card header-->
         <div class="card-body p-0">

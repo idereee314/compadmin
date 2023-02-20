@@ -76,7 +76,9 @@ return [
     'general_rank' => 'Зэрэглэл',
     'general_reset' => 'Цэвэрлэх',
     'general_connect' => 'Холбох',
-    'general_is_team' =>'Багийн спорт мөн эсэх',
+    'general_is_team' => 'Багийн спорт мөн эсэх',
+    'general_team' => 'Багийн нэр',
+    'general_team_athlete' => 'Багийн тамирчид',
 
     /** NOUN **/
     "general_code" => "Код",
@@ -162,6 +164,7 @@ return [
     'general_no_record' => 'Бичлэг байхгүй',
     'general_current_status' => 'Одоогийн төлөв',
     'general_next_status' => 'Шилжүүлэх төлөв',
+    'general_sport_type' => 'Спортын төрөл',
 
     // Search
     "general_search_list" => "Хайлт",
@@ -283,6 +286,12 @@ return [
     'comp_place_nuber' => 'Байр',
     'comp_org_type' => 'Оролцох харъялалын төрөл',
     'comp_max_entry' => 'Оролцох хүмүүсийн лимит',
+    'comp_athlete_age_average' => 'Багийн тамирчдын дундаж нас',
+
+    // Volleyball
+    'voll_role' => 'Гүйцэтгэх үүрэг',
+    'athlete_height' =>'Биеийн өндөр',
+    'voll_rank' =>'Спортын цол зэрэг',
 
     //Academy
 

@@ -55,6 +55,11 @@ class EventConfig extends Model
     {
         return $this->hasManyThrough('reference\EntryConfigWeight', 'reference\EventEntries', 'event_id', 'entry_id', 'event_id', 'id');
     }
+
+    public function sport()
+    {
+        return $this->belongsTo('sport\Sport', 'sport_id');
+    }
     
 	public static function boot()
     {

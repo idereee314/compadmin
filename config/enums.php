@@ -47,6 +47,10 @@ return array(
 		'6' => array('title' => "Хэрэглэгч",'code' => 'event_event_user','name' => "tab_event_user", 'icon' => "fa-user-check",'number' => 'tab1-7'),
     ],
 
+	'event_team_tabs' => [
+        '0' => array('title' => "Тамирчдын жагсаалт",'code' => 'general','name' => "tab_general", 'icon' => "fa-user-check",'number' => 'tab1-1'),
+    ],
+
 	'org_type' => [
 		'academy' => 'Академи',
 		'highschool' => 'Дунд сургууль',

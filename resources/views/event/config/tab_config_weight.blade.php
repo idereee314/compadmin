@@ -49,7 +49,7 @@
                         <td class="text-center">{{$loop->parent->parent->index+1}}. {{$loop->parent->index+1}}. {{++$loop->index}}</td>
                         <td>{{$weight->age->name}}</td>
                         <td>{{$weight->weight}}</td>
-                        <td>{{$weight->max_entry}}</td>
+                        <td class="text-center">{{$weight->max_entry}}</td>
                         <td class="text-center">{{$weight->created_at}}</td>
                         <td class="text-center pr-0">
                             <a href="javascript:;" class="btn btn-icon btn-light btn-hover-primary btn-sm mx-3 edit-weight" data-weightid="{{$weight->id}}">

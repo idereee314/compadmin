@@ -19,6 +19,7 @@ use reference\EntryConfigBeltRepository as EntryConfigBelt;
 use reference\EntryConfigAgeRepository as EntryConfigAge;
 use reference\EntryConfigWeightRepository as EntryConfigWeight;
 use reference\EventEntriesFeeRepository as EventEntriesFee;
+use sport\SportRepository as Sport;
 
 //Models
 use event\EventConfig as EventConfigModel;
@@ -32,7 +33,7 @@ class EventConfigController extends Controller
 {
     public $restful = true;
 
-    public function __construct(EventConfig $eventConfig, Event $event, EventEntries $eventEntries, EntryConfigBelt $entryConfigBelt, EntryConfigAge $entryConfigAge, EntryConfigWeight $entryConfigWeight, EventEntriesFee $eventEntriesFee)
+    public function __construct(EventConfig $eventConfig, Event $event, EventEntries $eventEntries, EntryConfigBelt $entryConfigBelt, EntryConfigAge $entryConfigAge, EntryConfigWeight $entryConfigWeight, EventEntriesFee $eventEntriesFee, Sport $sport)
     {
         $this->view_path = 'event.config';
         $this->eventConfig = $eventConfig;
@@ -42,6 +43,7 @@ class EventConfigController extends Controller
         $this->entryConfigAge = $entryConfigAge;
         $this->entryConfigWeight = $entryConfigWeight;
         $this->eventEntriesFee = $eventEntriesFee;
+        $this->sport = $sport;
     }
 
     /**
@@ -71,8 +73,11 @@ class EventConfigController extends Controller
      */
     public function create()
     {
+        $sports = $this->sport->all();
+       
+        $data['sports'] = $sports;
         $data['view_path'] = $this->view_path;
-
+    
         return view($this->view_path.'.add', $data);
     }
 
@@ -86,7 +91,7 @@ class EventConfigController extends Controller
     {
         $input = Input::all();
         $validator = Validator::make($input, EventConfigModel::rules(0));
-
+        
         if ($validator->fails())
         {
             $response = array(
@@ -134,7 +139,7 @@ class EventConfigController extends Controller
         $configWeights = $this->entryConfigWeight->getConfigWeightByEventId($eventConfig->event_id);
         $configEntriesFees = $this->eventEntriesFee->getEntriesFeeByEventId($eventConfig->event_id);
         $event = $this->event->find($eventConfig->event_id);
-        
+
         $data['eventConfig'] = $eventConfig;
         $data['entries'] = $eventConfig->event->entries;
         $data['configBelsts'] = $configBelsts->groupBy('entry_id');
@@ -160,7 +165,7 @@ class EventConfigController extends Controller
     public function edit($id)
     {
         $eventConfig = $this->eventConfig->find($id);
-
+        
         $data['tabs'] = collect(Config::get("enums.event_config"))->sortBy('order')->toArray();
         $data['event_config_id'] = $id;
         $data['tab_id'] = 'tab1-1';
@@ -342,7 +347,9 @@ class EventConfigController extends Controller
         $configWeights = $this->entryConfigWeight->getConfigWeightByEventId($eventConfig->event_id);
         $configEntriesFees = $this->eventEntriesFee->getEntriesFeeByEventId($eventConfig->event_id);
         $event = $this->event->find($eventConfig->event_id);
-        
+        $sports = $this->sport->all();
+       
+        $data['sports'] = $sports;
         $data['eventConfig'] = $eventConfig;
         $data['entries'] = $eventConfig->event->entries;
         $data['configBelsts'] = $configBelsts->groupBy('entry_id');
@@ -350,7 +357,7 @@ class EventConfigController extends Controller
         $data['configWeights'] = $configWeights->groupBy(['entry_id', 'entry_age_id']);
         $data['configEntriesFees'] = $configEntriesFees->groupBy('entry_id');
         $data['eventUsers'] = $event->eventUsers;
-
+        
         if($input['code'] == 'entry_config_belt') 
         {
            

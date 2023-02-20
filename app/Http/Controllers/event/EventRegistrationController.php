@@ -18,6 +18,7 @@ use reference\EntryConfigBeltRepository as EntryConfigBelt;
 use reference\EntryConfigWeightRepository as EntryConfigWeight;
 
 use event\EventRegistrationRepository as EventRegistration;
+use event\EventTeamRegistrationRepository as EventTeamRegistration;
 use event\EventConfigRepository as EventConfig;
 use event\EventRepository as Event;
 use academy\AcademyRepository as Academy;
@@ -25,6 +26,7 @@ use member\MemberRepository as Member;
 
 //Models
 use event\EventRegistration as EventRegistrationModel;
+use event\EventTeamRegistration as EventTeamRegistrationModel;
 
 use \Auth as Auth;
 use Config;
@@ -37,7 +39,7 @@ class EventRegistrationController extends Controller
 {
     public $restful = true;
 
-    public function __construct(Event $event, EventRegistration $eventRegistration, EventConfig $eventConfig, Academy $academy, EventEntries $eventEntries, EntryConfigAge $configAge, EntryConfigBelt $configBelt, EntryConfigWeight $configWeight, Member $member)
+    public function __construct(Event $event, EventRegistration $eventRegistration, EventConfig $eventConfig, Academy $academy, EventEntries $eventEntries, EntryConfigAge $configAge, EntryConfigBelt $configBelt, EntryConfigWeight $configWeight, Member $member, EventTeamRegistration $eventTeamRegistration)
     {
         $this->view_path = 'event.registration';
         $this->event = $event;
@@ -49,6 +51,7 @@ class EventRegistrationController extends Controller
         $this->configBelt = $configBelt;
         $this->configWeight = $configWeight;
         $this->member = $member;
+        $this->eventTeamRegistration = $eventTeamRegistration;
     }
 
     /**
@@ -59,25 +62,44 @@ class EventRegistrationController extends Controller
     public function index()
     {
         $input = Input::all();
-
         if(@$input['event_id'])
         {
             $event = $this->event->find(@$input['event_id']);
+            // dd($event);
+            if($event->config->is_team == FALSE)
+            {
+                $eventEntries = $event->entries;
+                $eventRegStatusCount = $this->eventRegistration->getEventRegStatusCount($event->id)->pluck('total', 'status')->toArray();
+                $academies = $this->academy->all();
+                $eventFees = $this->eventRegistration->getPaymentByEventId(@$input['event_id'])->groupBy('amount');
 
-            $eventEntries = $event->entries;
-            $eventRegStatusCount = $this->eventRegistration->getEventRegStatusCount($event->id)->pluck('total', 'status')->toArray();
-            $academies = $this->academy->all();
-            $eventFees = $this->eventRegistration->getPaymentByEventId(@$input['event_id'])->groupBy('amount');
+                $data['event'] = $event;
+                $data['eventEntries'] = $event->entries;
+                $data['eventRegStatusCount'] = $eventRegStatusCount;
+                $data['progressPercent'] = round(@$eventRegStatusCount[@Config::get('smart.event_registration_status')['approved']] ? @$eventRegStatusCount[@Config::get('smart.event_registration_status')['approved']] / array_sum(@$eventRegStatusCount) * 100 : 0);
+                $data['eventFees'] = $eventFees;
+                $data['academies'] = $academies;
+                $data['view_path'] = $this->view_path;
+                
+                return view($this->view_path.'.index', $data);
+            }
+            else
+            {
+                $eventEntries = $event->entries;
+                $eventTeamRegStatusCount = $this->eventTeamRegistration->getEventRegStatusCount($event->id)->pluck('total', 'status')->toArray();
+                $academies = $this->academy->all();
+                $eventFees = $this->eventTeamRegistration->getPaymentByEventId(@$input['event_id'])->groupBy('amount');
 
-            $data['event'] = $event;
-            $data['eventEntries'] = $event->entries;
-            $data['eventRegStatusCount'] = $eventRegStatusCount;
-            $data['progressPercent'] = round(@$eventRegStatusCount[@Config::get('smart.event_registration_status')['approved']] ? @$eventRegStatusCount[@Config::get('smart.event_registration_status')['approved']] / array_sum(@$eventRegStatusCount) * 100 : 0);
-            $data['eventFees'] = $eventFees;
-            $data['academies'] = $academies;
-            $data['view_path'] = $this->view_path;
-    
-            return view($this->view_path.'.index', $data);
+                $data['event'] = $event;
+                $data['eventEntries'] = $event->entries;
+                $data['eventTeamRegStatusCount'] = $eventTeamRegStatusCount;
+                $data['progressPercent'] = round(@$eventTeamRegStatusCount[@Config::get('smart.event_registration_status')['approved']] ? @$eventRegStatusCount[@Config::get('smart.event_registration_status')['approved']] / array_sum(@$eventRegStatusCount) * 100 : 0);
+                $data['eventFees'] = $eventFees;
+                $data['academies'] = $academies;
+                $data['view_path'] = $this->view_path;
+                
+                return view($this->view_path.'.index_team', $data);
+            }
         
         }
         else 
@@ -94,14 +116,29 @@ class EventRegistrationController extends Controller
     public function create()
     {
         $input = Input::all();
-        $entries = $this->eventEntries->getEntryByEventId(@$input['event_id']);
-        $academy = $this->academy->all();
+        $is_team = $this->event->find(request()->event_id)->config->is_team;
+        if ($is_team == false) {
+            $entries = $this->eventEntries->getEntryByEventId(@$input['event_id']);
+            $academy = $this->academy->all();
 
-        $data['event_id'] = @$input['event_id'];
-        $data['entries'] = $entries;
-        $data['academies'] = $academy;
+            $data['event_id'] = @$input['event_id'];
+            $data['entries'] = $entries;
+            $data['academies'] = $academy;
 
-        return view($this->view_path.'.add', $data);
+            return view($this->view_path.'.add', $data);
+        }
+        else
+        {
+            $entries = $this->eventEntries->getEntryByEventId(@$input['event_id']);
+            $academy = $this->academy->all();
+
+            $data['event_id'] = @$input['event_id'];
+            $data['entries'] = $entries;
+            $data['academies'] = $academy;
+
+            return view($this->view_path.'.add_team', $data);
+        }
+        
     }
 
     /**
@@ -113,37 +150,80 @@ class EventRegistrationController extends Controller
     public function store(Request $request)
     {
         $input = Input::all();
-        $validator = Validator::make($input, EventRegistrationModel::rules(0));
 
-        if ($validator->fails())
-        {
-            $response = array(
-                'status' => 'error',
-                'msg' => trans('messages.error_save'),
-                'errors' => html_entity_decode(HTML::ul($validator->errors()->all()))
-            );
-        }
-        else
-        {
-            try
-            {
-                $event = $this->eventRegistration->create($input);
+        $is_team = $this->event->find(request()->event_id)->config->is_team;
+        if ($is_team == false) {
+            
+            $validator = Validator::make($input, EventRegistrationModel::rules(0));
 
-                $response = array(
-                    'status' => 'success',
-                    'msg' => trans('messages.success_save')
-                );
-
-            }
-            catch(\Illuminate\Database\QueryException $e)
+            if ($validator->fails())
             {
                 $response = array(
                     'status' => 'error',
                     'msg' => trans('messages.error_save'),
-                    'errors' => $e->getMessage()
+                    'errors' => html_entity_decode(HTML::ul($validator->errors()->all()))
                 );
-
             }
+            else
+            {
+                try
+                {
+                    $event = $this->eventRegistration->create($input);
+    
+                    $response = array(
+                        'status' => 'success',
+                        'msg' => trans('messages.success_save')
+                    );
+    
+                }
+                catch(\Illuminate\Database\QueryException $e)
+                {
+                    $response = array(
+                        'status' => 'error',
+                        'msg' => trans('messages.error_save'),
+                        'errors' => $e->getMessage()
+                    );
+    
+                }
+            }
+
+        }
+        else 
+        {
+            $validator = Validator::make($input, EventTeamRegistrationModel::rules(0));
+
+            if ($validator->fails())
+            {
+                $response = array(
+                    'status' => 'error',
+                    'msg' => trans('messages.error_save'),
+                    'errors' => html_entity_decode(HTML::ul($validator->errors()->all()))
+                );
+            }
+            else
+            {
+                try
+                {
+                    $event = $this->eventTeamRegistration->create($input);
+    
+                    $response = array(
+                        'status' => 'success',
+                        'msg' => trans('messages.success_save')
+                    );
+    
+                }
+                catch(\Illuminate\Database\QueryException $e)
+                {
+                    $response = array(
+                        'status' => 'error',
+                        'msg' => trans('messages.error_save'),
+                        'errors' => $e->getMessage()
+                    );
+    
+                }
+            }
+
+        
         }
         return $response;
     }
@@ -156,7 +236,12 @@ class EventRegistrationController extends Controller
      */
     public function show($id)
     {
-        //
+        $input = Input::all();
+        $eventTeamRegistration = $this->eventTeamRegistration->find($id);
+               
+		$data['eventTeamRegistration'] = $eventTeamRegistration;
+
+        return view($this->view_path.'.athlete', $data);
     }
 
     /**
@@ -167,21 +252,39 @@ class EventRegistrationController extends Controller
      */
     public function edit($id)
     {
-        $eventRegistration = $this->eventRegistration->find($id);
-        $academy = $this->academy->all();
-        $eventEntries = $this->eventEntries->getEntryByEventId($eventRegistration->event_id);
-        $configBelts = $this->configBelt->getEntryBeltByEntryId($eventRegistration->entry_id);
-        $configAges = $this->configAge->getEntryAgeByEntryId($eventRegistration->entry_id);
-        $configWeights = $this->configWeight->getEntryWeightByAgeId($eventRegistration->entry_age_id);   
-
-        $data['eventRegistration'] = $eventRegistration;
-        $data['eventEntries'] = $eventEntries;
-        $data['configBelts'] = $configBelts;
-        $data['configAges'] = $configAges;
-        $data['configWeights'] = $configWeights;
-        $data['academies'] = $academy;
-
-        return view($this->view_path.'.edit', $data);
+        // dd($this);
+        // $is_team = $this->event->find(@$request['event'])->config->is_team;
+        // if ($is_team == false) {
+            $eventRegistration = $this->eventRegistration->find($id);
+            $academy = $this->academy->all();
+            $eventEntries = $this->eventEntries->getEntryByEventId($eventRegistration->event_id);
+            $configBelts = $this->configBelt->getEntryBeltByEntryId($eventRegistration->entry_id);
+            $configAges = $this->configAge->getEntryAgeByEntryId($eventRegistration->entry_id);
+            $configWeights = $this->configWeight->getEntryWeightByAgeId($eventRegistration->entry_age_id);   
+    
+            $data['eventRegistration'] = $eventRegistration;
+            $data['eventEntries'] = $eventEntries;
+            $data['configBelts'] = $configBelts;
+            $data['configAges'] = $configAges;
+            $data['configWeights'] = $configWeights;
+            $data['academies'] = $academy;
+    
+            return view($this->view_path.'.edit', $data);
+        // }
+        // else
+        // {
+        //     $eventTeamRegistration = $this->eventTeamRegistration->find($id);
+        //     $academy = $this->academy->all();
+        //     $eventEntries = $this->eventEntries->getEntryByEventId($eventRegistration->event_id);
+             
+    
+        //     $data['eventRegistration'] = $eventRegistration;
+        //     $data['eventEntries'] = $eventEntries;
+        //     $data['academies'] = $academy;
+    
+        //     return view($this->view_path.'.edit_team', $data);
+        // }
+        
     }
 
     /**
@@ -194,43 +297,86 @@ class EventRegistrationController extends Controller
     public function update(Request $request, $id)
     {
         $input = Input::all();
+        
+        // $is_team = $this->event->find(request()->event_id)->config->is_team;
+        // if ($is_team == false) {
+            $rules = [
+                'entry_id' => 'required',
+                'entry_age_id' => 'required',
+                'entry_belt_id' => 'required',
+                'entry_weight_id' => 'required',
+                'academy_id' => 'required',
+                //'status' => 'required'
+            ];
+    
+            $validator = Validator::make($input, $rules);
+    
+            if ($validator->fails())
+            {
+                $response = array(
+                    'status' => 'error',
+                    'msg' => trans('messages.error_save'),
+                    'errors' => html_entity_decode(HTML::ul($validator->errors()->all()))
+                );
+            } else {
+                try {
+                    $event = $this->eventRegistration->update($id, $input);
+    
+                    $response = array(
+                        'status' => 'success',
+                        'msg' => trans('messages.success_update')
+                    );
+                }
+                catch(Exception $e)
+                {
+                    $response = array(
+                        'status' => 'error',
+                        'msg' => trans('messages.error_save'),
+                        'errors' => $e->getMessage()
+                    );
+                }
+            }
+        // }
+        // else
+        // {
 
-        $rules = [
-            'entry_id' => 'required',
-            'entry_age_id' => 'required',
-            'entry_belt_id' => 'required',
-            'entry_weight_id' => 'required',
-            'academy_id' => 'required',
-            //'status' => 'required'
-        ];
+        //     $rules = [
+        //         'entry_id' => 'required',
+        //         'entry_age_id' => 'required',
+        //         'entry_belt_id' => 'required',
+        //         'entry_weight_id' => 'required',
+        //         'academy_id' => 'required',
+        //         //'status' => 'required'
+        //     ];
 
-        $validator = Validator::make($input, $rules);
+        //     $validator = Validator::make($input, $rules);
 
-        if ($validator->fails())
-		{
-        	$response = array(
-                'status' => 'error',
-                'msg' => trans('messages.error_save'),
-                'errors' => html_entity_decode(HTML::ul($validator->errors()->all()))
-            );
-        } else {
-			try {
-                $event = $this->eventRegistration->update($id, $input);
+        //     if ($validator->fails())
+	    // 	{
+        //     	$response = array(
+        //             'status' => 'error',
+        //             'msg' => trans('messages.error_save'),
+        //             'errors' => html_entity_decode(HTML::ul($validator->errors()->all()))
+        //         );
+        //     } else {
+	    // 		try {
+        //             $event = $this->eventRegistration->update($id, $input);
 
-				$response = array(
-					'status' => 'success',
-					'msg' => trans('messages.success_update')
-				);
-			}
-			catch(Exception $e)
-			{
-				$response = array(
-					'status' => 'error',
-					'msg' => trans('messages.error_save'),
-					'errors' => $e->getMessage()
-				);
-			}
-		}
+	    // 			$response = array(
+	    // 				'status' => 'success',
+	    // 				'msg' => trans('messages.success_update')
+	    // 			);
+	    // 		}
+	    // 		catch(Exception $e)
+	    // 		{
+	    // 			$response = array(
+	    // 				'status' => 'error',
+	    // 				'msg' => trans('messages.error_save'),
+	    // 				'errors' => $e->getMessage()
+	    // 			);
+	    // 		}
+	    // 	}
+        // }
 
         return $response;
     }
@@ -287,7 +433,12 @@ class EventRegistrationController extends Controller
 
     public function getDatatableList(Request $request)
     {
-        return $this->eventRegistration->getDatatableList($request);
+        $is_team = $this->event->find(@$request['event'])->config->is_team;
+        if ($is_team == false) {
+            return $this->eventRegistration->getDatatableList($request);
+        } else {
+            return $this->eventTeamRegistration->getDatatableList($request);
+        }
     }
 
     public function getConfigByEntryId()

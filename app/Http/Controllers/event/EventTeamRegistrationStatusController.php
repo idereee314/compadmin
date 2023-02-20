@@ -12,13 +12,12 @@ use Illuminate\Support\Facades\URL;
 use HTML;
 
 //Repositories
-use event\EventRegistrationStatusRepository as EventRegistrationStatus;
-use event\EventRegistrationRepository as EventRegistration;
-use reference\EventEntriesFeeRepository as EventEntriesFee;
+use event\EventTeamRegistrationStatusRepository as EventTeamRegistrationStatus;
 use event\EventTeamRegistrationRepository as EventTeamRegistration;
+use reference\EventEntriesFeeRepository as EventEntriesFee;
 
 //Models
-use event\EventRegistrationStatus as EventRegistrationStatusModel;
+use event\EventTeamRegistrationStatus as EventTeamRegistrationStatusModel;
 
 use \Auth as Auth;
 use Config;
@@ -28,17 +27,16 @@ use Image;
 use PDF;
 use Carbon;
 
-class EventRegistrationStatusController extends Controller
+class EventTeamRegistrationStatusController extends Controller
 {
     public $restful = true;
 
-    public function __construct(EventRegistrationStatus $eventRegistrationStatus, EventRegistration $eventRegistration, EventEntriesFee $eventEntriesFee, EventTeamRegistration $eventTeamRegistration)
+    public function __construct(EventTeamRegistrationStatus $eventTeamRegistrationStatus, EventTeamRegistration $eventTeamRegistration, EventEntriesFee $eventEntriesFee)
     {
         $this->view_path = 'event.registration';
-        $this->eventRegistrationStatus = $eventRegistrationStatus;
-        $this->eventRegistration = $eventRegistration;
-        $this->eventEntriesFee = $eventEntriesFee;
+        $this->eventTeamRegistrationStatus = $eventTeamRegistrationStatus;
         $this->eventTeamRegistration = $eventTeamRegistration;
+        $this->eventEntriesFee = $eventEntriesFee;
     }
 
     /**
@@ -59,22 +57,15 @@ class EventRegistrationStatusController extends Controller
     public function change()
     {
         $input = Input::all();
-        // dd($this->eventTeamRegistration->find(@$input['reg_id']));
-        $eventRegistration = $this->eventRegistration->find(@$input['reg_id']);
         $eventTeamRegistration = $this->eventTeamRegistration->find(@$input['reg_id']);
-        $nextStatuses = @Config::get('smart.event_registration_status_flow')[$eventRegistration->status];
-        // dd($this->eventEntriesFee->getFeesByEntryId($eventTeamRegistration->entry_id));
-        // dd($this->eventEntriesFee->getFeesByEntryId($eventTeamRegistration->entry_id));
-        // $entryFees = $this->eventEntriesFee->getFeesByEntryId($eventTeamRegistration->entry_id);
-        $entryFees = $this->eventEntriesFee->getFeesByEntryId($eventRegistration->entry_id);
+        $nextStatuses = @Config::get('smart.event_registration_status_flow')[$eventTeamRegistration->status];
+        $entryFees = $this->eventEntriesFee->getFeesByEntryId($eventTeamRegistration->entry_id);
 
         $data['eventTeamRegistration'] = $eventTeamRegistration;
-        $data['eventRegistration'] = $eventRegistration;
         $data['nextStatuses'] = $nextStatuses;
         $data['entryFees'] = $entryFees;
 
-        return view($this->view_path.'.form_status', $data);
-        // return view($this->view_path.'.form_team_member_status', $data);
+        return view($this->view_path.'.form_team_status', $data);
     }
 
     /**
@@ -86,8 +77,9 @@ class EventRegistrationStatusController extends Controller
     public function changed(Request $request)
     {
         $input = Input::all();
-        $validator = Validator::make($input, EventRegistrationStatusModel::$rules);
-        $eventRegistration = $this->eventRegistration->find(@$input['event_registration_id']);
+        $validator = Validator::make($input, eventTeamRegistrationStatusModel::$rules);
+
+        $eventTeamRegistration = $this->eventTeamRegistration->find(@$input['team_registration_id']);
 
         if ($validator->fails())
         {
@@ -99,7 +91,7 @@ class EventRegistrationStatusController extends Controller
         }
         else
         {
-            if($eventRegistration->status != @$input['status'])
+            if($eventTeamRegistration->status != @$input['status'])
             {
                 $statusArr['status'] = $input['status'];
                 $statusArr['changed_by'] = Auth::id();
@@ -107,7 +99,7 @@ class EventRegistrationStatusController extends Controller
 
                 try
                 {
-                    $eventRegistration->statuses()->create($statusArr);
+                    $eventTeamRegistration->statuses()->create($statusArr);
 
                     $response = array(
                         'status' => 'success',
@@ -127,17 +119,17 @@ class EventRegistrationStatusController extends Controller
 
             if(array_key_exists('amount', $input))
             {
-                $paymentUnq['registration_id'] = $eventRegistration->id;
+                $paymentUnq['registration_id'] = $eventTeamRegistration->id;
 
-                $paymentArr['registration_id'] = $eventRegistration->id;
-                $paymentArr['member_id'] = $eventRegistration->member_id;
-                $paymentArr['register_number'] = $eventRegistration->member->register_number;
+                $paymentArr['registration_id'] = $eventTeamRegistration->id;
+                $paymentArr['member_id'] = $eventTeamRegistration->member_id;
+                $paymentArr['register_number'] = $eventTeamRegistration->member->register_number;
                 $paymentArr['status'] = @$input['payment_status'] ? $input['payment_status'] : false;
                 $paymentArr['amount'] = $input['amount'];
                 
                 try
                 {
-                    $eventRegistration->payment()->updateOrCreate($paymentUnq, $paymentArr);
+                    $eventTeamRegistration->payment()->updateOrCreate($paymentUnq, $paymentArr);
 
                     $response = array(
                         'status' => 'success',

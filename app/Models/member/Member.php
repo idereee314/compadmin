@@ -16,7 +16,7 @@ use Illuminate\Support\Str;
 class Member extends Model
 {
     protected $table = 'uq_member';
-    protected $appends = array('fullname');
+    protected $appends = array('fullname','age');
     
     public static function rules($id) 
     {
@@ -31,6 +31,13 @@ class Member extends Model
             // 'id_photo' => 'required',
 		);
 	}
+    public function getAgeAttribute()
+    {
+        $currentYear = date('Y'); // Одоогийн жил
+        $birthYear = date('Y', strtotime($this->birth)); // strtotime болон date() функцийг ашиглан төрсөн оныг задалсан
+        $age = $currentYear - $birthYear; // Тухайн жилээс төрсөн оныг хасна
+        return $age;
+    }
 
     public function getFullnameAttribute()
     {

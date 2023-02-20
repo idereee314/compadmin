@@ -9,9 +9,22 @@
     <div class="card-body">
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.event_title')}}: <span class="text-danger">*</span></label>
-            <div class="col-md-9">
+            <div class="col-md-9 col-lg-6">
                 <select class="form-control" id="event_id" name="event_id" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}">
                     <option value="0">-- {{ trans('display.general_select') }} --</option>
+                </select>
+                <div class="error-here"></div>
+            </div>
+        </div> 
+
+        <div class="form-group row">
+            <label class="col-md-3 col-form-label text-right">{{trans('display.general_sport_type')}}: <span class="text-danger">*</span></label>
+            <div class="col-md-9 col-lg-6">
+                <select class="form-control selectpicker" id="sport_id" name="sport_id" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}">
+                    <option value="0">-- {{ trans('display.general_select') }} --</option>
+                    @foreach($sports as $type)
+                        <option value="{{ $type->id }}">{{ $type->name }}</option>
+                    @endforeach
                 </select>
                 <div class="error-here"></div>
             </div>

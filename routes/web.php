@@ -84,6 +84,14 @@ Route::group([
 
     Route::get('/member/list/by/event/{member}', 'member\MemberController@memberListByEvent');
 
+     //Event Team
+    Route::resource('/event/registration/team', 'event\EventRegistrationController', ['names' => 'event.team.registration']);
+    Route::any('/event/registration/team/data/list', 'event\EventRegistrationController@getDatatableList')->name('event.team.registration.data.list');
+    Route::get('/event/registration/team-tabs', 'event\EventRegistrationController@includeTab')->name('event.team.registration.tabs');
+    
+    Route::get('/event/registration/team/change/status', 'event\EventTeamRegistrationStatusController@change')->name('event.team.registration.change.status');
+    Route::post('/event/registration/team/changed/status', 'event\EventTeamRegistrationStatusController@changed')->name('event.team.registration.changed.status');
+
     //Event
     Route::resource('/event/registration', 'event\EventRegistrationController', ['names' => 'event.registration']);
     Route::any('/event/registration/data/list', 'event\EventRegistrationController@getDatatableList')->name('event.registration.data.list');
@@ -91,7 +99,7 @@ Route::group([
     Route::get('/event/registration/create/award', 'event\EventRegistrationController@createPlace')->name('event.registration.create.award');
     Route::post('/event/registration/take/award', 'event\EventRegistrationController@takePlace')->name('event.registration.take.award');
     Route::get('/event/competition', 'event\EventRegistrationController@showCard')->name('event.competition.card');
-
+    
     Route::get('/event/registration/change/status', 'event\EventRegistrationStatusController@change')->name('event.registration.change.status');
     Route::post('/event/registration/changed/status', 'event\EventRegistrationStatusController@changed')->name('event.registration.changed.status');
     Route::get('/event/registration/print/mandat', 'event\EventRegistrationController@printMandateByEventAndStatus')->name('event.registration.print.mandat');
