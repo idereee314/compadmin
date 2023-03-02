@@ -59,13 +59,10 @@ class EventRegistrationStatusController extends Controller
     public function change()
     {
         $input = Input::all();
-        // dd($this->eventTeamRegistration->find(@$input['reg_id']));
-        $eventRegistration = $this->eventRegistration->find(@$input['reg_id']);
-        $eventTeamRegistration = $this->eventTeamRegistration->find(@$input['reg_id']);
+    
+        $eventRegistration = $this->eventRegistration->find(@$input['reg_id']);    
         $nextStatuses = @Config::get('smart.event_registration_status_flow')[$eventRegistration->status];
-        // dd($this->eventEntriesFee->getFeesByEntryId($eventTeamRegistration->entry_id));
-        // dd($this->eventEntriesFee->getFeesByEntryId($eventTeamRegistration->entry_id));
-        // $entryFees = $this->eventEntriesFee->getFeesByEntryId($eventTeamRegistration->entry_id);
+        $eventTeamRegistration = $this->eventTeamRegistration->find(@$input['reg_id']);
         $entryFees = $this->eventEntriesFee->getFeesByEntryId($eventRegistration->entry_id);
 
         $data['eventTeamRegistration'] = $eventTeamRegistration;
@@ -74,7 +71,6 @@ class EventRegistrationStatusController extends Controller
         $data['entryFees'] = $entryFees;
 
         return view($this->view_path.'.form_status', $data);
-        // return view($this->view_path.'.form_team_member_status', $data);
     }
 
     /**

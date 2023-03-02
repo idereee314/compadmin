@@ -18,6 +18,11 @@ class Sport extends Model
         return $this->hasOne('event\EventConfig', 'sport_id');
     }
 
+    public function eventRegistration()
+    {
+        return $this->hasOne('event\EventConfig', 'sport_id');
+    }
+
     
     public static function boot()
     {

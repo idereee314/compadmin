@@ -39,16 +39,13 @@ class EloquentEventTeamRegistrationRepository implements EventTeamRegistrationRe
 	{
 		$eventTeamRegistration = new EventTeamRegistration;
 
-		$eventTeamRegistration->member_id = $input['member_id'];
 		$eventTeamRegistration->event_id = $input['event_id'];
 		$eventTeamRegistration->entry_id = $input['entry_id'];
-		$eventTeamRegistration->entry_age_id = $input['entry_age_id'];
-		$eventTeamRegistration->entry_belt_id = $input['entry_belt_id'];
-		$eventTeamRegistration->entry_weight_id = @$input['entry_weight_id'];
+		$eventTeamRegistration->team_id = $input['team_id'];
 		$eventTeamRegistration->academy_id = @$input['academy_id'];
 		$eventTeamRegistration->academy_name = @$input['academy_name'];
 		//$eventTeamRegistration->status = @$input['status'];
-
+		
 		$eventTeamRegistration->save();
 		return $eventTeamRegistration;
 	}
@@ -57,14 +54,11 @@ class EloquentEventTeamRegistrationRepository implements EventTeamRegistrationRe
 	{
 		$eventTeamRegistration = $this->find($id);
 		$eventTeamRegistration->entry_id = $input['entry_id'];
-		$eventTeamRegistration->entry_age_id = $input['entry_age_id'];
-		$eventTeamRegistration->entry_belt_id = $input['entry_belt_id'];
-		$eventTeamRegistration->entry_weight_id = @$input['entry_weight_id'];
+		$eventTeamRegistration->team_id = $input['team_id'];
 		$eventTeamRegistration->academy_id = @$input['academy_id'];
 		$eventTeamRegistration->academy_name = @$input['academy_name'];
 		//$eventTeamRegistration->status = @$input['status'];
-		$eventTeamRegistration->is_weight_checked = @$input['is_weight_checked'] ? true: false ;
-		$eventTeamRegistration->current_weight = @$input['current_weight'];
+		
 
 		$eventTeamRegistration->save();
 		return $eventTeamRegistration;
@@ -150,6 +144,11 @@ class EloquentEventTeamRegistrationRepository implements EventTeamRegistrationRe
 					
 				// }
             })
+			->setRowAttr([
+				'class' => function($qry) {
+					return @$qry->is_weight_checked ? 'table-success' : '';
+				}
+			])
 			->editColumn('team_name', function($qry)
 			{
 				return $qry->team->name;
@@ -185,6 +184,7 @@ class EloquentEventTeamRegistrationRepository implements EventTeamRegistrationRe
 			})
 			// ->addColumn('athlete_average_age', function($qry){
 			// 	dd($qry);
+				
 			// 	return $qry->teamathlete;
 			// })
             ->addColumn('action', function ($qry) {
@@ -204,8 +204,8 @@ class EloquentEventTeamRegistrationRepository implements EventTeamRegistrationRe
 						}
 					}
 					//if($qry->event->due_date > Carbon\Carbon::now()){
-						// $actionHtml .= 	'<a class="btn btn-icon btn-light btn-hover-primary btn-sm mr-3 edit" href="javascript:;" data-registrationid="'.$qry->id.'" title="'.trans('display.general_edit').'"><i class="la la-edit"></i></a>';
-						$actionHtml .= 	'<a class="btn btn-icon btn-light btn-hover-primary btn-sm mr-3 edit" href="'.route('event.team.registration.edit', $qry->id).'" title="'.trans('display.general_edit').'"><i class="la la-edit"></i></a>';
+						$actionHtml .= 	'<a class="btn btn-icon btn-light btn-hover-primary btn-sm mr-3 edit" href="javascript:;" data-registrationid="'.$qry->id.'" title="'.trans('display.general_edit').'"><i class="la la-edit"></i></a>';
+						// $actionHtml .= 	'<a class="btn btn-icon btn-light btn-hover-primary btn-sm mr-3 edit" href="'.route('event.team.registration.edit', $qry->id).'" title="'.trans('display.general_edit').'"><i class="la la-edit"></i></a>';
 						if($qry->source_type == @Config::get('smart.event_registration_source_type')['admin'] && (empty($qry->status) || $qry->status == @Config::get('smart.event_registration_status')['created']))
 						{
 							$actionHtml .= 	'<a class="btn btn-icon btn-light btn-hover-primary btn-sm delete" href="javascript:;" data-registrationid="'.$qry->id.'" title="'.trans('display.general_delete').'"><i class="la la-trash"></i></li>';

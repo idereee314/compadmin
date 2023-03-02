@@ -79,6 +79,10 @@ return [
     'general_is_team' => 'Багийн спорт мөн эсэх',
     'general_team' => 'Багийн нэр',
     'general_team_athlete' => 'Багийн тамирчид',
+    'general_team_no_athlete' => 'Багийн тамирчид бүртгүүлээгүй байна.',
+    'general_new_athlete' => 'Тамирчин шинээр нэмэх',
+    'general_athlete_count' => 'Оролцож буй тамирчдын тоо',
+
 
     /** NOUN **/
     "general_code" => "Код",
@@ -165,6 +169,7 @@ return [
     'general_current_status' => 'Одоогийн төлөв',
     'general_next_status' => 'Шилжүүлэх төлөв',
     'general_sport_type' => 'Спортын төрөл',
+    'general_event_stats' => 'Тэмцээний статистик',
 
     // Search
     "general_search_list" => "Хайлт",
@@ -287,11 +292,13 @@ return [
     'comp_org_type' => 'Оролцох харъялалын төрөл',
     'comp_max_entry' => 'Оролцох хүмүүсийн лимит',
     'comp_athlete_age_average' => 'Багийн тамирчдын дундаж нас',
+    'comp_add_member' => 'Тамирчин шинээр нэмэх',
 
     // Volleyball
     'voll_role' => 'Гүйцэтгэх үүрэг',
     'athlete_height' =>'Биеийн өндөр',
     'voll_rank' =>'Спортын цол зэрэг',
+    'athlete_jersey_number' => 'Тамирчны Хувийн дугаар',
 
     //Academy
 

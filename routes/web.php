@@ -87,10 +87,19 @@ Route::group([
      //Event Team
     Route::resource('/event/registration/team', 'event\EventRegistrationController', ['names' => 'event.team.registration']);
     Route::any('/event/registration/team/data/list', 'event\EventRegistrationController@getDatatableList')->name('event.team.registration.data.list');
-    Route::get('/event/registration/team-tabs', 'event\EventRegistrationController@includeTab')->name('event.team.registration.tabs');
     
     Route::get('/event/registration/team/change/status', 'event\EventTeamRegistrationStatusController@change')->name('event.team.registration.change.status');
     Route::post('/event/registration/team/changed/status', 'event\EventTeamRegistrationStatusController@changed')->name('event.team.registration.changed.status');
+
+    //team member
+    Route::get('/event/registration/team/member/change/status', 'event\EventTeamMemberRegistrationStatusController@change')->name('event.team.member.registration.change.status');
+    Route::post('/event/registration/team/member/changed/status', 'event\EventTeamMemberRegistrationStatusController@changed')->name('event.team.member.registration.changed.status');
+
+    Route::get('/event/registration/team/member/create', 'event\EventRegistrationController@createTeamMember')->name('event.team.member.create');
+    Route::post('/event/registration/team/member/store', 'event\EventRegistrationController@storeTeamMember')->name('event.team.member.store');
+    Route::get('/event/registration/team/member/{id}/edit', 'event\EventRegistrationController@editTeamMember')->name('event.team.member.edit');
+    Route::post('/event/registration/team/member/update/{id}', 'event\EventRegistrationController@updateTeamMember')->name('event.team.member.update');
+    Route::post('/event/registration/team/member/{id}/remove', 'event\EventRegistrationController@removeTeamMember');
 
     //Event
     Route::resource('/event/registration', 'event\EventRegistrationController', ['names' => 'event.registration']);
@@ -146,8 +155,12 @@ Route::group([
     Route::post('/academy/isother', 'academy\AcademyController@getIsOther')->name('academy.isother');
     Route::get('/academy/search/org', 'academy\AcademyController@findOrganizationByName')->name('academy.search.org');
 
+    
+
 });
 
 Route::get('/event/{eventId}/bracket', 'event\EventRegistrationController@treeBracket')->name('event.bracket');
 Route::get('/event/{eventId}/bracket/show', 'event\EventRegistrationController@showBracket')->name('event.show.bracket');
 
+//stats
+Route::get('/event/{eventId}/statistics', 'event\EventRegistrationController@statistics')->name('event.statistics');

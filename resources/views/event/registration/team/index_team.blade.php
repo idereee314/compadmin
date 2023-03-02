@@ -359,8 +359,8 @@
                                 <!-- <th width="20%">{{trans('display.comp_athlete_age_average')}}</th> -->
                                 <th width="15%">{{trans('display.comp_entry')}}</th>                                
                                 <th width="10%">{{trans('display.general_status')}}</th>
-                                <th width="15%">{{trans('display.general_created_at')}}</th>
-                                <th width="5%">{{trans('display.general_manage')}}</th>
+                                <th width="10%">{{trans('display.general_created_at')}}</th>
+                                <th width="10%">{{trans('display.general_manage')}}</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -459,20 +459,13 @@ $(document).ready(function() {
                 }
             },
             {
-                text: '<i class="far fa-address-card"></i> Мандат хэвлэх',
-                className: "btn btn-light-success font-weight-bolder mb-2 {{ SecurityHelper::checkPermission(@Config::get('permission.event_registration'), Config::get('permission.editable')) ? '' : 'd-none' }}",
-                action: function ( e, dt, node, config ) {
-                    window.open('{!! route('event.registration.print.mandat') !!}?'+$('#event-team-registration-search-form').serialize(), '_blank');
-                }
-            },
-            {
                 extend: 'excelHtml5',
-                text: '<i class="fa fa-print"></i> Оролцогчдын жагсаалт {!! trans('display.general_excel') !!}',
+                text: '<i class="fa fa-print"></i>Багийн жагсаалт {!! trans('display.general_excel') !!}',
                 className: "btn btn-light-warning font-weight-bolder mb-2",
-                title: 'Оролцогчийн жагсаалт',
+                title: 'Тэмцээнд оролцогч багийн жагсаалт',
                 customize: function ( xlsx ) {
                     var sheet = xlsx.xl.worksheets['sheet1.xml'];
-                    $('c[r=A1] t', sheet).text( 'Тэмцээнд оролцогчид' );
+                    $('c[r=A1] t', sheet).text( 'Тэмцээнд оролцогч багийн жагсаалт' );
                 },
                 exportOptions: {
                     columns: [ 0,1,2,3,4,5,6,7,8],
@@ -483,7 +476,7 @@ $(document).ready(function() {
                         selected: undefined
                     }
                 }
-            }
+            },
         ]
 	});
 
@@ -510,7 +503,7 @@ $(document).ready(function() {
     $('#event-team-registration-datatable tbody').on( 'click', 'tr td a.edit', function () {
         var id = $(this).data("registrationid");
 
-        $.get('registration/'+id+'/edit', showEditModal);
+        $.get('registration/team/'+id+'/edit', showEditModal);
     });
 
     $('#event-team-registration-datatable tbody').on( 'click', 'tr td button.btn-status', function () {
@@ -1012,142 +1005,7 @@ function showEditModal(data){
         $('#memberTeamModal .modal-content').html(data);
         $('.selectpicker').selectpicker();
 
-        $('#update-event-registration-form select[name=entry_age_id]').select2({
-            placeholder: "-- {{ trans('display.general_select') }} --"
-        });
-        $('#update-event-registration-form select[name=entry_belt_id]').select2({
-            placeholder: "-- {{ trans('display.general_select') }} --"
-        });
-        $('#update-event-registration-form select[name=entry_weight_id]').select2({
-            placeholder: "-- {{ trans('display.general_select') }} --"
-        });
-
-        $('#update-event-registration-form select[name=entry_id]').on('change', function(){
-            var entryId = $(this).val();
-            var jsonDataConfig;
-            var jsonDataBelt;
-            var jsonDataAge;
-
-            $.ajax({
-                type: 'POST',
-                url: '{!! route('event.registration.take.config') !!}',
-                data: {entry_id: entryId},
-                success: function (data) {
-                    jsonDataConfig = JSON.parse(data);
-                    jsonDataBelt = jsonDataConfig['belt'];
-                    jsonDataAge = jsonDataConfig['age'];
-                },
-                error: function (xhr, textStatus, error) {
-                    console.log(xhr.statusText);
-                    console.log(textStatus);
-                    console.log(error);
-                },
-                async: false
-            });
-
-            $('#update-event-registration-form select[name=entry_belt_id]').select2({
-                placeholder: "-- {{ trans('display.general_select') }} --",
-                data: jsonDataBelt,
-                id: 'id',
-                closeOnSelect: true,
-                allowClear: true,
-                templateSelection: function (item) {
-                    return item.name;
-                },
-                templateResult: function (item) {
-                    return item.name;
-                }
-            });
-
-            $('#update-event-registration-form select[name=entry_age_id]').select2({
-                placeholder: "-- {{ trans('display.general_select') }} --",
-                data:jsonDataAge,
-                id: 'id',
-                closeOnSelect: true,
-                allowClear: true,
-                templateSelection: function (item) {
-                    return item.name;
-                },
-                templateResult: function (item) {
-                    return item.name;
-                }
-            });
-
-            $('#update-event-registration-form select[name=entry_weight_id]').select({data: ''});
-        });
-
-        $('#update-event-registration-form select[name=entry_age_id]').on('change', function(){
-            var ageId = $(this).val();
-            var jsonDataWeight;
-
-            $.ajax({
-                type: 'POST',
-                url: '{!! route('event.entry.weight.by.age') !!}',
-                data: {entry_age_id: ageId},
-                success: function (data) {
-                    jsonDataWeight = JSON.parse(data);
-                },
-                error: function (xhr, textStatus, error) {
-                    console.log(xhr.statusText);
-                    console.log(textStatus);
-                    console.log(error);
-                },
-                async: false
-            });
-
-            $('#update-event-registration-form select[name=entry_weight_id]').select2({
-                placeholder: "-- {{ trans('display.general_select') }} --",
-                data: jsonDataWeight,
-                id: 'id',
-                closeOnSelect: true,
-                allowClear: true,
-                templateSelection: function (item) {
-                    return item.weight;
-                },
-                templateResult: function (item) {
-                    return item.weight;
-                }
-            }); 
-        });
-
-        $('#update-event-registration-form select[name=academy_id]').on('change', function(){
-            var academyId = $(this).val(); 
-            $.ajax({
-                type: 'POST',
-                url: '{!! route('academy.isother') !!}',
-                data: {academy_id: academyId},
-                success: function (data) {
-                    $('#academy_name_other').addClass('d-none');
-                    $("#academy_name").attr("disabled", true);
-                    $("#academy_name").val("");
-                    jsonData = JSON.parse(data);
-
-                    if(jsonData) {
-                        $('#academy_name_other').removeClass('d-none');
-                        $("#academy_name").attr("disabled", false);
-                    }              
-                },
-                error: function (xhr, textStatus, error) {
-                    console.log(xhr.statusText);
-                    console.log(textStatus);
-                    console.log(error);
-                },
-                async: false
-            });
-        });
-
-        $('#update-event-registration-form input[name=is_weight_checked]').on('click', function(el){
-            if($(this).is(':checked'))
-            {
-                $('#update-event-registration-form input[name=current_weight]').prop('disabled', false);
-            }
-            else 
-            {
-                $('#update-event-registration-form input[name=current_weight]').prop('disabled', true);
-            }
-        });
-
-        $('#update-event-registration-form').validate({
+        $('#update-event-team-registration-form').validate({
             ignore: [],
             highlight:function(element) {
                 $(element).parents('.form-group').addClass('has-error has-feedback');
@@ -1195,7 +1053,7 @@ function showEditModal(data){
             }
         });
 
-        $('#update-event-registration-form select[name=status]').trigger('change');
+        $('#update-event-team-registration-form select[name=status]').trigger('change');
 
         $(this).off('shown.bs.modal');
     });

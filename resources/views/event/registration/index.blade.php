@@ -479,7 +479,7 @@ $(document).ready(function() {
             targets: [0,9]
         }],
         order: [[ 8, "desc" ]],
-        dom: "<'row'<'col-sm-6 text-left'B><'col-sm-6 text-right'<'#colvis'>>><'row'<'col-sm-12'tr>><'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7 dataTables_pager'lp>>",
+        dom: "<'row'<'col-sm-8 text-left'B><'col-sm-6 text-right'<'#colvis'>>><'row'<'col-sm-12'tr>><'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7 dataTables_pager'lp>>",
         buttons: [
             {
                 text: '<i class="la la-plus"></i> Шинээр нэмэх',
@@ -513,7 +513,7 @@ $(document).ready(function() {
                         selected: undefined
                     }
                 }
-            }
+            },            
         ]
 	});
 
@@ -1312,6 +1312,68 @@ function showStatusModal(data){
 
     $('#memberModal').on('hidden.bs.modal', function(){
         $('#memberModal .modal-content').empty();
+    });
+}
+
+function showStatisticModal(data){
+    $('#statsModal').modal();
+    $('#statsModal').on('shown.bs.modal', function(){
+        $('#statsModal .modal-content').html(data);
+
+
+        $('#change-status-form').validate({
+            ignore: [],
+            highlight:function(element) {
+                $(element).parents('.form-group').addClass('has-error has-feedback');
+            },
+            unhighlight: function(element) {
+                $(element).parents('.form-group').removeClass('has-error');
+            },
+            submitHandler: function(form) {
+                $.ajax({
+                    url: form.action,
+                    type: form.method,
+                    data: new FormData(form),
+                    success: function(response) {
+                        var page = eventTable.page.info().page;
+                        if(response.status == 'success')
+                        {
+                            $('#statsModal').find("#close").trigger('click');
+                            toastr.success(response.msg);
+                            eventTable.page(page).draw('page');
+                        }
+                        else {
+                            toastr.error(response.errors, response.msg, {
+                                "closeButton": true,
+                                "timeOut": "0",
+                                "extendedTimeOut": "0",
+                            });
+                        }
+                    },
+                    error: function (xhr, textStatus, error) {
+                        console.log(xhr.statusText);
+                        console.log(textStatus);
+                        console.log(error);
+                    },
+                    async: false,
+                    processData: false,
+                    contentType: false
+                });
+            },
+            errorPlacement: function(error, element) {
+                if($(element).parents('.form-group').find(".error-here")){
+                    error.appendTo($(element).parents('.form-group').find(".error-here"));
+                } else {
+                    error.insertAfter(element);
+                }
+            }
+        });
+
+        $(this).off('shown.bs.modal');
+    });
+
+    $('#statsModal').on('hidden.bs.modal', function(){
+        $('#statsModal .modal-content').empty();
     });
 }
 </script>

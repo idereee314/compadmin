@@ -121,7 +121,7 @@ class EloquentEventEntriesRepository implements EventEntriesRepository {
 		{
 			$qry = EventEntries::where('event_id', $eventId)->orderBy('gender_code')->orderBy('name');
 			$entries = $qry->get();
-
+			
 			$map = $entries->map(function($items){
 				$items->id = $items->id;
 				$items->name = $items->name.' - '.@Config::get('enums.gender_code')[$items->gender_code];

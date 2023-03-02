@@ -30,7 +30,6 @@
                 position: relative;
                 padding: 0;
                 margin: 0;
-                /* background: url('/assets/images/mnpro2023.jpg') no-repeat center center; */
                 background: url('/assets/images/mandat_bb.png') no-repeat center center;
                 background-size: contain;
                 border-top: 2px solid #fff;
@@ -99,6 +98,21 @@
                 position: absolute;
                 width: 250px;
                 height: 40px;
+                bottom: 233px;
+                left: 130px;
+                border-radius: 8px;
+                font-family: 'Times New Roman', Times;
+                font-weight: bold;
+                font-style: italic;
+                font-size: 20px;
+                color: #222;
+                line-height: 20px;
+                text-align: left;
+            }
+            .gender{
+                position: absolute;
+                width: 250px;
+                height: 20px;
                 bottom: 233px;
                 left: 130px;
                 border-radius: 8px;

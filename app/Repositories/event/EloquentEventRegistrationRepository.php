@@ -403,6 +403,44 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 								order by r.entry_id, r.entry_age_id, r.entry_belt_id, r.entry_weight_id");
 	}
 
+	public function getStatsAcademyFromEvent($eventId)
+	{
+		return DB::select("select count(uer.academy_id) as academy_count, uer.academy_id, ua.name
+        						from uq_comp.uq_event_registration uer
+								left join uq_comp.uq_academy ua on uer.academy_id = ua.id
+        						where uer.event_id = $eventId and uer.status = 'approved'
+        						group by uer.event_id, uer.academy_id, uer.status, ua.name
+        						order by uer.status asc, academy_count desc");
+	}
+
+	public function getStatsEntriesFromEvent($eventId)
+	{
+		return DB::select("select count(uer.entry_id) as entry_count, uer.entry_id, uee.name
+        						from uq_comp.uq_event_registration uer
+								left join uq_comp.uq_event_entries uee on uer.entry_id = uee.id
+        						where uer.event_id = $eventId
+        						group by uer.event_id, uer.entry_id, uee.name
+        						order by entry_count desc");
+	}
+
+	public function getStatsStatusFromEvent($eventId)
+	{
+		return DB::select("select uer.status , count(uer.status) as status_count
+        						from uq_comp.uq_event_registration uer								
+        						where uer.event_id = $eventId
+        						group by uer.event_id, uer.status
+        						order by status_count desc");
+	}
+
+	public function getStatsGenderFromEvent($eventId)
+	{
+		return DB::select("select um.gender_code , count(um.gender_code) as gender_count
+        						from uq_comp.uq_event_registration uer	
+								left join uniqdb.uq_comp.uq_member um on um.id = uer.member_id 	
+        						where uer.event_id = $eventId
+        						group by uer.event_id, um.gender_code");
+	}
+
 	public function getAllEntriesFromEventById($eventId, $entryId, $entryAgeId, $entryBeltId, $entryWeightId)
 	{
 		return DB::select("select r.entry_id, r.entry_age_id, r.entry_belt_id, r.entry_weight_id  

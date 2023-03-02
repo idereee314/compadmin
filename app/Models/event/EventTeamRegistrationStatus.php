@@ -42,14 +42,14 @@ class EventTeamRegistrationStatus extends Model
 
         static::created(function($regStatus)
         {
-            $eventReg = $regStatus->eventRegistration;
+            $eventReg = $regStatus->eventTeamRegistration;
             $eventReg->status = $regStatus->status;
             $eventReg->save();
         });
 
         static::deleting(function($status)
         {
-            $eventReg = @$status->eventRegistration;
+            $eventReg = @$status->eventTeamRegistration;
             $prevStatus = @$eventReg->statuses->where('id', '!=', $status->id)->orderBy('changed_at', 'desc')->first();
 
             $eventReg->status = @$prevStatus ? $prevStatus->status : @Config::get('smart.event_registration_statu')['created'];

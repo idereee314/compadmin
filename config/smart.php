@@ -53,6 +53,16 @@ return array(
 		'canceled' => 'canceled',
 	],
 
+	'athlete_role' => [
+		'outside hitter' => 'outside hitter',
+		'opposite' => 'opposite',
+		'setter' => 'setter',
+		'middle blocker' => 'middle blocker',
+		'libero' => 'libero',
+		'defensive specialist' => 'defensive specialist',
+		'serving specialist' => 'serving specialist',
+	],
+
 	'menu' => [
 		'home' => [
 			'icon' => 'flaticon2-architecture-and-city', 

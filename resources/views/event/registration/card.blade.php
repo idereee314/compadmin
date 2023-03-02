@@ -102,7 +102,7 @@
                                                             </a>
                                                         </li>
                                                         <li class="navi-item">
-                                                            <a href="javascript:;" class="navi-link">
+                                                            <a href="{{ route('event.statistics', @$event['id']) }}" class="navi-link">
                                                                 <span class="navi-icon">
                                                                     <i class="flaticon2-graph-1"></i>
                                                                 </span>

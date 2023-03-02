@@ -23,7 +23,7 @@ class TeamMember extends Model
 		return array(
 		);
 	}
-
+    
     public function getFullnameAttribute()
     {
 		return $this->lastname.' '.$this->firstname;

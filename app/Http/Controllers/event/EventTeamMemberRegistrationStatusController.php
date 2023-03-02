@@ -28,7 +28,7 @@ use Image;
 use PDF;
 use Carbon;
 
-class EventRegistrationStatusController extends Controller
+class EventTeamMemberRegistrationStatusController extends Controller
 {
     public $restful = true;
 
@@ -59,19 +59,20 @@ class EventRegistrationStatusController extends Controller
     public function change()
     {
         $input = Input::all();
-        // dd($this->eventTeamRegistration->find(@$input['reg_id']));
-        $eventRegistration = $this->eventRegistration->find(@$input['reg_id']);
+        dd($this->eventTeamRegistration->teamathlete);
         $eventTeamRegistration = $this->eventTeamRegistration->find(@$input['reg_id']);
-        $nextStatuses = @Config::get('smart.event_registration_status_flow')[$eventRegistration->status];
-        // dd($this->eventEntriesFee->getFeesByEntryId($eventTeamRegistration->entry_id));
-        // dd($this->eventEntriesFee->getFeesByEntryId($eventTeamRegistration->entry_id));
-        $entryFees = $this->eventEntriesFee->getFeesByEntryId($eventRegistration->entry_id);
-
+        
+        $eventRegistration = $this->eventRegistration->find(@$input['reg_id']);
+        $nextStatuses = @Config::get('smart.event_registration_status_flow')[$eventTeamRegistration->status];
+        dd($this->eventEntriesFee->getFeesByEntryId($eventTeamRegistration->entry_id));
+        $entryFees = $this->eventEntriesFee->getFeesByEntryId($eventTeamRegistration->entry_id);
+        // dd($eventTeamRegistration->teamathlete);
+        $data['eventTeamRegistration'] = $eventTeamRegistration;
         $data['eventRegistration'] = $eventRegistration;
         $data['nextStatuses'] = $nextStatuses;
         $data['entryFees'] = $entryFees;
 
-        return view($this->view_path.'.form_status', $data);
+        return view($this->view_path.'.team/form_team_member_status', $data);
     }
 
     /**

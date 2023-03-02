@@ -102,11 +102,12 @@ class EventTeamRegistration extends Model
             $statusArr['status'] = @Config::get('smart.event_registration_status')['created'];
             $statusArr['changed_by'] = Auth::id();
 			$statusArr['changed_at'] = Carbon\Carbon::now()->toDateTimeString();
-
+           
             $EventTeamRegistration->statuses()->create($statusArr);
+
         });
 
-        static::deleting(function($member)
+        static::deleting(function($teamMember)
         {
 
 		});

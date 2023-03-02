@@ -13,8 +13,30 @@ return array(
 		2 => 'Эмэгтэй'
 	],
 
+	'team_lead' => [
+		'0' => '',
+		'1' => 'Багийн ахлагч'
+	],
+
+	'athlete_role' => [
+		'outside hitter' => 'Гадна Hitter',
+		'opposite' => 'Эсрэг Hitter',
+		'setter' => 'Тогтоогч',
+		'middle blocker' => 'Дунд Хориглогч',
+		'libero' => 'Либеро',
+		'defensive specialist' => 'Хамгаалалтын Мэргэжилтэн',
+	],
+
+
 	'event_registration_status' => [
 		'created' => 'Илгээсэн',
+		//'registered' => 'Бүртгэсэн',
+		'approved' => 'Баталгаажсан',
+		'canceled' => 'Цуцалсан',
+	],
+
+	'event_registration_status_for_stats' => [
+		'created' => 'Баталгаажаагүй',
 		//'registered' => 'Бүртгэсэн',
 		'approved' => 'Баталгаажсан',
 		'canceled' => 'Цуцалсан',

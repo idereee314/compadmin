@@ -185,6 +185,15 @@ $(document).ready(function() {
         e.preventDefault();
     });
 
+    $("#kt_reset").click(function(e){
+        e.preventDefault();
+        $('.datatable-input').each(function() {
+            $(this).val('');
+            academyTable.column($(this).data('col-index')).search('', false, false);
+        });
+        academyTable.draw();
+    });
+
 }).ajaxStart($.blockUI).ajaxStop($.unblockUI);
 
 //Modal

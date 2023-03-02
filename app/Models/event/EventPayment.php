@@ -12,7 +12,8 @@ class EventPayment extends Model
     protected $table = 'uq_event_payment';
     protected $primaryKey = 'id';
 
-    protected $fillable = ['registration_id', 'member_id', 'register_number', 'status', 'amount', 'from_type', 'created_by', 'updated_by', 'created_at', 'updated_at'];
+    // protected $fillable = ['registration_id', 'member_id', 'register_number', 'status', 'amount', 'from_type', 'created_by', 'updated_by', 'created_at', 'updated_at'];
+    protected $fillable = ['registration_id', 'status', 'amount', 'from_type', 'created_by', 'updated_by', 'created_at', 'updated_at'];
 
     public function eventRegistration()
     {

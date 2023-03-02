@@ -65,7 +65,7 @@ class EventTeamRegistrationStatusController extends Controller
         $data['nextStatuses'] = $nextStatuses;
         $data['entryFees'] = $entryFees;
 
-        return view($this->view_path.'.form_team_status', $data);
+        return view($this->view_path.'.team/form_team_status', $data);
     }
 
     /**
@@ -120,12 +120,15 @@ class EventTeamRegistrationStatusController extends Controller
             if(array_key_exists('amount', $input))
             {
                 $paymentUnq['registration_id'] = $eventTeamRegistration->id;
-
+                
                 $paymentArr['registration_id'] = $eventTeamRegistration->id;
-                $paymentArr['member_id'] = $eventTeamRegistration->member_id;
-                $paymentArr['register_number'] = $eventTeamRegistration->member->register_number;
+                $paymentArr['member_id'] = $eventTeamRegistration->team_id;
+                
+                // $paymentArr['register_number'] = $eventTeamRegistration->member->register_number;
                 $paymentArr['status'] = @$input['payment_status'] ? $input['payment_status'] : false;
                 $paymentArr['amount'] = $input['amount'];
+
+                // dd($paymentArr);
                 
                 try
                 {

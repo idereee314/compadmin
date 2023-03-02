@@ -38,6 +38,11 @@ class EventRegistration extends Model
         return $this->belongsTo('member\Member', 'member_id');
     }
 
+    public function team()
+    {
+        return $this->belongsTo('team\Team', 'team_id');
+    }
+
     public function entry()
     {
         return $this->belongsTo('reference\EventEntries', 'entry_id');
@@ -81,6 +86,11 @@ class EventRegistration extends Model
     public function statuses()
     {
         return $this->hasMany('event\EventRegistrationStatus', 'event_registration_id');
+    }
+
+    public function sport()
+    {
+        return $this->belongsTo('sport\Sport', 'sport_id');
     }
     
     public static function boot()

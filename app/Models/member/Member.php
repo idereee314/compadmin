@@ -59,6 +59,11 @@ class Member extends Model
         return $this->hasMany(EventRegistration::class, 'member_id');
     }
 
+    public function eventTeamRegistration()
+    {
+        return $this->hasMany(EventTeamRegistration::class, 'member_id');
+    }
+
     public static function boot()
     {
         parent::boot();

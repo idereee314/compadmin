@@ -23,10 +23,13 @@ use event\EventConfigRepository as EventConfig;
 use event\EventRepository as Event;
 use academy\AcademyRepository as Academy;
 use member\MemberRepository as Member;
+use team\TeamRepository as Team;
+use member\TeamMemberRepository as TeamMember;
 
 //Models
 use event\EventRegistration as EventRegistrationModel;
 use event\EventTeamRegistration as EventTeamRegistrationModel;
+use member\TeamMember as TeamMemberModel;
 
 use \Auth as Auth;
 use Config;
@@ -39,7 +42,7 @@ class EventRegistrationController extends Controller
 {
     public $restful = true;
 
-    public function __construct(Event $event, EventRegistration $eventRegistration, EventConfig $eventConfig, Academy $academy, EventEntries $eventEntries, EntryConfigAge $configAge, EntryConfigBelt $configBelt, EntryConfigWeight $configWeight, Member $member, EventTeamRegistration $eventTeamRegistration)
+    public function __construct(Event $event, EventRegistration $eventRegistration, EventConfig $eventConfig, Academy $academy, EventEntries $eventEntries, EntryConfigAge $configAge, EntryConfigBelt $configBelt, EntryConfigWeight $configWeight, Member $member, EventTeamRegistration $eventTeamRegistration, Team $team, TeamMember $teamMember)
     {
         $this->view_path = 'event.registration';
         $this->event = $event;
@@ -52,6 +55,8 @@ class EventRegistrationController extends Controller
         $this->configWeight = $configWeight;
         $this->member = $member;
         $this->eventTeamRegistration = $eventTeamRegistration;
+        $this->team = $team;
+        $this->teamMember = $teamMember;
     }
 
     /**
@@ -62,10 +67,11 @@ class EventRegistrationController extends Controller
     public function index()
     {
         $input = Input::all();
+
         if(@$input['event_id'])
         {
             $event = $this->event->find(@$input['event_id']);
-            // dd($event);
+            
             if($event->config->is_team == FALSE)
             {
                 $eventEntries = $event->entries;
@@ -93,12 +99,12 @@ class EventRegistrationController extends Controller
                 $data['event'] = $event;
                 $data['eventEntries'] = $event->entries;
                 $data['eventTeamRegStatusCount'] = $eventTeamRegStatusCount;
-                $data['progressPercent'] = round(@$eventTeamRegStatusCount[@Config::get('smart.event_registration_status')['approved']] ? @$eventRegStatusCount[@Config::get('smart.event_registration_status')['approved']] / array_sum(@$eventRegStatusCount) * 100 : 0);
+                $data['progressPercent'] = round(@$eventTeamRegStatusCount[@Config::get('smart.event_registration_status')['approved']] ? @$eventTeamRegStatusCount[@Config::get('smart.event_registration_status')['approved']] / array_sum(@$eventTeamRegStatusCount) * 100 : 0);
                 $data['eventFees'] = $eventFees;
                 $data['academies'] = $academies;
                 $data['view_path'] = $this->view_path;
                 
-                return view($this->view_path.'.index_team', $data);
+                return view($this->view_path.'.team/index_team', $data);
             }
         
         }
@@ -131,12 +137,14 @@ class EventRegistrationController extends Controller
         {
             $entries = $this->eventEntries->getEntryByEventId(@$input['event_id']);
             $academy = $this->academy->all();
-
+            $team_list = $this->team->all();
+            
+            $data['team_list'] = $team_list;
             $data['event_id'] = @$input['event_id'];
             $data['entries'] = $entries;
             $data['academies'] = $academy;
 
-            return view($this->view_path.'.add_team', $data);
+            return view($this->view_path.'.team/add_team', $data);
         }
         
     }
@@ -150,7 +158,7 @@ class EventRegistrationController extends Controller
     public function store(Request $request)
     {
         $input = Input::all();
-
+        
         $is_team = $this->event->find(request()->event_id)->config->is_team;
         if ($is_team == false) {
             
@@ -190,8 +198,9 @@ class EventRegistrationController extends Controller
         }
         else 
         {
+            
             $validator = Validator::make($input, EventTeamRegistrationModel::rules(0));
-
+            
             if ($validator->fails())
             {
                 $response = array(
@@ -204,6 +213,7 @@ class EventRegistrationController extends Controller
             {
                 try
                 {
+                    // dd($this->eventTeamRegistration);
                     $event = $this->eventTeamRegistration->create($input);
     
                     $response = array(
@@ -238,10 +248,10 @@ class EventRegistrationController extends Controller
     {
         $input = Input::all();
         $eventTeamRegistration = $this->eventTeamRegistration->find($id);
-               
+
 		$data['eventTeamRegistration'] = $eventTeamRegistration;
 
-        return view($this->view_path.'.athlete', $data);
+        return view($this->view_path.'.team/athlete_team/athlete', $data);
     }
 
     /**
@@ -252,10 +262,11 @@ class EventRegistrationController extends Controller
      */
     public function edit($id)
     {
-        // dd($this);
-        // $is_team = $this->event->find(@$request['event'])->config->is_team;
-        // if ($is_team == false) {
-            $eventRegistration = $this->eventRegistration->find($id);
+        $eventRegistration = $this->eventRegistration->find($id);
+        $eventTeamRegistration = $this->eventTeamRegistration->find($id);
+
+        if($eventTeamRegistration == null)
+        {
             $academy = $this->academy->all();
             $eventEntries = $this->eventEntries->getEntryByEventId($eventRegistration->event_id);
             $configBelts = $this->configBelt->getEntryBeltByEntryId($eventRegistration->entry_id);
@@ -270,21 +281,42 @@ class EventRegistrationController extends Controller
             $data['academies'] = $academy;
     
             return view($this->view_path.'.edit', $data);
-        // }
-        // else
-        // {
-        //     $eventTeamRegistration = $this->eventTeamRegistration->find($id);
-        //     $academy = $this->academy->all();
-        //     $eventEntries = $this->eventEntries->getEntryByEventId($eventRegistration->event_id);
-             
-    
-        //     $data['eventRegistration'] = $eventRegistration;
-        //     $data['eventEntries'] = $eventEntries;
-        //     $data['academies'] = $academy;
-    
-        //     return view($this->view_path.'.edit_team', $data);
-        // }
-        
+        }
+        else
+        {
+            $is_team = $eventTeamRegistration->event->config->is_team;
+            
+            if ($is_team == false) {
+                $academy = $this->academy->all();
+                $eventEntries = $this->eventEntries->getEntryByEventId($eventRegistration->event_id);
+                $configBelts = $this->configBelt->getEntryBeltByEntryId($eventRegistration->entry_id);
+                $configAges = $this->configAge->getEntryAgeByEntryId($eventRegistration->entry_id);
+                $configWeights = $this->configWeight->getEntryWeightByAgeId($eventRegistration->entry_age_id);   
+            
+                $data['eventRegistration'] = $eventRegistration;
+                $data['eventEntries'] = $eventEntries;
+                $data['configBelts'] = $configBelts;
+                $data['configAges'] = $configAges;
+                $data['configWeights'] = $configWeights;
+                $data['academies'] = $academy;
+            
+                return view($this->view_path.'.edit', $data);
+            }
+            else
+            {
+                $eventTeamRegistration = $this->eventTeamRegistration->find($id);
+                $academy = $this->academy->all();
+                $eventEntries = $this->eventEntries->getEntryByEventId($eventTeamRegistration->event_id);
+                $team_list = $this->team->all();
+
+                $data['team_list'] = $team_list;
+                $data['eventTeamRegistration'] = $eventTeamRegistration;
+                $data['eventEntries'] = $eventEntries;
+                $data['academies'] = $academy;
+            
+                return view($this->view_path.'.team/edit_team', $data);
+            }
+        }
     }
 
     /**
@@ -297,9 +329,12 @@ class EventRegistrationController extends Controller
     public function update(Request $request, $id)
     {
         $input = Input::all();
-        
-        // $is_team = $this->event->find(request()->event_id)->config->is_team;
-        // if ($is_team == false) {
+    
+        $eventRegistration = $this->eventRegistration->find($id);
+        $eventTeamRegistration = $this->eventTeamRegistration->find($id);
+
+        if($eventTeamRegistration == null)
+        {
             $rules = [
                 'entry_id' => 'required',
                 'entry_age_id' => 'required',
@@ -336,47 +371,88 @@ class EventRegistrationController extends Controller
                     );
                 }
             }
-        // }
-        // else
-        // {
-
-        //     $rules = [
-        //         'entry_id' => 'required',
-        //         'entry_age_id' => 'required',
-        //         'entry_belt_id' => 'required',
-        //         'entry_weight_id' => 'required',
-        //         'academy_id' => 'required',
-        //         //'status' => 'required'
-        //     ];
-
-        //     $validator = Validator::make($input, $rules);
-
-        //     if ($validator->fails())
-	    // 	{
-        //     	$response = array(
-        //             'status' => 'error',
-        //             'msg' => trans('messages.error_save'),
-        //             'errors' => html_entity_decode(HTML::ul($validator->errors()->all()))
-        //         );
-        //     } else {
-	    // 		try {
-        //             $event = $this->eventRegistration->update($id, $input);
-
-	    // 			$response = array(
-	    // 				'status' => 'success',
-	    // 				'msg' => trans('messages.success_update')
-	    // 			);
-	    // 		}
-	    // 		catch(Exception $e)
-	    // 		{
-	    // 			$response = array(
-	    // 				'status' => 'error',
-	    // 				'msg' => trans('messages.error_save'),
-	    // 				'errors' => $e->getMessage()
-	    // 			);
-	    // 		}
-	    // 	}
-        // }
+        }
+        else 
+        {
+            $is_team = $eventTeamRegistration->event->config->is_team;
+    
+            if ($is_team == false) {
+                $rules = [
+                    'entry_id' => 'required',
+                    'entry_age_id' => 'required',
+                    'entry_belt_id' => 'required',
+                    'entry_weight_id' => 'required',
+                    'academy_id' => 'required',
+                    //'status' => 'required'
+                ];
+        
+                $validator = Validator::make($input, $rules);
+        
+                if ($validator->fails())
+                {
+                    $response = array(
+                        'status' => 'error',
+                        'msg' => trans('messages.error_save'),
+                        'errors' => html_entity_decode(HTML::ul($validator->errors()->all()))
+                    );
+                } else {
+                    try {
+                        $event = $this->eventRegistration->update($id, $input);
+        
+                        $response = array(
+                            'status' => 'success',
+                            'msg' => trans('messages.success_update')
+                        );
+                    }
+                    catch(Exception $e)
+                    {
+                        $response = array(
+                            'status' => 'error',
+                            'msg' => trans('messages.error_save'),
+                            'errors' => $e->getMessage()
+                        );
+                    }
+                }
+            }
+            else
+            {
+    
+                $rules = [
+                    'entry_id' => 'required',
+                    'academy_id' => 'required',
+                    //'status' => 'required'
+                ];
+    
+                $validator = Validator::make($input, $rules);
+    
+                if ($validator->fails())
+                {
+                    $response = array(
+                        'status' => 'error',
+                        'msg' => trans('messages.error_save'),
+                        'errors' => html_entity_decode(HTML::ul($validator->errors()->all()))
+                    );
+                } else {
+                    try {
+                        $event = $this->eventTeamRegistration->update($id, $input);
+    
+                        $response = array(
+                            'status' => 'success',
+                            'msg' => trans('messages.success_update')
+                        );
+                    }
+                    catch(Exception $e)
+                    {
+                        $response = array(
+                            'status' => 'error',
+                            'msg' => trans('messages.error_save'),
+                            'errors' => $e->getMessage()
+                        );
+                    }
+                }
+            }
+        }
+        
 
         return $response;
     }
@@ -389,54 +465,149 @@ class EventRegistrationController extends Controller
      */
     public function destroy($id)
     {
-        try {
-            $eventRegistration = $this->eventRegistration->find($id);
-
-            if(!empty($eventRegistration))
-            {
-                if(empty($eventRegistration->status) || $eventRegistration->status == 'created')
+        $eventRegistration = $this->eventRegistration->find($id);
+        $eventTeamRegistration = $this->eventTeamRegistration->find($id);
+        
+        if($eventTeamRegistration == null)
+        {
+            try {
+                $eventRegistration = $this->eventRegistration->find($id);
+    
+                if(!empty($eventRegistration))
                 {
-                    $this->eventRegistration->delete($id);
-
+                    if(empty($eventRegistration->status) || $eventRegistration->status == 'created')
+                    {
+                        $this->eventRegistration->delete($id);
+    
+                        $response = array(
+                            'status' => 'success',
+                            'msg' => trans('messages.success_delete')
+                        );
+                    }
+                    else
+                    {
+                        $response = array(
+                            'status' => 'warning',
+                            'msg' => 'Баталгаажуулсан хэрэглэгч устгах боломжгүй'                    
+                        );
+                    }
+                }
+                else 
+                {
                     $response = array(
-                        'status' => 'success',
-                        'msg' => trans('messages.success_delete')
+                        'status' => 'error',
+                        'msg' => trans('messages.no_record'),
                     );
                 }
-                else
-                {
-                    $response = array(
-                        'status' => 'warning',
-                        'msg' => 'Баталгаажуулсан хэрэглэгч устгах боломжгүй'                    
-                    );
-                }
-            }
-            else 
+              
+            } catch(\Illuminate\Database\QueryException $e)
             {
                 $response = array(
                     'status' => 'error',
-                    'msg' => trans('messages.no_record'),
+                    'msg' => trans('messages.error_delete'),
+                    'errors' => $e->getMessage()
                 );
             }
-          
-        } catch(\Illuminate\Database\QueryException $e)
-        {
-            $response = array(
-                'status' => 'error',
-                'msg' => trans('messages.error_delete'),
-                'errors' => $e->getMessage()
-            );
         }
-
+        else
+        {
+            $is_team = $eventTeamRegistration->event->config->is_team;
+        
+            if ($is_team == false) {
+                try {
+                    $eventRegistration = $this->eventRegistration->find($id);
+        
+                    if(!empty($eventRegistration))
+                    {
+                        if(empty($eventRegistration->status) || $eventRegistration->status == 'created')
+                        {
+                            $this->eventRegistration->delete($id);
+        
+                            $response = array(
+                                'status' => 'success',
+                                'msg' => trans('messages.success_delete')
+                            );
+                        }
+                        else
+                        {
+                            $response = array(
+                                'status' => 'warning',
+                                'msg' => 'Баталгаажуулсан хэрэглэгч устгах боломжгүй'                    
+                            );
+                        }
+                    }
+                    else 
+                    {
+                        $response = array(
+                            'status' => 'error',
+                            'msg' => trans('messages.no_record'),
+                        );
+                    }
+                  
+                } catch(\Illuminate\Database\QueryException $e)
+                {
+                    $response = array(
+                        'status' => 'error',
+                        'msg' => trans('messages.error_delete'),
+                        'errors' => $e->getMessage()
+                    );
+                }
+            }
+            else
+            {
+                try {
+                    $eventTeamRegistration = $this->eventTeamRegistration->find($id);
+        
+                    if(!empty($eventTeamRegistration))
+                    {
+                        if(empty($eventTeamRegistration->status) || $eventTeamRegistration->status == 'created')
+                        {
+                            $this->eventTeamRegistration->delete($id);
+        
+                            $response = array(
+                                'status' => 'success',
+                                'msg' => trans('messages.success_delete')
+                            );
+                        }
+                        else
+                        {
+                            $response = array(
+                                'status' => 'warning',
+                                'msg' => 'Баталгаажуулсан хэрэглэгч устгах боломжгүй'                    
+                            );
+                        }
+                    }
+                    else 
+                    {
+                        $response = array(
+                            'status' => 'error',
+                            'msg' => trans('messages.no_record'),
+                        );
+                    }
+                  
+                } catch(\Illuminate\Database\QueryException $e)
+                {
+                    $response = array(
+                        'status' => 'error',
+                        'msg' => trans('messages.error_delete'),
+                        'errors' => $e->getMessage()
+                    );
+                }
+            }
+        }
+        
         return $response;
     }
 
     public function getDatatableList(Request $request)
     {
         $is_team = $this->event->find(@$request['event'])->config->is_team;
-        if ($is_team == false) {
+        if ($is_team == false) 
+        {
             return $this->eventRegistration->getDatatableList($request);
-        } else {
+        } 
+        else 
+        {
             return $this->eventTeamRegistration->getDatatableList($request);
         }
     }
@@ -460,8 +631,10 @@ class EventRegistrationController extends Controller
     {
         $input = Input::all();
         $eventRegistration = $this->eventRegistration->find($input['event_reg_id']);
+        $eventTeamRegistration = $this->eventTeamRegistration->find($input['event_reg_id']);
 
         $data['eventRegistration'] = $eventRegistration;
+        $data['eventTeamRegistration'] = $eventTeamRegistration;
 
         return view($this->view_path.'.award', $data);
     }
@@ -523,7 +696,7 @@ class EventRegistrationController extends Controller
         $list = $this->eventRegistration->getRegistrationByStatus(@$input['search_event'], @Config::get('smart.event_registration_status')['approved'], $input);
 
         $data['regs'] = $list->load(['academy:id,name,is_other','member:id,lastname,firstname,profile_url', 'weight:id,weight', 'entry:id,name', 'belt:id,name'])->chunk(4);
-        $view = $this->view_path.'.mandat_'.@$eventConfig->mandat_template;
+        $view = $this->view_path.'.mandat/mandat_'.@$eventConfig->mandat_template;
         
         
         if(\View::exists($view))
@@ -768,4 +941,183 @@ class EventRegistrationController extends Controller
         
         return view('event.bracket.print', $data);        
     }
+
+    public function statistics($eventId)
+    {
+        $event = $this->event->find($eventId);
+        $eventRegistration = $this->eventRegistration->getEventRegByGroup($eventId);
+        $eventRegStatusCount = $this->eventRegistration->getEventRegStatusCount($event->id)->pluck('total', 'status')->toArray();
+        
+        $eventFees = $this->eventRegistration->getPaymentByEventId(@$eventId)->groupBy('amount');
+        $eventRegistrationAcademyStats = $this->eventRegistration->getStatsAcademyFromEvent($eventId);
+        $eventRegistrationEntriesStats = $this->eventRegistration->getStatsEntriesFromEvent($eventId);
+        $eventRegistrationStatusStats = $this->eventRegistration->getStatsStatusFromEvent($eventId);
+        $eventRegistrationGenderStats = $this->eventRegistration->getStatsGenderFromEvent($eventId);
+                
+        
+        $data['event'] = $event;
+        $data['progressPercent'] = round(@$eventRegStatusCount[@Config::get('smart.event_registration_status')['approved']] ? @$eventRegStatusCount[@Config::get('smart.event_registration_status')['approved']] / array_sum(@$eventRegStatusCount) * 100 : 0);
+        $data['eventRegistration'] = $eventRegistration->groupBy(['entry.fullname', 'belt.name', 'age.name', 'weight.weight']);
+        $data['eventRegStatusCount'] = $eventRegStatusCount;
+        $data['eventFees'] = $eventFees;
+        $data['events'] = $event['data'];  
+        $data['eventRegistrationAcademyStats'] = $eventRegistrationAcademyStats;
+        $data['eventRegistrationEntriesStats'] = $eventRegistrationEntriesStats;
+        $data['eventRegistrationStatusStats'] = $eventRegistrationStatusStats;
+        $data['eventRegistrationGenderStats'] = $eventRegistrationGenderStats;
+        
+        $data['view_path'] = $this->view_path;
+
+        return view($this->view_path.'.stats', $data);
+    }
+
+    //Team Member
+    public function createTeamMember()
+    {
+        $input = Input::all();
+        
+        $academy = $this->academy->all();
+        $team_list = $this->team->all();
+
+        $data['team_list'] = $team_list;
+        $data['event_id'] = @$input['event_id'];
+        $data['academies'] = $academy;
+        
+        return view($this->view_path.'.team/athlete_team/add', $data);
+    }
+
+    public function storeTeamMember(Request $request)
+    {
+        $input = Input::all();
+
+        $validator = Validator::make($input, TeamMemberModel::rules(0));
+        if ($validator->fails())
+        {
+            $response = array(
+                'status' => 'error',
+                'msg' => trans('messages.error_save'),
+                'errors' => html_entity_decode(HTML::ul($validator->errors()->all()))
+            );
+        }
+        else
+        {
+            try
+            {
+                $event = $this->teamMember->create($input);
+
+                $response = array(
+                    'status' => 'success',
+                    'msg' => trans('messages.success_save')
+                );
+
+            }
+            catch(\Illuminate\Database\QueryException $e)
+            {
+                $response = array(
+                    'status' => 'error',
+                    'msg' => trans('messages.error_save'),
+                    'errors' => $e->getMessage()
+                );
+
+            }
+        }
+
+		return $response;
+    }
+
+    public function editTeamMember($id)
+    {
+        $eventTeamRegistration = $this->eventTeamRegistration->find($id);
+        $academy = $this->academy->all();
+           
+
+        $data['eventRegistration'] = $eventRegistration;
+        $data['academies'] = $academy;
+
+        return view($this->view_path.'.team/athlete_team/edit_athlete_team', $data);
+    }
+
+    public function updateTeamMember(Request $request, $id)
+    {
+        $input = Input::all();
+        $rules = [
+            'academy_id' => 'required',
+            //'status' => 'required'
+        ];
+
+        $validator = Validator::make($input, $rules);
+
+        if ($validator->fails())
+        {
+            $response = array(
+                'status' => 'error',
+                'msg' => trans('messages.error_save'),
+                'errors' => html_entity_decode(HTML::ul($validator->errors()->all()))
+            );
+        } else {
+            try {
+                $event = $this->teamMember->update($id, $input);
+
+                $response = array(
+                    'status' => 'success',
+                    'msg' => trans('messages.success_update')
+                );
+            }
+            catch(Exception $e)
+            {
+                $response = array(
+                    'status' => 'error',
+                    'msg' => trans('messages.error_save'),
+                    'errors' => $e->getMessage()
+                );
+            }
+        }
+
+		return $response;
+    }
+
+    public function removeTeamMember($id)
+    {
+        try {
+            $teamMember = $this->teamMember->find($id);
+
+            if(!empty($teamMember))
+            {
+                if(empty($teamMember->status) || $teamMember->status == 'created')
+                {
+                    $this->teamMember->delete($id);
+
+                    $response = array(
+                        'status' => 'success',
+                        'msg' => trans('messages.success_delete')
+                    );
+                }
+                else
+                {
+                    $response = array(
+                        'status' => 'warning',
+                        'msg' => 'Баталгаажуулсан хэрэглэгч устгах боломжгүй'                    
+                    );
+                }
+            }
+            else 
+            {
+                $response = array(
+                    'status' => 'error',
+                    'msg' => trans('messages.no_record'),
+                );
+            }
+          
+        } catch(\Illuminate\Database\QueryException $e)
+        {
+            $response = array(
+                'status' => 'error',
+                'msg' => trans('messages.error_delete'),
+                'errors' => $e->getMessage()
+            );
+        }
+
+		return $response;
+    }
+
 }
