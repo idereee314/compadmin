@@ -49,6 +49,7 @@
             }
             .image_container img{
                 border-radius: 100%;
+                border: 5px solid #000;
             }
             .org{
                 position: absolute;
@@ -58,7 +59,7 @@
                 left: 230px;
                 border-radius: 8px;
                 font-family: 'Times New Roman', Times;
-                font-style: italic;
+                font-style: normal;
                 font-weight: bold;
                 font-size: 18px;
                 
@@ -72,7 +73,7 @@
                 /* right: 100px; */
                 border-radius: 8px;
                 font-family: 'Times New Roman', Times;
-                /* font-style: italic; */
+                /* font-style: normal; */
                 font-weight: bold;
                 font-size: 30px;
                 line-height: 26px;
@@ -84,10 +85,10 @@
                 width: 250px;
                 height: 40px;
                 bottom: 195px;
-                left: 150px;
+                left: 40px;
                 border-radius: 8px;
                 font-family: 'Times New Roman', Times;
-                font-style: italic;
+                font-style: normal;
                 font-weight: bold;
                 font-size: 20px;
                 color: #222;
@@ -99,11 +100,11 @@
                 width: 250px;
                 height: 40px;
                 bottom: 233px;
-                left: 130px;
+                left: 40px;
                 border-radius: 8px;
                 font-family: 'Times New Roman', Times;
                 font-weight: bold;
-                font-style: italic;
+                font-style: normal;
                 font-size: 20px;
                 color: #222;
                 line-height: 20px;
@@ -113,12 +114,27 @@
                 position: absolute;
                 width: 250px;
                 height: 20px;
-                bottom: 233px;
-                left: 130px;
+                bottom: 180px;
+                left: 40px;
                 border-radius: 8px;
                 font-family: 'Times New Roman', Times;
                 font-weight: bold;
-                font-style: italic;
+                font-style: normal;
+                font-size: 20px;
+                color: #222;
+                line-height: 20px;
+                text-align: left;
+            }
+            .birthdate{
+                position: absolute;
+                width: 250px;
+                height: 20px;
+                bottom: 320px;
+                left: 40px;
+                border-radius: 8px;
+                font-family: 'Times New Roman', Times;
+                font-weight: bold;
+                font-style: normal;
                 font-size: 20px;
                 color: #222;
                 line-height: 20px;
@@ -133,7 +149,7 @@
                 border-radius: 8px;
                 font-family: 'Times New Roman', Times;
                 font-weight: bold;
-                font-style: italic;
+                font-style: normal;
                 font-size: 20px;
                 color: #222;
                 line-height: 20px;
@@ -148,7 +164,7 @@
                 border-radius: 8px;
                 font-family: 'Times New Roman', Times;
                 font-weight: bold;
-                font-style: italic;
+                font-style: normal;
                 font-size: 20px;
                 color: #222;
                 line-height: 20px;
@@ -156,13 +172,13 @@
             }
             .category{
                 position: absolute;
-                width: 150px;
+                width: 280px;
                 height: 40px;
                 bottom: 273px;
-                left: 130px;
+                left: 40px;
                 border-radius: 8px;
                 font-family: 'Times New Roman', Times;
-                font-style: italic;
+                font-style: normal;
                 font-weight: bold;
                 font-size: 20px;
                 text-align: left;
@@ -190,11 +206,19 @@
                         {{ @$reg->member->lastname }} {{ @$reg->member->firstname }}
                     </div>
                     <div class="weight">
-                        {{ @$reg->weight->weight }}кг
+                        Жин : {{ @$reg->weight->weight }}кг
                     </div>
-                    <div class="category">{{$reg->entry->name}}</div>
+                    <div class="category">
+                        Ангилал : {{$reg->entry->name}}
+                    </div>
                     <div class="belt">
-                        {{@$reg->belt->name}}
+                        Бүс : {{@$reg->belt->name}}
+                    </div>
+                    <div class="gender">
+                        Хүйс : {{ Config::get("enums.gender_code")[@$reg->member->gender_code] }}
+                    </div>
+                    <div class="birthdate">
+                        Төрсөн огноо : {{@$reg->member->birth}}
                     </div>
                     
                     <div class="qrcode">

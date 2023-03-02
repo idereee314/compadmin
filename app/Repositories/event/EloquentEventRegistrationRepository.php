@@ -415,12 +415,12 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 
 	public function getStatsEntriesFromEvent($eventId)
 	{
-		return DB::select("select count(uer.entry_id) as entry_count, uer.entry_id, uee.name
+		return DB::select("select count(uer.entry_id) as entry_count, uer.entry_id, uee.name, uee.gender_code
         						from uq_comp.uq_event_registration uer
 								left join uq_comp.uq_event_entries uee on uer.entry_id = uee.id
         						where uer.event_id = $eventId
-        						group by uer.event_id, uer.entry_id, uee.name
-        						order by entry_count desc");
+        						group by uer.event_id, uer.entry_id, uee.name,uee.gender_code
+        						order by uee.gender_code desc");
 	}
 
 	public function getStatsStatusFromEvent($eventId)
@@ -428,8 +428,7 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 		return DB::select("select uer.status , count(uer.status) as status_count
         						from uq_comp.uq_event_registration uer								
         						where uer.event_id = $eventId
-        						group by uer.event_id, uer.status
-        						order by status_count desc");
+        						group by uer.event_id, uer.status");
 	}
 
 	public function getStatsGenderFromEvent($eventId)

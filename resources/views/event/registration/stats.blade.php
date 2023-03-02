@@ -156,14 +156,12 @@
                         </div>
                     </div>
                     <!--begin::Row-->
-                    
                     <div class="row">
-                    
                         <div class="col-xl-4">
                             <!--begin::Card-->
                             <div class="card card-custom gutter-b">
                                 <div class="card-header">
-                                    <div class="card-title">
+                                    <div class="card-title title-center">
                                         <h3 class="card-label"><strong> Нийт бүртгэл </strong></h3>
                                     </div>
                                 </div>
@@ -181,7 +179,7 @@
                                                 @foreach($eventRegistrationStatusStats as $stats)
                                                     <tr>
                                                         <td class="text-center border-right">{{ ++$loop->index }}</td>                                                    
-                                                        <td class="text-center border-right"><strong>{{ Config::get("enums.event_registration_status")[@$stats->status] }}</strong></td>
+                                                        <td class="min-w-200px border-right"><strong>{{ Config::get("enums.event_registration_status_for_stats")[@$stats->status] }}</strong></td>
                                                         <td class="text-center border-right"><strong>{{ $stats->status_count }}</strong></td>
                                                     </tr>
                                                 @endforeach 
@@ -204,14 +202,14 @@
                                         <table class="table table-hover table-bordered table-head-custom" id="event-team-registration-datatable">
                                             <thead>
                                                 <tr>                                
-                                                    <th class="text-center">{{trans('display.general_status')}}</th>
+                                                    <th class="text-center"> Хүйс </th>
                                                     <th class="text-center">{{trans('display.general_athlete_count')}}</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 @foreach($eventRegistrationGenderStats as $stats)
                                                     <tr>                                                                                                         
-                                                        <td class="text-center border-right"><strong>{{ Config::get("enums.gender_code")[@$stats->gender_code] }}</strong></td>
+                                                        <td class="min-w-200px text-center border-right"><strong>{{ Config::get("enums.gender_code")[@$stats->gender_code] }}</strong></td>
                                                         <td class="text-center border-right"><strong>{{ $stats->gender_count }}</strong></td>
                                                     </tr>
                                                 @endforeach 
@@ -223,7 +221,6 @@
                             </div>
                             <!--end::Card-->
                         </div>
-
                         <div class="col-xl-4">
                             <!--begin::Card-->
                             <div class="card card-custom gutter-b">
@@ -239,6 +236,7 @@
                                             <tr>
                                                 <th>#</th>
                                                 <th class="text-center"> Тэмцээнд оролцох төрлүүд </th>
+                                                <th class="text-center"> Хүйс </th>
                                                 <th class="text-center">{{trans('display.general_athlete_count')}}</th>
                                             </tr>
                                         </thead>
@@ -246,8 +244,9 @@
                                             @foreach($eventRegistrationEntriesStats as $stats)
                                                 <tr>
                                                     <td class="text-center border-right">{{ ++$loop->index }}</td>
-                                                    <td class="text-center border-right"><strong>{{ $stats->name }}</strong></td>
-                                                    <td class="text-center border-right"><strong>{{ $stats->entry_count }}</strong></td>
+                                                    <td width="60%" class="border-right"><strong>{{ $stats->name }}</strong></td>
+                                                    <td width="15%" class="text-center border-right"><strong>{{ Config::get("enums.gender_code_for_stats")[@$stats->gender_code] }}</strong></td>
+                                                    <td width="15%" class="text-center border-right"><strong>{{ $stats->entry_count }}</strong></td>
 
                                                 </tr>
                                             @endforeach 
@@ -259,7 +258,6 @@
                             </div>
                             <!--end::Card-->
                         </div>
-
                         <div class="col-xl-4">
                             <!--begin::Card-->
                             <div class="card card-custom gutter-b">
@@ -282,14 +280,13 @@
                                             @foreach($eventRegistrationAcademyStats as $stats)
                                                 <tr>
                                                     <td class="text-center border-right">{{ ++$loop->index }}</td>
-                                                    <td class="text-center border-right"><strong>{{ $stats->name }}</strong></td>
+                                                    <td class="min-w-200px text-center border-right"><strong>{{ $stats->name }}</strong></td>
                                                     <td class="text-center border-right"><strong>{{ $stats->academy_count }}</strong></td>
 
                                                 </tr>
                                             @endforeach 
                                         </table>
-                                        </tbody>
-                                        
+                                        </tbody>                                        
                                     </div>
                                 </div>
                             </div>

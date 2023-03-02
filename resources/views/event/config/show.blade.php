@@ -94,6 +94,134 @@
                         </table>
                         <!--end::Table-->
                     </div>
+                    <div class="tab-pane fade in {{@$tab_id == $tab['number'] ? 'active show' : '' }}" id="tab1-3">
+                        <!--begin::Table-->
+                        <table class="table table-separate table-head-custom dtr-inline">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th class="min-w-200px text-left">{{trans('display.general_name')}}</th> 
+                                    <th class="min-w-100px text-left">{{trans('display.general_name_en')}}</th>
+                                    <th class="min-w-125px text-center">{{trans('display.human_gender_code')}}</th>
+                                    <th class="min-w-125px text-center">{{trans('display.entrance_fee')}}</th>
+                                    <th class="min-w-110px text-center">{{trans('display.general_created_at')}}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse(@$entries as $entry)
+                                <tr>
+                                    <td class="pl-0 py-4 text-center">{{ ++$loop->index }}</td>
+                                    <td class="pl-0">{{$entry->name}}</td>
+                                    <td class="text-left">{{$entry->name_en}}</td>
+                                    <td class="text-center">{{Config::get("enums.gender_code")[$entry->gender_code]}}</td>
+                                    <td class="text-center">{{$entry->entrance_fee}}</td>
+                                    <td class="text-center">{{$entry->created_at}}</td>
+                                </tr>
+                                @empty
+                                <tr>
+                                    <td colspan="7" class="text-center">{{ trans('display.general_no_record') }}</td>
+                                </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                        <!--end::Table-->
+                    </div>
+                    <div class="tab-pane fade in {{@$tab_id == $tab['number'] ? 'active show' : '' }}" id="tab1-4">
+                        <!--begin::Table-->
+                        <table class="table table-separate table-head-custom dtr-inline">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th class="min-w-200px text-left">{{trans('display.general_name')}}</th> 
+                                    <th class="min-w-100px text-left">{{trans('display.general_name_en')}}</th>
+                                    <th class="min-w-125px text-center">{{trans('display.human_gender_code')}}</th>
+                                    <th class="min-w-125px text-center">{{trans('display.entrance_fee')}}</th>
+                                    <th class="min-w-110px text-center">{{trans('display.general_created_at')}}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse(@$entries as $entry)
+                                <tr>
+                                    <td class="pl-0 py-4 text-center">{{ ++$loop->index }}</td>
+                                    <td class="pl-0">{{$entry->name}}</td>
+                                    <td class="text-left">{{$entry->name_en}}</td>
+                                    <td class="text-center">{{Config::get("enums.gender_code")[$entry->gender_code]}}</td>
+                                    <td class="text-center">{{$entry->entrance_fee}}</td>
+                                    <td class="text-center">{{$entry->created_at}}</td>
+                                </tr>
+                                @empty
+                                <tr>
+                                    <td colspan="7" class="text-center">{{ trans('display.general_no_record') }}</td>
+                                </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                        <!--end::Table-->
+                    </div>
+                    <div class="tab-pane fade in {{@$tab_id == $tab['number'] ? 'active show' : '' }}" id="tab1-5">
+                        <!--begin::Table-->
+                        <table class="table table-separate table-head-custom dtr-inline">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th class="min-w-200px text-left">{{trans('display.general_name')}}</th> 
+                                    <th class="min-w-100px text-left">{{trans('display.general_name_en')}}</th>
+                                    <th class="min-w-125px text-center">{{trans('display.human_gender_code')}}</th>
+                                    <th class="min-w-125px text-center">{{trans('display.entrance_fee')}}</th>
+                                    <th class="min-w-110px text-center">{{trans('display.general_created_at')}}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse(@$entries as $entry)
+                                <tr>
+                                    <td class="pl-0 py-4 text-center">{{ ++$loop->index }}</td>
+                                    <td class="pl-0">{{$entry->name}}</td>
+                                    <td class="text-left">{{$entry->name_en}}</td>
+                                    <td class="text-center">{{Config::get("enums.gender_code")[$entry->gender_code]}}</td>
+                                    <td class="text-center">{{$entry->entrance_fee}}</td>
+                                    <td class="text-center">{{$entry->created_at}}</td>
+                                </tr>
+                                @empty
+                                <tr>
+                                    <td colspan="7" class="text-center">{{ trans('display.general_no_record') }}</td>
+                                </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                        <!--end::Table-->
+                    </div>
+                    <div class="tab-pane fade in {{@$tab_id == $tab['number'] ? 'active show' : '' }}" id="tab1-6">
+                        <!--begin::Table-->
+                        <table class="table table-separate table-head-custom dtr-inline">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th class="min-w-200px text-left">{{trans('display.general_name')}}</th> 
+                                    <th class="min-w-100px text-left">{{trans('display.general_name_en')}}</th>
+                                    <th class="min-w-125px text-center">{{trans('display.human_gender_code')}}</th>
+                                    <th class="min-w-125px text-center">{{trans('display.entrance_fee')}}</th>
+                                    <th class="min-w-110px text-center">{{trans('display.general_created_at')}}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse(@$entries as $entry)
+                                <tr>
+                                    <td class="pl-0 py-4 text-center">{{ ++$loop->index }}</td>
+                                    <td class="pl-0">{{$entry->name}}</td>
+                                    <td class="text-left">{{$entry->name_en}}</td>
+                                    <td class="text-center">{{Config::get("enums.gender_code")[$entry->gender_code]}}</td>
+                                    <td class="text-center">{{$entry->entrance_fee}}</td>
+                                    <td class="text-center">{{$entry->created_at}}</td>
+                                </tr>
+                                @empty
+                                <tr>
+                                    <td colspan="7" class="text-center">{{ trans('display.general_no_record') }}</td>
+                                </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                        <!--end::Table-->
+                    </div>
                 </div>
             </div>
             @endif

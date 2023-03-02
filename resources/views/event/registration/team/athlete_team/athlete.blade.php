@@ -17,10 +17,10 @@
                                 <tr>
                                     <th>#</th>
                                     <th class="min-w-250px text-center">{{trans('display.comp_member')}}</th>
-                                    <th class="min-w-80px text-center">{{trans('display.athlete_jersey_number')}}</th>
+                                    <!-- <th class="min-w-80px text-center">{{trans('display.athlete_jersey_number')}}</th>
                                     <th class="min-w-80px text-center">{{trans('display.voll_rank')}}</th>
                                     <th class="min-w-80px text-center">{{trans('display.voll_role')}}</th>
-                                    <th class="min-w-50px text-center">{{trans('display.athlete_height')}}</th>
+                                    <th class="min-w-50px text-center">{{trans('display.athlete_height')}}</th> -->
                                     <th class="min-w-100px text-center">{{trans('display.comp_academy_name')}}</th>
                                     <th class="min-w-100px text-center">{{trans('display.general_team')}}</th>
                                     <th class="min-w-50px text-center">{{trans('display.comp_entry_age')}}</th>
@@ -50,10 +50,10 @@
 					                        </div>
                                         </div>
                                     </td>
+                                    <!-- <td class="text-center border-right"></td>
                                     <td class="text-center border-right"></td>
                                     <td class="text-center border-right"></td>
-                                    <td class="text-center border-right"></td>
-                                    <td class="text-center border-right"></td>                                
+                                    <td class="text-center border-right"></td>                                 -->
                                     <td class="text-center border-right">{{ $eventTeamRegistration->academy->name }}</td>
                                     <td class="text-center border-right">{{ $eventTeamRegistration->team->name }}</td>
                                     <td class="text-center border-right">{{ @$athlete->member->age }}</td>
