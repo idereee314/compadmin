@@ -111,7 +111,7 @@ Route::group([
     
     Route::get('/event/registration/change/status', 'event\EventRegistrationStatusController@change')->name('event.registration.change.status');
     Route::post('/event/registration/changed/status', 'event\EventRegistrationStatusController@changed')->name('event.registration.changed.status');
-    Route::get('/event/registration/print/mandat', 'event\EventRegistrationController@printCertificateByMember')->name('event.registration.print.mandat');
+    Route::get('/event/registration/print/mandat', 'event\EventRegistrationController@printMandateByEventAndStatus')->name('event.registration.print.mandat');
     
 
     Route::resource('/event/config', 'event\EventConfigController', ['names' => 'event.config']);
