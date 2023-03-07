@@ -380,6 +380,23 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 		return $registrations;
 	}
 
+	public function getRegistrationByMember($eventId, $memberId)
+	{
+		if(@$eventId && @$memberId)
+		{
+			$qry = EventRegistration::selectRaw('id, status, member_id, academy_id, entry_id, entry_belt_id, entry_weight_id, academy_name')
+			->where('event_id', $eventId)
+			->where('member_id', $memberId);
+
+			$qry->with(['academy:id,name,is_other','member:id,lastname,firstname,profile_url,birth,gender_code', 'weight:id,weight', 'entry:id,name', 'belt:id,name']);
+			
+			return $qry->first();
+		}
+		
+		return null;
+	}
+
+
 	public  function getEventRegByGroup($eventId)
 	{
 		$regs = "";

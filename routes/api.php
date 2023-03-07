@@ -14,6 +14,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::group([
+    'prefix' => '',
+], function() {
+    /** START REQUEST */
+    // References
+    Route::get('/sport/certificate/print', 'event\EventRegistrationController@printCertificateByMember')->name('api.sport.certificate.print');
+    
 });
