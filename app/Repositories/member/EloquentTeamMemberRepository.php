@@ -41,16 +41,9 @@ class EloquentTeamMemberRepository implements TeamMemberRepository {
 	{
 		$teamMember = new TeamMember;
 
-		$teamMember->user_id = @$input['user_id'];
-		$teamMember->register_number = $input['register_number'];
-		$teamMember->firstname = $input['firstname'];
-		$teamMember->lastname = $input['lastname'];
-		$teamMember->contact_phone = preg_replace('/\s+/', '', @$input['contact_phone']);
-		$teamMember->birth = @$input['birth'];
-		$teamMember->status = Config::get('smart.member_status')['created'];
-		$teamMember->gender_code = @$input['gender_code'];
-		$teamMember->profile_url = @$input['profile_url'];
-		$teamMember->id_url = @$input['id_url'];
+		$teamMember->member_id = $input['member_id'];
+		$teamMember->event_id = $input['event_id'];
+		$teamMember->team_id = @$input['team_id'];
 
 		$teamMember->save();
 		return $teamMember;
@@ -59,22 +52,10 @@ class EloquentTeamMemberRepository implements TeamMemberRepository {
  	public function update($id, $input)
 	{
 		$teamMember = $this->find($id);
-		$teamMember->register_number = Str::upper($input['register_number']);
-		$teamMember->firstname = $input['firstname'];
-		$teamMember->lastname = $input['lastname'];
-		$teamMember->contact_phone = preg_replace('/\s+/', '', @$input['contact_phone']);
-		$teamMember->birth = @$input['birth'];
-		$teamMember->gender_code = @$input['gender_code'];
-		$teamMember->status = @$input['status'];
-		if(array_key_exists('profile_url', $input))
-		{
-			$teamMember->profile_url = @$input['profile_url'];
-		}
-
-		if(array_key_exists('id_url', $input))
-		{
-			$teamMember->id_url = @$input['id_url'];
-		}
+		
+		$teamMember->member_id = $input['member_id'];
+		$teamMember->event_id = $input['event_id'];
+		$teamMember->team_id = @$input['team_id'];
 
 		$teamMember->save();
 		return $teamMember;
@@ -176,6 +157,23 @@ class EloquentTeamMemberRepository implements TeamMemberRepository {
             ->make(true);
 
         return $data;
+	}
+
+	public function getTeamRegStatusCount($eventId, $teamId = null)
+	{
+		$count = "";
+		if(@$eventId)
+		{
+			$qry = TeamMember::selectRaw('status, count(*) as total')->where('event_id', $eventId);
+			if(@$teamId)
+			{
+				$qry->where('team_id', $teamId);
+			}
+			
+			$count = $qry->groupBy('status')->get();
+		}
+
+		return $count;
 	}
 
 }

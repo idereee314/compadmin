@@ -16,6 +16,7 @@ use event\EventRegistrationStatusRepository as EventRegistrationStatus;
 use event\EventRegistrationRepository as EventRegistration;
 use reference\EventEntriesFeeRepository as EventEntriesFee;
 use event\EventTeamRegistrationRepository as EventTeamRegistration;
+use member\TeamMemberRepository as TeamMember;
 
 //Models
 use event\EventRegistrationStatus as EventRegistrationStatusModel;
@@ -32,13 +33,14 @@ class EventTeamMemberRegistrationStatusController extends Controller
 {
     public $restful = true;
 
-    public function __construct(EventRegistrationStatus $eventRegistrationStatus, EventRegistration $eventRegistration, EventEntriesFee $eventEntriesFee, EventTeamRegistration $eventTeamRegistration)
+    public function __construct(EventRegistrationStatus $eventRegistrationStatus, EventRegistration $eventRegistration, EventEntriesFee $eventEntriesFee, EventTeamRegistration $eventTeamRegistration, TeamMember $teamMember)
     {
         $this->view_path = 'event.registration';
         $this->eventRegistrationStatus = $eventRegistrationStatus;
         $this->eventRegistration = $eventRegistration;
         $this->eventEntriesFee = $eventEntriesFee;
         $this->eventTeamRegistration = $eventTeamRegistration;
+        $this->teamMember = $teamMember;
     }
 
     /**
@@ -59,20 +61,18 @@ class EventTeamMemberRegistrationStatusController extends Controller
     public function change()
     {
         $input = Input::all();
-        dd($this->eventTeamRegistration->teamathlete);
-        $eventTeamRegistration = $this->eventTeamRegistration->find(@$input['reg_id']);
-        
-        $eventRegistration = $this->eventRegistration->find(@$input['reg_id']);
-        $nextStatuses = @Config::get('smart.event_registration_status_flow')[$eventTeamRegistration->status];
-        dd($this->eventEntriesFee->getFeesByEntryId($eventTeamRegistration->entry_id));
-        $entryFees = $this->eventEntriesFee->getFeesByEntryId($eventTeamRegistration->entry_id);
-        // dd($eventTeamRegistration->teamathlete);
-        $data['eventTeamRegistration'] = $eventTeamRegistration;
-        $data['eventRegistration'] = $eventRegistration;
+
+        $teamAthlete = $this->teamMember->find(@$input['reg_id']);
+        // dd($teamAthlete->status);
+        // dd($teamAthlete->status);
+        $nextStatuses = @Config::get('smart.event_registration_status_flow')[$teamAthlete->status];
+        $entryFees = $this->eventEntriesFee->getFeesByEntryId($teamAthlete->team_id);
+       
+        $data['teamAthlete'] = $teamAthlete;
         $data['nextStatuses'] = $nextStatuses;
         $data['entryFees'] = $entryFees;
 
-        return view($this->view_path.'.team/form_team_member_status', $data);
+        return view($this->view_path.'.team/athlete_team/form_team_member_status', $data);
     }
 
     /**

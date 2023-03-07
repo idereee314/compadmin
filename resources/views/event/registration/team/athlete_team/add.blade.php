@@ -1,5 +1,4 @@
-<form class="form" method="POST" id="create-event-registration-form" action="{{ route('event.registration.store') }}">
-    <input type="hidden" name="event_id" id="event_id" value="{{ $event_id }}"/>
+<form class="form" method="POST" id="create-event-team-member-registration-form" action="{{ route('event.team.member.store') }}">
     <div class="modal-header bg-gray-100">
         <h5 class="modal-title" id="exampleModalLabel"><strong>{{trans('display.general_new_athlete')}}</strong></h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -31,33 +30,17 @@
             </div>
         </div>
 
-        <div class="form-group row">
-            <label class="col-md-3 col-form-label text-right"><strong>{{trans('display.general_team')}}: </strong><span class="text-danger">*</span></label>
-            <div class="col-md-9">
-                <select class="form-control selectpicker" data-live-search="true" name="team_id" id="team_id" data-col-index="5">
-                    <option value="">-- {{ trans('display.general_all') }} --</option>
-                    @forelse(@$team_list as $teams)
-                    <option value="{{ $teams->id }}">{{ $teams->name }}</option>
-                    @empty
-                    @endforelse
-                </select>
-            </div>
-        </div>
+        <input type="hidden" name="event_id" id="event_id" value="{{ $event_id }}"/>
+        <input type="hidden" name="team_id" id="team_id" value="{{ $team_id }}"/>
 
         <!-- <div class="form-group row">
             <label class="col-md-3 col-form-label text-right"><strong>{{trans('display.comp_academy')}}: </strong><span class="text-danger">*</span></label>
             <div class="col-md-9">
-                <select class="form-control selectpicker" data-live-search="true" id="academy_id" name="academy_id" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}">
-                    <option value="">-- {{ trans('display.general_select') }} --</option>
-                    @forelse(@$academies as $academy)
-                    <option value="{{ $academy->id }}">{{ $academy->name }}</option>
-                    @empty
-                    @endforelse
-                </select>
+                <input type="text" id="event_id" name="event_id" value="{{ $event_id }}">
             </div>
-        </div>
+        </div> -->
 
-        <div class="form-group row d-none" id="academy_name_other">
+        <!-- <div class="form-group row d-none" id="academy_name_other">
             <label class="col-md-3 col-form-label text-right"><strong>{{trans('display.comp_academy_name')}}: </strong><span class="text-danger">*</span></label>
             <div class="col-md-9">
                 <input class="form-control" id="academy_name" name="academy_name" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required')}}"/>

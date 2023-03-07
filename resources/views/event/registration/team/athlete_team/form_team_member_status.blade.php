@@ -1,5 +1,6 @@
 <form class="form" method="POST" id="change-status-form" action="{{ route('event.team.member.registration.changed.status') }}">
-    <input type="hidden" name="team_registration_id" id="team_registration_id" value="{{ $eventTeamRegistration->id }}"/>
+    <input type="hidden" name="team_athlete_registration_id" id="team_athlete_registration_id" value="{{ $teamAthlete->id }}"/> 
+
     <div class="modal-header bg-gray-100">
         <h5 class="modal-title" id="exampleModalLabel">{{trans('display.general_status')}}</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -9,40 +10,28 @@
 
     <div class="card-body">
         <div class="row"> 
-            <div class="col-md-5">    
+        <div class="col-md-5">    
                 <div class="timeline timeline-2">
                     <div class="timeline-bar"></div>
-                    @forelse(@$eventTeamRegistration->statuses as $status)
-                    <!--begin::Item-->
-                    <div class="timeline-item">
-                        <div class="timeline-badge bg-{{ @Config::get('smart.event_registration_status_class')[$status->status] }}"></div>
-                        <div class="timeline-content d-flex align-items-center justify-content-between">
-                            <span class="mr-3">
-                                {{ @Config::get('enums.event_registration_status')[$status->status] }}
-                                {{ @$status->changedBy ? 'by '.@$status->changedBy->username : '' }}
-                            </span>
-                            <span class="text-muted text-right">{{ Carbon\Carbon::parse($status->changed_at)->format('y M, d g:i A') }}</span>
+                       
+                        <div class="timeline-item">
+                            <div class="timeline-badge bg-{{ @Config::get('smart.event_registration_status_class')[$teamAthlete->status] }}"></div>
+                            <div class="timeline-content d-flex align-items-center justify-content-between">
+                                <span class="mr-3">
+                                    {{ @Config::get('enums.event_registration_status')[$teamAthlete->status] }}
+                                    {{ @$teamAthlete->changedBy ? 'by '.@$teamAthlete->changedBy->username : '' }}
+                                </span>
+                                <span class="text-muted text-right">{{ Carbon\Carbon::parse($teamAthlete->changed_at)->format('y M, d g:i A') }}</span>
+                            </div>
                         </div>
-                    </div>
-                    <!--end::Item-->
-                    @empty
-                    @endforelse
+                        <!--end::Item-->
+                        
                 </div>
             </div>
             <div class="col-md-7">
                 <div class="form-group row">
                     <label class="col-md-3 col-form-label text-right">{{trans('display.general_status')}}:<span class="text-danger">*</span></label>
-                    <div class="col-md-9">
-                        <select class="form-control selectpicker" id="status" name="status" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}">
-                            @foreach($eventTeamRegistration->teamathlete as $athlete)    
-                            <option value="{{ $athlete->status }}" selected="selected">{{ @Config::get("enums.event_registration_status")[$athlete->status] }}</option>
-                            @endforeach
-                            @forelse(@$nextStatuses as $nextStatus)
-                            <option value="{{ $nextStatus }}">{{ @Config::get("enums.event_registration_status")[$nextStatus] }}</option>
-                            @empty
-                            @endforelse
-                        </select>
-                    </div>
+                    
                 </div>
                 <div class="form-group row payment" style="{{ @$eventTeamRegistration->status == @Config::get('smart.event_registration_status')['created'] ? 'display: none' : ''}}">
                     <label class="col-md-3 col-form-label text-right">{{ trans('display.general_amount') }}:<span class="text-danger">*</span></label>

@@ -54,12 +54,15 @@ class EloquentEventTeamRegistrationRepository implements EventTeamRegistrationRe
 	{
 		$eventTeamRegistration = $this->find($id);
 		$eventTeamRegistration->entry_id = $input['entry_id'];
-		$eventTeamRegistration->team_id = $input['team_id'];
+
+		$team = $eventTeamRegistration->team;
+		$team->name = $input['team_id'];
+		$team->save();
+
 		$eventTeamRegistration->academy_id = @$input['academy_id'];
 		$eventTeamRegistration->academy_name = @$input['academy_name'];
 		//$eventTeamRegistration->status = @$input['status'];
 		
-
 		$eventTeamRegistration->save();
 		return $eventTeamRegistration;
 	}
@@ -73,76 +76,65 @@ class EloquentEventTeamRegistrationRepository implements EventTeamRegistrationRe
 
     public function getDatatableList($searchData)
     {
-		$qry = EventTeamRegistration::selectRaw('uq_team_registration.*, uq_event_config.reg_start_date, uq_event_config. reg_end_date')
-			->join('uq_event_config', 'uq_event_config.event_id', '=', 'uq_team_registration.event_id')
-			->withCount(['teamathlete']);
+		$qry = EventTeamRegistration::selectRaw('uq_team_registration.*, uq_event_config.reg_start_date, uq_event_config.reg_end_date, (select count(*) from "uq_team_registration_member" where "uq_team_registration"."team_id" = "uq_team_registration_member"."team_id") as "teamathlete_count"')
+            ->join('uq_event_config', 'uq_event_config.event_id', '=', 'uq_team_registration.event_id');
 
-			// if($searchData->has('event') && $searchData->get('event') !== null)
-			// {
-			// 	$qry->where('uq_team_registration.event_id', $searchData->get('event'));
-			// }
-
-			// $qry->with(['entry:id,name', 'age:id,start_age,end_age', 'belt:id,name', 'weight:id,weight', 'academy:id,name,is_other']);
+			if($searchData->has('event') && $searchData->get('event') !== null)
+			{
+				$qry->where('uq_team_registration.event_id', $searchData->get('event'));
+			}
 
         $data = Datatables::make($qry)
-            ->filter(function ($qry) use ($searchData) {
-                
-				// if($searchData->has('reg_id') && $searchData->get('reg_id') !== null)
-                // {
-				// 	$qry->where('uq_team_registration.id', $searchData->get('reg_id'));
-				// }
+            ->filter(function ($qry) use ($searchData) {                
+				if($searchData->has('reg_id') && $searchData->get('reg_id') !== null)
+                {
+					$qry->where('uq_team_registration.id', $searchData->get('reg_id'));
+				}
 
-				// if($searchData->has('gender') && $searchData->get('gender') !== null)
-                // {
-				// 	$qry->whereHas('member', function($q) use($searchData){
-				// 		$q->where('gender_code', $searchData->get('gender'));
-				// 	});				
-				// }
+				if($searchData->has('status') && $searchData->get('status') !== null)
+                {
+					$qry->where('status', $searchData->get('status'));
+				}
 
-				// if($searchData->has('is_weight') && $searchData->get('is_weight') !== null)
-                // {
-				// 	$qry->where('is_weight_checked', $searchData->get('is_weight'));			
-				// }
+				if($searchData->has('academy') && $searchData->get('academy') !== null)
+                {
+					$qry->where('academy_id', $searchData->get('academy'));
+				}
 
-				// if($searchData->has('status') && $searchData->get('status') !== null)
-                // {
-				// 	$qry->where('status', $searchData->get('status'));
-				// }
-
-				// if($searchData->has('academy') && $searchData->get('academy') !== null)
-                // {
-				// 	$qry->where('academy_id', $searchData->get('academy'));
-				// }
+				if($searchData->has('team') && $searchData->get('team') !== null)
+                {
+					$qry->where('team_id', $searchData->get('team'));
+				}
 				
-				// if($searchData->has('date') && !empty(array_filter($searchData->get('date'))))
-                // {
-				// 	$qry->whereBetween('uq_team_registration.created_at', $searchData->get('date'));
-				// }
+				if($searchData->has('date') && !empty(array_filter($searchData->get('date'))))
+                {
+					$qry->whereBetween('uq_team_registration.created_at', $searchData->get('date'));
+				}
 
-                // if($searchData->has('member') && $searchData->get('member') !== null)
-                // {
-				// 	$qry->whereHas('member', function($q) use($searchData){
-				// 		$q->whereRaw("LOWER(register_number) like ?", array('%'.mb_strtolower($searchData->get('member')).'%'))
-				// 		->orWhereRaw("LOWER(firstname) like ?", array('%'.mb_strtolower($searchData->get('member')).'%'))
-				// 		->orWhereRaw("LOWER(lastname) like ?", array('%'.mb_strtolower($searchData->get('member')).'%'))
-				// 		->orWhereRaw("LOWER(contact_phone) like ?", array('%'.mb_strtolower($searchData->get('member')).'%'));
-				// 	});
-                // }
+                if($searchData->has('member') && $searchData->get('member') !== null)
+                {
+					$qry->whereHas('member', function($q) use($searchData){
+						$q->whereRaw("LOWER(register_number) like ?", array('%'.mb_strtolower($searchData->get('member')).'%'))
+						->orWhereRaw("LOWER(firstname) like ?", array('%'.mb_strtolower($searchData->get('member')).'%'))
+						->orWhereRaw("LOWER(lastname) like ?", array('%'.mb_strtolower($searchData->get('member')).'%'))
+						->orWhereRaw("LOWER(contact_phone) like ?", array('%'.mb_strtolower($searchData->get('member')).'%'));
+					});
+                }
 
-				// if($searchData->has('amount') && $searchData->get('amount') !== null)
-                // {
-				// 	if($searchData->get('amount') > 0)
-				// 	{
-				// 		$qry->whereHas('payments', function($q) use($searchData){
-				// 			$q->where('amount', $searchData->get('amount'));
-				// 		});
-				// 	}
-				// 	else 
-				// 	{
-				// 		$qry->whereDoesntHave('payments');
-				// 	}
+				if($searchData->has('amount') && $searchData->get('amount') !== null)
+                {
+					if($searchData->get('amount') > 0)
+					{
+						$qry->whereHas('payments', function($q) use($searchData){
+							$q->where('amount', $searchData->get('amount'));
+						});
+					}
+					else 
+					{
+						$qry->whereDoesntHave('payments');
+					}
 					
-				// }
+				}
             })
 			->setRowAttr([
 				'class' => function($qry) {
@@ -159,7 +151,6 @@ class EloquentEventTeamRegistrationRepository implements EventTeamRegistrationRe
 			})
 			->editColumn('status', function($qry)
 			{
-				// dd($qry);
 				$status = '<button type="button" class="btn btn-light-'.@Config::get('smart.event_registration_status_class')[$qry->status].' btn-sm btn-status" data-registrationid="'.$qry->id.'">'.@Config::get('enums.event_registration_status')[$qry->status].'</button>';
 				return $status;
 			})

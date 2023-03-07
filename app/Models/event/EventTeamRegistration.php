@@ -37,7 +37,7 @@ class EventTeamRegistration extends Model
 
     public function teamathlete()
     {
-        return $this->hasMany('member\TeamMember', 'team_id');
+        return $this->hasMany('member\TeamMember', 'team_id', 'team_id');
     }
 
     public function entry()

@@ -81,6 +81,7 @@ return [
     'general_team_athlete' => 'Багийн тамирчид',
     'general_team_no_athlete' => 'Багийн тамирчид бүртгүүлээгүй байна.',
     'general_new_athlete' => 'Тамирчин шинээр нэмэх',
+    'general_edit_athlete' => 'Тамирчин мэдээлэл засварлах',
     'general_athlete_count' => 'Оролцож буй тамирчдын тоо',
 
 
@@ -170,6 +171,7 @@ return [
     'general_next_status' => 'Шилжүүлэх төлөв',
     'general_sport_type' => 'Спортын төрөл',
     'general_event_stats' => 'Тэмцээний статистик',
+    'general_check_weight' => 'Жин шалгах',
 
     // Search
     "general_search_list" => "Хайлт",

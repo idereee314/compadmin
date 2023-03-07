@@ -12,6 +12,7 @@ use event\EventTeamRegistration;
 use Auth;
 use Carbon;
 use Illuminate\Support\Str;
+use Config;
 
 class TeamMember extends Model
 {
@@ -44,7 +45,7 @@ class TeamMember extends Model
         return $this->belongsTo(Event::class, 'event_id');
     }
 
-    public function EventTeamRegistration()
+    public function eventTeamRegistration()
     {
         return $this->hasMany(EventTeamRegistration::class, 'team_id');
     }
@@ -53,24 +54,30 @@ class TeamMember extends Model
     {
         parent::boot();
 
-        static::updating(function($TeamMember)
+        static::updating(function($teamMember)
         {
-            $TeamMember->updated_by = Auth::id();
-			$TeamMember->updated_at = Carbon\Carbon::now()->toDateTimeString();
+            $teamMember->updated_by = Auth::id();
+			$teamMember->updated_at = Carbon\Carbon::now()->toDateTimeString();
         });
 
-        static::creating(function($TeamMember)
+        static::creating(function($teamMember)
         {
-            $TeamMember->created_by = Auth::id();
-			$TeamMember->created_at = Carbon\Carbon::now()->toDateTimeString();
+            $teamMember->created_by = Auth::id();
+			$teamMember->created_at = Carbon\Carbon::now()->toDateTimeString();
         });
 
-        static::created(function($TeamMember)
+        static::created(function($teamMember)
         {
-            //
+            // $teamMember->status = @Config::get('smart.event_registration_status')['created'];
+
+            // $statusArr['status'] = @Config::get('smart.event_registration_status')['created'];
+            // $statusArr['changed_by'] = Auth::id();
+			// $statusArr['changed_at'] = Carbon\Carbon::now()->toDateTimeString();
+
+            // $teamMember->statuses()->create($statusArr);
         });
 
-        static::deleting(function($TeamMember)
+        static::deleting(function($teamMember)
         {
             //
 		});

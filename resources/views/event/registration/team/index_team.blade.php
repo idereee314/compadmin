@@ -239,33 +239,35 @@
                                                         @endforelse
                                                     </select>
                                                 </div>
-                                                <div class="col-lg-2 mb-lg-0 mb-6">
-                                                    <label>{{ trans('display.comp_entry_age') }}:</label>
-                                                    <select class="form-control datatable-input" name="search_entry_age" id="search_entry_age" data-col-index="2">
-                                                        <option value="">-- {{ trans('display.general_all') }} --</option>
-                                                        
-                                                    </select>
-                                                </div>
-                                                <div class="col-lg-2 mb-lg-0 mb-6">
-                                                    <label>{{ trans('display.comp_entry_belt') }}:</label>
-                                                    <select class="form-control datatable-input" name="search_entry_belt" id="search_entry_belt" data-col-index="3">
-                                                        <option value="">-- {{ trans('display.general_all') }} --</option>
-                                                        
-                                                    </select>
-                                                </div>
-                                                <div class="col-lg-2 mb-lg-0 mb-6">
-                                                    <label>{{ trans('display.comp_entry_weight') }}:</label>
-                                                    <select class="form-control datatable-input" name="search_entry_weight" id="search_entry_weight" data-col-index="4">
-                                                        <option value="">-- {{ trans('display.general_all') }} --</option>
-                                                        
-                                                    </select>
-                                                </div>
+                                                
                                                 <div class="col-lg-3 mb-lg-0 mb-6">
                                                     <label>{{ trans('display.comp_academy') }}:</label>
                                                     <select class="form-control selectpicker datatable-input" data-live-search="true" name="search_academy" id="search_academy" data-col-index="5">
                                                         <option value="">-- {{ trans('display.general_all') }} --</option>
                                                         @forelse(@$academies as $academy)
                                                         <option value="{{ $academy->id }}">{{ $academy->name }}</option>
+                                                        @empty
+                                                        @endforelse
+                                                    </select>
+                                                </div>
+
+                                                <div class="col-lg-3 mb-lg-0 mb-6">
+                                                    <label>Баг:</label>
+                                                    <select class="form-control selectpicker datatable-input" data-live-search="true" name="search_team" id="search_team" data-col-index="5">
+                                                        <option value="">-- {{ trans('display.general_all') }} --</option>
+                                                        @forelse(@$team_list as $team)
+                                                        <option value="{{ $team->id }}">{{ $team->name }}</option>
+                                                        @empty
+                                                        @endforelse
+                                                    </select>
+                                                </div>
+                                                
+                                                <div class="col-lg-3 mb-lg-0 mb-6">
+                                                    <label>{{ trans('display.general_amount') }}:</label>
+                                                    <select class="form-control selectpicker datatable-input" name="search_amount" id="search_amount" data-col-index="11">
+                                                        <option value="">-- {{ trans('display.general_all') }} --</option>
+                                                        @forelse($eventFees as $key => $amount)
+                                                        <option value="{{ $key }}">{{ $key }}</option>
                                                         @empty
                                                         @endforelse
                                                     </select>
@@ -289,16 +291,6 @@
                                                     <input type="text" class="form-control datatable-input" name="search_member" id="search_member" placeholder="Оролцогчийн мэдээллээр хайх" data-col-index="8"/>
                                                 </div>
                                                 <div class="col-lg-2 mb-lg-0 mb-6">
-                                                    <label>Жин шалгасан эсэх:</label>
-                                                    <select class="form-control selectpicker datatable-input" name="search_is_weight" id="search_is_weight" data-col-index="9">
-                                                        <option value="">-- {{ trans('display.general_all') }} --</option>
-                                                        @forelse(@Config::get('enums.boolean_type') as $key => $type)
-                                                        <option value="{{ $key }}">{{ $type }}</option>
-                                                        @empty
-                                                        @endforelse
-                                                    </select>
-                                                </div>
-                                                <div class="col-lg-2 mb-lg-0 mb-6">
                                                     <label>{{ trans('display.general_status') }}:</label>
                                                     <select class="form-control selectpicker datatable-input" name="search_status" id="search_status" data-col-index="10">
                                                         <option value="">-- {{ trans('display.general_all') }} --</option>
@@ -308,22 +300,11 @@
                                                         @endforelse
                                                     </select>
                                                 </div>
-                                                <div class="col-lg-3 mb-lg-0 mb-6">
-                                                    <label>{{ trans('display.general_amount') }}:</label>
-                                                    <select class="form-control selectpicker datatable-input" name="search_amount" id="search_amount" data-col-index="11">
-                                                        <option value="">-- {{ trans('display.general_all') }} --</option>
-                                                        @forelse($eventFees as $key => $amount)
-                                                        <option value="{{ $key }}">{{ $key }}</option>
-                                                        @empty
-                                                        @endforelse
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="row mb-8">
                                                 <div class="col-lg-4 mb-lg-0 mb-6">
                                                     <label>Бүртгэлийн дугаар:</label>
                                                     <input type="text" class="form-control datatable-input" name="search_reg_id" id="search_reg_id" placeholder="Бүртгэлийн дугаар" data-col-index="8"/>
-                                                </div>
+                                                </div>                                               
+                                                
                                             </div>
                                             <div class="row mt-8">
                                                 <div class="col-lg-12">
@@ -407,18 +388,14 @@ $(document).ready(function() {
                     dateArr[this.id] = this.value;
                 }).get();
                 d.event = $('#event-team-registration-search-form input[id="search_event"]').val();
-                d.entry = $('#event-team-registration-search-form select[id="search_entry"]').val();
-                d.entryAge = $('#event-team-registration-search-form select[id="search_entry_age"]').val();
-                d.entryBelt = $('#event-team-registration-search-form select[id="search_entry_belt"]').val();
-                d.entryWeight = $('#event-team-registration-search-form select[id="search_entry_weight"]').val();
+                d.entry = $('#event-team-registration-search-form select[id="search_entry"]').val();                
                 d.status = $('#event-team-registration-search-form select[id="search_status"]').val();
                 d.member = $('#event-team-registration-search-form input[id="search_member"]').val();
                 d.gender = $('#event-team-registration-search-form select[id="search_gender"]').val();
                 d.academy = $('#event-team-registration-search-form select[id="search_academy"]').val();
-                d.is_weight = $('#event-team-registration-search-form select[id="search_is_weight"]').val();
                 d.amount = $('#event-team-registration-search-form select[id="search_amount"]').val();
                 d.reg_id = $('#event-team-registration-search-form input[id="search_reg_id"]').val();
-                
+                d.team = $('#event-team-registration-search-form select[id="search_team"]').val();
                 d.date = dateArr;
             },
         },
@@ -468,7 +445,7 @@ $(document).ready(function() {
                     $('c[r=A1] t', sheet).text( 'Тэмцээнд оролцогч багийн жагсаалт' );
                 },
                 exportOptions: {
-                    columns: [ 0,1,2,3,4,5,6,7,8],
+                    columns: [ 0,1,2,3,4,5,6],
                     modifier: {
                         order: 'current',
                         page: 'all',
@@ -769,14 +746,10 @@ $(document).ready(function() {
             eventTable.column($(this).data('col-index')).search('', false, false);
 
             $("#search_entry").val('').selectpicker("refresh");            
-            $('#event-team-registration-search-form select[name=search_entry_age]').select2({data: ""});
-            $('#event-team-registration-search-form select[name=search_entry_belt]').select2({data: ""});
-            $('#event-team-registration-search-form select[name=search_entry_weight]').select2({data: ""});
             $("#search_academy").val('').selectpicker("refresh"); 
-            $("#search_is_weight").val('').selectpicker("refresh");
+            $("#search_team").val('').selectpicker("refresh"); 
             $("#search_status").val('').selectpicker("refresh");
-            $("#search_amount").val('').selectpicker("refresh");
-            
+            $("#search_amount").val('').selectpicker("refresh");            
         });
         eventTable.draw();
     });
