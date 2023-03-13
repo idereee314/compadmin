@@ -117,8 +117,10 @@ class EloquentEventConfigRepository implements EventConfigRepository {
 	public function getDatatableList($searchData)
     {
 		$qry = EventConfig::select('*')->with('event:id,name', 'event.users')->withCount(['entries', 'configBelts', 'configAges', 'configWeights']);
-
-        $data = Datatables::make($qry)
+		// dd(Auth::user());
+		if(Auth::user()->roles->first()->code == 'admin' || Auth::user()->roles->first()->code == 'event')
+		{
+			$data = Datatables::make($qry)
             ->filter(function ($qry) use ($searchData) {
                 if($searchData->has('event') && $searchData->get('event') !== null)
                 {
@@ -164,7 +166,58 @@ class EloquentEventConfigRepository implements EventConfigRepository {
             })->rawColumns(['action', 'entries_count', 'config_belts_count', 'config_ages_count', 'config_ages_count', 'config_weights_count'])
             ->make(true);
 
-        return $data;
+        	return $data;
+		}
+		elseif(Auth::user()->roles->first()->code == 'staff' || Auth::user()->roles->first()->code == '')
+		{
+			$data = Datatables::make($qry)
+            ->filter(function ($qry) use ($searchData) {
+                if($searchData->has('event') && $searchData->get('event') !== null)
+                {
+                    $qry->where('uq_event_registration.event_id', $searchData->get('event'));
+                }
+            })
+			->editColumn('created_at', function($qry)
+			{
+				return $qry->created_at;
+			})
+			->editColumn('entries_count', function($qry)
+			{
+				return '<a href="javascript:;" class="show-count" data-configid="'.$qry->id.'" data-tabid="tab1-2">'.$qry->entries_count.'</a>';
+			})
+			->editColumn('config_belts_count', function($qry)
+			{
+				return '<a href="javascript:;" class="show-count" data-configid="'.$qry->id.'" data-tabid="tab1-3">'.$qry->config_belts_count.'</a>';
+			})
+			->editColumn('config_ages_count', function($qry)
+			{
+				return '<a href="javascript:;" class="show-count" data-configid="'.$qry->id.'" data-tabid="tab1-4">'.$qry->config_ages_count.'</a>';
+			})
+			->editColumn('config_weights_count', function($qry)
+			{
+				return '<a href="javascript:;" class="show-count" data-configid="'.$qry->id.'" data-tabid="tab1-5">'.$qry->config_weights_count.'</a>';
+			})
+            ->addColumn('action', function ($qry) {
+				$permissionEdit = SecurityHelper::checkPermission(@Config::get('permission.event_config'), Config::get('permission.editable'));
+				if($permissionEdit)
+				{
+					if($qry->event->users->contains(Auth::user()->id) || Auth::user()->roles->first()->code == 'admin')
+					{
+						$actionHtml = "";
+						if(Carbon\Carbon::parse($qry->reg_end_date) >= Carbon\Carbon::now())
+						{
+							$actionHtml .= 	'<a class="btn btn-icon btn-light btn-hover-primary btn-sm mr-3 edit" href="'.route('event.config.edit', $qry->id).'" title="'.trans('display.general_edit').'"><i class="la la-edit"></i></a>';
+							$actionHtml .= 	'<a class="btn btn-icon btn-light btn-hover-primary btn-sm delete mr-3" href="javascript:;" data-configid="'.$qry->id.'" title="'.trans('display.general_delete').'"><i class="la la-trash"></i></li>';
+						}
+						$actionHtml .= 	'<a class="btn btn-icon btn-light btn-hover-primary btn-sm copy mr-3" href="javascript:;" data-configid="'.$qry->id.'" title="'.trans('display.general_copy').'"><i class="far fa-copy"></i></li>';
+						return $actionHtml;
+					}
+				}
+            })->rawColumns(['action', 'entries_count', 'config_belts_count', 'config_ages_count', 'config_ages_count', 'config_weights_count'])
+            ->make(true);
+
+        	return $data;
+		}
 	}
 
 	public function getEventConfigByPage($perPage = 10, $searchData = null)

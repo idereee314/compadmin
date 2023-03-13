@@ -42,6 +42,11 @@ class EloquentEventTeamRegistrationRepository implements EventTeamRegistrationRe
 		$eventTeamRegistration->event_id = $input['event_id'];
 		$eventTeamRegistration->entry_id = $input['entry_id'];
 		$eventTeamRegistration->team_id = $input['team_id'];
+
+		// $team = $eventTeamRegistration->team;
+		// $team->name = $input['team_id'];
+		// $team->save();
+
 		$eventTeamRegistration->academy_id = @$input['academy_id'];
 		$eventTeamRegistration->academy_name = @$input['academy_name'];
 		//$eventTeamRegistration->status = @$input['status'];
@@ -123,7 +128,7 @@ class EloquentEventTeamRegistrationRepository implements EventTeamRegistrationRe
 
 				if($searchData->has('amount') && $searchData->get('amount') !== null)
                 {
-					if($searchData->get('amount') > 0)
+					if($searchData->get('amount') > 0 || $searchData->get('amount') == 0)
 					{
 						$qry->whereHas('payments', function($q) use($searchData){
 							$q->where('amount', $searchData->get('amount'));

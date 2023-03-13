@@ -115,54 +115,8 @@
                                 </div>
                                 <!--end::Info-->
                             </div>
-                            <!--end::Top-->
-                            @if(!@$eventFees->isEmpty())
-                            <!--begin::Separator-->
-                            <div class="separator separator-solid my-7"></div>
-                            <!--end::Separator-->
-                            <!--begin::Bottom-->
-                            <div class="d-flex align-items-center flex-wrap">
-                                <!--begin: Item-->
-                                <div class="d-flex align-items-center flex-lg-fill mr-10 my-1 btn btn-light-success btn-hover-success btn-filter-amount" data-amount="">
-                                    <span class="mr-4">
-                                        <i class="flaticon-piggy-bank text-success icon-3x font-weight-bold"></i>
-                                    </span>
-                                    <div class="d-flex flex-column">
-                                        <span class="font-weight-bolder font-size-sm">{{ trans('display.general_total') }}/{{ $eventFees->flatten(1)->count() }}</span>
-                                        <span class="font-weight-bolder font-size-h5">
-                                        <span class="font-weight-bold">{{ trans('display.general_tug') }}</span>{{ number_format($eventFees->flatten(1)->sum('fee_amount'), 0) }}</span>
-                                    </div>
-                                </div>
-                                <div class="d-flex align-items-center flex-lg-fill mr-10 my-1 btn btn-light-success btn-hover-success btn-filter-amount" data-amount="">
-                                    <span class="mr-4">
-                                        <i class="flaticon-piggy-bank text-success icon-3x font-weight-bold"></i>
-                                    </span>
-                                    <div class="d-flex flex-column">
-                                        <span class="font-weight-bolder font-size-sm">Зохион байгуулагчруу шилжих</span>
-                                        <span class="font-weight-bolder font-size-h5">
-                                        <span class="font-weight-bold">{{ trans('display.general_tug') }}</span>{{ number_format($eventFees->flatten(1)->sum('fee_amount') * 0.9, 0) }}</span>
-                                    </div>
-                                </div>
-                                <!--end: Item-->
-                                @forelse($eventFees as $key => $fee)
-                                <!--begin: Item-->
-                                <div class="d-flex align-items-center flex-lg-fill mr-5 my-1 btn btn-hover-light-success btn-filter-amount" data-amount="{{ $key }}">
-                                    <span class="mr-4">
-                                        <i class="flaticon-pie-chart text-success icon-3x font-weight-bold"></i>
-                                    </span>
-                                    <div class="d-flex flex-column">
-                                        <span class="font-weight-bolder font-size-sm">{{ number_format($key, 0) }}/{{ count($fee) }}</span>
-                                        <span class="font-weight-bolder font-size-h5">
-                                        <span class="text-success font-weight-bold">{{ trans('display.general_tug') }}</span>{{ number_format($fee->sum('fee_amount'), 0) }}</span>
-                                    </div>
-                                </div>
-                                <!--end: Item-->
-                                @empty
-                                @endforelse
-                            </div>                        
-                            <!--end::Bottom-->
-                            @endif
 
+                            
                             <!--begin::Accordion-->
                             <div class="accordion accordion-light accordion-light-borderless accordion-svg-toggle" id="search">
                                 <div class="card">
@@ -321,6 +275,7 @@
                                     </div>
                                 </div>
                                 <div class="card-body">
+                                @if(count($eventRegistrationGenderStats) > 0)
                                     <div class="table-responsive">
                                         <table class="table table-hover table-bordered table-head-custom" id="event-team-registration-datatable">
                                             <thead>
@@ -342,6 +297,11 @@
                                             </tbody>
                                         </table>
                                     </div>
+                                @else
+                                <tr>
+                                    <td colspan="12" class="text-center"><strong>{{ trans('display.general_no_athlete') }}</strong></td>
+                                </tr>
+                                @endif 
                                 </div>
                             </div>
                             <!--end::Card-->
@@ -349,10 +309,11 @@
                             <div class="card card-custom gutter-b">
                                 <div class="card-header">
                                     <div class="card-title">
-                                        <h3 class="card-label"><strong> Хүйс </strong></h3>
+                                        <h3 class="card-label"><strong> Хүйс (Баталгаажсан) </strong></h3>
                                     </div>
                                 </div>
                                 <div class="card-body">
+                                @if(count($eventRegistrationGenderStats) > 0)
                                     <div class="table-responsive">
                                         <table class="table table-hover table-bordered table-head-custom" id="event-team-registration-datatable">
                                             <thead>
@@ -372,6 +333,47 @@
                                             </tbody>
                                         </table>
                                     </div>
+                                @else
+                                    <tr>
+                                        <td colspan="12" class="text-center"><strong>{{ trans('display.general_no_athlete') }}</strong></td>
+                                    </tr>
+                                @endif 
+                                </div>
+                            </div>
+                            <!--end::Card-->
+                            <!--begin::Card-->
+                            <div class="card card-custom gutter-b">
+                                <div class="card-header">
+                                    <div class="card-title">
+                                        <h3 class="card-label"><strong> Хүйс (Бүгд)</strong></h3>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                @if(count($eventRegistrationGenderStats) > 0)
+                                    <div class="table-responsive">
+                                        <table class="table table-hover table-bordered table-head-custom" id="event-team-registration-datatable">
+                                            <thead>
+                                                <tr>                                
+                                                    <th class="text-center"> Хүйс </th>
+                                                    <th class="text-center">{{trans('display.general_athlete_count')}}</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach($eventRegistrationGenderAllStats as $stats)
+                                                    <tr>                                                                                                         
+                                                        <td class="min-w-200px text-center border-right"><strong>{{ Config::get("enums.gender_code")[@$stats->gender_code] }}</strong></td>
+                                                        <td class="text-center border-right"><strong>{{ $stats->gender_count }}</strong></td>
+                                                    </tr>
+                                                @endforeach 
+                                            
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                @else
+                                <tr>
+                                    <td colspan="12" class="text-center"><strong>{{ trans('display.general_no_athlete') }}</strong></td>
+                                </tr>
+                                @endif 
                                 </div>
                             </div>
                             <!--end::Card-->
@@ -381,10 +383,54 @@
                             <div class="card card-custom gutter-b">
                                 <div class="card-header">
                                     <div class="card-title">
-                                        <h3 class="card-label"><strong> Тэмцээний төрөл </strong></h3>
+                                        <h3 class="card-label"><strong> Тэмцээний ангилал (Бүгд) </strong></h3>
                                     </div>
                                 </div>
                                 <div class="card-body">
+                                @if(count($eventRegistrationGenderStats) > 0)
+                                    <div class="table-responsive">
+                                        <table class="table table-hover table-bordered table-head-custom" id="event-team-registration-datatable">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th class="text-center"> Тэмцээнд оролцох төрлүүд </th>
+                                                <th class="text-center"> Хүйс </th>
+                                                <th class="text-center">{{trans('display.general_athlete_count')}}</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach($eventRegistrationEntriesAllStats as $stats)
+                                                <tr>
+                                                    <td class="text-center border-right">{{ ++$loop->index }}</td>
+                                                    <td width="60%" class="border-right"><strong>{{ $stats->name }}</strong></td>
+                                                    <td width="15%" class="text-center border-right"><strong>{{ Config::get("enums.gender_code_for_stats")[@$stats->gender_code] }}</strong></td>
+                                                    <td width="15%" class="text-center border-right"><strong>{{ $stats->entry_count }}</strong></td>
+
+                                                </tr>
+                                            @endforeach 
+                                        </table>
+                                        </tbody>
+                                        
+                                    </div>
+                                @else
+                                    <tr>
+                                        <td colspan="12" class="text-center"><strong>{{ trans('display.general_no_athlete') }}</strong></td>
+                                    </tr>
+                                @endif
+                                </div>
+                            </div>
+                            <!--end::Card-->
+
+                            <!--begin::Card-->
+                            <div class="card card-custom gutter-b">
+                            
+                                <div class="card-header">
+                                    <div class="card-title">
+                                        <h3 class="card-label"><strong> Тэмцээний ангилал (Баталгаажсан)</strong></h3>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                @if(count($eventRegistrationEntriesStats) > 0)
                                     <div class="table-responsive">
                                         <table class="table table-hover table-bordered table-head-custom" id="event-team-registration-datatable">
                                         <thead>
@@ -409,19 +455,26 @@
                                         </tbody>
                                         
                                     </div>
-                                </div>
+                                @else
+                                    <tr>
+                                        <td colspan="12" class="text-center"><strong>{{ trans('display.general_no_athlete') }}</strong></td>
+                                    </tr>
+                                @endif 
+                                </div>                            
                             </div>
                             <!--end::Card-->
+                            
                         </div>
                         <div class="col-xl-4">
                             <!--begin::Card-->
                             <div class="card card-custom gutter-b">
                                 <div class="card-header">
                                     <div class="card-title">
-                                        <h3 class="card-label"><strong> Тэмцээнд бүртгүүлсэн академи </strong></h3>
+                                        <h3 class="card-label"><strong> Тэмцээнд бүртгүүлсэн академи (Баталгаажсан)</strong></h3>
                                     </div>
                                 </div>
                                 <div class="card-body">
+                                @if(count($eventRegistrationAcademyStats) > 0)
                                     <div class="table-responsive">
                                         <table class="table table-hover table-bordered table-head-custom" id="event-team-registration-datatable">
                                         <thead>
@@ -443,6 +496,11 @@
                                         </table>
                                         </tbody>                                        
                                     </div>
+                                @else
+                                    <tr>
+                                        <td colspan="12" class="text-center"><strong>{{ trans('display.general_no_athlete') }}</strong></td>
+                                    </tr>
+                                @endif 
                                 </div>
                             </div>
                             <!--end::Card-->

@@ -104,7 +104,6 @@ class EventTeamRegistration extends Model
 			$statusArr['changed_at'] = Carbon\Carbon::now()->toDateTimeString();
            
             $EventTeamRegistration->statuses()->create($statusArr);
-
         });
 
         static::deleting(function($teamMember)

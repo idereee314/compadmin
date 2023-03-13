@@ -130,24 +130,24 @@ class EventRegistrationController extends Controller
 
         if ($is_team == false) {
             $entries = $this->eventEntries->getEntryByEventId(@$input['event_id']);
-            $academy = $this->academy->all();
+            $academies = $this->academy->all();
 
             $data['event_id'] = @$input['event_id'];
             $data['entries'] = $entries;
-            $data['academies'] = $academy;
+            $data['academies'] = $academies;
 
             return view($this->view_path.'.add', $data);
         }
         else
         {
             $entries = $this->eventEntries->getEntryByEventId(@$input['event_id']);
-            $academy = $this->academy->all();
+            $academies = $this->academy->all();
             $team_list = $this->team->all();
             
             $data['team_list'] = $team_list;
             $data['event_id'] = @$input['event_id'];
             $data['entries'] = $entries;
-            $data['academies'] = $academy;
+            $data['academies'] = $academies;
 
             return view($this->view_path.'.team/add_team', $data);
         }
@@ -277,7 +277,7 @@ class EventRegistrationController extends Controller
 
         if($eventTeamRegistration == null)
         {
-            $academy = $this->academy->all();
+            $academies = $this->academy->all();
             $eventEntries = $this->eventEntries->getEntryByEventId($eventRegistration->event_id);
             $configBelts = $this->configBelt->getEntryBeltByEntryId($eventRegistration->entry_id);
             $configAges = $this->configAge->getEntryAgeByEntryId($eventRegistration->entry_id);
@@ -288,7 +288,7 @@ class EventRegistrationController extends Controller
             $data['configBelts'] = $configBelts;
             $data['configAges'] = $configAges;
             $data['configWeights'] = $configWeights;
-            $data['academies'] = $academy;
+            $data['academies'] = $academies;
     
             return view($this->view_path.'.edit', $data);
         }
@@ -297,7 +297,7 @@ class EventRegistrationController extends Controller
             $is_team = $eventTeamRegistration->event->config->is_team;
             
             if ($is_team == false) {
-                $academy = $this->academy->all();
+                $academies = $this->academy->all();
                 $eventEntries = $this->eventEntries->getEntryByEventId($eventRegistration->event_id);
                 $configBelts = $this->configBelt->getEntryBeltByEntryId($eventRegistration->entry_id);
                 $configAges = $this->configAge->getEntryAgeByEntryId($eventRegistration->entry_id);
@@ -308,21 +308,21 @@ class EventRegistrationController extends Controller
                 $data['configBelts'] = $configBelts;
                 $data['configAges'] = $configAges;
                 $data['configWeights'] = $configWeights;
-                $data['academies'] = $academy;
+                $data['academies'] = $academies;
             
                 return view($this->view_path.'.edit', $data);
             }
             else
             {
                 $eventTeamRegistration = $this->eventTeamRegistration->find($id);
-                $academy = $this->academy->all();
+                $academies = $this->academy->all();
                 $eventEntries = $this->eventEntries->getEntryByEventId($eventTeamRegistration->event_id);
                 $team_list = $this->team->all();
 
                 $data['team_list'] = $team_list;
                 $data['eventTeamRegistration'] = $eventTeamRegistration;
                 $data['eventEntries'] = $eventEntries;
-                $data['academies'] = $academy;
+                $data['academies'] = $academies;
             
                 return view($this->view_path.'.team/edit_team', $data);
             }
@@ -994,16 +994,21 @@ class EventRegistrationController extends Controller
         $eventFees = $this->eventRegistration->getPaymentByEventId(@$eventId)->groupBy('amount');
         $eventRegistrationAcademyStats = $this->eventRegistration->getStatsAcademyFromEvent($eventId);
         $eventRegistrationEntriesStats = $this->eventRegistration->getStatsEntriesFromEvent($eventId);
+        $eventRegistrationEntriesAllStats = $this->eventRegistration->getStatsEntriesAllFromEvent($eventId);
         $eventRegistrationStatusStats = $this->eventRegistration->getStatsStatusFromEvent($eventId);
         $eventRegistrationGenderStats = $this->eventRegistration->getStatsGenderFromEvent($eventId);
+        $eventRegistrationGenderAllStats = $this->eventRegistration->getStatsGenderAllFromEvent($eventId);
+        
         
         $data['event'] = $event;
         $data['progressPercent'] = round(@$eventRegStatusCount[@Config::get('smart.event_registration_status')['approved']] ? @$eventRegStatusCount[@Config::get('smart.event_registration_status')['approved']] / array_sum(@$eventRegStatusCount) * 100 : 0);
         $data['eventRegistration'] = $eventRegistration->groupBy(['entry.fullname', 'belt.name', 'age.name', 'weight.weight']);        
         $data['eventRegistrationAcademyStats'] = $eventRegistrationAcademyStats;
         $data['eventRegistrationEntriesStats'] = $eventRegistrationEntriesStats;
+        $data['eventRegistrationEntriesAllStats'] = $eventRegistrationEntriesAllStats;
         $data['eventRegistrationStatusStats'] = $eventRegistrationStatusStats;
         $data['eventRegistrationGenderStats'] = $eventRegistrationGenderStats;
+        $data['eventRegistrationGenderAllStats'] = $eventRegistrationGenderAllStats;
         $data['eventRegStatusCount'] = $eventRegStatusCount;
         $data['eventEntries'] = $event->entries;
         $data['academies'] = $academies;
@@ -1015,18 +1020,31 @@ class EventRegistrationController extends Controller
         return view($this->view_path.'.stats', $data);
     }
 
+    public function results($eventId)
+    {
+        $event = $this->event->find($eventId);
+        $eventResult = $this->eventRegistration->getResultGoldFromEvent($eventId);
+        // dd($this->eventRegistration->getResultGoldFromEvent($eventId));
+        $data['event'] = $event;
+        $data['eventResult'] = $eventResult;
+
+        $data['view_path'] = $this->view_path;
+
+        return view($this->view_path.'.results', $data);
+    }
+
     //Team Member
     public function createTeamMember()
     {
         $input = Input::all();
         
-        $academy = $this->academy->all();
+        $academies = $this->academy->all();
         $team_list = $this->team->all();
 
         $data['team_list'] = $team_list;
         $data['event_id'] = @$input['event_id'];
         $data['team_id'] = @$input['team_id'];
-        $data['academies'] = $academy;
+        $data['academies'] = $academies;
         
         return view($this->view_path.'.team/athlete_team/add', $data);
     }
@@ -1073,11 +1091,18 @@ class EventRegistrationController extends Controller
     public function editTeamMember($id)
     {
         $eventTeamRegistration = $this->eventTeamRegistration->find($id);
-        $academy = $this->academy->all();
-           
+        $academies = $this->academy->all();
+        $teamMember = $this->teamMember->find($id);
+        $team_list = $this->team->all();
+        $eventEntries = $this->eventEntries->getEntryByEventId($teamMember->event_id);
+        
+        dd($this->eventTeamRegistration->find($this->teamMember->find($id)));
 
+        $data['eventEntries'] = $eventEntries;
+        $data['team_id'] = @$input['team_id'];
+        $data['teamMember'] = $teamMember;
         $data['eventTeamRegistration'] = $eventTeamRegistration;
-        $data['academies'] = $academy;
+        $data['academies'] = $academies;
         $data['event_id'] = @$input['event_id'];
         $data['team_id'] = @$input['team_id'];
 

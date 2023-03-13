@@ -164,3 +164,6 @@ Route::get('/event/{eventId}/bracket/show', 'event\EventRegistrationController@s
 
 //stats
 Route::get('/event/{eventId}/statistics', 'event\EventRegistrationController@statistics')->name('event.statistics');
+
+//result
+Route::get('/event/{eventId}/results', 'event\EventRegistrationController@results')->name('event.results');

@@ -6,7 +6,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 
-        <title>Condition cup 2022</title>
+        <title>UniQ Certificate</title>
 
         <style>
             body{
@@ -14,8 +14,6 @@
                 padding: 0;
             }
             .main_container{
-                width: 1050px;
-                height: 1484px;
                 background: #eee;
                 margin: 0 auto;
                 position: relative;
@@ -30,75 +28,170 @@
                 position: relative;
                 padding: 0;
                 margin: 0;
-                background: url('/assets/images/bg_condition_cup.jpg') no-repeat center center;
+                background: url('/assets/images/certificate.jpg') no-repeat center center;
                 background-size: contain;
+                border-top: 2px solid #fff;
             }
             .content{
                 position: relative;
-                margin-top: 742px;
+                margin-top: 738px;
             }
             .image_container{
                 position: absolute;
-                width: 132px;
-                height: 235px;
+                width: 130px;
+                height: 130px;
                 background: #222;
-                bottom: 42px;
-                left: 58px;
-                border-radius: 8px;
+                bottom: 375px;
+                left: 50px;
+                border-radius: 50%;
             }
             .image_container img{
+                border-radius: 100%;
+                border: 5px solid #000;
+            }
+            .eventName{
+                position: absolute;
+                width: 400px;
+                height: 20px;
+                bottom: 650px;
+                left: 30px;
                 border-radius: 8px;
+                font-family: 'Times New Roman', Times;
+                font-style: normal;
+                font-weight: bold;
+                font-size: 30px;
             }
             .org{
                 position: absolute;
-                width: 155px;
+                width: 200px;
                 height: 20px;
-                bottom: 216px;
-                right: 50px;
+                bottom: 390px;
+                left: 230px;
                 border-radius: 8px;
-                font-family: 'Times New Roman', Times, serif;
-                font-style: italic;
+                font-family: 'Times New Roman', Times;
+                font-style: normal;
                 font-weight: bold;
-                font-size: 14px;
-                color: #222;
+                font-size: 18px;
+                
             }
             .name{
                 position: absolute;
-                width: 248px;
-                height: 20px;
-                bottom: 143px;
-                right: 50px;
+                width: 280px;
+                height: 70px;
+                bottom: 400px;
+                left: 230px;
+                /* right: 100px; */
                 border-radius: 8px;
-                font-family: 'Times New Roman', Times, serif;
-                font-style: italic;
+                font-family: 'Times New Roman', Times;
+                /* font-style: normal; */
                 font-weight: bold;
-                font-size: 18px;
+                font-size: 30px;
+                line-height: 26px;
                 color: #222;
+                text-align: left;
             }
             .weight{
                 position: absolute;
-                width: 105px;
-                height: 20px;
-                bottom: 71px;
-                right: 190px;
+                width: 250px;
+                height: 40px;
+                bottom: 195px;
+                left: 40px;
                 border-radius: 8px;
-                font-family: 'Times New Roman', Times, serif;
-                font-style: italic;
+                font-family: 'Times New Roman', Times;
+                font-style: normal;
                 font-weight: bold;
-                font-size: 22px;
+                font-size: 20px;
                 color: #222;
+                line-height: 20px;
+                text-align: left;
+            }
+            .belt{
+                position: absolute;
+                width: 250px;
+                height: 40px;
+                bottom: 233px;
+                left: 40px;
+                border-radius: 8px;
+                font-family: 'Times New Roman', Times;
+                font-weight: bold;
+                font-style: normal;
+                font-size: 20px;
+                color: #222;
+                line-height: 20px;
+                text-align: left;
+            }
+            .gender{
+                position: absolute;
+                width: 250px;
+                height: 20px;
+                bottom: 180px;
+                left: 40px;
+                border-radius: 8px;
+                font-family: 'Times New Roman', Times;
+                font-weight: bold;
+                font-style: normal;
+                font-size: 20px;
+                color: #222;
+                line-height: 20px;
+                text-align: left;
+            }
+            .birthdate{
+                position: absolute;
+                width: 250px;
+                height: 20px;
+                bottom: 320px;
+                left: 40px;
+                border-radius: 8px;
+                font-family: 'Times New Roman', Times;
+                font-weight: bold;
+                font-style: normal;
+                font-size: 20px;
+                color: #222;
+                line-height: 20px;
+                text-align: left;
+            }
+            .qrcode{
+                position: absolute;
+                width: 250px;
+                height: 90px;
+                bottom: 260px;
+                right: 30px;
+                border-radius: 8px;
+                font-family: 'Times New Roman', Times;
+                font-weight: bold;
+                font-style: normal;
+                font-size: 20px;
+                color: #222;
+                line-height: 20px;
+                text-align: right;
+            }
+            .regid{
+                position: absolute;
+                width: 250px;
+                height: 40px;
+                bottom: 150px;
+                right: 80px;
+                border-radius: 8px;
+                font-family: 'Times New Roman', Times;
+                font-weight: bold;
+                font-style: normal;
+                font-size: 20px;
+                color: #222;
+                line-height: 20px;
+                text-align: right;
             }
             .category{
                 position: absolute;
-                width: 105px;
-                height: 20px;
-                bottom: 71px;
-                right: 50px;
+                width: 280px;
+                height: 40px;
+                bottom: 273px;
+                left: 40px;
                 border-radius: 8px;
-                font-family: 'Times New Roman', Times, serif;
-                font-style: italic;
+                font-family: 'Times New Roman', Times;
+                font-style: normal;
                 font-weight: bold;
-                font-size: 14px;
+                font-size: 20px;
+                text-align: left;
                 color: #222;
             }
 
@@ -123,17 +216,30 @@
                         {{ @$reg->member->lastname }} {{ @$reg->member->firstname }}
                     </div>
                     <div class="weight">
-                        {{ @$reg->weight->weight }}кг
+                        Жин : {{ @$reg->weight->weight }}кг
                     </div>
                     <div class="category">
-                        {{ @$reg->entry->name }}
+                        Ангилал : {{$reg->entry->name}}
+                    </div>
+                    <div class="belt">
+                        Бүс : {{@$reg->belt->name}}
+                    </div>
+                    <div class="gender">
+                        Хүйс : {{ Config::get("enums.gender_code")[@$reg->member->gender_code] }}
+                    </div>
+                    <div class="birthdate">
+                        Төрсөн огноо : {{@$reg->member->birth}}
+                    </div>
+                    
+                    <div class="qrcode">
+                        <img src="data:image/png;base64,{{\DNS2D::getBarcodePNG(strval(@$reg->id), 'QRCODE')}}" width="150px" height="150px">
+                    </div>
+                    <div class="regid">
+                        {{@$reg->id}}
                     </div>
                 </div>
             </div>
-            
-            @endforeach           
-               
-                   
+            @endforeach                              
         </div>
         <div style="break-after:always; clear:both"></div> 
         @empty

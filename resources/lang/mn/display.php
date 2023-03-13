@@ -80,9 +80,11 @@ return [
     'general_team' => 'Багийн нэр',
     'general_team_athlete' => 'Багийн тамирчид',
     'general_team_no_athlete' => 'Багийн тамирчид бүртгүүлээгүй байна.',
+    'general_no_athlete' => 'Тамирчид бүртгүүлээгүй байна.',
     'general_new_athlete' => 'Тамирчин шинээр нэмэх',
     'general_edit_athlete' => 'Тамирчин мэдээлэл засварлах',
     'general_athlete_count' => 'Оролцож буй тамирчдын тоо',
+    'general_result' => 'Тэмцээний үр дүн',
 
 
     /** NOUN **/
@@ -305,6 +307,7 @@ return [
     //Academy
 
     "organization" => "Байгууллага",
+    "best_academy" =>"Шилдэг академи",
 
     //Event
     'event_title' => 'Эвент',

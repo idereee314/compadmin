@@ -22,6 +22,13 @@
             </div>
         </div> 
 
+        <!-- <div class="form-group row">
+            <label class="col-md-3 col-form-label text-right">{{trans('display.general_team')}}: <span class="text-danger">*</span></label>
+            <div class="col-md-9">
+                <input class="form-control" id="team_id" name="team_id"/>
+            </div>
+        </div> -->
+
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.general_team')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9">

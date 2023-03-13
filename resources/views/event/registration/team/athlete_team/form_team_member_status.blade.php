@@ -31,7 +31,15 @@
             <div class="col-md-7">
                 <div class="form-group row">
                     <label class="col-md-3 col-form-label text-right">{{trans('display.general_status')}}:<span class="text-danger">*</span></label>
-                    
+                    <div class="col-md-9">
+                        <select class="form-control selectpicker" id="status" name="status" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}">
+                            <option value="{{ $teamAthlete->status }}" selected="selected">{{ @Config::get("enums.event_registration_status")[$teamAthlete->status] }}</option>
+                            @forelse(@$nextStatuses as $nextStatus)
+                            <option value="{{ $nextStatus }}">{{ @Config::get("enums.event_registration_status")[$nextStatus] }}</option>
+                            @empty
+                            @endforelse
+                        </select>
+                    </div>
                 </div>
                 <div class="form-group row payment" style="{{ @$eventTeamRegistration->status == @Config::get('smart.event_registration_status')['created'] ? 'display: none' : ''}}">
                     <label class="col-md-3 col-form-label text-right">{{ trans('display.general_amount') }}:<span class="text-danger">*</span></label>

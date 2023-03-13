@@ -162,7 +162,7 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 
 				if($searchData->has('amount') && $searchData->get('amount') !== null)
                 {
-					if($searchData->get('amount') > 0)
+					if($searchData->get('amount') > 0 || $searchData->get('amount') == 0)
 					{
 						$qry->whereHas('payments', function($q) use($searchData){
 							$q->where('amount', $searchData->get('amount'));
@@ -420,6 +420,7 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 								order by r.entry_id, r.entry_age_id, r.entry_belt_id, r.entry_weight_id");
 	}
 
+	// stats queries .start
 	public function getStatsAcademyFromEvent($eventId)
 	{
 		return DB::select("select count(uer.academy_id) as academy_count, uer.academy_id, ua.name
@@ -431,6 +432,16 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 	}
 
 	public function getStatsEntriesFromEvent($eventId)
+	{
+		return DB::select("select count(uer.entry_id) as entry_count, uer.entry_id, uee.name, uee.gender_code
+        						from uq_comp.uq_event_registration uer
+								left join uq_comp.uq_event_entries uee on uer.entry_id = uee.id
+        						where uer.event_id = $eventId and uer.status = 'approved'
+        						group by uer.event_id, uer.entry_id, uee.name,uee.gender_code
+        						order by uee.gender_code desc");
+	}
+
+	public function getStatsEntriesAllFromEvent($eventId)
 	{
 		return DB::select("select count(uer.entry_id) as entry_count, uer.entry_id, uee.name, uee.gender_code
         						from uq_comp.uq_event_registration uer
@@ -453,9 +464,61 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 		return DB::select("select um.gender_code , count(um.gender_code) as gender_count
         						from uq_comp.uq_event_registration uer	
 								left join uniqdb.uq_comp.uq_member um on um.id = uer.member_id 	
+        						where uer.event_id = $eventId and uer.status = 'approved'
+        						group by uer.event_id, um.gender_code");
+	}
+
+	public function getStatsGenderAllFromEvent($eventId)
+	{
+		return DB::select("select um.gender_code , count(um.gender_code) as gender_count
+        						from uq_comp.uq_event_registration uer	
+								left join uniqdb.uq_comp.uq_member um on um.id = uer.member_id 	
         						where uer.event_id = $eventId
         						group by uer.event_id, um.gender_code");
 	}
+
+	// stats queries .end
+	//results queries .start
+	public function getResultFromEvent($eventId)
+	{
+		return DB::select("ua.name , uea.place_number, count(uea.place_number) as award
+								from uq_comp.uq_event_award uea 
+								left join uq_comp.uq_event_registration uer ON uer.id = uea.event_registration_id 
+								left join uq_comp.uq_academy ua on ua.id = uer.academy_id 
+								where uer.event_id = 615
+								group by uea.place_number, ua.name");
+	}
+
+	public function getResultTestFromEvent($eventId)
+	{
+		return DB::select("select ua.name,
+			SUM(CASE WHEN uea.place_number = 1 THEN 1 ELSE 0 END) AS place_number_1,
+			SUM(CASE WHEN uea.place_number = 2 THEN 1 ELSE 0 END) AS place_number_2,
+			SUM(CASE WHEN uea.place_number = 3 THEN 1 ELSE 0 END) AS place_number_3
+			FROM uq_comp.uq_event_award uea
+			LEFT JOIN uq_comp.uq_event_registration uer ON uer.id = uea.event_registration_id
+			LEFT JOIN uq_comp.uq_academy ua ON ua.id = uer.academy_id
+			WHERE uer.event_id = $eventId
+			GROUP BY ua.name
+			ORDER BY place_number_1 desc");
+	}
+
+	public function getResultGoldFromEvent($eventId)
+	{
+		return DB::select("select uer.academy_id, ua.name,
+			SUM(CASE WHEN uea.place_number = 1 THEN 1 ELSE 0 END) as gold,
+			SUM(CASE WHEN uea.place_number = 2 THEN 1 ELSE 0 END) AS silver,
+       		SUM(CASE WHEN uea.place_number = 3 THEN 1 ELSE 0 END) AS bronze
+			FROM uq_comp.uq_event_award uea
+			LEFT JOIN uq_comp.uq_event_registration uer ON uer.id = uea.event_registration_id
+			LEFT JOIN uq_comp.uq_academy ua ON ua.id = uer.academy_id
+			WHERE uer.event_id = $eventId
+			GROUP BY ua.name,uer.academy_id
+			ORDER BY gold desc");
+	}
+
+	
+	//results queries .end
 
 	public function getAllEntriesFromEventById($eventId, $entryId, $entryAgeId, $entryBeltId, $entryWeightId)
 	{
