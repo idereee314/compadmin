@@ -91,7 +91,14 @@ return array(
 		'academy' => 'Академи',
 		'highschool' => 'Дунд сургууль',
 		'university' => 'Их, дээд сургууль, коллеж'
-	]
+	],
+
+	'event_award' => [
+		'1' => 'fas fa-medal icon-2x gold-medal-icon',
+		'2' => 'fas fa-medal icon-2x silver-medal-icon',
+		'3' => 'fas fa-medal icon-2x bronze-medal-icon',
+	],
+
 )
 
 ?>

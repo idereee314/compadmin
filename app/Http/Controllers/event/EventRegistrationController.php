@@ -1023,14 +1023,29 @@ class EventRegistrationController extends Controller
     public function results($eventId)
     {
         $event = $this->event->find($eventId);
-        $eventResult = $this->eventRegistration->getResultGoldFromEvent($eventId);
-        // dd($this->eventRegistration->getResultGoldFromEvent($eventId));
-        $data['event'] = $event;
+        $eventResult = $this->eventRegistration->getResultFromEvent($eventId);
+        $eventAllMedal = $this->eventRegistration->getAllMedalFromEvent($eventId);
+        // dd($eventResult);
+        $data['eventAllMedal'] = $eventAllMedal;
         $data['eventResult'] = $eventResult;
+        $data['event'] = $event;
 
         $data['view_path'] = $this->view_path;
 
-        return view($this->view_path.'.results', $data);
+        return view($this->view_path.'.result', $data);
+    }
+
+    public function toplist($eventId)
+    {
+        $event = $this->event->find($eventId);
+        $eventToplist = $this->eventRegistration->getToplistFromEvent($eventId);
+        
+        $data['event'] = $event;
+        $data['eventToplist'] = $eventToplist;
+
+        $data['view_path'] = $this->view_path;
+
+        return view($this->view_path.'.toplist', $data);
     }
 
     //Team Member

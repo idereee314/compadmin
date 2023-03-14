@@ -275,7 +275,7 @@
                                     </div>
                                 </div>
                                 <div class="card-body">
-                                @if(count($eventRegistrationGenderStats) > 0)
+                                @if(count($eventRegistrationStatusStats) > 0)
                                     <div class="table-responsive">
                                         <table class="table table-hover table-bordered table-head-custom" id="event-team-registration-datatable">
                                             <thead>
@@ -349,7 +349,7 @@
                                     </div>
                                 </div>
                                 <div class="card-body">
-                                @if(count($eventRegistrationGenderStats) > 0)
+                                @if(count($eventRegistrationGenderAllStats) > 0)
                                     <div class="table-responsive">
                                         <table class="table table-hover table-bordered table-head-custom" id="event-team-registration-datatable">
                                             <thead>
@@ -387,7 +387,7 @@
                                     </div>
                                 </div>
                                 <div class="card-body">
-                                @if(count($eventRegistrationGenderStats) > 0)
+                                @if(count($eventRegistrationEntriesAllStats) > 0)
                                     <div class="table-responsive">
                                         <table class="table table-hover table-bordered table-head-custom" id="event-team-registration-datatable">
                                         <thead>

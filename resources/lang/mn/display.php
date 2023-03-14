@@ -307,7 +307,9 @@ return [
     //Academy
 
     "organization" => "Байгууллага",
-    "best_academy" =>"Шилдэг академи",
+    "best_academy" => "Шилдэг академи",
+    "toplist" => "Топ жагсаалт",
+    "results" => "Үр дүн",
 
     //Event
     'event_title' => 'Эвент',

@@ -61,6 +61,7 @@ return array (
 	"validation_confirm_field_password" => "Баталгаажуулах нууц таарахгүй байна",
 
 	"empty_image" => "Зураг байхгүй байна",
+	"empty_toplist" => "Одоогоор шагналын мэдээлэл ороогүй байна.",
 
 	"information_is_incomplete" => "Мэдээлэл дутуу байна. Байгууллагын мэдээлэлээ бүрэн оруулна уу!",
 
@@ -69,4 +70,6 @@ return array (
 
 	"validation_register_field_password_confirmed" => "Нууц үгийг дахин оруулахдаа буруу оруулсан байна",
 	"validation_register_field_password_min" => "Нууц үг хамгийн багадаа 8 тэмдэгт байна",
+	
+	
 );

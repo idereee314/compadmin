@@ -167,3 +167,4 @@ Route::get('/event/{eventId}/statistics', 'event\EventRegistrationController@sta
 
 //result
 Route::get('/event/{eventId}/results', 'event\EventRegistrationController@results')->name('event.results');
+Route::get('/event/{eventId}/toplist', 'event\EventRegistrationController@toplist')->name('event.toplist');
