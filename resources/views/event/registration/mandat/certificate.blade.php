@@ -20,7 +20,7 @@
                 padding: 0;
             }
             .container{
-                width: 525px;
+                width: 550px;
                 height: 742px;
                 background: #ddd;
                 margin: 0 auto;
