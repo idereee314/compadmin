@@ -496,7 +496,8 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 
 	public function getResultFromEvent($eventId)
 	{
-		return DB::select("select CONCAT(um.lastname, ' ',um.firstname) AS fullname, uea.place_number, uee.name as category_name, uecw.weight, ua.name as academy_name , uecb.name as bus, uer.academy_name as busad
+		return DB::select("select CONCAT(um.lastname, ' ',um.firstname) AS fullname, uea.place_number, uee.name as category_name, uecw.weight, 
+		ua.name as academy_name , uecb.name as bus, uer.academy_name as busad, ueca.start_age , ueca.end_age, ueca.id as ageId
 			FROM uq_comp.uq_event_award uea
 			LEFT JOIN uniqdb.uq_comp.uq_event_registration uer ON uer.id = uea.event_registration_id 
 			LEFT JOIN uniqdb.uq_comp.uq_academy ua ON ua.id = uer.academy_id 
@@ -504,9 +505,10 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 			LEFT JOIN uniqdb.uq_comp.uq_event_entries uee ON uee.id = uer.entry_id  
 			LEFT JOIN uniqdb.uq_comp.uq_entry_config_weight uecw ON uecw.id = uer.entry_weight_id 
 			LEFT JOIN uniqdb.uq_comp.uq_entry_config_belt uecb  ON uecb.id = uer.entry_belt_id 
+			LEFT JOIN uniqdb.uq_comp.uq_entry_config_age ueca ON ueca.id = uer.entry_age_id 
 			WHERE uer.event_id = $eventId
-			GROUP BY uee.name, ua.name, fullname, uea.place_number, uecw.weight, uee.id, ua.name, bus, uer.academy_name 
-			ORDER BY uee.id desc, bus, uecw.weight desc, uea.place_number asc");
+			GROUP BY uee.name, ua.name, fullname, uea.place_number, uecw.weight, uee.id, ua.name, bus, uer.academy_name, ueca.id
+			ORDER BY uee.id desc, ueca.id desc, bus , uecw.weight desc, uea.place_number asc");
 	}
 
 	public function getAllMedalFromEvent($eventId)

@@ -200,63 +200,69 @@
                             </div>
                             <!--end::Card-->                            
                         </div>
-                       
-                        <div class="col-xl-12">
-                            <!--begin::Card-->
-                            <div class="card card-custom gutter-b">
-                                <!-- <div class="card-header">
-                                    <div class="card-title text-center">
-                                        <h3 class="card-label"><strong></strong></h3>
-                                    </div>
-                                </div> -->
-                                <div class="card-body">    
-                                @if(count($eventResult) > 0 || count($eventResult) == 0)                               
-                                    <div class="table-responsive">
-                                        <table class="table table-hover table-bordered table-head-custom" id="event-team-registration-datatable">
-                                        <thead>
-                                            <tr>
-                                                <th class="text-center">#</th>
-                                                <th class="text-center">{{trans('display.human_name')}}</th>
-                                                <th class="text-center">{{trans('display.comp_academy_name')}}</th>
-                                                <th class="text-center">{{trans('display.comp_entry')}}</th>
-                                                <th class="text-center">{{trans('display.comp_entry_belt')}}</th>
-                                                <th class="text-center">{{trans('display.comp_entry_weight')}}</th>
-                                            </tr>
-                                        </thead>                                        
-                                        <tbody>
-                                                @foreach($eventResult as $results)
-                                                <tr>
-                                                    @if($results->place_number > 3)     
-                                                    <td class="text-center border-right"><strong>{{ $results->place_number }}</strong></td>
-                                                    @else
-                                                    <td class="text-center border-right"><strong><i class="{{ Config::get("enums.event_award")[@$results->place_number] }}"></i></strong></td>
-                                                    @endif
-                                                    <td class="text-center border-right"><strong>{{ $results->fullname }}</strong></td> 
-                                                    
-                                                    @if($results->academy_name == 'Бусад')                       
-                                                    <td class="text-center border-right"><strong>{{ $results->busad }}</strong></td>                                                                                                        
-                                                    @else 
-                                                    <td class="text-center border-right"><strong>{{ $results->academy_name }}</strong></td>  	            
-                                                    @endif
 
-                                                    <td class="text-center border-right"><strong>{{ $results->category_name }} </strong></td>
-                                                    <td class="text-center border-right"><strong>{{ $results->bus }} </strong></td>
-                                                    <td class="text-center border-right"><strong>{{ $results->weight }}</strong></td>
-                                                    
-                                                </tr>
-                                                @endforeach 
-                                        </table>
-                                        </tbody>                                        
-                                    </div>                                
-                                </div>
-                                @else
-                                    <tr>
-                                        <td colspan="12" class="text-center"><strong>{{ trans('messages.empty_toplist') }}</strong></td>
-                                    </tr>
-                                @endif
-                            </div>
-                            <!--end::Card-->                            
-                        </div>                        
+                        @foreach(collect($eventResult)->groupBy('category_name') as $categoryName => $categoryResults)
+                        @foreach(collect($categoryResults)->groupBy(function($item) 
+                        {
+                            return $item->start_age . '-' . $item->end_age;
+                        }) as $age => $ages)
+                            @php
+                                $ageArray = explode('-', $age);
+                                $startage = $ageArray[0];
+                                $end_age = $ageArray[1];
+                            @endphp
+                                @foreach(collect($ages)->groupBy('bus') as $bus => $belts)
+                                    @foreach(collect($belts)->groupBy('weight') as $weight => $weights)
+                                        <div class="col-xl-12">
+                                            <!--begin::Card-->
+                                            <div class="card card-custom gutter-b">
+                                                <div class="card-header">
+                                                    <div class="card-title text-center">
+                                                        <h3 class="card-label"><strong>{{ $categoryName }} - ({{$startage}}-{{$end_age}}) - {{ $bus }} {{ $weight }}</strong></h3>
+                                                    </div>
+                                                </div>
+                                                <div class="card-body">                                                              
+                                                    <div class="table-responsive">
+                                                        <table class="table table-hover table-bordered table-head-custom" id="event-team-registration-datatable">                                                                        
+                                                            <tbody>
+                                                                @foreach($weights as $result)
+                                                                
+                                                                    <tr>
+                                                                        @if($result->place_number > 3)     
+                                                                            <td class="text-center border-right"><strong>{{ $result->place_number }}</strong></td>
+                                                                        @else
+                                                                            <td class="text-center border-right"><strong><i class="{{ Config::get("enums.event_award")[@$result->place_number] }}"></i></strong></td>
+                                                                        @endif
+                                                                        
+                                                                        <td class="text-center border-right"><strong>{{ $result->fullname }}</strong></td> 
+
+                                                                        @if($result->academy_name == 'Бусад')                       
+                                                                            <td class="text-center border-right"><strong>{{ $result->busad }}</strong></td>                                                                                                        
+                                                                        @else 
+                                                                            <td class="text-center border-right"><strong>{{ $result->academy_name }}</strong></td>  	            
+                                                                        @endif           
+                                                                        
+                                                                        <!-- <td class="text-left border-right">
+                                                                            <h3><strong>{{ $result->fullname }}</strong></h3>
+                                                                            @if($result->academy_name == 'Бусад')
+                                                                                <h4><small>{{ $result->busad }}</small></h4>
+                                                                            @else
+                                                                                <h4><small>{{ $result->academy_name }}</small></h4>
+                                                                            @endif
+                                                                        </td> -->
+                                                                    </tr>
+                                                                @endforeach 
+                                                            </tbody>                                        
+                                                        </table>                                  
+                                                    </div>                                
+                                                </div>                            
+                                            </div>
+                                            <!--end::Card-->                            
+                                        </div> 
+                                    @endforeach 
+                                @endforeach 
+                            @endforeach 
+                        @endforeach
                     </div>                    
                     <!--end::Row-->                    
                 </div>

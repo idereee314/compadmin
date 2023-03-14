@@ -58,7 +58,8 @@ class EloquentEventRepository implements EventRepository {
 				$q->where('uq_event_registration.status', @Config::get('smart.event_registration_status')['approved']);
 			}])
 			->join('uq_event_user', 'uq_event_user.event_id', '=', 'rti_event.id')
-			->where('uq_event_user.user_id', '=', Auth::user()->id);
+			->where('uq_event_user.user_id', '=', Auth::user()->id)
+			->orderBy('rti_event.event_date', 'desc');
 
 		$eventConfig = $qry->orderBy('uq_event_config.created_at', 'desc')->paginate($perPage);
 		return json_encode($eventConfig);

@@ -54,6 +54,10 @@
                                     <div class="ribbon-target bg-success" style="top: -2px; right: 20px;">
                                         <i class="fa fa-star text-white"></i>
                                     </div>
+                                    @else
+                                    <div class="ribbon-target bg-warning" style="top: -2px; right: 20px;">
+                                        Дууссан
+                                    </div>
                                     @endif
                                     <!--begin::Section-->
                                     <div class="d-flex align-items-center">
