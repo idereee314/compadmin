@@ -165,8 +165,8 @@
                             <!--begin::Card-->
                             <div class="card card-custom gutter-b">
                                 <div class="card-header">
-                                    <div class="card-title text-center">Нийт медаль
-                                        <!-- <h3 class="card-label text-center"><strong></strong></h3> -->
+                                    <div class="card-title">
+                                        <h3 class="card-label"><strong>Нийт медаль</strong></h3>
                                     </div>
                                 </div>
                                 <div class="card-body">     
