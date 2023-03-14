@@ -1164,10 +1164,12 @@ function showEditModal(data){
             if($(this).is(':checked'))
             {
                 $('#update-event-registration-form input[name=current_weight]').prop('disabled', false);
+                $('#update-event-registration-form input[name=weight_desc]').prop('disabled', false);
             }
             else 
             {
                 $('#update-event-registration-form input[name=current_weight]').prop('disabled', true);
+                $('#update-event-registration-form input[name=weight_desc]').prop('disabled', true);
             }
         });
 

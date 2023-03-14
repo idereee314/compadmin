@@ -119,7 +119,8 @@ $(document).ready(function() {
         timePickerIncrement: 30,
         locale: {
             format: 'YYYY-MM-DD hh:mm A'
-        }
+        },
+        
     }, function(start, end, label) {
         $('#kt_reg_date .form-control').val( start.format('YYYY-MM-DD hh:mm A') + ' / ' + end.format('YYYY-MM-DD hh:mm A'));
     });
@@ -131,8 +132,9 @@ $(document).ready(function() {
         format: 'yyyy-MM-D HH:mm',
         templates: {
             leftArrow: '<i class="la la-angle-right"></i>',
-            rightArrow: '<i class="la la-angle-left"></i>'
-        }
+            rightArrow: '<i class="la la-angle-left"></i>',
+        },
+        locale: 'mn',
     });
 
     $('#reg_update_date').datetimepicker({

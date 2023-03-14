@@ -10,14 +10,14 @@
     <div class="card-body">
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.comp_member')}}: <span class="text-danger">*</span></label>
-            <div class="col-md-9 col-lg-5">
+            <div class="col-md-9 col-lg-7">
                 <input class="form-control form-control-lg" disabled value="{{ $eventRegistration->member->fullname }}"/>
             </div>
         </div> 
 
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.comp_entry')}}: <span class="text-danger">*</span></label>
-            <div class="col-md-9 col-lg-5">
+            <div class="col-md-9 col-lg-7">
                 <select class="form-control selectpicker" id="entry_id" name="entry_id" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}">
                     @forelse(@$eventEntries as $entry)
                     <option value="{{ $entry['id'] }}" {{ $eventRegistration->entry_id == @$entry->id ? 'selected' : ''}}>{{ $entry->name }}</option>
@@ -29,7 +29,7 @@
 
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.comp_entry_belt')}}: <span class="text-danger">*</span></label>
-            <div class="col-md-9 col-lg-5">
+            <div class="col-md-9 col-lg-7">
                 <select class="form-control form-control-input" id="entry_belt_id" name="entry_belt_id" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}">
                     @forelse(@$configBelts as $belt)
                     <option value="{{ $belt->id }}" {{ $eventRegistration->entry_belt_id == $belt->id ? 'selected' : ''}}>{{ $belt->name }}</option>
@@ -41,7 +41,7 @@
 
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.comp_entry_age')}}: <span class="text-danger">*</span></label>
-            <div class="col-md-9 col-lg-5">
+            <div class="col-md-9 col-lg-7">
                 <select class="form-control form-control-input" id="entry_age_id" name="entry_age_id" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}">
                     @forelse(@$configAges as $age)
                     <option value="{{ $age->id }}" {{ $eventRegistration->entry_age_id == $age->id ? 'selected' : ''}}>{{ @$age->start_age }} - {{ @$age->end_age }}</option>
@@ -53,7 +53,7 @@
 
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.comp_entry_weight')}}: <span class="text-danger">*</span></label>
-            <div class="col-md-9 col-lg-5">
+            <div class="col-md-9 col-lg-7">
                 <select class="form-control form-control-lg" id="entry_weight_id" name="entry_weight_id" value="{{$eventRegistration->entry_weight_id}}" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}">
                     @forelse(@$configWeights as $weight)
                     <option value="{{ $weight->id }}" {{ $eventRegistration->entry_weight_id == $weight->id ? 'selected' : ''}}>{{ @$weight->weight }}</option>
@@ -65,7 +65,7 @@
 
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.comp_academy')}}: <span class="text-danger">*</span></label>
-            <div class="col-md-9 col-lg-5">
+            <div class="col-md-9 col-lg-7">
                 <select class="form-control selectpicker" data-live-search="true" id="academy_id" name="academy_id" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}">
                     <option value="">-- {{ trans('display.general_select') }} --</option>
                     @forelse(@$academies as $academy)
@@ -78,7 +78,7 @@
 
         <div class="form-group row {{$eventRegistration->academy->is_other == 0 ? 'd-none' : ''}}" id="academy_name_other">
             <label class="col-md-3 col-form-label text-right">{{trans('display.comp_academy_name')}}: <span class="text-danger">*</span></label>
-            <div class="col-md-9 col-lg-5">
+            <div class="col-md-9 col-lg-7">
                 <input class="form-control" id="academy_name" name="academy_name" {{ $eventRegistration->academy->is_other == 0 ? 'disabled' : '' }} value="{{$eventRegistration->academy_name}}" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}"/>
             </div>
         </div>
@@ -86,7 +86,7 @@
         @if($eventRegistration->status == @Config::get('smart.event_registration_status')['approved'])
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">Жингийн мэдээлэл </label>
-            <div class="col-md-9 col-lg-5">
+            <div class="col-md-9 col-lg-7">
                 <div class="input-group">
                     <div class="input-group-prepend">
                         <span class="input-group-text">
@@ -96,8 +96,10 @@
                             </label>
                         </span>
                     </div>
-                    <input type="number" min="1" class="form-control" name="current_weight" id="current_weight" {{ @$eventRegistration->is_weight_checked ? '' : 'disabled'}} value="{{ @$eventRegistration->current_weight }}">
+                    <input type="number" min="1" class="form-control" name="current_weight" id="current_weight" placeholder="Жингийн мэдээлэл" {{ @$eventRegistration->is_weight_checked ? '' : 'disabled'}} value="{{ @$eventRegistration->current_weight }}">
+                    <input type="text" class="form-control" name="weight_desc" id="weight_desc" placeholder="Жингийн шүүгчийн нэр" {{ @$eventRegistration->is_weight_checked ? '' : 'disabled'}} value="{{ @$eventRegistration->weight_desc }}"/>
                 </div>
+                
             </div>
         </div>
         @endif

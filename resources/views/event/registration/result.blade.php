@@ -202,10 +202,10 @@
                         </div>
 
                         @foreach(collect($eventResult)->groupBy('category_name') as $categoryName => $categoryResults)
-                        @foreach(collect($categoryResults)->groupBy(function($item) 
-                        {
-                            return $item->start_age . '-' . $item->end_age;
-                        }) as $age => $ages)
+                            @foreach(collect($categoryResults)->groupBy(function($item) 
+                            {
+                                return $item->start_age . '-' . $item->end_age;
+                            }) as $age => $ages)
                             @php
                                 $ageArray = explode('-', $age);
                                 $startage = $ageArray[0];

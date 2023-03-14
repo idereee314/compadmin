@@ -315,7 +315,7 @@ $(document).ready(function() {
             class: "text-center",
             targets: [0,2,3,4,5,6,7,8,9]
         }],
-        order: [[ 8, "desc" ]],
+        order: [[ 3, "desc" ]],
         dom: "<'row'<'col-sm-6 text-left'B><'col-sm-6 text-right'<'#colvis'>>><'row'<'col-sm-12'tr>><'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7 dataTables_pager'lp>>",
         buttons: [
             {
