@@ -207,7 +207,7 @@
                             @endphp
                                 @foreach(collect($ages)->groupBy('bus') as $bus => $belts)
                                     @foreach(collect($belts)->groupBy('weight') as $weight => $weights)
-                                        <div class="col-xl-12">
+                                        <div class="col-xl-4">
                                             <!--begin::Card-->
                                             <div class="card card-custom gutter-b">
                                                 <div class="card-header">
