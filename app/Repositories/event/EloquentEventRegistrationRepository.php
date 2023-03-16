@@ -264,7 +264,15 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 						}
 					}
 					//if($qry->event->due_date > Carbon\Carbon::now()){
-						$actionHtml .= 	'<a class="btn btn-icon btn-light btn-hover-primary btn-sm mr-3 edit" href="javascript:;" data-registrationid="'.$qry->id.'" title="'.trans('display.general_check_weight').'"><i class="fas fa-tachometer-alt"></i></a>';
+						if((empty($qry->status) || $qry->status == @Config::get('smart.event_registration_status')['created'] || $qry->status == @Config::get('smart.event_registration_status')['canceled']))
+						{
+							$actionHtml .= 	'<a class="btn btn-icon btn-light btn-hover-primary btn-sm mr-3 edit" href="javascript:;" data-registrationid="'.$qry->id.'" title="'.trans('display.general_edit').'"><i class="la la-edit"></i></a>';
+						}
+						else
+						{
+							$actionHtml .= 	'<a class="btn btn-icon btn-light btn-hover-primary btn-sm mr-3 edit" href="javascript:;" data-registrationid="'.$qry->id.'" title="'.trans('display.general_check_weight').'"><i class="fas fa-tachometer-alt"></i></a>';
+						}
+						
 						if($qry->source_type == @Config::get('smart.event_registration_source_type')['admin'] && (empty($qry->status) || $qry->status == @Config::get('smart.event_registration_status')['created']))
 						{
 							$actionHtml .= 	'<a class="btn btn-icon btn-light btn-hover-primary btn-sm delete" href="javascript:;" data-registrationid="'.$qry->id.'" title="'.trans('display.general_delete').'"><i class="la la-trash"></i></li>';
@@ -479,7 +487,7 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 	}
 
 	// stats queries .end
-	//toplist queries .start
+	//RESULTS queries .start
 
 	public function getToplistFromEvent($eventId)
 	{
@@ -498,7 +506,7 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 	public function getResultFromEvent($eventId)
 	{
 		return DB::select("select CONCAT(um.lastname, ' ',um.firstname) AS fullname, uea.place_number, uee.name as category_name, uecw.weight, 
-		ua.name as academy_name , uecb.name as bus, uer.academy_name as busad, ueca.start_age , ueca.end_age, ueca.id as ageId
+		ua.name as academy_name , uecb.name as bus, uer.academy_name as busad, ueca.start_age , ueca.end_age, ueca.id as ageId, um.profile_url, um.id AS memberid
 			FROM uq_comp.uq_event_award uea
 			LEFT JOIN uniqdb.uq_comp.uq_event_registration uer ON uer.id = uea.event_registration_id 
 			LEFT JOIN uniqdb.uq_comp.uq_academy ua ON ua.id = uer.academy_id 
@@ -508,7 +516,7 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 			LEFT JOIN uniqdb.uq_comp.uq_entry_config_belt uecb  ON uecb.id = uer.entry_belt_id 
 			LEFT JOIN uniqdb.uq_comp.uq_entry_config_age ueca ON ueca.id = uer.entry_age_id 
 			WHERE uer.event_id = $eventId
-			GROUP BY uee.name, ua.name, fullname, uea.place_number, uecw.weight, uee.id, ua.name, bus, uer.academy_name, ueca.id
+			GROUP BY uee.name, ua.name, fullname, uea.place_number, uecw.weight, uee.id, ua.name, bus, uer.academy_name, ueca.id, um.profile_url, memberid
 			ORDER BY uee.id desc, ueca.id desc, bus , uecw.weight desc, uea.place_number asc");
 	}
 
@@ -523,7 +531,7 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 			WHERE uer.event_id = $eventId");
 	}
 	
-	//toplist queries .end
+	//RESULTS queries .end
 
 	public function getAllEntriesFromEventById($eventId, $entryId, $entryAgeId, $entryBeltId, $entryWeightId)
 	{

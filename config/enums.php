@@ -94,9 +94,9 @@ return array(
 	],
 
 	'event_award' => [
-		'1' => 'fas fa-medal icon-2x gold-medal-icon',
-		'2' => 'fas fa-medal icon-2x silver-medal-icon',
-		'3' => 'fas fa-medal icon-2x bronze-medal-icon',
+		'1' => 'fas fa-medal icon-4x gold-medal-icon',
+		'2' => 'fas fa-medal icon-4x silver-medal-icon',
+		'3' => 'fas fa-medal icon-4x bronze-medal-icon',
 	],
 
 )

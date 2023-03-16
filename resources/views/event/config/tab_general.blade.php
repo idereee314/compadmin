@@ -91,9 +91,19 @@
             <label class="col-md-3 col-form-label text-right"></label>
             <div class="col-md-9 col-lg-6">
                 <label class="checkbox">
-                    <input type="checkbox" name="is_team" {{ @$eventConfig->is_team ? 'checked="checked"' : '' }}>
+                    <input type="checkbox" name="is_team" id="is_team" {{ @$eventConfig->is_team ? 'checked="checked"' : '' }}>
                     <span></span>&nbsp;
                     {{ trans('display.general_is_team') }}
+                </label>
+            </div>
+        </div>
+        <div class="form-group row d-none" id="is_athlete_must_pay">
+            <label class="col-md-3 col-form-label text-right"></label>
+            <div class="col-md-9 col-lg-6">
+                <label class="checkbox">
+                    <input type="checkbox" name="is_athlete_pay" >
+                    <span></span>&nbsp;
+                    {{ trans('display.general_is_pay_athlete') }}
                 </label>
             </div>
         </div>
@@ -150,6 +160,16 @@ $(document).ready(function() {
     });
 
     $('#update-event-config-form select[id=org_types]').select2({});
+
+    $('#is_team').on('change', function() {    
+        if(this.checked) {
+            $("#is_athlete_must_pay").removeClass('d-none');
+        }
+        else {
+            $("#is_athlete_must_pay").addClass('d-none');
+        }
+    });
+    $('#is_team').trigger('change');
 
     $('#update-event-config-form').validate({
         ignore: [],

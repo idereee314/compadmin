@@ -55,9 +55,17 @@
                                         <i class="fa fa-star text-white"></i>
                                     </div>
                                     @else
-                                    <div class="ribbon-target bg-warning" style="top: -2px; right: 20px;">
-                                        Дууссан
-                                    </div>
+                                        @if(Carbon\Carbon::now() <= @$event['event_date'] )
+                                        <div class="ribbon-target bg-info" style="top: -2px; right: 20px;">
+                                            Одоо болж буй
+                                        </div>
+                                        @else 
+                                            @if(Carbon\Carbon::now() >= @$event['due_date'] )
+                                            <div class="ribbon-target bg-warning" style="top: -2px; right: 20px;">
+                                                Дууссан
+                                            </div>
+                                            @endif    
+                                        @endif
                                     @endif
                                     <!--begin::Section-->
                                     <div class="d-flex align-items-center">
@@ -88,7 +96,9 @@
                                                     <ul class="navi navi-hover">
                                                         <li class="navi-header pb-1">
                                                             <span class="text-primary text-uppercase font-weight-bold font-size-sm">Үйлдэл:</span>
-                                                        </li>
+                                                        </li>                                               
+                                                        @if(Auth::user()->roles->first() == null)
+                                                        @elseif(Auth::user()->roles->first()->code == 'admin' || Auth::user()->roles->first()->code == 'event')
                                                         <li class="navi-item">
                                                             <a href="javascript:;" class="navi-link" id="generate-bracket" data-eventid="{{ @$event['id'] }}">
                                                                 <span class="navi-icon">
@@ -97,6 +107,8 @@
                                                                 <span class="navi-text">Оноолт үүсгэх</span>
                                                             </a>
                                                         </li>
+                                                        
+                                                        @endif
                                                         <li class="navi-item">
                                                             <a href="{{ route('event.bracket', @$event['id']) }}" class="navi-link">
                                                                 <span class="navi-icon">

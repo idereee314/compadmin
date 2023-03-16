@@ -40,7 +40,7 @@
                     <!--begin::Details-->
                     <div class="d-flex align-items-center flex-wrap mr-2">
                         <!--begin::Title-->
-                        <h2 class="d-flex align-items-center text-dark font-weight-bold my-1 mr-3">{{trans('display.results')}}</h2>
+                        <h2 class="d-flex align-items-center text-dark font-weight-bold my-1 mr-3">{{trans('display.general_result')}}</h2>
                         <!--end::Title-->
                         <!--begin::Breadcrumb-->
                         <ul class="breadcrumb breadcrumb-transparent breadcrumb-dot font-weight-bold my-2 p-0">
@@ -169,8 +169,7 @@
                                         <h3 class="card-label"><strong>Нийт медаль</strong></h3>
                                     </div>
                                 </div>
-                                <div class="card-body">     
-                                @if(count($eventAllMedal) > 0 || count($eventAllMedal) == 0)
+                                <div class="card-body">                                
                                     <div class="table-responsive">
                                         <table class="table table-hover table-bordered table-head-custom" id="event-team-registration-datatable">
                                         <thead>
@@ -190,12 +189,7 @@
                                             @endforeach 
                                         </table>
                                         </tbody>                                        
-                                    </div>
-                                @else
-                                    <tr>
-                                        <td colspan="12" class="text-center"><strong>{{ trans('messages.empty_toplist') }}</strong></td>
-                                    </tr>
-                                @endif
+                                    </div>        
                                 </div>
                             </div>
                             <!--end::Card-->                            
@@ -232,15 +226,32 @@
                                                                             <td class="text-center border-right"><strong>{{ $result->place_number }}</strong></td>
                                                                         @else
                                                                             <td class="text-center border-right"><strong><i class="{{ Config::get("enums.event_award")[@$result->place_number] }}"></i></strong></td>
-                                                                        @endif
+                                                                        @endif               
+
+                                                                        <td class="text-center border-right">
+                                                                            <div class="d-flex align-items-center">
+                                                                                @if(@$result->profile_url xor ((@env('production') && \Storage::disk('s3')->exists($result->profile_url)) || @env('local')))
+                                                                                    <a href="javascript:;" class="show-image" data-id="{{$result->memberid}}" data-type="profile">
+                                                                                        <div class="symbol symbol-100 flex-shrink-0 rounded-circle">
+                                                                                            <img src="{{\Storage::disk('s3')->url($result->profile_url)}}" alt="Profile" style="width: 60; height:60;">
+                                                                                        </div>
+                                                                                    </a>
+                                                                                @endif
+                                                                                <div class="ml-3">                                            
+			                                                                        <span class="text-dark-75 line-height-sm d-block pb-3" style="white-space: nowrap;"><strong>{{$result->fullname}}</strong></span>
+                                                                                    <span class="text-dark-75 line-height-sm d-block pb-2">{{ $result->academy_name }}</span>
+			                                                                    </div>                                                                              
+                                                                            </div>
+                                                                            
+                                                                        </td>
                                                                         
-                                                                        <td class="text-center border-right"><strong>{{ $result->fullname }}</strong></td> 
+                                                                        <!-- <td class="text-center border-right"><strong>{{ $result->fullname }}</strong></td> 
 
                                                                         @if($result->academy_name == 'Бусад')                       
                                                                             <td class="text-center border-right"><strong>{{ $result->busad }}</strong></td>                                                                                                        
                                                                         @else 
                                                                             <td class="text-center border-right"><strong>{{ $result->academy_name }}</strong></td>  	            
-                                                                        @endif           
+                                                                        @endif            -->
                                                                         
                                                                         <!-- <td class="text-left border-right">
                                                                             <h3><strong>{{ $result->fullname }}</strong></h3>

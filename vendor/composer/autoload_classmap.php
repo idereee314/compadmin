@@ -7363,6 +7363,7 @@ return array(
     'event\\EventRepository' => $baseDir . '/app/Repositories/event/EventRepository.php',
     'event\\EventTeamMemberRegistrationStatusController' => $baseDir . '/app/Http/Controllers/event/EventTeamMemberRegistrationStatusController.php',
     'event\\EventTeamRegistration' => $baseDir . '/app/Models/event/EventTeamRegistration.php',
+    'event\\EventTeamRegistrationMemberStatus' => $baseDir . '/app/Models/event/EventTeamRegistrationMemberStatus.php',
     'event\\EventTeamRegistrationRepository' => $baseDir . '/app/Repositories/event/EventTeamRegistrationRepository.php',
     'event\\EventTeamRegistrationStatus' => $baseDir . '/app/Models/event/EventTeamRegistrationStatus.php',
     'event\\EventTeamRegistrationStatusController' => $baseDir . '/app/Http/Controllers/event/EventTeamRegistrationStatusController.php',

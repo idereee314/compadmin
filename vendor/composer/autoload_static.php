@@ -8003,6 +8003,7 @@ class ComposerStaticInit8da5d45392af245feb314a3d0411c64d
         'event\\EventRepository' => __DIR__ . '/../..' . '/app/Repositories/event/EventRepository.php',
         'event\\EventTeamMemberRegistrationStatusController' => __DIR__ . '/../..' . '/app/Http/Controllers/event/EventTeamMemberRegistrationStatusController.php',
         'event\\EventTeamRegistration' => __DIR__ . '/../..' . '/app/Models/event/EventTeamRegistration.php',
+        'event\\EventTeamRegistrationMemberStatus' => __DIR__ . '/../..' . '/app/Models/event/EventTeamRegistrationMemberStatus.php',
         'event\\EventTeamRegistrationRepository' => __DIR__ . '/../..' . '/app/Repositories/event/EventTeamRegistrationRepository.php',
         'event\\EventTeamRegistrationStatus' => __DIR__ . '/../..' . '/app/Models/event/EventTeamRegistrationStatus.php',
         'event\\EventTeamRegistrationStatusController' => __DIR__ . '/../..' . '/app/Http/Controllers/event/EventTeamRegistrationStatusController.php',

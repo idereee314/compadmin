@@ -690,7 +690,7 @@ class EventRegistrationController extends Controller
         
         $data['view_path'] = $this->view_path;
         $data['events'] = $event['data'];
-        
+        // dd(Auth::user()->roles->first());
         //dd($event);
         $pagination = new LengthAwarePaginator($event['data'], @$event['total'], @$event['per_page'], @$event['current_page'], [
             'path'  => URL::current()
@@ -1166,45 +1166,45 @@ class EventRegistrationController extends Controller
     public function removeTeamMember($id)
     {
         try {
-            $teamMember = $this->teamMember->find($id);
-
-            if(!empty($teamMember))
-            {
-                if(empty($teamMember->status) || $teamMember->status == 'created')
-                {
-                    $this->teamMember->delete($id);
-
-                    $response = array(
+            $teamMember = TeamMember::find($id);
+        
+            if ($teamMember) {
+                if (empty($teamMember->status) || $teamMember->status == 'created') {
+                    $teamMember->delete();
+                
+                    $response = [
                         'status' => 'success',
                         'msg' => trans('messages.success_delete')
-                    );
-                }
-                else
-                {
-                    $response = array(
+                    ];
+                
+                    return redirect()->route('event.team.member.index')->with('status', $response['msg']);
+                } else {
+                    $response = [
                         'status' => 'warning',
-                        'msg' => 'Баталгаажуулсан хэрэглэгч устгах боломжгүй'                    
-                    );
+                        'msg' => 'Баталгаажуулсан хэрэглэгч устгах боломжгүй'
+                    ];
+                
+                    return redirect()->route('event.team.member.index')->with('warning', $response['msg']);
                 }
-            }
-            else 
-            {
-                $response = array(
+            } else {
+                $response = [
                     'status' => 'error',
                     'msg' => trans('messages.no_record'),
-                );
+                ];
+            
+                return redirect()->route('event.team.member.index')->with('error', $response['msg']);
             }
-          
-        } catch(\Illuminate\Database\QueryException $e)
-        {
-            $response = array(
+        } catch (\Illuminate\Database\QueryException $e) {
+            $response = [
                 'status' => 'error',
                 'msg' => trans('messages.error_delete'),
                 'errors' => $e->getMessage()
-            );
+            ];
+        
+            return redirect()->route('event.team.member.index')->with('error', $response['msg']);
         }
-
-		return $response;
     }
+    
+
 
 }

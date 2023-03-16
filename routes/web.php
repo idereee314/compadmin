@@ -99,7 +99,8 @@ Route::group([
     Route::post('/event/registration/team/member/store', 'event\EventRegistrationController@storeTeamMember')->name('event.team.member.store');
     Route::get('/event/registration/team/member/{id}/edit', 'event\EventRegistrationController@editTeamMember')->name('event.team.member.edit');
     Route::post('/event/registration/team/member/update/{id}', 'event\EventRegistrationController@updateTeamMember')->name('event.team.member.update');
-    Route::post('/event/registration/team/member/{id}/remove', 'event\EventRegistrationController@removeTeamMember');
+    Route::post('/event/registration/team/member/{id}/remove', 'event\EventRegistrationController@removeTeamMember')->name('event.team.member.remove');
+
 
     //Event
     Route::resource('/event/registration', 'event\EventRegistrationController', ['names' => 'event.registration']);

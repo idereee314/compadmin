@@ -85,6 +85,7 @@ return [
     'general_edit_athlete' => 'Тамирчин мэдээлэл засварлах',
     'general_athlete_count' => 'Оролцож буй тамирчдын тоо',
     'general_result' => 'Тэмцээний үр дүн',
+    'general_is_pay_athlete' => 'Багийн тамирчин төлбөр төлөх эсэх',
 
 
     /** NOUN **/
@@ -309,7 +310,6 @@ return [
     "organization" => "Байгууллага",
     "best_academy" => "Шилдэг академи",
     "toplist" => "Топ жагсаалт",
-    "results" => "Үр дүн",
 
     //Event
     'event_title' => 'Эвент',

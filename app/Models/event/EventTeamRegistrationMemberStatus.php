@@ -1,0 +1,62 @@
+<?php
+
+namespace event;
+
+use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\Model;
+
+use Auth;
+use Carbon;
+
+class EventTeamRegistrationMemberStatus extends Model
+{
+    protected $table = 'uq_team_registration_member_status';
+    protected $fillable = ['team_registration_member_id', 'status', 'changed_by', 'changed_at'];
+    public $timestamps = false;
+
+    public static $rules = array(
+        'team_registration_member_id' => 'required',
+        'status' => 'required'
+    );
+
+    public function eventTeamRegistration()
+    {
+        return $this->belongsTo('member\teamMember', 'team_registration_member_id');
+    }
+
+    public function changedBy()
+    {
+        return $this->belongsTo('user\CompadUser', 'changed_by');
+    }
+
+    public static function boot()
+    {
+        parent::boot();
+    
+        static::creating(function($regStatus)
+        {
+            $regStatus->changed_by = Auth::id();
+            $regStatus->changed_at = Carbon\Carbon::now()->toDateTimeString();
+        });
+    
+        static::created(function($regStatus)
+        {
+            $eventReg = $regStatus->teamMember;
+            $eventReg->status = $regStatus->status;
+            $eventReg->save();
+        });
+    
+        static::deleting(function($status)
+        {
+            $eventReg = $status->teamMember;
+            if ($eventReg) {
+                $prevStatus = $eventReg->statuses->where('id', '!=', $status->id)->orderBy('changed_at', 'desc')->first();
+            
+                $eventReg->status = $prevStatus ? $prevStatus->status : Config::get('smart.event_registration_statu')['created'];
+                $eventReg->save();
+            }
+        });
+    }
+
+}
