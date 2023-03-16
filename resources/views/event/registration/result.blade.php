@@ -207,7 +207,7 @@
                             @endphp
                                 @foreach(collect($ages)->groupBy('bus') as $bus => $belts)
                                     @foreach(collect($belts)->groupBy('weight') as $weight => $weights)
-                                        <div class="col-xl-4">
+                                        <div class="col-xl-6">
                                             <!--begin::Card-->
                                             <div class="card card-custom gutter-b">
                                                 <div class="card-header">
@@ -223,7 +223,7 @@
                                                                 
                                                                     <tr>
                                                                         @if($result->place_number > 3)     
-                                                                            <td class="text-center border-right"><strong>{{ $result->place_number }}</strong></td>
+                                                                            <td class="text-center border-right" style="height 25;"><strong>{{ $result->place_number }}</strong></td>
                                                                         @else
                                                                             <td class="text-center border-right"><strong><i class="{{ Config::get("enums.event_award")[@$result->place_number] }}"></i></strong></td>
                                                                         @endif               
