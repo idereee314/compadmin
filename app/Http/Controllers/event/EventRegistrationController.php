@@ -1000,7 +1000,7 @@ class EventRegistrationController extends Controller
         $eventRegistrationGenderAllStats = $this->eventRegistration->getStatsGenderAllFromEvent($eventId);
         $eventRegistrationOrgTypeStats = $this->eventRegistration->getStatsOrgTypeFromEvent($eventId);
         $eventRegistrationOrgTypeAllStats = $this->eventRegistration->getStatsOrgTypeAllFromEvent($eventId);
-        
+
         $data['event'] = $event;
         $data['progressPercent'] = round(@$eventRegStatusCount[@Config::get('smart.event_registration_status')['approved']] ? @$eventRegStatusCount[@Config::get('smart.event_registration_status')['approved']] / array_sum(@$eventRegStatusCount) * 100 : 0);
         $data['eventRegistration'] = $eventRegistration->groupBy(['entry.fullname', 'belt.name', 'age.name', 'weight.weight']);        

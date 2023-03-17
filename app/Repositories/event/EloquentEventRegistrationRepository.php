@@ -488,20 +488,26 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 
 	public function getStatsOrgTypeFromEvent($eventId)
 	{
-		return DB::select("select ua.type as org_type, COUNT(ua.type) as org_count
-								from uniqdb.uq_comp.uq_academy ua
-								left join uniqdb.uq_comp.uq_event_registration uer on uer.academy_id = ua.id
-								where uer.event_id = $eventId and uer.status = 'approved'
-								group by ua.type");
+		return DB::select("select academy_too.type as org_type ,count (academy_too.type) as org_count
+									from (select count(uer.academy_id) , uer.academy_id, ua.name, ua.type
+										from uq_comp.uq_event_registration uer
+										left join uq_comp.uq_academy ua on uer.academy_id = ua.id
+										where uer.event_id = $eventId and uer.status = 'approved'
+										group by uer.event_id, uer.academy_id, uer.status, ua.name, ua.type
+										) as academy_too
+										group by academy_too.type");
 	}
 
 	public function getStatsOrgTypeAllFromEvent($eventId)
 	{
-		return DB::select("select ua.type as org_type, COUNT(ua.type) as org_count
-								from uniqdb.uq_comp.uq_academy ua
-								left join uniqdb.uq_comp.uq_event_registration uer on uer.academy_id = ua.id
-								where uer.event_id = $eventId
-								group by ua.type");
+		return DB::select("select academy_too.type as org_type ,count (academy_too.type) as org_count
+									from (select count(uer.academy_id), uer.academy_id, ua.name, ua.type
+										from uq_comp.uq_event_registration uer
+										left join uq_comp.uq_academy ua on uer.academy_id = ua.id
+										where uer.event_id = $eventId
+										group by uer.event_id, uer.academy_id, uer.status, ua.name, ua.type
+										) as academy_too
+										group by academy_too.type");
 	}
 
 	// stats queries .end
