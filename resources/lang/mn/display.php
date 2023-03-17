@@ -84,6 +84,8 @@ return [
     'general_new_athlete' => 'Тамирчин шинээр нэмэх',
     'general_edit_athlete' => 'Тамирчин мэдээлэл засварлах',
     'general_athlete_count' => 'Оролцож буй тамирчдын тоо',
+    'general_org_count' => 'Оролцож буй байгууллагын тоо',
+    
     'general_result' => 'Тэмцээний үр дүн',
     'general_is_pay_athlete' => 'Багийн тамирчин төлбөр төлөх эсэх',
 

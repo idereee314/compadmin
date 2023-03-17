@@ -223,7 +223,7 @@
                                                                 
                                                                     <tr>
                                                                         @if($result->place_number > 3)     
-                                                                            <td class="text-center border-right" style="height 25;"><strong>{{ $result->place_number }}</strong></td>
+                                                                            <td class="text-center border-right"><strong>{{ $result->place_number }}</strong></td>
                                                                         @else
                                                                             <td class="text-center border-right"><strong><i class="{{ Config::get("enums.event_award")[@$result->place_number] }}"></i></strong></td>
                                                                         @endif               

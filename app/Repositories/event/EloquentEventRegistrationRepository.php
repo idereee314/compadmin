@@ -486,6 +486,24 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
         						group by uer.event_id, um.gender_code");
 	}
 
+	public function getStatsOrgTypeFromEvent($eventId)
+	{
+		return DB::select("select ua.type as org_type, COUNT(ua.type) as org_count
+								from uniqdb.uq_comp.uq_academy ua
+								left join uniqdb.uq_comp.uq_event_registration uer on uer.academy_id = ua.id
+								where uer.event_id = $eventId and uer.status = 'approved'
+								group by ua.type");
+	}
+
+	public function getStatsOrgTypeAllFromEvent($eventId)
+	{
+		return DB::select("select ua.type as org_type, COUNT(ua.type) as org_count
+								from uniqdb.uq_comp.uq_academy ua
+								left join uniqdb.uq_comp.uq_event_registration uer on uer.academy_id = ua.id
+								where uer.event_id = $eventId
+								group by ua.type");
+	}
+
 	// stats queries .end
 	//RESULTS queries .start
 

@@ -998,7 +998,8 @@ class EventRegistrationController extends Controller
         $eventRegistrationStatusStats = $this->eventRegistration->getStatsStatusFromEvent($eventId);
         $eventRegistrationGenderStats = $this->eventRegistration->getStatsGenderFromEvent($eventId);
         $eventRegistrationGenderAllStats = $this->eventRegistration->getStatsGenderAllFromEvent($eventId);
-        
+        $eventRegistrationOrgTypeStats = $this->eventRegistration->getStatsOrgTypeFromEvent($eventId);
+        $eventRegistrationOrgTypeAllStats = $this->eventRegistration->getStatsOrgTypeAllFromEvent($eventId);
         
         $data['event'] = $event;
         $data['progressPercent'] = round(@$eventRegStatusCount[@Config::get('smart.event_registration_status')['approved']] ? @$eventRegStatusCount[@Config::get('smart.event_registration_status')['approved']] / array_sum(@$eventRegStatusCount) * 100 : 0);
@@ -1014,6 +1015,8 @@ class EventRegistrationController extends Controller
         $data['academies'] = $academies;
         $data['eventFees'] = $eventFees;
         $data['events'] = $event['data'];  
+        $data['eventRegistrationOrgTypeStats'] = $eventRegistrationOrgTypeStats;
+        $data['eventRegistrationOrgTypeAllStats'] = $eventRegistrationOrgTypeAllStats;
         
         $data['view_path'] = $this->view_path;
 

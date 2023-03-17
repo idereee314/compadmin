@@ -108,31 +108,31 @@
 <script src="{{asset('assets/js/plugins/custom/datatables/datatables.bundle.js')}}"></script>
 
 <script>
-$(document).ready(function() {
-    eventTable = $("#event-team-member-registration-datatable").DataTable({
-        dom: "<'row'<'col-sm-6 text-left'B><'col-sm-6 text-right'<'#colvis'>>><'row'<'col-sm-12'tr>><'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7 dataTables_pager'lp>>",
-        buttons: [
-            {
-                extend: 'excelHtml5',
-                text: '<i class="fa fa-print"></i>Багийн жагсаалт {!! trans('display.general_excel') !!}',
-                className: "btn btn-light-warning font-weight-bolder mb-2",
-                title: 'Тэмцээнд оролцогч багийн жагсаалт',
-                customize: function ( xlsx ) {
-                    var sheet = xlsx.xl.worksheets['sheet1.xml'];
-                    $('c[r=A1] t', sheet).text( '{{ $eventTeamRegistration->team->name }} багийн тэмцээнд оролцох тамирчдын жагсаалт' );
-                },
-                exportOptions: {
-                    columns: [ 0,1,2,3,4,5,6],
-                    modifier: {
-                        order: 'current',
-                        page: 'all',
-                        focused: undefined,
-                        selected: undefined
-                    }
-                }
-            },
-        ]
-	});
+// $(document).ready(function() {
+//     eventTable = $("#event-team-member-registration-datatable").DataTable({
+//         dom: "<'row'<'col-sm-6 text-left'B><'col-sm-6 text-right'<'#colvis'>>><'row'<'col-sm-12'tr>><'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7 dataTables_pager'lp>>",
+//         buttons: [
+//             {
+//                 extend: 'excelHtml5',
+//                 text: '<i class="fa fa-print"></i>Багийн жагсаалт {!! trans('display.general_excel') !!}',
+//                 className: "btn btn-light-warning font-weight-bolder mb-2",
+//                 title: 'Тэмцээнд оролцогч багийн жагсаалт',
+//                 customize: function ( xlsx ) {
+//                     var sheet = xlsx.xl.worksheets['sheet1.xml'];
+//                     $('c[r=A1] t', sheet).text( '{{ $eventTeamRegistration->team->name }} багийн тэмцээнд оролцох тамирчдын жагсаалт' );
+//                 },
+//                 exportOptions: {
+//                     columns: [ 0,1,2,3,4,5,6],
+//                     modifier: {
+//                         order: 'current',
+//                         page: 'all',
+//                         focused: undefined,
+//                         selected: undefined
+//                     }
+//                 }
+//             },
+//         ]
+// 	});
 
     $('#team_athlete_add').on( 'click', function () {
         var eventId = $('#event_id').val();
@@ -461,6 +461,6 @@ $(document).ready(function() {
         $('#showImageModal .modal-content').empty();
     });
     }
-});
+// });
 </script>
 
