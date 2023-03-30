@@ -1,35 +1,36 @@
 <style>
     .card-content {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      height: 100%;
-      font-size: 20px;
-      color: black;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        height: 100%;
+        font-size: 20px;
+        color: black;
     }
 
     .card-header {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      height: 100%;
-      font-size: 20px;
-      color: black;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        height: 100%;
+        font-size: 20px;
+        color: black;
     }
     
     .card-content i {
-      margin-bottom: 5px;
+        margin-bottom: 5px;
     }
 
     .card {
-      margin-bottom: 20px;
+        margin-bottom: 20px;
+        justify-content: center;
     }
 
     @media only screen and (max-width: 768px) {
       .card {
-        width: 100%;
+            width: 100%;
       }
     }
     .action-title {
@@ -41,12 +42,12 @@
 @section('css')
     <link rel="stylesheet" href="{{asset('assets/js/plugins/custom/jstree/dist/themes/default/style.min.css')}}">
 @endsection
-@include('layouts.mobile')
+@include('layouts.mobile_v2')
 @section('content')
 
 <!--begin::Main-->
 <!--begin::Wrapper-->
-    <div class="d-flex flex-column flex-row-fluid wrapper" id="kt_wrapper" style="background-image: url('assets/media/bg/bg-3.jpg');">
+    <div class="d-flex flex-column flex-row-fluid wrapper" id="kt_wrapper" style="background-image: url('{{ asset('assets/media/bg/bg-3.jpg') }}');">
     @include('layouts.header_v2')
         <!--begin::Content-->
         <div class="content d-flex flex-column flex-column-fluid">
