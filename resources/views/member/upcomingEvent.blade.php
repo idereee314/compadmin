@@ -54,10 +54,31 @@
             <!--begin::Entry-->
             <div class="d-flex flex-column-fluid">
                 <!--begin::Container-->
-                <div class="container">  
+                <div class="container"> 
+                    <!--begin::Subheader-->
+                    <div class="subheader py-2 py-lg-4 subheader-transparent" id="kt_subheader">
+                        <div class="container d-flex align-items-center justify-content-between flex-wrap flex-sm-nowrap">
+                            <!--begin::Details-->
+                            <div class="d-flex align-items-center flex-wrap mr-2">
+                                <!--begin::Breadcrumb-->
+                                <ul class="breadcrumb breadcrumb-transparent breadcrumb-dot font-weight-bold my-2 p-0">
+                                    <li class="breadcrumb-item text-muted">
+                                        <a href="/event/competition" class="text-muted">Тэмцээнүүд</a>
+                                    </li>
+                                    <li class="breadcrumb-item text-muted">
+                                        <a href="/upcoming" style="color: black;"><strong> Удахгүй болох жюү жицүгийн тэмцээнүүд</strong></a>
+                                    </li>
+                                </ul>
+                                <!--end::Breadcrumb-->
+                            </div>
+                            <!--end::Details-->
+                        </div>
+                    </div>
+                    <!--end::Subheader-->  
                     <div class="d-flex justify-content-center mb-5">
                         <h1 class="text-center bold margin-bottom-xs-16 margin-bottom-sm-0" style="font-size: 4rem; color: #0f4b63;"><strong>Удахгүй болох жюү жицүгийн тэмцээнүүд</strong></h1>
                     </div>
+                    
                     <div class="d-flex justify-content-center mt-5 pt-5">
                         <div class="col-lg-8" class="event-list">
                             <div>
