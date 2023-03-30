@@ -92,13 +92,13 @@
                     
                     <div class="d-flex justify-content-center mt-5 pt-5">
                         <div class="col-lg-8" class="event-list">
-                            <div class="d-flex align-items-center flex-wrap justify-content-start row mt-5 mx-5">
+                            <div class="d-flex align-items-center flex-wrap justify-content-start row mt-5 mx-5 mb-2">
                                 <div class="col-lg-6">
-                                    <span class="action-title"><strong> Удахгүй болох жюү жицүгийн тэмцээнүүд </strong></span> 
+                                    <span class="action-title" style="font-size: 16px"><strong> Удахгүй болох жюү жицүгийн тэмцээнүүд </strong></span> 
                                 </div>
                                 <div class="col-lg-6 text-right">
                                     <a href="/upcoming" class="" target="_blank">
-                                        <span class="action-link" style="color:#f96815;">Бүгдийг харах<span class="ml-2"><i class="fas fa-chevron-right"></i></span></span>
+                                        <span class="action-link" style="color:#f96815; font-size: 16px">Бүгдийг харах<span class="ml-2"><i class="fas fa-chevron-right"></i></span></span>
                                     </a>
                                 </div> 
                             </div>
@@ -106,17 +106,19 @@
                                 @foreach($upcomingEventJiuJitsuData as $upcomingjiujitsu)
                                 <div class="event-list">
                                     <div class="card" style="border-left-color: #f96815; border-left-width: 1rem; ">
-                                        <div class="card-content">
-                                            
+                                        <div class="card-content">                                            
                                             <div class="event-date">
-                                            <i class="flaticon-calendar-with-a-clock-time-tools mr-1" style="color:#f96815;"></i>
-                                            <small>{{date('Y-m-d', strtotime($upcomingjiujitsu->event_date))}}</small> 
-                                                
+                                                <i class="flaticon-calendar-with-a-clock-time-tools mr-1 mt-2" style="color:#f96815;"></i>
+                                                <small>{{date('Y-m-d', strtotime($upcomingjiujitsu->event_date))}}</small>                                                 
                                             </div> 
-                                            <div class="event-name">
+                                            <div class="event-name mt-2">
                                                 <span>{{ $upcomingjiujitsu->event_name }}</span> 
-                                            </div> 
-                                            <div class="event-location">                                                
+                                            </div>
+                                            <!-- <div class="event-reg-date">
+                                                <i class="flaticon-calendar-with-a-clock-time-tools mr-1 mt-2" style="color:#f96815;"></i>
+                                                <small class="text-muted">{{date('Y-m-d', strtotime($upcomingjiujitsu->reg_start_date))}} -> {{date('Y-m-d', strtotime($upcomingjiujitsu->reg_end_date))}}</small>                                                 
+                                            </div>  -->
+                                            <div class="event-location mt-2 mb-2">                                                
                                                 <small class="text-muted"> <i class="flaticon2-location mr-2" style="color:#f96815;"></i>{{ $upcomingjiujitsu->object_name }} </small>
                                             </div>                                            
                                         </div>
@@ -125,7 +127,42 @@
                                 @endforeach   
                             </div>                                                              
                         </div>
-                    </div>                         
+                    </div>
+                    
+                    <div class="d-flex justify-content-center mt-5 pt-5">
+                        <div class="col-lg-8" class="event-list">
+                            <div class="d-flex align-items-center flex-wrap justify-content-start row mt-5 mx-5 mb-2">
+                                <div class="col-lg-6">
+                                    <span class="action-title" style="font-size: 16px"><strong> Болж өнгөрсөн жюү жицүгийн тэмцээнүүд </strong></span> 
+                                </div>
+                                <div class="col-lg-6 text-right">
+                                    <a href="/pastEvent" class="" target="_blank">
+                                        <span class="action-link" style="color:#f96815; font-size: 16px">Бүгдийг харах<span class="ml-2"><i class="fas fa-chevron-right"></i></span></span>
+                                    </a>
+                                </div> 
+                            </div>
+                            <div>
+                                @for($i = 0; $i < 3 && $i < count($pastEventJiuJitsuData); $i++)
+                                <div class="event-list">
+                                    <div class="card" style="border-left-color: #0f4b63; border-left-width: 1rem; ">
+                                        <div class="card-content">                                            
+                                            <div class="event-date">
+                                                <i class="flaticon-calendar-with-a-clock-time-tools mr-1 mt-2" style="color:#f96815;"></i>
+                                                <small>{{date('Y-m-d', strtotime($pastEventJiuJitsuData[$i]->event_date))}}</small>                                                 
+                                            </div> 
+                                            <div class="event-name mt-2">
+                                                <span>{{ $pastEventJiuJitsuData[$i]->event_name }}</span> 
+                                            </div>
+                                            <div class="event-location mt-2 mb-2">                                                
+                                                <small class="text-muted"> <i class="flaticon2-location mr-2" style="color:#f96815;"></i>{{ $pastEventJiuJitsuData[$i]->object_name }} </small>
+                                            </div>                                            
+                                        </div>
+                                    </div>
+                                </div>
+                                @endfor   
+                            </div>                                                              
+                        </div>
+                    </div>              
                 </div>
                 <!--end::Container-->
             </div>

@@ -425,8 +425,9 @@ class MemberController extends Controller
         $memberApprovedData = $this->member->getMemberToProfileApprovedData($memberId);
         $memberAllData = $this->member->getMemberToProfileAllData($memberId);
         $upcomingEventJiuJitsuData = $this->member->getUpcomingJiuJitsuEvent();
-        // dd($upcomingEventJiuJitsuData);
+        $pastEventJiuJitsuData = $this->member->getPastJiuJitsuEvent();
 
+        $data['pastEventJiuJitsuData'] = $pastEventJiuJitsuData;
         $data['member'] = $member;
         $data['memberApprovedData'] = $memberApprovedData;
         $data['memberAllData'] = $memberAllData;
@@ -471,5 +472,12 @@ class MemberController extends Controller
         return view($this->view_path.'.upcomingEvent', $data); 
     }
 
-    
+    public function profilePastEvent()
+    {
+        $pastEventJiuJitsuData = $this->member->getPastJiuJitsuEvent();
+
+        $data['pastEventJiuJitsuData'] = $pastEventJiuJitsuData;
+
+        return view($this->view_path.'.pastEvent', $data); 
+    }    
 }
