@@ -94,10 +94,10 @@
                         <div class="col-lg-8" class="event-list">
                             <div class="d-flex align-items-center flex-wrap justify-content-start row mt-5 mx-5">
                                 <div class="col-lg-6">
-                                    <span class="action-title"><strong> Удахгүй болох тэмцээн </strong></span> 
+                                    <span class="action-title"><strong> Удахгүй болох жюү жицүгийн тэмцээнүүд </strong></span> 
                                 </div>
                                 <div class="col-lg-6 text-right">
-                                    <a href="/upcoming" class="">
+                                    <a href="/upcoming" class="" target="_blank">
                                         <span class="action-link" style="color:#f96815;">Бүгдийг харах<span class="ml-2"><i class="fas fa-chevron-right"></i></span></span>
                                     </a>
                                 </div> 
