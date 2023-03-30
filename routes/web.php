@@ -98,9 +98,11 @@ Route::group([
     Route::get('/event/registration/team/member/create', 'event\EventRegistrationController@createTeamMember')->name('event.team.member.create');
     Route::post('/event/registration/team/member/store', 'event\EventRegistrationController@storeTeamMember')->name('event.team.member.store');
     Route::get('/event/registration/team/member/{id}/edit', 'event\EventRegistrationController@editTeamMember')->name('event.team.member.edit');
-    Route::post('/event/registration/team/member/update/{id}', 'event\EventRegistrationController@updateTeamMember')->name('event.team.member.update');
+    Route::put('/event/registration/team/member/update/{id}', 'event\EventRegistrationController@updateTeamMember')->name('event.team.member.update');
     Route::post('/event/registration/team/member/{id}/remove', 'event\EventRegistrationController@removeTeamMember')->name('event.team.member.remove');
 
+    Route::get('/event/registration/team/athlete_team/{id}', 'event\EventRegistrationController@MeduulegPrint')->name('event.registration.meduuleg');
+    Route::get('/event/registration/team/athlete_team/{id}/pdf', 'event\EventRegistrationController@generatePdf')->name('generate-pdf');
 
     //Event
     Route::resource('/event/registration', 'event\EventRegistrationController', ['names' => 'event.registration']);
@@ -169,3 +171,10 @@ Route::get('/event/{eventId}/statistics', 'event\EventRegistrationController@sta
 //result
 Route::get('/event/{eventId}/results', 'event\EventRegistrationController@results')->name('event.results');
 Route::get('/event/{eventId}/toplist', 'event\EventRegistrationController@toplist')->name('event.toplist');
+
+//profile
+
+Route::get('/profile/{member}','member\MemberController@profile')->name('member.profile');
+Route::get('/profile/{member}/event','member\MemberController@profileEvent')->name('member.profile.event');
+Route::get('/profile/{member}/results','member\MemberController@profileResult')->name('member.profile.results');
+Route::get('/upcoming','member\MemberController@profileUpcoming')->name('upcoming');

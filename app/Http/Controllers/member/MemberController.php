@@ -417,4 +417,59 @@ class MemberController extends Controller
 
         }
     }
+
+    //Profile
+    public function profile($memberId)
+    {
+        $member = $this->member->find($memberId);
+        $memberApprovedData = $this->member->getMemberToProfileApprovedData($memberId);
+        $memberAllData = $this->member->getMemberToProfileAllData($memberId);
+        $upcomingEventJiuJitsuData = $this->member->getUpcomingJiuJitsuEvent();
+        // dd($upcomingEventJiuJitsuData);
+
+        $data['member'] = $member;
+        $data['memberApprovedData'] = $memberApprovedData;
+        $data['memberAllData'] = $memberAllData;
+        $data['upcomingEventJiuJitsuData'] = $upcomingEventJiuJitsuData;
+
+        return view($this->view_path.'.profile', $data); 
+    }
+
+    public function profileResult($memberId)
+    {
+        $member = $this->member->find($memberId);
+        $memberApprovedData = $this->member->getMemberToProfileApprovedData($memberId);
+        $memberAllData = $this->member->getMemberToProfileAllData($memberId);
+        // dd($memberData);
+
+        $data['member'] = $member;
+        $data['memberApprovedData'] = $memberApprovedData;
+        $data['memberAllData'] = $memberAllData;
+
+        return view($this->view_path.'.profileResults', $data); 
+    }
+
+    public function profileEvent($memberId)
+    {
+        $member = $this->member->find($memberId);
+        $memberApprovedData = $this->member->getMemberToProfileApprovedData($memberId);
+        $memberAllData = $this->member->getMemberToProfileAllData($memberId);
+     
+        $data['member'] = $member;
+        $data['memberApprovedData'] = $memberApprovedData;
+        $data['memberAllData'] = $memberAllData;
+
+        return view($this->view_path.'.profileEvents', $data); 
+    }
+
+    public function profileUpcoming()
+    {
+        $upcomingEventJiuJitsuData = $this->member->getUpcomingJiuJitsuEvent();
+
+        $data['upcomingEventJiuJitsuData'] = $upcomingEventJiuJitsuData;
+
+        return view($this->view_path.'.upcomingEvent', $data); 
+    }
+
+    
 }

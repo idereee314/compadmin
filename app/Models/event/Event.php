@@ -27,6 +27,11 @@ class Event extends Model
         return $this->hasMany('event\EventRegistration', 'event_id')->orderBy('uq_event_registration.created_at', 'desc');
     }
 
+    public function organization()
+    {
+        return $this->belongsToMany('organization\OrganizationEvent', 'event_id');
+    }
+
     public function members()
     {
         return $this->belongsToMany('member\Member', 'uq_event_registration', 'event_id', 'member_id')->orderBy('uq_event_registration.created_at', 'desc');

@@ -222,4 +222,54 @@ class EloquentMemberRepository implements MemberRepository {
 		$members = $qry->get();  
 		return $members;
 	}
+
+	public function getMemberToProfileApprovedData($memberId)
+	{
+		return DB::select("select uer.event_id, re.name as event_name, uer.member_id, ua.name as academy_name, um.lastname, um.firstname, uecb.name as belt, 
+		uee.name as entries, uer.status, re.event_date, ueca.start_age , ueca.end_age, uea.place_number, uec.sport_id from uniqdb.uq_comp.uq_event_registration uer 
+			left join uniqdb.rt_listing.rti_event re on re.id = uer.event_id
+			left join uniqdb.uq_comp.uq_member um on um.id = uer.member_id 
+			left join uniqdb.uq_comp.uq_entry_config_belt uecb on uecb.id = uer.entry_belt_id 
+			left join uniqdb.uq_comp.uq_entry_config_age ueca on ueca.id = uer.entry_age_id 
+			left join uniqdb.uq_comp.uq_event_entries uee on uee.id = uer.entry_id
+			left join uniqdb.uq_comp.uq_entry_config_weight uecw on uecw.id = uer.entry_weight_id 
+			left join uniqdb.uq_comp.uq_event_award uea on uea.event_registration_id = uer.id
+			left join uniqdb.uq_comp.uq_academy ua on  ua.id = uer.academy_id 
+			left join uniqdb.uq_comp.uq_event_config uec on uec.event_id = uer.event_id 
+			where um.id = $memberId and uer.status = 'approved' and uer.is_weight_checked = TRUE and uec.is_active = TRUE
+			group by uer.event_id, re.name, um.firstname, uer.member_id, um.lastname, uecb.name, uee.name, uer.status, ua.name, re.event_date, ueca.start_age , ueca.end_age, uea.place_number, uec.sport_id
+			order by re.event_date desc
+			");
+	}
+	
+	public function getMemberToProfileAllData($memberId)
+	{
+		return DB::select("select uer.event_id, re.name as event_name, uer.member_id, ua.name as academy_name, um.lastname, um.firstname, uecb.name as belt, 
+		uee.name as entries, uer.status, re.event_date, ueca.start_age , ueca.end_age, uea.place_number, uec.sport_id from uniqdb.uq_comp.uq_event_registration uer 
+			left join uniqdb.rt_listing.rti_event re on re.id = uer.event_id
+			left join uniqdb.uq_comp.uq_member um on um.id = uer.member_id 
+			left join uniqdb.uq_comp.uq_entry_config_belt uecb on uecb.id = uer.entry_belt_id 
+			left join uniqdb.uq_comp.uq_entry_config_age ueca on ueca.id = uer.entry_age_id 
+			left join uniqdb.uq_comp.uq_event_entries uee on uee.id = uer.entry_id
+			left join uniqdb.uq_comp.uq_entry_config_weight uecw on uecw.id = uer.entry_weight_id 
+			left join uniqdb.uq_comp.uq_event_award uea on uea.event_registration_id = uer.id
+			left join uniqdb.uq_comp.uq_academy ua on  ua.id = uer.academy_id 
+			left join uniqdb.uq_comp.uq_event_config uec on uec.event_id = uer.event_id 
+			where um.id = $memberId and uec.is_active = TRUE
+			group by uer.event_id, re.name, um.firstname, uer.member_id, um.lastname, uecb.name, uee.name, uer.status, ua.name, re.event_date, ueca.start_age , ueca.end_age, uea.place_number, uec.sport_id 
+			order by re.event_date desc
+			");
+	}
+
+	public function getUpcomingJiuJitsuEvent()
+	{
+		return DB::select("select uec.event_id, uec.is_active , uec.sport_id , uec.is_team , uec.reg_start_date , uec.reg_end_date , re.name as event_name , 
+		re.event_date , re.description as event_description , rel.object_location_id ,rol.object_name from uniqdb.uq_comp.uq_event_config uec 
+			left join uniqdb.rt_listing.rti_event re on re.id = uec.event_id 
+			left join uniqdb.rt_listing.rti_event_location rel on rel.event_id = uec.event_id 
+			left join uniqdb.rt_listing.rti_object_location rol on rol.id = rel.object_location_id 
+			where uec.sport_id = 1 and re.event_date > now() 
+			group by uec.event_id, uec.is_active , uec.sport_id , uec.is_team , uec.reg_start_date , uec.reg_end_date , re.name , re.event_date , re.description , rel.object_location_id ,rol.object_name
+			");
+	}
 }

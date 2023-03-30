@@ -8,6 +8,9 @@
     .bronze-medal-icon {
         color: #CD7F32;
     }
+    .background-image: {
+        url('assets/media/bg/bg-3.jpg');
+    }
 </style>
 @extends('default')
 @section('css')
@@ -48,7 +51,7 @@
             <div class="d-flex flex-column-fluid">
                 <!--begin::Container-->
                 <div class="container">
-                <div class="card card-custom gutter-b">
+                    <div class="card card-custom gutter-b">
                         <div class="card-body">
                             <!--begin::Top-->
                             <div class="d-flex">
@@ -198,10 +201,7 @@
                             <!--end::Card-->                            
                         </div>
                     </div>
-                    
                     <!--end::Row-->
-
-                    
                 </div>
                 <!--end::Container-->
             </div>

@@ -40,6 +40,11 @@ class EventTeamRegistration extends Model
         return $this->hasMany('member\TeamMember', 'team_id', 'team_id');
     }
 
+    public function memberAttribute()
+    {
+        return $this->hasMany('member\MemberAttribute', 'team_id', 'team_id');
+    }
+
     public function entry()
     {
         return $this->belongsTo('reference\EventEntries', 'entry_id');

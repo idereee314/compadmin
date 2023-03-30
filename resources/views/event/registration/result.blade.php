@@ -172,23 +172,24 @@
                                 <div class="card-body">                                
                                     <div class="table-responsive">
                                         <table class="table table-hover table-bordered table-head-custom" id="event-team-registration-datatable">
-                                        <thead>
-                                            <tr>                                                                                        
-                                                <th class="text-center"><i class="fas fa-medal icon-2x gold-medal-icon"></i> АЛТ</th>
-                                                <th class="text-center"><i class="fas fa-medal icon-2x silver-medal-icon"></i> МӨНГӨ</th>
-                                                <th class="text-center"><i class="fas fa-medal icon-2x bronze-medal-icon"></i> ХҮРЭЛ</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach($eventAllMedal as $medals)
-                                                <tr>                                                    
-                                                    <td class="text-center border-right"><strong>{{ $medals->gold }}</strong></td>
-                                                    <td class="text-center border-right"><strong>{{ $medals->silver }}</strong></td>
-                                                    <td class="text-center border-right"><strong>{{ $medals->bronze }}</strong></td>
+                                            <thead>
+                                                <tr>                                                                                        
+                                                    <th class="text-center"><i class="fas fa-medal icon-2x gold-medal-icon"></i> АЛТ</th>
+                                                    <th class="text-center"><i class="fas fa-medal icon-2x silver-medal-icon"></i> МӨНГӨ</th>
+                                                    <th class="text-center"><i class="fas fa-medal icon-2x bronze-medal-icon"></i> ХҮРЭЛ</th>
                                                 </tr>
-                                            @endforeach 
+                                            </thead>
+                                            <tbody>
+                                                @foreach($eventAllMedal as $medals)
+                                                    <tr>                                                    
+                                                        <td class="text-center border-right"><strong>{{ $medals->gold }}</strong></td>
+                                                        <td class="text-center border-right"><strong>{{ $medals->silver }}</strong></td>
+                                                        <td class="text-center border-right"><strong>{{ $medals->bronze }}</strong></td>
+                                                    </tr>
+                                                @endforeach 
+                                            </tbody> 
                                         </table>
-                                        </tbody>                                        
+                                                                               
                                     </div>        
                                 </div>
                             </div>

@@ -55,6 +55,12 @@ class TeamMember extends Model
         return $this->hasMany('event\EventTeamRegistrationMemberStatus', 'team_registration_member_id');
     }
 
+    public function team()
+    {
+        return $this->belongsTo('team\Team', 'team_id');
+    }
+
+
     public static function boot()
     {
         parent::boot();
@@ -71,13 +77,22 @@ class TeamMember extends Model
 			$teamMember->created_at = Carbon\Carbon::now()->toDateTimeString();
         });
 
-        static::created(function($teamMember)
-        {
+        static::created(function($teamMember) {
             $statusArr['status'] = @Config::get('smart.event_registration_status')['created'];
             $statusArr['changed_by'] = Auth::id();
-			$statusArr['changed_at'] = Carbon\Carbon::now()->toDateTimeString();
-           
-            $teamMember->statuses()->create($statusArr);
+            $statusArr['changed_at'] = Carbon\Carbon::now()->toDateTimeString();
+
+            // $teamMembers = $statusArr->eventTeamRegistration;
+            // // dd($teamMembers);
+            // foreach ($teamMembers as $teamMember) {
+            //     $teamMember->statuses()->create($statusArr);
+            // }
+
+            // dd($teamMember->statuses);
+
+            // dd($teamMember);
+
+            //  $teamMember->statuses()->create($statusArr);
         });
 
         static::deleting(function($teamMember)

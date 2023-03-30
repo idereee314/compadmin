@@ -295,17 +295,20 @@ return [
     'comp_member' => 'Оролцогч',
     'comp_title' => 'Тэмцээн',
     'comp_award_place' => 'Байр эзлүүлэх',
-    'comp_place_nuber' => 'Байр',
+    'comp_place_number' => 'Байр',
     'comp_org_type' => 'Оролцох харъялалын төрөл',
     'comp_max_entry' => 'Оролцох хүмүүсийн лимит',
     'comp_athlete_age_average' => 'Багийн тамирчдын дундаж нас',
     'comp_add_member' => 'Тамирчин шинээр нэмэх',
 
     // Volleyball
-    'voll_role' => 'Гүйцэтгэх үүрэг',
-    'athlete_height' =>'Биеийн өндөр',
-    'voll_rank' =>'Спортын цол зэрэг',
-    'athlete_jersey_number' => 'Тамирчны Хувийн дугаар',
+    'comp_voll_role' => 'Гүйцэтгэх үүрэг',
+    'comp_voll_position' => 'Байрлал',
+    'comp_athlete_height' =>'Биеийн өндөр',
+    'comp_athlete_weight' => 'Биеийн жин',
+    'comp_voll_rank' =>'Спортын цол зэрэг',
+    'comp_athlete_jersey_number' => 'Тамирчны Хувийн дугаар',
+    'sport_title' => 'Цол зэрэг',
 
     //Academy
 

@@ -25,11 +25,13 @@ use academy\AcademyRepository as Academy;
 use member\MemberRepository as Member;
 use team\TeamRepository as Team;
 use member\TeamMemberRepository as TeamMember;
+use member\TeamMemberAttributeRepository as MemberAttribute;
 
 //Models
 use event\EventRegistration as EventRegistrationModel;
 use event\EventTeamRegistration as EventTeamRegistrationModel;
 use member\TeamMember as TeamMemberModel;
+use member\MemberAttribute as MemberAttributeModel;
 
 use \Auth as Auth;
 use Config;
@@ -42,7 +44,7 @@ class EventRegistrationController extends Controller
 {
     public $restful = true;
 
-    public function __construct(Event $event, EventRegistration $eventRegistration, EventConfig $eventConfig, Academy $academy, EventEntries $eventEntries, EntryConfigAge $configAge, EntryConfigBelt $configBelt, EntryConfigWeight $configWeight, Member $member, EventTeamRegistration $eventTeamRegistration, Team $team, TeamMember $teamMember)
+    public function __construct(Event $event, EventRegistration $eventRegistration, EventConfig $eventConfig, Academy $academy, EventEntries $eventEntries, EntryConfigAge $configAge, EntryConfigBelt $configBelt, EntryConfigWeight $configWeight, Member $member, EventTeamRegistration $eventTeamRegistration, Team $team, TeamMember $teamMember, MemberAttribute $memberAttribute)
     {
         $this->view_path = 'event.registration';
         $this->event = $event;
@@ -57,6 +59,7 @@ class EventRegistrationController extends Controller
         $this->eventTeamRegistration = $eventTeamRegistration;
         $this->team = $team;
         $this->teamMember = $teamMember;
+        $this->memberAttribute = $memberAttribute;
     }
 
     /**
@@ -250,18 +253,63 @@ class EventRegistrationController extends Controller
         $input = Input::all();
         
         $eventTeamRegistration = $this->eventTeamRegistration->find($id);
-        $event = $eventTeamRegistration->event->id;
+        $event = $eventTeamRegistration->event;
         $eventTeamAthleteRegStatusCount = $this->teamMember->getTeamRegStatusCount($eventTeamRegistration->event_id, $eventTeamRegistration->team_id)->pluck('total', 'status')->toArray();
         $athlete_list = $eventTeamRegistration->teamathlete->where('team_id', $eventTeamRegistration->team_id);
-        // dd($eventTeamRegistration);
-
+        
+        // dd($eventTeamRegistration->teamathlete[0]->member->memberAttribute);
+        // dd($eventTeamRegistration->teamathlete);
         $data['athlete_list'] = $athlete_list;
-        $data['event_id'] = $event;
+        $data['event_id'] = $event->id;
 		$data['eventTeamRegistration'] = $eventTeamRegistration;
         $data['eventTeamAthleteRegStatusCount'] = $eventTeamAthleteRegStatusCount;
         $data['progressPercent'] = round(@$eventTeamAthleteRegStatusCount[@Config::get('smart.event_registration_status')['approved']] ? @$eventTeamAthleteRegStatusCount[@Config::get('smart.event_registration_status')['approved']] / array_sum(@$eventTeamAthleteRegStatusCount) * 100 : 0);
+        $data['event'] = $event;
 
         return view($this->view_path.'.team/athlete_team/athlete', $data);
+    }
+
+    public function MeduulegPrint($id)
+    {        
+        $eventTeamRegistration = $this->eventTeamRegistration->find($id);
+        $event = $eventTeamRegistration->event;
+        $eventEntries = $event->entries->find($eventTeamRegistration->entry_id);
+        $athlete_list = $eventTeamRegistration->teamathlete->where('team_id', $eventTeamRegistration->team_id);
+        
+        $data['athlete_list'] = $athlete_list;
+        $data['eventEntries'] = $eventEntries;
+        $data['athlete_list'] = $athlete_list;
+        $data['event_id'] = $event->id;
+		$data['eventTeamRegistration'] = $eventTeamRegistration;
+        $data['event'] = $event;
+
+        return view($this->view_path.'.team/athlete_team/pdf_meduuleg', $data);    
+    }
+
+    public function generatePdf($id)
+    {
+        $eventTeamRegistration = $this->eventTeamRegistration->find($id);
+        $event = $eventTeamRegistration->event;
+        $eventEntries = $event->entries->find($eventTeamRegistration->entry_id);
+        $athlete_list = $eventTeamRegistration->teamathlete->where('team_id', $eventTeamRegistration->team_id);
+        
+        $data['athlete_list'] = $athlete_list;
+        $data['eventEntries'] = $eventEntries;
+        $data['athlete_list'] = $athlete_list;
+        $data['event_id'] = $event->id;
+		$data['eventTeamRegistration'] = $eventTeamRegistration;
+        $data['event'] = $event;
+
+        // $pdf = PDF::loadView('pdf_meduuleg.view', $data);
+
+        // return $pdf->download('file.pdf');
+
+        // return PDF::loadView('pdf_meduuleg.view', $data);
+
+        // return view($this->view_path.'.team/athlete_team/pdf_meduuleg', $data);  
+        $pdf = PDF::loadView($this->view_path.'.team.athlete_team.pdf_meduuleg', $data);
+        // $pdf->setPaper('a4', 'landscape');
+        return $pdf->download('file.pdf');
     }
 
     /**
@@ -1055,7 +1103,7 @@ class EventRegistrationController extends Controller
     public function createTeamMember()
     {
         $input = Input::all();
-        
+        // dd($this->memberAttribute);
         $academies = $this->academy->all();
         $team_list = $this->team->all();
 
@@ -1070,7 +1118,9 @@ class EventRegistrationController extends Controller
     public function storeTeamMember(Request $request)
     {
         $input = Input::all();
-        // dd($input);
+
+        $layerType = $this->layerType->find($input['layer_type_id']);
+        
         $validator = Validator::make($input, TeamMemberModel::rules(0));
         if ($validator->fails())
         {
@@ -1090,7 +1140,6 @@ class EventRegistrationController extends Controller
                     'status' => 'success',
                     'msg' => trans('messages.success_save')
                 );
-
             }
             catch(\Illuminate\Database\QueryException $e)
             {
@@ -1099,7 +1148,6 @@ class EventRegistrationController extends Controller
                     'msg' => trans('messages.error_save'),
                     'errors' => $e->getMessage()
                 );
-
             }
         }
 
@@ -1108,21 +1156,17 @@ class EventRegistrationController extends Controller
 
     public function editTeamMember($id)
     {
-        $eventTeamRegistration = $this->eventTeamRegistration->find($id);
+
         $academies = $this->academy->all();
         $teamMember = $this->teamMember->find($id);
         $team_list = $this->team->all();
         $eventEntries = $this->eventEntries->getEntryByEventId($teamMember->event_id);
-        
-        dd($this->eventTeamRegistration->find($this->teamMember->find($id)));
 
         $data['eventEntries'] = $eventEntries;
-        $data['team_id'] = @$input['team_id'];
+        $data['team_id'] = $teamMember->team_id;
         $data['teamMember'] = $teamMember;
-        $data['eventTeamRegistration'] = $eventTeamRegistration;
         $data['academies'] = $academies;
         $data['event_id'] = @$input['event_id'];
-        $data['team_id'] = @$input['team_id'];
 
         return view($this->view_path.'.team/athlete_team/edit', $data);
     }
@@ -1130,12 +1174,13 @@ class EventRegistrationController extends Controller
     public function updateTeamMember(Request $request, $id)
     {
         $input = Input::all();
-        $rules = [
-            'academy_id' => 'required',
-            //'status' => 'required'
-        ];
 
-        $validator = Validator::make($input, $rules);
+        // dd();
+
+        // $attributeGroup = $this->attributeGroup->update($id, $input);
+
+        // $validator = Validator::make($input, $rules);
+        $validator = Validator::make($input,  memberAttributeModel::rules($id));
 
         if ($validator->fails())
         {
@@ -1146,7 +1191,8 @@ class EventRegistrationController extends Controller
             );
         } else {
             try {
-                $event = $this->teamMember->update($id, $input);
+                // $event = $this->teamMember->update($id, $input);
+                $memberAttribute = $this->memberAttribute->update($id, $input);
 
                 $response = array(
                     'status' => 'success',

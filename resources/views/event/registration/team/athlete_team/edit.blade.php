@@ -6,21 +6,59 @@
             <i aria-hidden="true" class="ki ki-close"></i>
         </button>
     </div>
-    <div class="card-body">
-        
+    <div class="card-body"> 
+        <!-- <div class="form-group row">
+            <label class="col-md-3 col-form-label text-right"><strong>{{trans('display.comp_voll_position')}}: </strong></label>
+            <div class="col-md-9">
+                <select class="form-control selectpicker" data-live-search="true" name="athlete_position" id="athlete_position" data-col-index="5">
+                    <option value="">-- {{ trans('display.general_all') }} --</option>
+                    @forelse(@Config::get('enums.athlete_position') as $key => $position)
+                        <option value="{{ $key }}">{{ $position }}</option>
+                    @empty
+                    @endforelse
+                </select>
+            </div>
+        </div> -->
 
         <div class="form-group row">
-            <label class="col-md-3 col-form-label text-right">{{trans('display.comp_entry')}}: <span class="text-danger">*</span></label>
-            <div class="col-md-9 col-lg-8">
-                <select class="form-control selectpicker" data-live-search="true" name="entry_id" id="entry_id" data-col-index="5">
+            <label class="col-md-3 col-form-label text-right"><strong>{{trans('display.comp_voll_role')}}: </strong></label>
+            <div class="col-md-9">
+                <select class="form-control selectpicker" data-live-search="true" name="athlete_role" id="athlete_role" data-col-index="5">
                     <option value="">-- {{ trans('display.general_all') }} --</option>
-                    @forelse(@$eventEntries as $eventEntry)
-                    <option value="{{ $eventEntry->id }}" {{ $teamMember->entry->id == $eventEntry->id ? 'selected' : ''}} >{{ $eventEntry->name }}</option>
+                    @forelse(@Config::get('enums.athlete_role') as $key => $roles)
+                        <option value="{{ $key }} {{ @$roles == @$teamMember->member->memberAttribute->where('attribute_id', 3)->where('sport_id', 2)->first()->value ? 'selected' : ''}}">{{ $roles }}</option>
                     @empty
                     @endforelse
                 </select>
             </div>
         </div>
+
+        <div class="form-group row">
+            <label class="col-md-3 col-form-label text-right"><strong>{{trans('display.sport_title')}}:</strong></label>
+            <div class="col-md-9">
+                <input type="text" class="form-control" name="sport_title" placeholder="{{trans('display.sport_title')}}" id="sport_title" value="{{ optional(@$teamMember->member->memberAttribute->where('attribute_id', 4)->where('sport_id', 2)->first())->value }}"/>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-md-3 col-form-label text-right"><strong>{{trans('display.comp_athlete_weight')}}:</strong></label>
+            <div class="col-md-9">
+                <input type="number" class="form-control" name="athlete_weight" placeholder="{{trans('display.comp_athlete_weight')}}" id="athlete_weight" value="{{ optional(@$teamMember->member->memberAttribute->where('attribute_id', 2)->where('sport_id', 2)->first())->value }}"/>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-md-3 col-form-label text-right"><strong>{{trans('display.comp_athlete_height')}}:</strong></label>
+            <div class="col-md-9">
+            <input type="number" class="form-control" name="athlete_height" placeholder="{{trans('display.comp_athlete_height')}}" id="athlete_height" value="{{ optional(@$teamMember->member->memberAttribute->where('attribute_id', 1)->where('sport_id', 2)->first())->value }}"/>            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-md-3 col-form-label text-right"><strong>{{trans('display.comp_athlete_jersey_number')}}:</strong></label>
+            <div class="col-md-9">
+            <input type="number" class="form-control" name="jersey_number" id="jersey_number" placeholder="{{trans('display.comp_athlete_jersey_number')}}" value="{{ optional(@$teamMember->member->memberAttribute->where('attribute_id', 5)->where('sport_id', 2)->first())->value }}"/>            </div>
+        </div>
+
     </div>
 
     <div class="modal-footer text-right bg-gray-100 border-top-0">

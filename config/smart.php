@@ -53,7 +53,7 @@ return array(
 		'canceled' => 'canceled',
 	],
 
-	'athlete_role' => [
+	'athlete_position' => [
 		'outside hitter' => 'outside hitter',
 		'opposite' => 'opposite',
 		'setter' => 'setter',
@@ -61,6 +61,11 @@ return array(
 		'libero' => 'libero',
 		'defensive specialist' => 'defensive specialist',
 		'serving specialist' => 'serving specialist',
+	],
+
+	'athlete_role' => [
+		'forward' => 'forward',
+		'support' => 'support',
 	],
 
 	'menu' => [

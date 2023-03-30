@@ -54,6 +54,11 @@ class Member extends Model
         return $this->belongsTo(Event::class, 'event_id');
     }
 
+    public function memberAttribute()
+    {
+        return $this->hasMany('member\MemberAttribute', 'member_id');
+    }
+
     public function eventRegistration()
     {
         return $this->hasMany(EventRegistration::class, 'member_id');

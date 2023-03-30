@@ -475,7 +475,10 @@ $(document).ready(function() {
         var id = $(this).data("registrationid");
         $.get('registration/'+id, showCountModal);
     });
-
+    // $('#event-team-registration-datatable tbody').on( 'click', 'tr td a.show-count', function () {
+    //     var id = $(this).data("registrationid");
+    //     window.open('registration/'+id+'?meduuleg', '_blank');
+    // });
 
     $('#event-team-registration-datatable tbody').on( 'click', 'tr td a.edit', function () {
         var id = $(this).data("registrationid");

@@ -45,6 +45,13 @@ class EloquentTeamMemberRepository implements TeamMemberRepository {
 		$teamMember->event_id = $input['event_id'];
 		$teamMember->team_id = @$input['team_id'];
 
+		// $heightAttribute = $this->memberAttribute;
+		// $heightAttribute->member_id = $input['member_id'];
+		// $heightAttribute->attribute_id = 1;
+		// $heightAttribute->sport_id = 2;
+		// $heightAttribute->value = $input['athlete_height'];
+		// $heightAttribute->save();
+		
 		$teamMember->save();
 		return $teamMember;
 	}
