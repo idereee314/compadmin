@@ -283,7 +283,7 @@ class EventRegistrationController extends Controller
 		$data['eventTeamRegistration'] = $eventTeamRegistration;
         $data['event'] = $event;
 
-        return view($this->view_path.'.team/athlete_team/pdf_meduuleg', $data);    
+        return view($this->view_path.'.team/athlete_team/print', $data);    
     }
 
     public function generatePdf($id)
@@ -1103,7 +1103,7 @@ class EventRegistrationController extends Controller
     public function createTeamMember()
     {
         $input = Input::all();
-        // dd($this->memberAttribute);
+
         $academies = $this->academy->all();
         $team_list = $this->team->all();
 
@@ -1117,11 +1117,90 @@ class EventRegistrationController extends Controller
 
     public function storeTeamMember(Request $request)
     {
-        $input = Input::all();
-
-        $layerType = $this->layerType->find($input['layer_type_id']);
-        
+        $input = $request->all();
+    
         $validator = Validator::make($input, TeamMemberModel::rules(0));
+        if ($validator->fails()) {
+            return [
+                'status' => 'error',
+                'msg' => trans('messages.error_save'),
+                'errors' => $validator->errors()->all()
+            ];
+        }
+    
+        try {
+            $teamMember = $this->teamMember->create($input);
+    
+            $attributes = [
+                [
+                    'attribute_id' => 1,
+                    'name' => 'athlete_height',
+                ],
+                [
+                    'attribute_id' => 2,
+                    'name' => 'athlete_weight',
+                ],
+                [
+                    'attribute_id' => 3,
+                    'name' => 'athlete_role',
+                ],
+                [
+                    'attribute_id' => 4,
+                    'name' => 'sport_title',
+                ],
+                [
+                    'attribute_id' => 5,
+                    'name' => 'jersey_number',
+                ],
+            ];
+    
+            foreach (@$attributes as $attribute) {
+                @$attributeModel = new MemberAttributeModel;
+                @$attributeModel->member_id = $teamMember->member_id;
+                @$attributeModel->attribute_id = $attribute['attribute_id'];
+                @$attributeModel->sport_id = 2;
+                @$attributeModel->value = $input[$attribute['name']];
+                @$attributeModel->save();
+            }
+
+            return [
+                'status' => 'success',
+                'msg' => trans('messages.success_save')
+            ];
+        } catch(\Illuminate\Database\QueryException $e) {
+            Log::error($e->getMessage());
+            return [
+                'status' => 'error',
+                'msg' => trans('messages.error_save'),
+                'errors' => $e->getMessage()
+            ];
+        }
+    }    
+
+    public function editTeamMember($id)
+    {
+
+        $academies = $this->academy->all();
+        $teamMember = $this->teamMember->find($id);
+        $team_list = $this->team->all();
+        $eventEntries = $this->eventEntries->getEntryByEventId($teamMember->event_id);
+        // dd($teamMember);
+        $data['eventEntries'] = $eventEntries;
+        $data['team_id'] = $teamMember->team_id;
+        $data['team_list'] = $team_list;
+        $data['teamMember'] = $teamMember;
+        $data['academies'] = $academies;
+        $data['event_id'] = @$input['event_id'];
+
+        return view($this->view_path.'.team/athlete_team/edit', $data);
+    }
+
+    public function updateTeamMember(Request $request, $id)
+    {
+        $input = $request->all();
+        dd($input);
+        $validator = Validator::make($input, TeamMemberModel::rules($id));
+    
         if ($validator->fails())
         {
             $response = array(
@@ -1134,11 +1213,46 @@ class EventRegistrationController extends Controller
         {
             try
             {
-                $event = $this->teamMember->create($input);
-
+                // Update the team member using the repository
+                $teamMember = $this->teamMember->update($id, $input);
+            
+                // Update the member attribute models
+                $attributes = [
+                    [
+                        'attribute_id' => 1,
+                        'name' => 'athlete_height',
+                    ],
+                    [
+                        'attribute_id' => 2,
+                        'name' => 'athlete_weight',
+                    ],
+                    [
+                        'attribute_id' => 3,
+                        'name' => 'athlete_role',
+                    ],
+                    [
+                        'attribute_id' => 4,
+                        'name' => 'sport_title',
+                    ],
+                    [
+                        'attribute_id' => 5,
+                        'name' => 'jersey_number',
+                    ],
+                ];
+        
+                foreach ($attributes as $attribute) {
+                    $attributeModel = new MemberAttributeModel;
+                    $attributeModel->member_id = $teamMember->member_id;
+                    $attributeModel->attribute_id = $attribute['attribute_id'];
+                    $attributeModel->sport_id = 2;
+                    $attributeModel->value = $input[$attribute['name']];
+                    $attributeModel->save();
+                }
+                
+                // Return a success response
                 $response = array(
                     'status' => 'success',
-                    'msg' => trans('messages.success_save')
+                    'msg' => trans('messages.success_update')
                 );
             }
             catch(\Illuminate\Database\QueryException $e)
@@ -1150,66 +1264,9 @@ class EventRegistrationController extends Controller
                 );
             }
         }
-
-		return $response;
-    }
-
-    public function editTeamMember($id)
-    {
-
-        $academies = $this->academy->all();
-        $teamMember = $this->teamMember->find($id);
-        $team_list = $this->team->all();
-        $eventEntries = $this->eventEntries->getEntryByEventId($teamMember->event_id);
-
-        $data['eventEntries'] = $eventEntries;
-        $data['team_id'] = $teamMember->team_id;
-        $data['teamMember'] = $teamMember;
-        $data['academies'] = $academies;
-        $data['event_id'] = @$input['event_id'];
-
-        return view($this->view_path.'.team/athlete_team/edit', $data);
-    }
-
-    public function updateTeamMember(Request $request, $id)
-    {
-        $input = Input::all();
-
-        // dd();
-
-        // $attributeGroup = $this->attributeGroup->update($id, $input);
-
-        // $validator = Validator::make($input, $rules);
-        $validator = Validator::make($input,  memberAttributeModel::rules($id));
-
-        if ($validator->fails())
-        {
-            $response = array(
-                'status' => 'error',
-                'msg' => trans('messages.error_save'),
-                'errors' => html_entity_decode(HTML::ul($validator->errors()->all()))
-            );
-        } else {
-            try {
-                // $event = $this->teamMember->update($id, $input);
-                $memberAttribute = $this->memberAttribute->update($id, $input);
-
-                $response = array(
-                    'status' => 'success',
-                    'msg' => trans('messages.success_update')
-                );
-            }
-            catch(Exception $e)
-            {
-                $response = array(
-                    'status' => 'error',
-                    'msg' => trans('messages.error_save'),
-                    'errors' => $e->getMessage()
-                );
-            }
-        }
-
-		return $response;
+    
+        // Return the response
+        return $response;
     }
 
     public function removeTeamMember($id)

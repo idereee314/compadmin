@@ -103,7 +103,7 @@
                         <td class="text-center" style="font-size:10px;">{{ @$athlete->member->memberAttribute->where('attribute_id', 1)->where('sport_id', 2)->first() ? $athlete->member->memberAttribute->where('attribute_id', 1)->where('sport_id', 2)->first()->value.'см' : '' }}</td>
                         <td class="text-center" style="font-size:10px;">{{ @$athlete->member->memberAttribute->where('attribute_id', 3)->where('sport_id', 2)->first()->value }}</td>
                         <td class="text-center" style="font-size:10px;">{{ @$athlete->member->memberAttribute->where('attribute_id', 4)->where('sport_id', 2)->first()->value }}</td>
-                        <td class="text-left" style="font-size:10px;">{{$athlete->member->contact_phone}}</td>
+                        <td class="text-center" style="font-size:10px;">{{$athlete->member->contact_phone}}</td>
                     </tr>
                     @if(@$athlete->is_team_lead)
                         @php

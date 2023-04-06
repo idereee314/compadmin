@@ -66,13 +66,16 @@
                     $teamAverageHeight = null;
                 @endphp
                 <tbody>
-                @foreach($eventTeamRegistration->teamathlete as $athlete)
-                    
+                @for($i = 1; $i <= 12; $i++)
+                    @if(isset($eventTeamRegistration->teamathlete[$i-1]))
+                        @php
+                            $athlete = $eventTeamRegistration->teamathlete[$i-1];
+                        @endphp
                         <tr>
-                            <td class="text-center" style="font-size:10px;">{{ ++$loop->index }} </td>
+                            <td class="text-center" style="font-size:10px;">{{ $i }} </td>
                             <td class="text-center" style="font-size:10px;">{{ @$athlete->member->memberAttribute->where('attribute_id', 5)->where('sport_id', 2)->first()->value }}</td>
                             <td class="text-left" style="font-size:10px;">{{$athlete->member->lastname}} {{$athlete->member->firstname}}</td>
-                            <td class="text-left" style="font-size:10px;">{{ $athlete->member->register_number }}</td>
+                            <td class="text-center" style="font-size:10px;">{{ $athlete->member->register_number }}</td>
                             <td class="text-center" style="font-size:10px;">{{ @$athlete->member->memberAttribute->where('attribute_id', 2)->where('sport_id', 2)->first() ? $athlete->member->memberAttribute->where('attribute_id', 2)->where('sport_id', 2)->first()->value.'кг' : '' }}</td>
                             <td class="text-center" style="font-size:10px;">{{ @$athlete->member->memberAttribute->where('attribute_id', 1)->where('sport_id', 2)->first() ? $athlete->member->memberAttribute->where('attribute_id', 1)->where('sport_id', 2)->first()->value.'см' : '' }}</td>
                             <td class="text-center" style="font-size:10px;">{{ @$athlete->member->memberAttribute->where('attribute_id', 3)->where('sport_id', 2)->first()->value }}</td>
@@ -87,14 +90,24 @@
                         @php
                             $teamMemberCount = $teamMemberCount += 1;
                             $teamAge = $teamAge + $athlete->member->age;
-
                             $teamHeight = $teamHeight + @$athlete->member->memberAttribute->where('attribute_id', 1)->where('sport_id', 2)->first()->value;
                             $teamAverageAge = round($teamAge/$teamMemberCount, 2);
-
                             $teamAverageHeight = round($teamHeight/$teamMemberCount, 2);
-                        @endphp
-                    
-                @endforeach
+                        @endphp 
+                    @else
+                        <tr>
+                            <td class="text-center" style="font-size:10px;">{{ $i }} </td>
+                            <td class="text-center" style="font-size:10px;"></td>
+                            <td class="text-center" style="font-size:10px;"></td>
+                            <td class="text-center" style="font-size:10px;"></td>
+                            <td class="text-center" style="font-size:10px;"></td>
+                            <td class="text-center" style="font-size:10px;"></td>
+                            <td class="text-center" style="font-size:10px;"></td>
+                            <td class="text-center" style="font-size:10px;"></td>
+                            <td class="text-center" style="font-size:10px;"></td>
+                        </tr>
+                    @endif
+                @endfor
                 </tbody>
             @else
                 <thead>

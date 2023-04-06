@@ -392,4 +392,28 @@ class EventConfigController extends Controller
 
         return view($this->view_path.'.'.$input['name'], $data);
     }
+
+    // public function ranking(){
+    //     $eventConfig = $this->eventConfig->find($id);
+        
+    //     $data['event_config_id'] = $id;
+
+    //     $data['eventConfig'] = $eventConfig;
+    //     $data['view_path'] = $this->view_path;
+
+    //     return view($this->view_path.'.ranking', $data);
+    // }
+
+    public function ranking(){
+        $rankings = DB::table('uq_event_config as uec')
+                        ->join('uq_event_registration as uer', 'uer.event_id', '=', 'uec.event_id')
+                        ->join('uq_event_award as uea', 'uea.event_registration_id', '=', 'uer.id')
+                        ->join('uq_member as um', 'um.id', '=', 'uer.member_id')
+                        ->select('um.id', 'um.firstname', 'um.lastname', DB::raw('SUM(uea.points) as points'))
+                        ->groupBy('um.id', 'um.firstname', 'um.lastname')
+                        ->orderByDesc('points')
+                        ->get();
+
+        return view('rankings', ['rankings' => $rankings]);
+    }
 }

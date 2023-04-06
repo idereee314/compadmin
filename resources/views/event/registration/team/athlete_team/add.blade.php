@@ -1,4 +1,7 @@
 <form class="form" method="POST" id="create-event-team-member-registration-form" action="{{ route('event.team.member.store') }}">
+<input type="hidden" name="event_id" id="event_id" value="{{ $event_id }}"/>
+<input type="hidden" name="team_id" id="team_id" value="{{ $team_id }}"/>
+
     <div class="modal-header bg-gray-100">
         <h5 class="modal-title" id="exampleModalLabel"><strong>{{trans('display.general_new_athlete')}}</strong></h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">

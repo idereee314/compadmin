@@ -7,6 +7,26 @@
         </button>
     </div>
     <div class="card-body"> 
+        <div class="form-group row">
+            <label class="col-md-3 col-form-label text-right"><strong>{{trans('display.comp_member')}}:</strong></label>
+            <div class="col-md-9">
+                <!-- <a name="member_id" id="member_id">{{@$teamMember->member->lastname}} {{@$teamMember->member->firstname}}</a> -->
+                <input type="text" class="form-control" disabled name="member_id" id="member_id" value="{{@$teamMember->member->lastname}} {{@$teamMember->member->firstname}}"/>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-md-3 col-form-label text-right"><strong> {{trans('display.general_team')}}: <span class="text-danger">*</span></strong></label>
+            <div class="col-md-9">
+                <select class="form-control selectpicker" data-live-search="true" name="team_id" id="team_id" data-col-index="5">
+                    <option value="">-- {{ trans('display.general_all') }} --</option>
+                    @foreach($team_list as $team)
+                        <option value="{{ $team->id }}" {{ $team->id == $teamMember->team_id ? 'selected' : '' }}>{{ $team->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+        </div>
+
         <!-- <div class="form-group row">
             <label class="col-md-3 col-form-label text-right"><strong>{{trans('display.comp_voll_position')}}: </strong></label>
             <div class="col-md-9">
@@ -21,14 +41,13 @@
         </div> -->
 
         <div class="form-group row">
-            <label class="col-md-3 col-form-label text-right"><strong>{{trans('display.comp_voll_role')}}: </strong></label>
+            <label class="col-md-3 col-form-label text-right"><strong>{{trans('display.comp_voll_role')}}:</strong></label>
             <div class="col-md-9">
                 <select class="form-control selectpicker" data-live-search="true" name="athlete_role" id="athlete_role" data-col-index="5">
                     <option value="">-- {{ trans('display.general_all') }} --</option>
-                    @forelse(@Config::get('enums.athlete_role') as $key => $roles)
-                        <option value="{{ $key }} {{ @$roles == @$teamMember->member->memberAttribute->where('attribute_id', 3)->where('sport_id', 2)->first()->value ? 'selected' : ''}}">{{ $roles }}</option>
-                    @empty
-                    @endforelse
+                    @foreach(config('enums.athlete_role') as $key => $role)
+                        <option value="{{ $key }}" {{ (optional($teamMember->member->memberAttribute->where('attribute_id', 3)->where('sport_id', 2)->first())->value == $key) ? 'selected' : '' }}>{{ $role }}</option>
+                    @endforeach
                 </select>
             </div>
         </div>
@@ -59,6 +78,18 @@
             <input type="number" class="form-control" name="jersey_number" id="jersey_number" placeholder="{{trans('display.comp_athlete_jersey_number')}}" value="{{ optional(@$teamMember->member->memberAttribute->where('attribute_id', 5)->where('sport_id', 2)->first())->value }}"/>            </div>
         </div>
 
+        <div class="form-group row">
+            <label class="col-3 col-form-label"></label>
+            <div class="col-9 col-form-label">
+                <div class="checkbox-inline">
+                    <label class="checkbox checkbox-lg checkbox-success">
+                        <input type="checkbox" name="is_team_lead" {{ @$teamMember->is_team_lead ? 'checked' : ''}}/>
+                        <span></span>
+                        <strong> Багийн ахлагч эсэх </strong>
+                    </label>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="modal-footer text-right bg-gray-100 border-top-0">

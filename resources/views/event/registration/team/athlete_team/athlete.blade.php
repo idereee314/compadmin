@@ -50,7 +50,6 @@
                 <tbody>
                 @foreach($eventTeamRegistration->teamathlete as $athlete)
                     <tr>
-                    <!-- <strong>{{ Config::get("enums.team_lead")[@$athlete->is_team_lead] }}</strong> -->
                         <td class="text-center border-right">{{ ++$loop->index }} </td>
                         <td class="text-center border-right">
                             <div class="d-flex align-items-center">
@@ -68,14 +67,14 @@
                         <td class="text-center border-right">{{ @$athlete->member->memberAttribute->where('attribute_id', 5)->where('sport_id', 2)->first()->value }}</td>
                         <td class="text-center border-right">{{ @$athlete->member->memberAttribute->where('attribute_id', 4)->where('sport_id', 2)->first()->value }}</td>
                         <td class="text-center border-right">{{ @$athlete->member->memberAttribute->where('attribute_id', 3)->where('sport_id', 2)->first()->value }}</td>
-                        <td class="text-center border-right">{{ @$athlete->member->memberAttribute->where('attribute_id', 2)->where('sport_id', 2)->first() ? $athlete->member->memberAttribute->where('attribute_id', 1)->where('sport_id', 2)->first()->value.'см' : '' }}</td>        
-                        <td class="text-center border-right">{{ @$athlete->member->memberAttribute->where('attribute_id', 2)->where('sport_id', 2)->first() ? $athlete->member->memberAttribute->where('attribute_id', 2)->where('sport_id', 2)->first()->value.'кг' : '' }}</td>                           
+                        <td class="text-center border-right">{{ @$athlete->member->memberAttribute->where('attribute_id', 2)->where('sport_id', 2)->first() ? @$athlete->member->memberAttribute->where('attribute_id', 1)->where('sport_id', 2)->first()->value.'см' : '' }}</td>        
+                        <td class="text-center border-right">{{ @$athlete->member->memberAttribute->where('attribute_id', 2)->where('sport_id', 2)->first() ? @$athlete->member->memberAttribute->where('attribute_id', 2)->where('sport_id', 2)->first()->value.'кг' : '' }}</td>                           
                         <td class="text-center border-right">{{ @$athlete->member->age }}</td>
                         <td class="text-center border-right">{{ Config::get("enums.gender_code")[@$athlete->member->gender_code] }}</td>
                         <td class="text-center border-right"><button type="button" class="btn btn-light-{{ @Config::get('smart.event_registration_status_class')[$athlete->status]}} btn-sm btn-status" data-registrationid="{{$athlete->id}}">{{@Config::get('enums.event_registration_status')[$athlete->status] }}</button></td>
                         <td class="text-center border-right">{{ $athlete->created_at }}</td>
                         <td class="text-center border-right">
-                            @if ($athlete->member->id_url)
+                            @if (@$athlete->member->id_url)
 			                    <a class="btn btn-icon btn-clean btn-sm mr-3 show-image" data-id="{{$athlete->member->id}}" data-type="id" title="{{trans('display.id_photo')}}"><i class="far fas fa-paperclip text-warning"></i></a>
                             @endif
 
@@ -141,11 +140,6 @@
         var teamId = $('#team_id').val();
         $.get('registration/team/member/create?event_id=' + eventId + '&team_id=' + teamId, showAddAthleteModal);
     });
-    
-    $('#print').on( 'click', function () {
-        var id = $(this).data("registrationid");
-        window.open('registration/team/athlete_team/'+id+'?meduuleg', '_blank');
-    });
 
     $('#event-team-member-registration-datatable').on( 'click','tr td a.edit', function () {
         var id = $(this).data("registrationid");
@@ -154,6 +148,12 @@
 
         $.get('registration/team/member/'+id+'/edit?event_id=' + eventId + '&team_id=' + teamId, showEditAthleteModal);
     });
+    
+    $('#print').on( 'click', function () {
+        var id = $(this).data("registrationid");
+        window.open('registration/team/athlete_team/'+id+'?meduuleg', '_blank');
+    });
+
 
     $('#event-team-member-registration-datatable tbody').on( 'click', 'tr td button.btn-status', function () {
         var id = $(this).data("registrationid");
@@ -224,10 +224,8 @@
         $('#showImageModal').on('shown.bs.modal', function(){
             $('#showImageModal .modal-content').html(data);
             $('.selectpicker').selectpicker();
-
             $('#change-status-form select[name=status]').on('change', function(){
                 var status = $(this).val(); 
-
                 if(status == '{{ @Config::get('smart.event_registration_status')['created']}}')
                 {
                     $(".payment").hide();
@@ -296,10 +294,8 @@
                     }
                 }
             });
-
             $(this).off('shown.bs.modal');
         });
-
         $('#showImageModal').on('hidden.bs.modal', function(){
             $('#showImageModal .modal-content').empty();
         });

@@ -136,7 +136,7 @@
                                                         <li class="navi-item">
                                                             <a href="{{ route('event.results', @$event['id']) }}" class="navi-link">
                                                                 <span class="navi-icon">
-                                                                    <i class="flaticon-medal"></i>
+                                                                    <i class="fas fa-medal"></i>
                                                                 </span>
                                                                 <span class="navi-text">Үр дүн</span>
                                                             </a>

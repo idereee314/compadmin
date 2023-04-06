@@ -173,9 +173,11 @@ Route::get('/event/{eventId}/results', 'event\EventRegistrationController@result
 Route::get('/event/{eventId}/toplist', 'event\EventRegistrationController@toplist')->name('event.toplist');
 
 //profile
-
 Route::get('/profile/{member}','member\MemberController@profile')->name('member.profile');
 Route::get('/profile/{member}/event','member\MemberController@profileEvent')->name('member.profile.event');
 Route::get('/profile/{member}/results','member\MemberController@profileResult')->name('member.profile.results');
 Route::get('/upcoming','member\MemberController@profileUpcoming')->name('upcoming');
 Route::get('/pastEvent','member\MemberController@profilePastEvent')->name('pastEvent');
+
+//Ranking
+Route::get('/{sport_id}/ranking','EventConfig\EventConfigController@ranking')->name('ranking');

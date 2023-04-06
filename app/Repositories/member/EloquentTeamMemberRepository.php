@@ -40,17 +40,9 @@ class EloquentTeamMemberRepository implements TeamMemberRepository {
 	public function create($input)
 	{
 		$teamMember = new TeamMember;
-
 		$teamMember->member_id = $input['member_id'];
 		$teamMember->event_id = $input['event_id'];
 		$teamMember->team_id = @$input['team_id'];
-
-		// $heightAttribute = $this->memberAttribute;
-		// $heightAttribute->member_id = $input['member_id'];
-		// $heightAttribute->attribute_id = 1;
-		// $heightAttribute->sport_id = 2;
-		// $heightAttribute->value = $input['athlete_height'];
-		// $heightAttribute->save();
 		
 		$teamMember->save();
 		return $teamMember;
@@ -63,7 +55,8 @@ class EloquentTeamMemberRepository implements TeamMemberRepository {
 		$teamMember->member_id = $input['member_id'];
 		$teamMember->event_id = $input['event_id'];
 		$teamMember->team_id = @$input['team_id'];
-
+		$teamMember->is_team_lead = @$input['is_team_lead'];
+		
 		$teamMember->save();
 		return $teamMember;
 	}

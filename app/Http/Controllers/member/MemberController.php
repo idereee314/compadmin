@@ -426,14 +426,20 @@ class MemberController extends Controller
         $memberAllData = $this->member->getMemberToProfileAllData($memberId);
         $upcomingEventJiuJitsuData = $this->member->getUpcomingJiuJitsuEvent();
         $pastEventJiuJitsuData = $this->member->getPastJiuJitsuEvent();
-
+        $athleteAcademyInfo = $this->member->getAthleteAcademyInfo($memberId);
+        $athleteSchoolInfo = $this->member->getAthleteSchoolInfo($memberId);
+        $athleteUniversityInfo = $this->member->getAthleteUniversityInfo($memberId);
+        // dd($member->age);
         $data['pastEventJiuJitsuData'] = $pastEventJiuJitsuData;
         $data['member'] = $member;
         $data['memberApprovedData'] = $memberApprovedData;
         $data['memberAllData'] = $memberAllData;
         $data['upcomingEventJiuJitsuData'] = $upcomingEventJiuJitsuData;
+        $data['athleteAcademyInfo'] = $athleteAcademyInfo;
+        $data['athleteSchoolInfo'] = $athleteSchoolInfo;
+        $data['athleteUniversityInfo'] = $athleteUniversityInfo;
 
-        return view($this->view_path.'.profile', $data); 
+        return view($this->view_path.'.profile/profile', $data); 
     }
 
     public function profileResult($memberId)
@@ -447,7 +453,7 @@ class MemberController extends Controller
         $data['memberApprovedData'] = $memberApprovedData;
         $data['memberAllData'] = $memberAllData;
 
-        return view($this->view_path.'.profileResults', $data); 
+        return view($this->view_path.'.profile/profileResults', $data); 
     }
 
     public function profileEvent($memberId)
@@ -460,7 +466,7 @@ class MemberController extends Controller
         $data['memberApprovedData'] = $memberApprovedData;
         $data['memberAllData'] = $memberAllData;
 
-        return view($this->view_path.'.profileEvents', $data); 
+        return view($this->view_path.'.profile/profileEvents', $data); 
     }
 
     public function profileUpcoming()
@@ -469,7 +475,7 @@ class MemberController extends Controller
 
         $data['upcomingEventJiuJitsuData'] = $upcomingEventJiuJitsuData;
 
-        return view($this->view_path.'.upcomingEvent', $data); 
+        return view($this->view_path.'.profile/upcomingEvent', $data); 
     }
 
     public function profilePastEvent()
@@ -478,6 +484,6 @@ class MemberController extends Controller
 
         $data['pastEventJiuJitsuData'] = $pastEventJiuJitsuData;
 
-        return view($this->view_path.'.pastEvent', $data); 
+        return view($this->view_path.'.profile/pastEvent', $data); 
     }    
 }

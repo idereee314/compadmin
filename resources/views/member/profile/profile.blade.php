@@ -74,6 +74,67 @@
 
                     <div class="d-flex justify-content-center mt-5 pt-5">
                         <div class="col-lg-4">
+                            <div class="card">
+                                <div class="card-header" style="color: #0f4b63; ">
+                                    <strong>Академиуд</strong>
+                                </div>
+                                <div class="card-body" style="color: #0f4b63;">
+                                    <ul>
+                                        @foreach($athleteAcademyInfo as $academyInfo)
+                                            <li>
+                                                <a href="#" style="color: #0f4b63; font-size: 16px">
+                                                    {{ $academyInfo->name }}
+                                                </a>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        @if($member->age > 18)
+                            <div class="col-lg-4">
+                                <div class="card">
+                                    <div class="card-header" style="color: #0f4b63; ">
+                                        <strong>Их сургууль</strong>
+                                    </div>
+                                    <div class="card-body" style="color: #0f4b63;">
+                                        <ul>
+                                            @foreach($athleteUniversityInfo as $universityInfo)
+                                                <li>
+                                                    <a href="#" style="color: #0f4b63; font-size: 16px">
+                                                        {{ $universityInfo->name }}
+                                                    </a>
+                                                </li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        @else
+                            <div class="col-lg-4">
+                                <div class="card">
+                                    <div class="card-header" style="color: #0f4b63; ">
+                                        <strong>Сургууль</strong>
+                                    </div>
+                                    <div class="card-body" style="color: #0f4b63;">
+                                        <ul>
+                                            @foreach($athleteSchoolInfo as $schoolInfo)
+                                                <li>
+                                                    <a href="#" style="color: #0f4b63; font-size: 16px">
+                                                        {{ $schoolInfo->name }}
+                                                    </a>
+                                                </li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+                    </div>
+
+
+                    <div class="d-flex justify-content-center mt-5 pt-5">
+                        <div class="col-lg-4">
                             <a href="/profile/{{ $member->id}}/event" target="_blank">
                                 <div class="card">
                                     <div class="card-content" style="color: #0f4b63;"><i class="la la-trophy icon-4x" style="color: #f96815;"></i>Миний бүртгүүлсэн тэмцээн</div>
