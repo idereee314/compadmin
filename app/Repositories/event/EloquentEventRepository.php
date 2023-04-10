@@ -55,7 +55,7 @@ class EloquentEventRepository implements EventRepository {
 		$isAdmin = DB::table('uniqdb.uq_comp.uq_compad_user_role')
             ->join('uniqdb.uq_comp.uq_compad_role', 'uniqdb.uq_comp.uq_compad_role.id', '=', 'uniqdb.uq_comp.uq_compad_user_role.role_id')
             ->where('uniqdb.uq_comp.uq_compad_user_role.user_id', '=', Auth::user()->id)
-            ->where('uniqdb.uq_comp.uq_compad_role.code', '=', 'admin')
+            ->whereIn('uniqdb.uq_comp.uq_compad_role.code', ['admin', 'mjjf'])
             ->exists();
 
 		if ($isAdmin) {
