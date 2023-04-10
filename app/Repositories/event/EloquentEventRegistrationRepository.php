@@ -224,8 +224,8 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 						$member .= '<div class="symbol symbol-50 flex-shrink-0"><img src="/assets/images/default_profile.jpg" alt="Profile"></div>';
 					}
 					$member .= '<div class="ml-3">';
-						$member .= '<span class="text-dark-75 line-height-sm d-block pb-3" style="white-space: nowrap;">'.$qry->member->lastname.' <strong>'.$qry->member->firstname.'</strong></span>';
-                        $member .= '<span class="text-dark-75 line-height-sm d-block pb-2"><i class="la la-address-book"></i>'.$qry->member->register_number.', <i class="la la-phone"></i>'.$qry->member->contact_phone.'</span>';
+					$member .= '<a href="/profile/' . $qry->member->id . '" class="text-dark-75 line-height-sm d-block pb-3" style="white-space: nowrap;" target="_blank">' . $qry->member->lastname . ' <strong>' . $qry->member->firstname . '</strong></a>';
+					$member .= '<span class="text-dark-75 line-height-sm d-block pb-2"><i class="la la-address-book"></i>'.$qry->member->register_number.', <i class="la la-phone"></i>'.$qry->member->contact_phone.'</span>';
 					$member .= '</div>';
                 $member .= '</div>';
 				return $member;

@@ -245,4 +245,16 @@ class EloquentEventConfigRepository implements EventConfigRepository {
 
 		return $config;
 	}
+
+	public function getRanking()
+	{
+		DB::table('uq_event_config as uec')
+            ->join('uq_event_registration as uer', 'uer.event_id', '=', 'uec.event_id')
+            ->join('uq_event_award as uea', 'uea.event_registration_id', '=', 'uer.id')
+            ->join('uq_member as um', 'um.id', '=', 'uer.member_id')
+            ->select('um.id', 'um.firstname', 'um.lastname', DB::raw('SUM(uea.points) as points'))
+            ->groupBy('um.id', 'um.firstname', 'um.lastname')
+            ->orderByDesc('points')
+            ->get();
+	}
 }
