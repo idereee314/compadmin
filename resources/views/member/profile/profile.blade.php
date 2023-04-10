@@ -83,10 +83,10 @@
                                         @foreach($athleteAcademyInfo as $academyInfo)
                                             <li>
                                                 <a href="#" style="color: #0f4b63; font-size: 16px">                                                    
-                                                    @if($academyInfo->name == 'бусад')   
-                                                        {{ $academyInfo->academy_name }}
+                                                    @if($academyInfo->name == 'Бусад')   
+                                                        <strong>{{ $academyInfo->name }} </strong> - {{ $academyInfo->academy_name }}                                                        
                                                     @else 
-                                                    <strong>{{ $academyInfo->name }} </strong> - {{ $academyInfo->academy_name }}                                                                                                       
+                                                        {{ $academyInfo->name }}                                                                                        
                                                     @endif
                                                 </a>
                                             </li>
@@ -106,10 +106,10 @@
                                         @foreach($athleteUniversityInfo as $universityInfo)
                                             <li>
                                                 <a href="#" style="color: #0f4b63; font-size: 16px">                                                  
-                                                    @if($universityInfo->name == 'бусад')   
-                                                        {{ $universityInfo->academy_name }}
+                                                    @if($universityInfo->name == 'Бусад')   
+                                                        <strong>{{ $universityInfo->name }} </strong> - {{ $universityInfo->academy_name }}                                                        
                                                     @else 
-                                                    <strong>{{ $universityInfo->name }} </strong> - {{ $universityInfo->academy_name }}                                                                                                       
+                                                        {{ $universityInfo->name }}                                                                                        
                                                     @endif
                                                 </a>
                                             </li>
@@ -129,10 +129,10 @@
                                         @foreach($athleteSchoolInfo as $schoolInfo)
                                             <li>
                                                 <a href="#" style="color: #0f4b63; font-size: 16px">
-                                                    @if($schoolInfo->name == 'бусад')   
-                                                        {{ $schoolInfo->academy_name }}
+                                                    @if($schoolInfo->name == 'Бусад')   
+                                                        <strong>{{ $schoolInfo->name }} </strong> - {{ $schoolInfo->academy_name }}                                                        
                                                     @else 
-                                                        <strong>{{ $schoolInfo->name }} </strong> - {{ $schoolInfo->academy_name }}                                                                                                       
+                                                        {{ $schoolInfo->name }}                                                                                        
                                                     @endif
                                                 </a>
                                             </li>
