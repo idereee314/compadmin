@@ -289,29 +289,29 @@ class EloquentMemberRepository implements MemberRepository {
 	
 	public function getAthleteAcademyInfo($memberId)
 	{
-		return DB::select("select ua.name from uniqdb.uq_comp.uq_event_registration uer 
+		return DB::select("select ua.name, uer.academy_name from uniqdb.uq_comp.uq_event_registration uer 
 				join uniqdb.uq_comp.uq_member um on um.id = uer.member_id 
 				join uniqdb.uq_comp.uq_academy ua on ua.id = uer.academy_id 
 				where um.id = $memberId and ua.type = 'academy'
-				group by ua.name");
+				group by ua.name, uer.academy_name");
 	}
 
 	public function getAthleteSchoolInfo($memberId)
 	{
-		return DB::select("select ua.name from uniqdb.uq_comp.uq_event_registration uer 
+		return DB::select("select ua.name , uer.academy_name from uniqdb.uq_comp.uq_event_registration uer 
 				join uniqdb.uq_comp.uq_member um on um.id = uer.member_id 
 				join uniqdb.uq_comp.uq_academy ua on ua.id = uer.academy_id 
 				where um.id = $memberId and ua.type = 'highschool'
-				group by ua.name");
+				group by ua.name, uer.academy_name");
 	}
 	
 	public function getAthleteUniversityInfo($memberId)
 	{
-		return DB::select("select ua.name from uniqdb.uq_comp.uq_event_registration uer 
+		return DB::select("select ua.name, uer.academy_name from uniqdb.uq_comp.uq_event_registration uer 
 				join uniqdb.uq_comp.uq_member um on um.id = uer.member_id 
 				join uniqdb.uq_comp.uq_academy ua on ua.id = uer.academy_id 
 				where um.id = $memberId and ua.type = 'university'
-				group by ua.name");
+				group by ua.name, uer.academy_name");
 	}
 
 }

@@ -82,7 +82,7 @@
                                         <a href="/profile/{{ $member->id}}" class="text-muted">Профайл</a>
                                     </li>
                                     <li class="breadcrumb-item text-muted">
-                                        <a href="/profile/{{ $member->id}}/results" style="color: black;"><strong> Миний Оролцсон тэмцээн үр дүн</strong></a>
+                                        <a href="/profile/{{ $member->id}}/results" style="color: black;"><strong> Оролцсон тэмцээн үр дүн</strong></a>
                                     </li>
                                 </ul>
                                 <!--end::Breadcrumb-->
@@ -95,10 +95,11 @@
                     <div class="d-flex justify-content-center mt-5 pt-5">
                         <div class="col-lg-12">                            
                             <div class="card">
-                                <div class="card-header" style="color: #0f4b63;"><i class="la la-trophy icon-4x" style="color: #f96815;"></i><strong>Миний Оролцсон тэмцээн үр дүн</strong></div>
+                                <div class="card-header" style="color: #0f4b63;"><i class="la la-trophy icon-4x" style="color: #f96815;"></i><strong>Оролцсон тэмцээн үр дүн</strong></div>
                                 <div class="card-body" style="color: #0f4b63;">
                                 <div class="table-responsive">
                                     <table class="table table-hover table-bordered table-head-custom" id="event-team-registration-datatable">
+                                        @if(count($memberApprovedData) > 0)
                                         <thead>
                                             <tr> 
                                                 <th class="text-center" style="color: #0f4b63;">#</th>
@@ -123,7 +124,12 @@
                                                     <td class="text-center border-right" style="color: #0f4b63;"><strong>{{ $memberDatas->start_age }}-{{ $memberDatas->end_age }}</strong></td>
                                                 </tr>
                                             @endforeach 
-                                        </tbody> 
+                                        </tbody>
+                                        @else
+                                            <tr>
+                                                <td colspan="12" class="text-center"><strong>Одоогоор тэмцээнд оролцоогүй байна.</strong></td>
+                                            </tr>
+                                        @endif 
                                     </table>
                                 </div>
                             </div>                           

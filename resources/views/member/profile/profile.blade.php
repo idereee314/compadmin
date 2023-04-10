@@ -82,8 +82,12 @@
                                     <ul>
                                         @foreach($athleteAcademyInfo as $academyInfo)
                                             <li>
-                                                <a href="#" style="color: #0f4b63; font-size: 16px">
-                                                    {{ $academyInfo->name }}
+                                                <a href="#" style="color: #0f4b63; font-size: 16px">                                                    
+                                                    @if($academyInfo->name == 'бусад')   
+                                                        {{ $academyInfo->academy_name }}
+                                                    @else 
+                                                    <strong>{{ $academyInfo->name }} </strong> - {{ $academyInfo->academy_name }}                                                                                                       
+                                                    @endif
                                                 </a>
                                             </li>
                                         @endforeach
@@ -101,8 +105,12 @@
                                     <ul>
                                         @foreach($athleteUniversityInfo as $universityInfo)
                                             <li>
-                                                <a href="#" style="color: #0f4b63; font-size: 16px">
-                                                    {{ $universityInfo->name }}
+                                                <a href="#" style="color: #0f4b63; font-size: 16px">                                                  
+                                                    @if($universityInfo->name == 'бусад')   
+                                                        {{ $universityInfo->academy_name }}
+                                                    @else 
+                                                    <strong>{{ $universityInfo->name }} </strong> - {{ $universityInfo->academy_name }}                                                                                                       
+                                                    @endif
                                                 </a>
                                             </li>
                                         @endforeach
@@ -121,7 +129,11 @@
                                         @foreach($athleteSchoolInfo as $schoolInfo)
                                             <li>
                                                 <a href="#" style="color: #0f4b63; font-size: 16px">
-                                                    {{ $schoolInfo->name }}
+                                                    @if($schoolInfo->name == 'бусад')   
+                                                        {{ $schoolInfo->academy_name }}
+                                                    @else 
+                                                        <strong>{{ $schoolInfo->name }} </strong> - {{ $schoolInfo->academy_name }}                                                                                                       
+                                                    @endif
                                                 </a>
                                             </li>
                                         @endforeach
@@ -135,17 +147,17 @@
 
                     <div class="d-flex justify-content-center mt-5 pt-5">
                         <div class="col-lg-4">
-                            <a href="/profile/{{ $member->id}}/event" target="_blank">
+                            <a href="/profile/{{ $member->id}}/results" target="_blank">
                                 <div class="card">
-                                    <div class="card-content" style="color: #0f4b63;"><i class="la la-trophy icon-4x" style="color: #f96815;"></i>Миний бүртгүүлсэн тэмцээн</div>
+                                <div class="card-content text-center" style="color: #0f4b63;"><i class="fas fa-medal icon-4x" style="color: #f96815;"></i>Оролцсон тэмцээн үр дүн</div>
                                 </div>
                             </a>
                         </div>
-                        
+
                         <div class="col-lg-4">
-                            <a href="/profile/{{ $member->id}}/results" target="_blank">
+                            <a href="/profile/{{ $member->id}}/event" target="_blank">
                                 <div class="card">
-                                <div class="card-content" style="color: #0f4b63;"><i class="fas fa-medal icon-4x" style="color: #f96815;"></i>Миний Оролцсон тэмцээн үр дүн</div>
+                                    <div class="card-content text-center" style="color: #0f4b63;"><i class="la la-trophy icon-4x" style="color: #f96815;"></i>Бүртгүүлсэн тэмцээн</div>
                                 </div>
                             </a>
                         </div>
@@ -172,8 +184,8 @@
                                                 <i class="flaticon-calendar-with-a-clock-time-tools mr-1 mt-2" style="color:#f96815;"></i>
                                                 <small>{{date('Y-m-d', strtotime($upcomingjiujitsu->event_date))}}</small>                                                 
                                             </div> 
-                                            <div class="event-name mt-2">
-                                                <span>{{ $upcomingjiujitsu->event_name }}</span> 
+                                            <div class="event-name mt-2 text-center">
+                                                {{ $upcomingjiujitsu->event_name }}
                                             </div>
                                             <!-- <div class="event-reg-date">
                                                 <i class="flaticon-calendar-with-a-clock-time-tools mr-1 mt-2" style="color:#f96815;"></i>
@@ -207,12 +219,12 @@
                                 <div class="event-list">
                                     <div class="card" style="border-left-color: #0f4b63; border-left-width: 1rem; ">
                                         <div class="card-content">                                            
-                                            <div class="event-date">
+                                            <div class="event-date text-center">
                                                 <i class="flaticon-calendar-with-a-clock-time-tools mr-1 mt-2" style="color:#f96815;"></i>
                                                 <small>{{date('Y-m-d', strtotime($pastEventJiuJitsuData[$i]->event_date))}}</small>                                                 
                                             </div> 
-                                            <div class="event-name mt-2">
-                                                <span>{{ $pastEventJiuJitsuData[$i]->event_name }}</span> 
+                                            <div class="event-name mt-2 text-center">
+                                                {{ $pastEventJiuJitsuData[$i]->event_name }}
                                             </div>
                                             <div class="event-location mt-2 mb-2">                                                
                                                 <small class="text-muted"> <i class="flaticon2-location mr-2" style="color:#f96815;"></i>{{ $pastEventJiuJitsuData[$i]->object_name }} </small>

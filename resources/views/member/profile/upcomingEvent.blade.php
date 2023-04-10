@@ -88,8 +88,8 @@
                                         <div class="event-date">
                                             <i class="flaticon-calendar-with-a-clock-time-tools mr-1" style="color:#f96815;"></i><small>{{date('Y-m-d', strtotime($upcomingjiujitsu->event_date))}}</small>                                                 
                                         </div> 
-                                        <div class="event-name">
-                                            <span class="text-center">{{ $upcomingjiujitsu->event_name }}</span> 
+                                        <div class="event-name text-center">
+                                            {{ $upcomingjiujitsu->event_name }}
                                         </div> 
                                         <div class="event-location mb-2"">                                                
                                             <small class="text-muted"> <i class="flaticon2-location mr-2" style="color:#f96815;"></i>{{ $upcomingjiujitsu->object_name }} </small>
