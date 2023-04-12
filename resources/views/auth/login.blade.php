@@ -54,7 +54,7 @@
 								<input class="form-control h-auto form-control-solid py-4 px-8" type="password" placeholder="{{trans('display.login_password')}}" name="password" autocomplete="off"/>
 							</div>
 							<div class="form-group d-flex flex-wrap justify-content-between align-items-center">
-								<div class="checkbox-inline">
+								<div class="checkbox-inline mr-3">
 									<label class="checkbox m-0 text-muted">
 									<input type="checkbox" name="remember" />
 									<span></span>{{trans('display.login_remember_me')}}</label>

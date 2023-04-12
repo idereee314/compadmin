@@ -48,8 +48,6 @@ class EloquentEventConfigRepository implements EventConfigRepository {
 		$eventConfig->sport_id = @$input['sport_id'];
 		$eventConfig->is_team = @$input['is_team'] ? $input['is_team'] : false;
 		
-		// $eventConfig->max_entry = @$input['max_entry'];
-
 		$eventConfig->save();
 		return $eventConfig;
 	}
@@ -67,9 +65,6 @@ class EloquentEventConfigRepository implements EventConfigRepository {
 		$eventConfig->update_final_date = @$input['reg_update_date'];
 		$eventConfig->sport_id = @$input['sport_id'];
 		$eventConfig->is_team = @$input['is_team'] ? $input['is_team'] : false;
-		
-		// dd($eventConfig);
-		// $eventConfig->max_entry = @$input['max_entry'];
 		
 		$eventConfig->save();
 		return $eventConfig;
@@ -117,7 +112,7 @@ class EloquentEventConfigRepository implements EventConfigRepository {
 	public function getDatatableList($searchData)
     {
 		$qry = EventConfig::select('*')->with('event:id,name', 'event.users')->withCount(['entries', 'configBelts', 'configAges', 'configWeights']);
-		// dd(Auth::user());
+		
 		if(Auth::user()->roles->first()->code == 'admin' || Auth::user()->roles->first()->code == 'event')
 		{
 			$data = Datatables::make($qry)

@@ -180,4 +180,7 @@ Route::get('/upcoming','member\MemberController@profileUpcoming')->name('upcomin
 Route::get('/pastEvent','member\MemberController@profilePastEvent')->name('pastEvent');
 
 //Ranking
-Route::get('/{sport_id}/ranking','EventConfig\EventConfigController@ranking')->name('ranking');
+Route::get('/{sport_id}/ranking','event\EventConfigController@ranking')->name('ranking');
+
+//Division information blade 
+Route::get('/{sport_id}/division','event\EventConfigController@division')->name('division.information');

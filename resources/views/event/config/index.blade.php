@@ -236,10 +236,9 @@
                                 <th width="5%">{{trans('display.comp_entry_weight')}}</th>
                                 <th width="13%">{{trans('display.general_created_at')}}</th>
                                 <th width="12%">{{trans('display.general_manage')}}</th>
+
                             </tr>
                             </thead>
-                            <tbody>
-                            </tbody>
                         </table>
                         <!--end: Datatable-->
                     </div>

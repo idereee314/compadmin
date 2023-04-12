@@ -405,10 +405,23 @@ class EventConfigController extends Controller
     // }
 
     public function ranking($sport_id){
-        $rankings = $this->config->getRanking();
+         
+        $sport = $this->sport->find($sport_id);
 
-        $data['rankings'] = $rankings;
+        $data['sport'] = $sport;
+        $data['view_path'] = $this->view_path;
 
-        return view($this->view_path.'.ranking', $data);
+        return view($this->view_path.'.rank/rank', $data);
+    }
+
+    public function division($sport_id){
+         
+        $sport = $this->sport->find($sport_id);
+
+        $data['sport_id'] = $sport_id;
+        $data['sport'] = $sport;
+        $data['view_path'] = $this->view_path;
+
+        return view($this->view_path.'.division/division', $data);
     }
 }
