@@ -76,8 +76,8 @@
             <label class="col-md-3 col-form-label text-right">{{trans('display.profile_photo')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9">
                 <div class="image-input image-input-outline" id="profile_photo">
-                    @if ($member->profile_photo)
-                        <img alt="..." id="profile-image" src="{{$member->profile_photo}}" style="max-width: 150px; max-height:120px">
+                    @if (@$member->profile_url xor ((@env('production') && \Storage::disk('s3')->exists($member->profile_url)) || @env('local')))
+                        <img alt="..." id="profile-image" src="{{\Storage::disk('s3')->url($member->profile_url)}}" style="max-width: 150px; max-height:120px">
                     @else
                         <img alt="..." id="profile-image" alt="" src="{{asset('/assets/media/users/100_1.jpg')}}" style="max-width: 150px; max-height:120px">
                     @endif
@@ -99,8 +99,8 @@
             <label class="col-md-3 col-form-label text-right">{{trans('display.id_photo')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9">
                 <div class="image-input image-input-outline" id="id_photo">
-                    @if ($member->id_photo)
-                        <img alt="..." id="id-image" src="{{$member->id_photo}}" style="max-width: 150px; max-height:120px">
+                    @if (@$member->id_url xor ((@env('production') && \Storage::disk('s3')->exists($member->id_url)) || @env('local')))
+                        <img alt="..." id="id-image" src="{{\Storage::disk('s3')->url($member->id_url)}}" style="max-width: 150px; max-height:120px">
                     @else
                         <img alt="..." id="id-image" alt="" src="{{asset('/assets/media/users/100_1.jpg')}}" style="max-width: 150px; max-height:120px">
                     @endif
