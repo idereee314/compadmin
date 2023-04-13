@@ -64,7 +64,12 @@
     </div>
 
     <div class="modal-footer text-right bg-gray-100 border-top-0">
+        
+        @if(Auth::user()->roles->first() == null)
+        <button type="button" id="close" class="btn btn-light-primary font-weight-bold" data-dismiss="modal">{{trans('display.general_close')}}</button>
+        @else
         <button type="button" id="close" class="btn btn-light-primary font-weight-bold" data-dismiss="modal">{{trans('display.general_close')}}</button>
         <button type="submit" class="btn btn-primary font-weight-bold">{{trans('display.general_save')}}</button>
+        @endif
     </div>
 </form>

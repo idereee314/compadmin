@@ -234,6 +234,12 @@ $('#bracketModal').on('hidden.bs.modal', function(){
     $('#bracketModal .card-body').empty();
 });
 }
+
+// auto reload every 10 min
+  setTimeout(function() {
+    location.reload();
+  }, 600000); // 10 minutes = 300000 milliseconds
+
 </script>
 @endsection
 @stop

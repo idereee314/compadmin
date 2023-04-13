@@ -298,17 +298,23 @@
 //Modal
 function showBracketModal( data ) {
 
-$('#bracketModal').modal();
-$('#bracketModal').on('shown.bs.modal', function(){
-    $('#bracketModal .card-body').html(data);
+    $('#bracketModal').modal();
+    $('#bracketModal').on('shown.bs.modal', function(){
+        $('#bracketModal .card-body').html(data);
 
-    $(this).off('shown.bs.modal');
-});
+        $(this).off('shown.bs.modal');
+    });
 
-$('#bracketModal').on('hidden.bs.modal', function(){
-    $('#bracketModal .card-body').empty();
-});
+    $('#bracketModal').on('hidden.bs.modal', function(){
+        $('#bracketModal .card-body').empty();
+    });
 }
+
+// auto reload every 10 min
+setTimeout(function() {
+    location.reload();
+  }, 600000); // 10 minutes = 300000 milliseconds
+
 </script>
 @endsection
 @stop

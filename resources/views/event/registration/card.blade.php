@@ -122,7 +122,7 @@
                                                                 <span class="navi-icon">
                                                                     <i class="flaticon2-graph-1"></i>
                                                                 </span>
-                                                                <span class="navi-text">Тайлан</span>
+                                                                <span class="navi-text">Статистик</span>
                                                             </a>
                                                         </li>
                                                         <li class="navi-item">
