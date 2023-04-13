@@ -15,7 +15,7 @@
                 <div class="card-header" style="color: #0f4b63;"><strong>16 аас доош насныхан</strong></div>
                 <div class="card-body" style="color: #0f4b63;">                                        
                     <div class="table-responsive">
-                        <table class="table table-hover table-bordered table-head-custom">                                               
+                        <table class="table table-hover table-bordered">                                               
                             <thead style="background-color: ">
                                 <tr> 
                                     <th class="text-center" style="color: #0f4b63;">Монгол нэр</th>                                                                                                                                     
@@ -86,7 +86,7 @@
                 <div class="card-header" style="color: #0f4b63;"><strong>16 аас доош насныхан</strong></div>
                 <div class="card-body" style="color: #0f4b63;">
                     <div class="table-responsive">
-                        <table class="table table-hover table-bordered table-head-custom">
+                        <table class="table table-hover table-bordered">
                             <thead>
                                 <tr> 
                                     <th class="text-center" style="color: #0f4b63;">Монгол нэр</th>                                                                                                                                     
@@ -160,8 +160,8 @@
                 <div class="card-header" style="color: #0f4b63;"><strong>16 аас доош насныхан</strong></div>
                 <div class="card-body" style="color: #0f4b63;">
                     <div class="table-responsive">
-                        <table class="table table-hover table-bordered table-head-custom">
-                            <thead style="background-color: #f1f1f1;">
+                        <table class="table table-hover table-bordered">
+                            <thead>
                                 <tr>
                                   <th class="text-center" style="color: #0f4b63;">Цагаан</th>
                                   <th class="text-center" style="color: #0f4b63;">Саарал</th>
@@ -171,10 +171,10 @@
                             </thead>
                             <tbody>                                                    
                                 <tr>
-                                    <td class="text-center border-right" style="color: #0f4b63;"><img src="/assets/images/belt.png" alt="white-belt" width="60" height="30"></td>                                                     
-                                    <td class="text-center border-right" style="color: #0f4b63;"><img src="/assets/images/belt.png" alt="white-belt" width="60" height="30"></td>
-                                    <td class="text-center border-right" style="color: #0f4b63;"><img src="/assets/images/belt.png" alt="white-belt" width="60" height="30"></td>
-                                    <td class="text-center border-right" style="color: #0f4b63;"><img src="/assets/images/belt.png" alt="white-belt" width="60" height="30"></td>
+                                    <td class="text-center border-right" style="color: #0f4b63;"><img src="/assets/images/belts/white.png" alt="white-belt" width="60" height="30"></td>                                                     
+                                    <td class="text-center border-right" style="color: #0f4b63;"><img src="/assets/images/belts/grey.png" alt="grey-belt" width="60" height="30"></td>
+                                    <td class="text-center border-right" style="color: #0f4b63;"><img src="/assets/images/belts/yellow.png" alt="yellow-belt" width="60" height="30"></td>
+                                    <td class="text-center border-right" style="color: #0f4b63;"><img src="/assets/images/belts/orange.png" alt="orange-belt" width="60" height="30"></td>
                                 </tr>
                             </tbody>
                         </table>                                        
@@ -187,8 +187,8 @@
                 <div class="card-header" style="color: #0f4b63;"><strong>Залуучууд</strong></div>
                 <div class="card-body" style="color: #0f4b63;">
                     <div class="table-responsive">
-                        <table class="table table-hover table-bordered table-head-custom">
-                            <thead style="background-color: #f1f1f1;">
+                        <table class="table table-hover table-bordered">
+                            <thead>
                                 <tr>
                                   <th class="text-center" style="color: #0f4b63;">Цагаан</th>
                                   <th class="text-center" style="color: #0f4b63;">Цэнхэр</th>
@@ -197,9 +197,9 @@
                             </thead>
                             <tbody>                                                    
                                 <tr>
-                                    <td class="text-center border-right" style="color: #0f4b63;"><img src="/assets/images/belt.png" alt="white-belt" width="60" height="30"></td>                                                     
-                                    <td class="text-center border-right" style="color: #0f4b63;"><img src="/assets/images/belt.png" alt="white-belt" width="60" height="30"></td>
-                                    <td class="text-center border-right" style="color: #0f4b63;"><img src="/assets/images/belt.png" alt="white-belt" width="60" height="30"></td>
+                                    <td class="text-center border-right" style="color: #0f4b63;"><img src="/assets/images/belts/white.png" alt="white-belt" width="60" height="30"></td>                                                     
+                                    <td class="text-center border-right" style="color: #0f4b63;"><img src="/assets/images/belts/blue.png" alt="blue-belt" width="60" height="30"></td>
+                                    <td class="text-center border-right" style="color: #0f4b63;"><img src="/assets/images/belts/purple.png" alt="purple-belt" width="60" height="30"></td>
                                 </tr>
                             </tbody>
                         </table>                                        
@@ -212,8 +212,8 @@
                 <div class="card-header" style="color: #0f4b63;"><strong>Насанд хүрэгч болон Мастерс</strong></div>
                 <div class="card-body" style="color: #0f4b63;">
                     <div class="table-responsive">
-                        <table class="table table-hover table-bordered table-head-custom">
-                            <thead style="background-color: #f1f1f1;">
+                        <table class="table table-hover table-bordered">
+                            <thead>
                                 <tr>
                                   <th class="text-center" style="color: #0f4b63;">Цагаан</th>
                                   <th class="text-center" style="color: #0f4b63;">Цэнхэр</th>
@@ -224,11 +224,11 @@
                             </thead>
                             <tbody>                                                    
                                 <tr>
-                                    <td class="text-center border-right" style="color: #0f4b63;"><img src="/assets/images/belt.png" alt="white-belt" width="60" height="30"></td>                                                     
-                                    <td class="text-center border-right" style="color: #0f4b63;"><img src="/assets/images/belt.png" alt="white-belt" width="60" height="30"></td>
-                                    <td class="text-center border-right" style="color: #0f4b63;"><img src="/assets/images/belt.png" alt="white-belt" width="60" height="30"></td>
-                                    <td class="text-center border-right" style="color: #0f4b63;"><img src="/assets/images/belt.png" alt="white-belt" width="60" height="30"></td>
-                                    <td class="text-center border-right" style="color: #0f4b63;"><img src="/assets/images/belt.png" alt="white-belt" width="60" height="30"></td>
+                                    <td class="text-center border-right" style="color: #0f4b63;"><img src="/assets/images/belts/white.png" alt="white-belt" width="60" height="30"></td>                                                     
+                                    <td class="text-center border-right" style="color: #0f4b63;"><img src="/assets/images/belts/blue.png" alt="blue-belt" width="60" height="30"></td>
+                                    <td class="text-center border-right" style="color: #0f4b63;"><img src="/assets/images/belts/purple.png" alt="purple-belt" width="60" height="30"></td>
+                                    <td class="text-center border-right" style="color: #0f4b63;"><img src="/assets/images/belts/brown.png" alt="brown-belt" width="60" height="30"></td>
+                                    <td class="text-center border-right" style="color: #0f4b63;"><img src="/assets/images/belts/black.png" alt="black-belt" width="60" height="30"></td>
                                 </tr>
                             </tbody>
                         </table>                                        
@@ -244,15 +244,15 @@
                 <div class="card-header" style="color: #0f4b63;"><strong>Хөвгүүд ( 16 аас доош насныхан )</strong></div>
                 <div class="card-body" style="color: #0f4b63;">
                     <div class="table-responsive">
-                        <table class="table table-hover table-bordered table-head-custom">
-                            <thead style="background-color: #f1f1f1;">
+                        <table class="table table-hover table-bordered">
+                            <thead>
                                 <tr>
-                                  <th class="text-center" style="color: #0f4b63;">Өсвөр үе 3 | Teen</th>
-                                  <th class="text-center" style="color: #0f4b63;">Өсвөр үе 2 | Junior</th>
-                                  <th class="text-center" style="color: #0f4b63;">Өсвөр үе 1 | Infant</th>
-                                  <th class="text-center" style="color: #0f4b63;">Бага нас 3 | Kids 3</th>
-                                  <th class="text-center" style="color: #0f4b63;">Бага нас 2 | Kids 2</th>
-                                  <th class="text-center" style="color: #0f4b63;">Бага нас 1 | Kids 1</th>
+                                  <th class="text-center" style="color: #0f4b63;">Өсвөр үе 3 <small>Teen</small></th>
+                                  <th class="text-center" style="color: #0f4b63;">Өсвөр үе 2 <small>Junior</small></th>
+                                  <th class="text-center" style="color: #0f4b63;">Өсвөр үе 1 <small>Infant</small></th>
+                                  <th class="text-center" style="color: #0f4b63;">Бага нас 3 <small>Kids 3</small></th>
+                                  <th class="text-center" style="color: #0f4b63;">Бага нас 2 <small>Kids 2</small></th>
+                                  <th class="text-center" style="color: #0f4b63;">Бага нас 1 <small>Kids 1</small></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -340,15 +340,15 @@
                 <div class="card-header" style="color: #0f4b63;"><strong>Охид ( 16 аас доош насныхан )</strong></div>
                 <div class="card-body" style="color: #0f4b63;">
                     <div class="table-responsive">
-                        <table class="table table-hover table-bordered table-head-custom">
-                            <thead style="background-color: #f1f1f1;">
+                        <table class="table table-hover table-bordered">
+                            <thead>
                                 <tr>
-                                  <th class="text-center" style="color: #0f4b63;">Өсвөр үе 3 | Teen</th>
-                                  <th class="text-center" style="color: #0f4b63;">Өсвөр үе 2 | Junior</th>
-                                  <th class="text-center" style="color: #0f4b63;">Өсвөр үе 1 | Infant</th>
-                                  <th class="text-center" style="color: #0f4b63;">Бага нас 3 | Kids 3</th>
-                                  <th class="text-center" style="color: #0f4b63;">Бага нас 2 | Kids 2</th>
-                                  <th class="text-center" style="color: #0f4b63;">Бага нас 1 | Kids 1</th>
+                                  <th class="text-center" style="color: #0f4b63;">Өсвөр үе 3 <small> Teen </small></th>
+                                  <th class="text-center" style="color: #0f4b63;">Өсвөр үе 2 <small> Junior </small></th>
+                                  <th class="text-center" style="color: #0f4b63;">Өсвөр үе 1 <small> Infant </small></th>
+                                  <th class="text-center" style="color: #0f4b63;">Бага нас 3 <small> Kids 3 </small></th>
+                                  <th class="text-center" style="color: #0f4b63;">Бага нас 2 <small> Kids 2 </small></th>
+                                  <th class="text-center" style="color: #0f4b63;">Бага нас 1 <small> Kids 1 </small></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -437,15 +437,15 @@
                 <div class="card-header" style="color: #0f4b63;"><strong>Эр ( 16 аас дээш насныхан )</strong></div>
                 <div class="card-body" style="color: #0f4b63;">
                     <div class="table-responsive">
-                        <table class="table table-hover table-bordered table-head-custom">
-                            <thead style="background-color: #f1f1f1;">
+                        <table class="table table-hover table-bordered">
+                            <thead>
                                 <tr>
-                                    <th class="text-center" style="color: #0f4b63;">Залуучууд | Youth</th>
-                                    <th class="text-center" style="color: #0f4b63;">Насанд хүрэгч | Adult</th>
-                                    <th class="text-center" style="color: #0f4b63;">Мастер 1 | Master 1</th>
-                                    <th class="text-center" style="color: #0f4b63;">Мастер 2 | Master 2</th>
-                                    <th class="text-center" style="color: #0f4b63;">Мастер 3 | Master 3</th>
-                                    <th class="text-center" style="color: #0f4b63;">Мастер 4 | Master 4</th>
+                                    <th class="text-center" style="color: #0f4b63;">Залуучууд <small> Youth</small></th>
+                                    <th class="text-center" style="color: #0f4b63;">Насанд<small style="color: #FFFFFF">.</small>хүрэгч <small> Adult</small></th>
+                                    <th class="text-center" style="color: #0f4b63;">Мастер 1 <small> Master 1</small></th>
+                                    <th class="text-center" style="color: #0f4b63;">Мастер 2 <small> Master 2</small></th>
+                                    <th class="text-center" style="color: #0f4b63;">Мастер 3 <small> Master 3</small></th>
+                                    <th class="text-center" style="color: #0f4b63;">Мастер 4 <small> Master 4</small></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -525,12 +525,12 @@
                 <div class="card-header" style="color: #0f4b63;"><strong>Эм ( 16 аас дээш насныхан )</strong></div>
                 <div class="card-body" style="color: #0f4b63;">
                     <div class="table-responsive">
-                        <table class="table table-hover table-bordered table-head-custom">
-                            <thead style="background-color: #f1f1f1;">
+                        <table class="table table-hover table-bordered">
+                            <thead>
                                 <tr>
-                                    <th class="text-center" style="color: #0f4b63;">Залуучууд | Youth</th>
-                                    <th class="text-center" style="color: #0f4b63;">Насанд хүрэгч | Adult</th>
-                                    <th class="text-center" style="color: #0f4b63;">Мастер 1 | Master 1</th>
+                                    <th class="text-center" style="color: #0f4b63;">Залуучууд <small> Youth</small></th>
+                                    <th class="text-center" style="color: #0f4b63;">Насанд хүрэгч <small> Adult</small></th>
+                                    <th class="text-center" style="color: #0f4b63;">Мастер 1 <small> Master 1</small></th>
                                 </tr>
                             </thead>
                             <tbody>
