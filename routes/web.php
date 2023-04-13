@@ -158,15 +158,12 @@ Route::group([
     Route::post('/academy/isother', 'academy\AcademyController@getIsOther')->name('academy.isother');
     Route::get('/academy/search/org', 'academy\AcademyController@findOrganizationByName')->name('academy.search.org');
 
-    
-
+    //stats
+    Route::get('/event/{eventId}/statistics', 'event\EventRegistrationController@statistics')->name('event.statistics');
 });
 
 Route::get('/event/{eventId}/bracket', 'event\EventRegistrationController@treeBracket')->name('event.bracket');
 Route::get('/event/{eventId}/bracket/show', 'event\EventRegistrationController@showBracket')->name('event.show.bracket');
-
-//stats
-Route::get('/event/{eventId}/statistics', 'event\EventRegistrationController@statistics')->name('event.statistics');
 
 //result
 Route::get('/event/{eventId}/results', 'event\EventRegistrationController@results')->name('event.results');
