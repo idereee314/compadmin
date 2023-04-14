@@ -219,7 +219,6 @@ class EventRegistrationController extends Controller
             {
                 try
                 {
-                    // dd($this->eventTeamRegistration);
                     $event = $this->eventTeamRegistration->create($input);
     
                     $response = array(
@@ -257,8 +256,6 @@ class EventRegistrationController extends Controller
         $eventTeamAthleteRegStatusCount = $this->teamMember->getTeamRegStatusCount($eventTeamRegistration->event_id, $eventTeamRegistration->team_id)->pluck('total', 'status')->toArray();
         $athlete_list = $eventTeamRegistration->teamathlete->where('team_id', $eventTeamRegistration->team_id);
         
-        // dd($eventTeamRegistration->teamathlete[0]->member->memberAttribute);
-        // dd($eventTeamRegistration->teamathlete);
         $data['athlete_list'] = $athlete_list;
         $data['event_id'] = $event->id;
 		$data['eventTeamRegistration'] = $eventTeamRegistration;
@@ -738,8 +735,7 @@ class EventRegistrationController extends Controller
         
         $data['view_path'] = $this->view_path;
         $data['events'] = $event['data'];
-        // dd(Auth::user()->roles->first());
-        //dd($event);
+
         $pagination = new LengthAwarePaginator($event['data'], @$event['total'], @$event['per_page'], @$event['current_page'], [
             'path'  => URL::current()
         ]);
@@ -818,7 +814,6 @@ class EventRegistrationController extends Controller
         $data['progressPercent'] = round(@$eventRegStatusCount[@Config::get('smart.event_registration_status')['approved']] ? @$eventRegStatusCount[@Config::get('smart.event_registration_status')['approved']] / array_sum(@$eventRegStatusCount) * 100 : 0);
         $data['eventRegistration'] = $eventRegistration->groupBy(['entry.fullname', 'belt.name', 'age.name', 'weight.weight']);
         $data['view_path'] = $this->view_path;
-        //dd($data['eventRegistration']);
 
         return view($this->view_path.'.bracket_tree', $data);
     }
@@ -1076,7 +1071,7 @@ class EventRegistrationController extends Controller
         $event = $this->event->find($eventId);
         $eventResult = $this->eventRegistration->getResultFromEvent($eventId);
         $eventAllMedal = $this->eventRegistration->getAllMedalFromEvent($eventId);
-        // dd($eventResult);
+
         $data['eventAllMedal'] = $eventAllMedal;
         $data['eventResult'] = $eventResult;
         $data['event'] = $event;
@@ -1184,7 +1179,7 @@ class EventRegistrationController extends Controller
         $teamMember = $this->teamMember->find($id);
         $team_list = $this->team->all();
         $eventEntries = $this->eventEntries->getEntryByEventId($teamMember->event_id);
-        // dd($teamMember);
+        
         $data['eventEntries'] = $eventEntries;
         $data['team_id'] = $teamMember->team_id;
         $data['team_list'] = $team_list;
@@ -1198,7 +1193,7 @@ class EventRegistrationController extends Controller
     public function updateTeamMember(Request $request, $id)
     {
         $input = $request->all();
-        dd($input);
+        
         $validator = Validator::make($input, TeamMemberModel::rules($id));
     
         if ($validator->fails())

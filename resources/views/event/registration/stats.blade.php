@@ -1,3 +1,4 @@
+<title>Тэмцээний Удирдлагын Систем Статистик</title>
 @extends('default')
 @section('css')
 <link rel="stylesheet" href="{{asset('assets/js/plugins/custom/jstree/dist/themes/default/style.min.css')}}">

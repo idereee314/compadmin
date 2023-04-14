@@ -52,7 +52,7 @@
         </div>
 
         <div class="form-group row">
-            <label class="col-md-3 col-form-label text-right">{{trans('display.comp_place_nuber')}}: <span class="text-danger">*</span></label>
+            <label class="col-md-3 col-form-label text-right">{{trans('display.comp_place_number')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9 col-lg-5">
                 <input type="number" min="1" class="form-control" name="place_number" id="place_number" value="{{ @$eventRegistration->award->place_number }}" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required')}}"/>
             </div>

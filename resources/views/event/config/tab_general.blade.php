@@ -77,6 +77,25 @@
                 <div class="error-here"></div>
             </div>
         </div> 
+
+        <div class="form-group row">
+            <label class="col-md-3 col-form-label text-right"></label>
+            <div class="col-md-9 col-lg-6">
+                <label class="checkbox">
+                    <input type="checkbox" name="is_athlete_limit" id="is_athlete_limit">
+                    <span></span>&nbsp;
+                    Лимиттэй эсэх
+                </label>
+            </div>
+        </div>
+
+        <div class="form-group row d-none" id="athletes_limit">
+            <label class="col-md-3 col-form-label text-right">Тамирчдын тоо: </label>
+            <div class="col-md-9 col-lg-6">
+                <input type="number" class="form-control" autocomplete="off" name="athlete_limit" id="athlete_limit"/>
+            </div>
+        </div>
+
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right"></label>
             <div class="col-md-9 col-lg-6">
@@ -160,6 +179,16 @@ $(document).ready(function() {
     });
 
     $('#update-event-config-form select[id=org_types]').select2({});
+
+    $('#is_athlete_limit').on('change', function() {    
+        if(this.checked) {
+            $("#athletes_limit").removeClass('d-none');
+        }
+        else {
+            $("#athletes_limit").addClass('d-none');
+        }
+    });
+    $('#is_athlete_limit').trigger('change');
 
     $('#is_team').on('change', function() {    
         if(this.checked) {
