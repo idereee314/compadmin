@@ -8,7 +8,10 @@
     </div>
 </div>
 <!--end::Subheader-->
+    
+    <!-- <h1 style="color: #0f4b63;"> Монгол жюү жицүгийн холбоо нас болон жингийн ангиллуудыг тодорхойлж, дараах байдлаар хуваадаг.</h1> -->
     <h2 style="color: #0f4b63;">НАСНИЙ АНГИЛАЛ</h2>
+    
     <div class="row">
         <div class="col">                            
             <div class="card">
