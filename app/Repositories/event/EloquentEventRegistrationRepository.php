@@ -184,15 +184,16 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 			->setRowAttr([
 				'class' => function($qry) {
 					if (@$qry->is_weight_checked == true ){
-						if (@$qry->entry_weight_id->weight <= @$qry->current_weight){
+						$weight = abs($qry->weight->weight);
+						if ($weight >= @$qry->current_weight){
 							return 'table-success';
-						}else{
-							return 'table-warning';
-							
+						} else {
+							return 'table-danger';
 						}
 					}
 				}
 			])
+			
 			->editColumn('status', function($qry)
 			{
 				$status = '<button type="button" class="btn btn-light-'.@Config::get('smart.event_registration_status_class')[$qry->status].' btn-sm btn-status" data-registrationid="'.$qry->id.'">'.@Config::get('enums.event_registration_status')[$qry->status].'</button>';
