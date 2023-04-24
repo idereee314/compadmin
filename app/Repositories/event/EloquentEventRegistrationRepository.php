@@ -66,6 +66,7 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 		$eventRegistraion->is_weight_checked = @$input['is_weight_checked'] ? true: false ;
 		$eventRegistraion->current_weight = @$input['current_weight'];
 		$eventRegistraion->weight_desc = @$input['weight_desc'];
+		$eventRegistraion->is_disqualify = @$input['is_disqualify'] ? true: false ;
 
 		$eventRegistraion->save();
 		return $eventRegistraion;
@@ -130,6 +131,11 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 					$qry->where('is_weight_checked', $searchData->get('is_weight'));			
 				}
 
+				if($searchData->has('is_disqualify') && $searchData->get('is_disqualify') !== null)
+                {
+					$qry->where('is_disqualify', $searchData->get('is_disqualify'));			
+				}
+
 				if($searchData->has('status') && $searchData->get('status') !== null)
                 {
 					$qry->where('status', $searchData->get('status'));
@@ -176,14 +182,9 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 					
 				}
             })
-			// ->setRowAttr([
-			// 	'class' => function($qry) {
-			// 		return @$qry->is_weight_checked ? 'table-success' : '';
-			// 	}
-			// ])
 			->setRowAttr([
 				'class' => function($qry) {
-					if (@$qry->is_weight_checked == true ){
+					if (@$qry->is_weight_checked == true){
 						$weight = abs($qry->weight->weight);
 						if ($weight >= @$qry->current_weight){
 							return 'table-success';
@@ -191,9 +192,12 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 							return 'table-danger';
 						}
 					}
+					if (@$qry->is_disqualify == true){
+						return 'table-danger';
+					}	
 				}
 			])
-			
+
 			->editColumn('status', function($qry)
 			{
 				$status = '<button type="button" class="btn btn-light-'.@Config::get('smart.event_registration_status_class')[$qry->status].' btn-sm btn-status" data-registrationid="'.$qry->id.'">'.@Config::get('enums.event_registration_status')[$qry->status].'</button>';
@@ -571,11 +575,11 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 
 	public function getBracketMembersFromEvent($eventId, $entryId, $entryAgeId, $entryBeltId, $entryWeightId, $isWeightChecked = false)
 	{
-		//and is_weight_checked = false
+		//and is_weight_checked = true
 		return DB::select("select r.id, r.member_id, r.academy_id, case when a.is_other = 1 then r.academy_name else a.name end as acname 
 								from uq_comp.uq_event_registration r
 								inner join uq_comp.uq_academy a on r.academy_id = a.id 
-								where status = 'approved' and event_id = ".$eventId." 								
+								where status = 'approved' and event_id = ".$eventId." and is_disqualify = false	
 								and r.entry_id = ".$entryId." and r.entry_age_id = ".$entryAgeId." 
 								and r.entry_belt_id = ".$entryBeltId." and r.entry_weight_id = ".$entryWeightId."
 								order by r.academy_id, r.academy_name, r.id");

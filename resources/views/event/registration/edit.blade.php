@@ -110,11 +110,34 @@
                         </span>
                     </div>
                     <input type="number" min="1" class="form-control" name="current_weight" id="current_weight" placeholder="Жингийн мэдээлэл" {{ @$eventRegistration->is_weight_checked ? '' : 'disabled'}} value="{{ @$eventRegistration->current_weight }}">
-                    <input type="text" class="form-control" name="weight_desc" id="weight_desc" placeholder="Жингийн шүүгчийн нэр" {{ @$eventRegistration->is_weight_checked ? '' : 'disabled'}} value="{{ @$eventRegistration->weight_desc }}"/>
+                    <input type="text" class="form-control" name="weight_desc" id="weight_desc" placeholder="Жингийн шүүгчийн нэр" {{ @$eventRegistration->is_weight_checked ? '' : 'disabled'}} value="{{ @$eventRegistration->weight_desc }}"/>                    
                 </div>
-                
             </div>
         </div>
+
+        <div class="form-group row">
+            <label class="col-md-3 col-form-label text-right">Жингээр хасагдсан эсэх</label>
+		    <div class="col-3">
+		    	<span class="switch switch-lg switch-icon">
+		    		<label>
+		    			<input type="checkbox" name="is_disqualify" id="is_disqualify" {{ @$eventRegistration->is_disqualify ? 'checked' : ''}}/>
+		    			<span></span>
+		    		</label>
+		    	</span>
+		    </div>
+        </div>
+        <!-- <div class="form-group row">
+            <label class="col-3 col-form-label"></label>
+            <div class="col-9 col-form-label">
+                <div class="checkbox-inline">                    
+                    <label class="checkbox checkbox-primary">
+                        <input type="checkbox" name="is_disqualify" id="is_disqualify" {{ @$eventRegistration->is_disqualify ? 'checked' : ''}}/>
+                        <span></span>
+                        Хасагдсан
+                    </label>
+                </div>
+            </div>
+        </div> -->
         @endif
     </div>
 

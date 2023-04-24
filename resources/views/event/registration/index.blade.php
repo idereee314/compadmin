@@ -298,6 +298,7 @@
                                                         @endforelse
                                                     </select>
                                                 </div>
+
                                                 <div class="col-lg-2 mb-lg-0 mb-6">
                                                     <label>{{ trans('display.general_status') }}:</label>
                                                     <select class="form-control selectpicker datatable-input" name="search_status" id="search_status" data-col-index="10">
@@ -314,6 +315,17 @@
                                                         <option value="">-- {{ trans('display.general_all') }} --</option>
                                                         @forelse($eventFees as $key => $amount)
                                                         <option value="{{ $key }}">{{ $key }}</option>
+                                                        @empty
+                                                        @endforelse
+                                                    </select>
+                                                </div>
+                                                
+                                                <div class="col-lg-2 mb-lg-0 mb-4 mt-5 ">
+                                                    <label>Хасагдсан эсэх:</label>
+                                                    <select class="form-control selectpicker datatable-input" name="search_is_disqualify" id="search_is_disqualify" data-col-index="9">
+                                                        <option value="">-- {{ trans('display.general_all') }} --</option>
+                                                        @forelse(@Config::get('enums.boolean_type') as $key => $type)
+                                                        <option value="{{ $key }}">{{ $type }}</option>
                                                         @empty
                                                         @endforelse
                                                     </select>
@@ -417,6 +429,7 @@ $(document).ready(function() {
                 d.gender = $('#event-registration-search-form select[id="search_gender"]').val();
                 d.academy = $('#event-registration-search-form select[id="search_academy"]').val();
                 d.is_weight = $('#event-registration-search-form select[id="search_is_weight"]').val();
+                d.is_disqualify = $('#event-registration-search-form select[id="search_is_disqualify"]').val();
                 d.amount = $('#event-registration-search-form select[id="search_amount"]').val();
                 d.reg_id = $('#event-registration-search-form input[id="search_reg_id"]').val();
                 
@@ -805,6 +818,7 @@ $(document).ready(function() {
             $('#event-registration-search-form select[name=search_entry_weight]').select2({data: ""});
             $("#search_academy").val('').selectpicker("refresh"); 
             $("#search_is_weight").val('').selectpicker("refresh");
+            $("#search_is_disqualify").val('').selectpicker("refresh");
             $("#search_status").val('').selectpicker("refresh");
             $("#search_amount").val('').selectpicker("refresh");
             
@@ -1160,14 +1174,11 @@ function showEditModal(data){
             });
         });
 
-        $('#update-event-registration-form input[name=is_weight_checked]').on('click', function(el){
-            if($(this).is(':checked'))
-            {
+        $('#update-event-registration-form input[name=is_weight_checked]').on('click', function(){
+            if($(this).is(':checked')){
                 $('#update-event-registration-form input[name=current_weight]').prop('disabled', false);
                 $('#update-event-registration-form input[name=weight_desc]').prop('disabled', false);
-            }
-            else 
-            {
+            } else {
                 $('#update-event-registration-form input[name=current_weight]').prop('disabled', true);
                 $('#update-event-registration-form input[name=weight_desc]').prop('disabled', true);
             }
