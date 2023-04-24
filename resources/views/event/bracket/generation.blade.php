@@ -15,11 +15,11 @@
             {
                 if($member->lastname_one != null && $member->lastname_two == null)
                 {
-                    $byeList[$key] = array('lastname'=> $member->lastname_one, 'firstname'=> $member->firstname_one, 'academy'=> $member->acname_one);
+                    $byeList[$key] = array('lastname'=> $member->lastname_one, 'firstname'=> $member->firstname_one, 'academy'=> $member->acname_one, 'is_dq_one'=> $member->is_dq_one);
                 }
                 else if($member->lastname_one == null && $member->lastname_two != null)
                 {
-                    $byeList[$key] = array('lastname'=> $member->lastname_two, 'firstname'=> $member->firstname_two, 'academy'=> $member->acname_two);
+                    $byeList[$key] = array('lastname'=> $member->lastname_two, 'firstname'=> $member->firstname_two, 'academy'=> $member->acname_two, 'is_dq_two'=> $member->is_dq_two);
                 }
                 else
                 {
@@ -39,24 +39,44 @@
 							<table class="tournament-bracket__table">
 								<tbody class="tournament-bracket__content">
 									<tr class="tournament-bracket__team tournament-bracket__team--winner">
-									<td class="tournament-bracket__country">
-										<abbr class="tournament-bracket__code" style="text-transform: capitalize !important">{{$member->acname_one}}</abbr>
-									</td>
-									<td class="tournament-bracket__country">
-										<abbr class="tournament-bracket__code">{{ $member->lastname_one != null? $member->lastname_one.' '.$member->firstname_one: 'BYE'}}</abbr><br>
-										<span class="tournament-bracket__flag flag-icon flag-icon-ca" aria-label="Flag"></span>
-									</td>
-									
+									@if($member->is_dq_one == true || $member->is_weight_checked_one == false)
+										<td class="tournament-bracket__country">
+											<del><abbr class="tournament-bracket__code" style="text-transform: capitalize !important">{{$member->acname_one}}</abbr></del>
+										</td>
+										<td class="tournament-bracket__country">
+											<del><abbr class="tournament-bracket__code">{{ $member->lastname_one != null? $member->lastname_one.' '.$member->firstname_one: 'BYE'}}</abbr><br></del>
+											<span class="tournament-bracket__flag flag-icon flag-icon-ca" aria-label="Flag"></span>
+											
+										</td>
+									@else
+										<td class="tournament-bracket__country">
+											<abbr class="tournament-bracket__code" style="text-transform: capitalize !important">{{$member->acname_one}}</abbr>
+										</td>
+										<td class="tournament-bracket__country">
+											<abbr class="tournament-bracket__code">{{ $member->lastname_one != null? $member->lastname_one.' '.$member->firstname_one: 'BYE'}}</abbr><br>
+											<span class="tournament-bracket__flag flag-icon flag-icon-ca" aria-label="Flag"></span>
+											
+										</td>
+									@endif
 									</tr>
 									<tr class="tournament-bracket__team">
-									<td class="tournament-bracket__country">
-										<abbr class="tournament-bracket__code" style="text-transform: capitalize !important">{{$member->acname_two}}</abbr>
-									</td>
-									<td class="tournament-bracket__country">
-										<abbr class="tournament-bracket__code">{{ $member->lastname_two != null? $member->lastname_two.' '.$member->firstname_two: 'BYE'}}</abbr><br>								
-										<span class="tournament-bracket__flag flag-icon flag-icon-kz" aria-label="Flag"></span>
-									</td>
-									
+									@if($member->is_dq_two == true || $member->is_weight_checked_two == false)
+										<td class="tournament-bracket__country">
+											<del><abbr class="tournament-bracket__code" style="text-transform: capitalize !important">{{$member->acname_two}}</abbr></del>
+										</td>
+										<td class="tournament-bracket__country">
+										<del><abbr class="tournament-bracket__code">{{ $member->lastname_two != null? $member->lastname_two.' '.$member->firstname_two: 'BYE'}}</abbr><br></del>
+											<span class="tournament-bracket__flag flag-icon flag-icon-kz" aria-label="Flag"></span>
+										</td>
+									@else
+										<td class="tournament-bracket__country">
+											<abbr class="tournament-bracket__code" style="text-transform: capitalize !important">{{$member->acname_two}}</abbr>
+										</td>
+										<td class="tournament-bracket__country">
+											<abbr class="tournament-bracket__code">{{ $member->lastname_two != null? $member->lastname_two.' '.$member->firstname_two: 'BYE'}}</abbr><br>								
+											<span class="tournament-bracket__flag flag-icon flag-icon-kz" aria-label="Flag"></span>
+										</td>
+									@endif
 									</tr>
 								</tbody>
 							</table>

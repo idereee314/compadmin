@@ -975,9 +975,9 @@ class EventRegistrationController extends Controller
     public function bracketShow($eventId, $entryId, $entryAgeId, $entryBeltId, $entryWeightId)
     {
         $input = Input::all();
-
+        
         $members = $this->eventRegistration->getBracketGenerationFromEvent($eventId, $entryId, $entryAgeId, $entryBeltId, $entryWeightId);
-
+        
         $total = count($members);
 
         $data['total'] = $total;
@@ -1000,9 +1000,9 @@ class EventRegistrationController extends Controller
     public function bracketPrint($eventId, $entryId, $entryAgeId, $entryBeltId, $entryWeightId)
     {
         $input = Input::all();
-
+        
         $members = $this->eventRegistration->getBracketGenerationFromEvent($eventId, $entryId, $entryAgeId, $entryBeltId, $entryWeightId);
-
+        dd($members);
         $eventConfig =  $this->eventConfig->findByEventId($eventId);
         $entry = $this->eventEntries->find($entryId);
         $age = $this->configAge->find($entryAgeId);

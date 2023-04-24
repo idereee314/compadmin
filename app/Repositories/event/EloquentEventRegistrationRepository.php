@@ -576,10 +576,11 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 	public function getBracketMembersFromEvent($eventId, $entryId, $entryAgeId, $entryBeltId, $entryWeightId, $isWeightChecked = false)
 	{
 		//and is_weight_checked = true
-		return DB::select("select r.id, r.member_id, r.academy_id, case when a.is_other = 1 then r.academy_name else a.name end as acname 
+		//and is_disqualify = false	
+		return DB::select("select r.is_disqualify, r.id, r.member_id, r.academy_id, case when a.is_other = 1 then r.academy_name else a.name end as acname 
 								from uq_comp.uq_event_registration r
 								inner join uq_comp.uq_academy a on r.academy_id = a.id 
-								where status = 'approved' and event_id = ".$eventId." and is_disqualify = false	
+								where status = 'approved' and event_id = ".$eventId." 
 								and r.entry_id = ".$entryId." and r.entry_age_id = ".$entryAgeId." 
 								and r.entry_belt_id = ".$entryBeltId." and r.entry_weight_id = ".$entryWeightId."
 								order by r.academy_id, r.academy_name, r.id");
@@ -587,9 +588,9 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 
 	public function getBracketGenerationFromEvent($eventId, $entryId, $entryAgeId, $entryBeltId, $entryWeightId)
 	{
-		return DB::select("select ro.id as ro, um.firstname as firstname_one, um.lastname as lastname_one, case when ao.is_other = 1 then ro.academy_name else ao.name end as acname_one, 
-								rt.id as rt, umt.firstname as firstname_two, umt.lastname as lastname_two, case when aot.is_other = 1 then rt.academy_name else aot.name end as acname_two,
-								rw.id as rw, umw.firstname as firstname_win, umw.lastname as lastname_win, case when aow.is_other = 1 then rw.academy_name else aow.name end as acname_win
+		return DB::select("select ro.id as ro, ro.is_disqualify as is_dq_one, ro.is_weight_checked as is_weight_checked_one, um.firstname as firstname_one, um.lastname as lastname_one, case when ao.is_other = 1 then ro.academy_name else ao.name end as acname_one, 
+								rt.id as rt, rt.is_disqualify as is_dq_two, rt.is_weight_checked as is_weight_checked_two, umt.firstname as firstname_two, umt.lastname as lastname_two, case when aot.is_other = 1 then rt.academy_name else aot.name end as acname_two,
+								rw.id as rw, rw.is_disqualify as is_dq_win, rw.is_weight_checked as is_weight_checked_win, umw.firstname as firstname_win, umw.lastname as lastname_win, case when aow.is_other = 1 then rw.academy_name else aow.name end as acname_win
 								from uq_comp.uq_event_brackets b
 								inner join uq_comp.uq_event_entries e on b.entry_id = e.id 
 								inner join uq_comp.uq_entry_config_age a on b.entry_age_id  = a.id 
