@@ -43,6 +43,7 @@
                 }
             } 
         ?>
+        
         @foreach($members as $member)
         <tr>
             @for($i = 0; $i < $round; $i++)
@@ -52,16 +53,31 @@
                             <div class="linebox"></div>
                             <div class="linebox_two"></div>
                             <table width="100%" style="width:100%;" id="table1" border="1">
+                            
                                 <tr>
+                                @if($member->is_dq_one == true || $member->is_weight_checked_one == false)
+                                    <td width="50%" align="center" style="font-size: 11px;border-right: 1px solid #cdd0d4;">
+                                    {!! $member->lastname_one != null? '<del>'.$member->lastname_one.'</del> <del>'.$member->firstname_one.'</del>': 'BYE'!!}<br>
+                                    {{$member->acname_one}}
+                                    </td>
+                                @else
                                     <td width="50%" align="center" style="font-size: 11px;border-right: 1px solid #cdd0d4;">
                                     {!! $member->lastname_one != null? $member->lastname_one.' <strong>'.$member->firstname_one.'</strong>': 'BYE'!!}<br>
                                     {{$member->acname_one}}
                                     </td>
+                                @endif
+                                @if($member->is_dq_two == true || $member->is_weight_checked_two == false)
+                                    <td width="50%" align="center" style="font-size: 11px;">
+                                    {!! $member->lastname_two != null? '<del>'.$member->lastname_two.' </del><del>'.$member->firstname_two.'</del>': 'BYE'!!}<br>
+                                    {{$member->acname_two}}
+                                    </td>
+                                @else
                                     <td width="50%" align="center" style="font-size: 11px;">
                                     {!! $member->lastname_two != null? $member->lastname_two.' <strong>'.$member->firstname_two.'</strong>': 'BYE'!!}<br>
                                     {{$member->acname_two}}
                                     </td>
-                                </tr>
+                                @endif
+                                </tr>                            
                             </table>
                         </div>
                     </td>
