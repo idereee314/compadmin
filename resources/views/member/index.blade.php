@@ -382,7 +382,7 @@ function showAddModal( data ) {
     $('#memberAddModal').modal();
     $('#memberAddModal').on('shown.bs.modal', function(){
         $('#memberAddModal .modal-content').html(data);
-
+        $('.selectpicker').selectpicker();
         $("#register_number").inputmask({ regex: "[А-Я]{2}[0-9]*"});
         $('.only-phone').inputmask("99 99 99 99");
 

@@ -63,13 +63,14 @@
                                 </div>
                             @endif
                             <div class="ml-5 mt-5">                                            
-                                <h1 class="text-center text-uppercase bold margin-bottom-xs-16 margin-bottom-sm-0" style="font-size: 4rem; color: #0f4b63;"><strong>{{$member->lastname}} {{$member->firstname}}</strong></h1>
+                                <h1 class="text-center text-uppercase bold margin-bottom-xs-16 margin-bottom-sm-0" style="font-size: 4rem; color: #0f4b63;"><img class="mb-3 mr-2" src="/assets/images/flags/4x3/{{$countries->abbreviation}}.svg" alt="flag" width="60" height="40 "><strong>{{$member->lastname}} {{$member->firstname}}</strong></h1>
 			                </div>  
                             <div class="ml-5">                                            
                                 <span class="text-center mr-5" style="font-size: 20px;color: #0f4b63;"><strong>Нас : {{$member->age}}</strong></span>
                                 <span class="text-center ml-5" style="font-size: 20px;color: #0f4b63;"><strong>Хүйс : {{ Config::get("enums.gender_code")[@$member->gender_code] }}</strong></span>
+                                <span class="text-center ml-5" style="font-size: 20px;color: #0f4b63;"><strong>Улс : {{$countries->name }}</strong></span>
 			                </div>                                                                                                   
-                        </div>                        
+                        </div>                    
                     </div>
 
                     <div class="d-flex justify-content-center mt-5 pt-5">

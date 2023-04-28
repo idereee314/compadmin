@@ -285,6 +285,7 @@ return [
     'human_contact_phone' => 'Утасны дугаар',
     'human_birth' => 'Төрсөн огноо',
     'human_gender_code' => 'Хүйс',
+    "human_country" => 'Иргэншил',
 
     'comp_entry' => 'Төрөл',
     'comp_entry_age' => 'Нас',
@@ -292,6 +293,7 @@ return [
     'comp_entry_weight' => 'Жин',
     'comp_academy' => 'Академи',
     'comp_academy_name' => 'Академи нэр',
+    'comp_country_name' => 'Улсын нэр',
     'comp_member' => 'Оролцогч',
     'comp_title' => 'Тэмцээн',
     'comp_award_place' => 'Байр эзлүүлэх',

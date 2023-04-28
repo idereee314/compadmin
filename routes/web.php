@@ -158,6 +158,11 @@ Route::group([
     Route::post('/academy/isother', 'academy\AcademyController@getIsOther')->name('academy.isother');
     Route::get('/academy/search/org', 'academy\AcademyController@findOrganizationByName')->name('academy.search.org');
 
+    //Country
+    Route::resource('/country', 'country\CountryController', ['names' => 'country']);
+    Route::any('/country/data/list', 'country\CountryController@getDatatableList')->name('country.data.list');
+    Route::get('/country/search/org', 'country\CountryController@findCountryByName')->name('country.search.org');
+
     //stats
     Route::get('/event/{eventId}/statistics', 'event\EventRegistrationController@statistics')->name('event.statistics');
 });

@@ -100,6 +100,17 @@
             <label class="col-md-3 col-form-label text-right"></label>
             <div class="col-md-9 col-lg-6">
                 <label class="checkbox">
+                    <input type="checkbox" name="is_dq">
+                    <span></span>&nbsp;
+                    Жингээр хасагдсан бол шууд хасна.
+                </label>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-md-3 col-form-label text-right"></label>
+            <div class="col-md-9 col-lg-6">
+                <label class="checkbox">
                     <input type="checkbox" name="is_active" {{ @$eventConfig->is_active ? 'checked="checked"' : '' }}>
                     <span></span>&nbsp;
                     {{ trans('display.general_active') }}

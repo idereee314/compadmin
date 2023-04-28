@@ -51,6 +51,7 @@ class EloquentMemberRepository implements MemberRepository {
 		$member->gender_code = @$input['gender_code'];
 		$member->profile_url = @$input['profile_url'];
 		$member->id_url = @$input['id_url'];
+		$member->country_id = @$input['country_id'];
 
 		$member->save();
 		return $member;
@@ -66,6 +67,7 @@ class EloquentMemberRepository implements MemberRepository {
 		$member->birth = @$input['birth'];
 		$member->gender_code = @$input['gender_code'];
 		$member->status = @$input['status'];
+		$member->country_id = @$input['country_id'];
 		if(array_key_exists('profile_url', $input))
 		{
 			$member->profile_url = @$input['profile_url'];
@@ -126,6 +128,11 @@ class EloquentMemberRepository implements MemberRepository {
 				($searchData->has('age') && !empty(array_filter($searchData->get('age'))))
                 {
 					$qry->whereBetween(DB::raw("date_part('year', AGE(now(), birth))"), $searchData->get('age'));
+				}
+
+				if($searchData->has('country') && $searchData->get('country') !== null)
+                {
+					$qry->where('country_id', $searchData->get('country'));				
 				}
 			})
 			->editColumn('profile_photo', function ($qry) {
@@ -225,10 +232,11 @@ class EloquentMemberRepository implements MemberRepository {
 
 	public function getMemberToProfileApprovedData($memberId)
 	{
-		return DB::select("select uer.event_id, re.name as event_name, uer.member_id, ua.name as academy_name, um.lastname, um.firstname, uecb.name as belt, 
+		return DB::select("select um.country_id, uc.name as countryname, uer.event_id, re.name as event_name, uer.member_id, ua.name as academy_name, um.lastname, um.firstname, uecb.name as belt, 
 		uee.name as entries, uer.status, re.event_date, ueca.start_age , ueca.end_age, uea.place_number, uec.sport_id from uniqdb.uq_comp.uq_event_registration uer 
 			left join uniqdb.rt_listing.rti_event re on re.id = uer.event_id
 			left join uniqdb.uq_comp.uq_member um on um.id = uer.member_id 
+			left join uniqdb.uq_comp.uq_country uc on uc.id = um.country_id
 			left join uniqdb.uq_comp.uq_entry_config_belt uecb on uecb.id = uer.entry_belt_id 
 			left join uniqdb.uq_comp.uq_entry_config_age ueca on ueca.id = uer.entry_age_id 
 			left join uniqdb.uq_comp.uq_event_entries uee on uee.id = uer.entry_id
@@ -237,17 +245,19 @@ class EloquentMemberRepository implements MemberRepository {
 			left join uniqdb.uq_comp.uq_academy ua on  ua.id = uer.academy_id 
 			left join uniqdb.uq_comp.uq_event_config uec on uec.event_id = uer.event_id 
 			where um.id = $memberId and uer.status = 'approved' and uer.is_weight_checked = TRUE and uec.is_active = TRUE
-			group by uer.event_id, re.name, um.firstname, uer.member_id, um.lastname, uecb.name, uee.name, uer.status, ua.name, re.event_date, ueca.start_age , ueca.end_age, uea.place_number, uec.sport_id
+			group by uer.event_id, re.name, um.firstname, uer.member_id, um.lastname, uecb.name, uee.name, uer.status, 
+			ua.name, re.event_date, ueca.start_age , ueca.end_age, uea.place_number, uec.sport_id, um.country_id, uc.name
 			order by re.event_date desc
 			");
 	}
 	
 	public function getMemberToProfileAllData($memberId)
 	{
-		return DB::select("select uer.event_id, re.name as event_name, uer.member_id, ua.name as academy_name, um.lastname, um.firstname, uecb.name as belt, 
+		return DB::select("select um.country_id, uc.name as countryname, uer.event_id, re.name as event_name, uer.member_id, ua.name as academy_name, um.lastname, um.firstname, uecb.name as belt, 
 		uee.name as entries, uer.status, re.event_date, ueca.start_age , ueca.end_age, uea.place_number, uec.sport_id from uniqdb.uq_comp.uq_event_registration uer 
 			left join uniqdb.rt_listing.rti_event re on re.id = uer.event_id
 			left join uniqdb.uq_comp.uq_member um on um.id = uer.member_id 
+			left join uniqdb.uq_comp.uq_country uc on uc.id = um.country_id
 			left join uniqdb.uq_comp.uq_entry_config_belt uecb on uecb.id = uer.entry_belt_id 
 			left join uniqdb.uq_comp.uq_entry_config_age ueca on ueca.id = uer.entry_age_id 
 			left join uniqdb.uq_comp.uq_event_entries uee on uee.id = uer.entry_id
@@ -256,7 +266,8 @@ class EloquentMemberRepository implements MemberRepository {
 			left join uniqdb.uq_comp.uq_academy ua on  ua.id = uer.academy_id 
 			left join uniqdb.uq_comp.uq_event_config uec on uec.event_id = uer.event_id 
 			where um.id = $memberId and uec.is_active = TRUE
-			group by uer.event_id, re.name, um.firstname, uer.member_id, um.lastname, uecb.name, uee.name, uer.status, ua.name, re.event_date, ueca.start_age , ueca.end_age, uea.place_number, uec.sport_id 
+			group by uer.event_id, re.name, um.firstname, uer.member_id, um.lastname, uecb.name, uee.name, uer.status, ua.name, re.event_date, 
+			ueca.start_age , ueca.end_age, uea.place_number, uec.sport_id, um.country_id, uc.name
 			order by re.event_date desc
 			");
 	}

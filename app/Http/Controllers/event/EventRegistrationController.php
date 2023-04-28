@@ -26,6 +26,7 @@ use member\MemberRepository as Member;
 use team\TeamRepository as Team;
 use member\TeamMemberRepository as TeamMember;
 use member\TeamMemberAttributeRepository as MemberAttribute;
+use country\CountryRepository as Country;
 
 //Models
 use event\EventRegistration as EventRegistrationModel;
@@ -44,7 +45,7 @@ class EventRegistrationController extends Controller
 {
     public $restful = true;
 
-    public function __construct(Event $event, EventRegistration $eventRegistration, EventConfig $eventConfig, Academy $academy, EventEntries $eventEntries, EntryConfigAge $configAge, EntryConfigBelt $configBelt, EntryConfigWeight $configWeight, Member $member, EventTeamRegistration $eventTeamRegistration, Team $team, TeamMember $teamMember, MemberAttribute $memberAttribute)
+    public function __construct(Event $event, EventRegistration $eventRegistration, EventConfig $eventConfig, Academy $academy, Country $country, EventEntries $eventEntries, EntryConfigAge $configAge, EntryConfigBelt $configBelt, EntryConfigWeight $configWeight, Member $member, EventTeamRegistration $eventTeamRegistration, Team $team, TeamMember $teamMember, MemberAttribute $memberAttribute)
     {
         $this->view_path = 'event.registration';
         $this->event = $event;
@@ -60,6 +61,7 @@ class EventRegistrationController extends Controller
         $this->team = $team;
         $this->teamMember = $teamMember;
         $this->memberAttribute = $memberAttribute;
+        $this->country = $country;
     }
 
     /**
@@ -80,6 +82,7 @@ class EventRegistrationController extends Controller
                 $eventEntries = $event->entries;
                 $eventRegStatusCount = $this->eventRegistration->getEventRegStatusCount($event->id)->pluck('total', 'status')->toArray();
                 $academies = $this->academy->all();
+                $countries = $this->country->all();
                 $eventFees = $this->eventRegistration->getPaymentByEventId(@$input['event_id'])->groupBy('amount');
 
                 $data['event'] = $event;
@@ -88,6 +91,7 @@ class EventRegistrationController extends Controller
                 $data['progressPercent'] = round(@$eventRegStatusCount[@Config::get('smart.event_registration_status')['approved']] ? @$eventRegStatusCount[@Config::get('smart.event_registration_status')['approved']] / array_sum(@$eventRegStatusCount) * 100 : 0);
                 $data['eventFees'] = $eventFees;
                 $data['academies'] = $academies;
+                $data['countries'] = $countries;
                 $data['view_path'] = $this->view_path;
                 
                 return view($this->view_path.'.index', $data);
@@ -656,7 +660,7 @@ class EventRegistrationController extends Controller
 
     public function getDatatableList(Request $request)
     {
-        $is_team = $this->event->find(@$request['event'])->config->is_team;
+        $is_team = @$this->event->find(@$request['event'])->config->is_team;
         if ($is_team == false) 
         {
             return $this->eventRegistration->getDatatableList($request);
@@ -745,7 +749,7 @@ class EventRegistrationController extends Controller
 
     public function printMandateByEventAndStatus()
     {
-        $input = Input::all();
+        $input = Input::all(); 
         $eventConfig = $this->eventConfig->findByEventId(@$input['search_event']);
         $list = $this->eventRegistration->getRegistrationByStatus(@$input['search_event'], @Config::get('smart.event_registration_status')['approved'], $input);
 
@@ -1043,7 +1047,9 @@ class EventRegistrationController extends Controller
         $eventRegistrationGenderAllStats = $this->eventRegistration->getStatsGenderAllFromEvent($eventId);
         $eventRegistrationOrgTypeStats = $this->eventRegistration->getStatsOrgTypeFromEvent($eventId);
         $eventRegistrationOrgTypeAllStats = $this->eventRegistration->getStatsOrgTypeAllFromEvent($eventId);
-
+        $eventRegistrationCountryStats = $this->eventRegistration->getStatsCountryFromEvent($eventId);
+        $eventRegistrationCountryAllStats = $this->eventRegistration->getStatsCountryAllFromEvent($eventId);
+        // dd($eventRegistrationCountryAllStats);
         $data['event'] = $event;
         $data['progressPercent'] = round(@$eventRegStatusCount[@Config::get('smart.event_registration_status')['approved']] ? @$eventRegStatusCount[@Config::get('smart.event_registration_status')['approved']] / array_sum(@$eventRegStatusCount) * 100 : 0);
         $data['eventRegistration'] = $eventRegistration->groupBy(['entry.fullname', 'belt.name', 'age.name', 'weight.weight']);        
@@ -1060,6 +1066,8 @@ class EventRegistrationController extends Controller
         $data['events'] = $event['data'];  
         $data['eventRegistrationOrgTypeStats'] = $eventRegistrationOrgTypeStats;
         $data['eventRegistrationOrgTypeAllStats'] = $eventRegistrationOrgTypeAllStats;
+        $data['eventRegistrationCountryStats'] = $eventRegistrationCountryStats;
+        $data['eventRegistrationCountryAllStats'] = $eventRegistrationCountryAllStats;
         
         $data['view_path'] = $this->view_path;
 

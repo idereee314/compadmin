@@ -58,6 +58,11 @@ class Member extends Model
     {
         return $this->hasMany('member\MemberAttribute', 'member_id');
     }
+    
+    public function country()
+    {
+        return $this->hasMany('country\Country', 'country_id');
+    }
 
     public function eventRegistration()
     {

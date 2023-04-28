@@ -39,16 +39,7 @@
 							<table class="tournament-bracket__table">
 								<tbody class="tournament-bracket__content">
 									<tr class="tournament-bracket__team tournament-bracket__team--winner">
-									@if($member->is_dq_one == true || $member->is_weight_checked_one == false)
-										<td class="tournament-bracket__country">
-											<del><abbr class="tournament-bracket__code" style="text-transform: capitalize !important">{{$member->acname_one}}</abbr></del>
-										</td>
-										<td class="tournament-bracket__country">
-											<del><abbr class="tournament-bracket__code">{{ $member->lastname_one != null? $member->lastname_one.' '.$member->firstname_one: 'BYE'}}</abbr><br></del>
-											<span class="tournament-bracket__flag flag-icon flag-icon-ca" aria-label="Flag"></span>
-											
-										</td>
-									@else
+									
 										<td class="tournament-bracket__country">
 											<abbr class="tournament-bracket__code" style="text-transform: capitalize !important">{{$member->acname_one}}</abbr>
 										</td>
@@ -57,18 +48,10 @@
 											<span class="tournament-bracket__flag flag-icon flag-icon-ca" aria-label="Flag"></span>
 											
 										</td>
-									@endif
+									
 									</tr>
 									<tr class="tournament-bracket__team">
-									@if($member->is_dq_two == true || $member->is_weight_checked_two == false)
-										<td class="tournament-bracket__country">
-											<del><abbr class="tournament-bracket__code" style="text-transform: capitalize !important">{{$member->acname_two}}</abbr></del>
-										</td>
-										<td class="tournament-bracket__country">
-										<del><abbr class="tournament-bracket__code">{{ $member->lastname_two != null? $member->lastname_two.' '.$member->firstname_two: 'BYE'}}</abbr><br></del>
-											<span class="tournament-bracket__flag flag-icon flag-icon-kz" aria-label="Flag"></span>
-										</td>
-									@else
+									
 										<td class="tournament-bracket__country">
 											<abbr class="tournament-bracket__code" style="text-transform: capitalize !important">{{$member->acname_two}}</abbr>
 										</td>
@@ -76,7 +59,7 @@
 											<abbr class="tournament-bracket__code">{{ $member->lastname_two != null? $member->lastname_two.' '.$member->firstname_two: 'BYE'}}</abbr><br>								
 											<span class="tournament-bracket__flag flag-icon flag-icon-kz" aria-label="Flag"></span>
 										</td>
-									@endif
+									
 									</tr>
 								</tbody>
 							</table>

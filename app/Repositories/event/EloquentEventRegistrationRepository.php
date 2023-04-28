@@ -38,7 +38,6 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 	public function create($input)
 	{
 		$eventRegistraion = new EventRegistration;
-
 		$eventRegistraion->member_id = $input['member_id'];
 		$eventRegistraion->event_id = $input['event_id'];
 		$eventRegistraion->entry_id = $input['entry_id'];
@@ -151,6 +150,13 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 					->orWhereRaw("LOWER(academy_name) like ?", array('%'.mb_strtolower($searchData->get('academy')).'%'));
 					*/
 				}
+
+				if($searchData->has('country') && $searchData->get('country') !== null)
+                {
+					$qry->whereHas('member', function($q) use($searchData){
+						$q->where('country_id', $searchData->get('country'));
+					});				
+				}
 				
 				if($searchData->has('date') && !empty(array_filter($searchData->get('date'))))
                 {
@@ -180,6 +186,11 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 						$qry->whereDoesntHave('payments');
 					}
 					
+				}
+				
+				if ($searchData->has('entryWeightCount') && $searchData->get('entryWeightCount') !== null) {
+					
+					$qry->having('count(uq_event_registration.entry_weight_id)', $searchData->get('entryWeightCount'));
 				}
             })
 			->setRowAttr([
@@ -231,6 +242,7 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 					$member .= '<div class="ml-3">';
 					$member .= '<a href="/profile/' . $qry->member->id . '" class="text-dark-75 line-height-sm d-block pb-3" style="white-space: nowrap;" target="_blank">' . $qry->member->lastname . ' <strong>' . $qry->member->firstname . '</strong></a>';
 					$member .= '<span class="text-dark-75 line-height-sm d-block pb-2"><i class="la la-address-book"></i>'.$qry->member->register_number.', <i class="la la-phone"></i>'.$qry->member->contact_phone.'</span>';
+					
 					$member .= '</div>';
                 $member .= '</div>';
 				return $member;
@@ -289,7 +301,24 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
             })->rawColumns(['action', 'status', 'member', 'id_photo', 'event', 'academy_name'])
             ->make(true);
 
-        return $data;
+			$jsonData = json_decode($data->content());
+			
+			if ($searchData->has('countEntryWeight') && $searchData->get('countEntryWeight') !== null) {
+				if($jsonData->recordsFiltered == $searchData->get('countEntryWeight'))
+				{
+					return $data;
+				}	
+				else {
+					$jsonData->recordsFiltered = 0;
+					$jsonData->data = [];
+
+					return $data->setData($jsonData);
+				}
+			}
+			else {
+				return $data;
+			}
+			//dd($jsonData->recordsFiltered);
 	}
 
 	public function getEventRegStatusCount($eventId)
@@ -303,7 +332,7 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 
 		return $count;
 	}
-
+	
 	public function getEventFeesByEventId($eventId)
 	{
 		$fees = "";
@@ -345,7 +374,7 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 	}
 
 	public function getRegistrationByStatus($evntId, $status, $searchData)
-	{
+	{ 
 		$registrations = "";
 		if(@$evntId && @$status)
 		{
@@ -453,6 +482,26 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
         						where uer.event_id = $eventId and uer.status = 'approved'
         						group by uer.event_id, uer.entry_id, uee.name,uee.gender_code
         						order by uee.gender_code desc");
+	}
+
+	public function getStatsCountryFromEvent($eventId)
+	{
+		return DB::select("select um.country_id, uc.name, uc.name_en, uc.abbreviation, count(um.country_id) as count_country 
+								from uq_comp.uq_event_registration uer 
+								join uq_comp.uq_member um on um.id = uer.member_id 
+								join uq_comp.uq_country uc on uc.id = um.country_id 
+								where uer.event_id = $eventId and uer.status = 'approved'  
+								group by um.country_id, uc.name, uc.name_en, uc.abbreviation");
+	}
+
+	public function getStatsCountryAllFromEvent($eventId)
+	{
+		return DB::select("select um.country_id, uc.name, uc.name_en, uc.abbreviation, count(um.country_id) as count_country
+								from uq_comp.uq_event_registration uer 
+								join uq_comp.uq_member um on um.id = uer.member_id 
+								join uq_comp.uq_country uc on uc.id = um.country_id 
+								where uer.event_id = $eventId  
+								group by um.country_id, uc.name, uc.name_en, uc.abbreviation");
 	}
 
 	public function getStatsEntriesAllFromEvent($eventId)

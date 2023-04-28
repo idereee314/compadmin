@@ -58,6 +58,20 @@
         </div>
 
         <div class="form-group row">
+            <label class="col-md-3 col-form-label text-right">{{ trans('display.human_country') }}: <span class="text-danger">*</span></label>
+            <div class="col-md-9 col-lg-6">
+                <select class="form-control selectpicker" data-live-search="true" id="country_id" name="country_id" required data-validation-required-message="{{ trans('messages.validation_field_required') }}">
+                    <option value="">-- {{ trans('display.general_select') }} --</option>
+                    @forelse($countries as $country)
+                        <option value="{{ $country->id }}">{{ $country->name }} - {{ $country->name_en }} - {{ $country->abbreviation }}</option>
+                    @empty
+                        <option value="">{{ trans('display.no_results_found') }}</option>
+                    @endforelse
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.human_birth')}}<span class="text-danger"> *</span></label>
             <div class="col-md-9 col-lg-6">
                 <div class="input-group date">

@@ -73,6 +73,19 @@
         </div>
 
         <div class="form-group row">
+            <label class="col-md-3 col-form-label text-right">{{trans('display.human_country')}}: <span class="text-danger">*</span></label>
+            <div class="col-md-9">
+                <select class="form-control selectpicker" data-live-search="true" id="country_id" name="country_id" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}">
+                    <option value="">-- {{ trans('display.general_select') }} --</option>
+                    @forelse(@$countries as $country)
+                    <option value="{{ $country->id }}" {{$member->country_id == $country->id ? 'selected' : ''}}>{{ $country->name }} - {{ $country->name_en }} - {{ $country->abbreviation }}</option>
+                    @empty
+                    @endforelse
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.profile_photo')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9">
                 <div class="image-input image-input-outline" id="profile_photo">

@@ -330,6 +330,22 @@
                                                         @endforelse
                                                     </select>
                                                 </div>
+
+                                                <div class="col-lg-2 mb-lg-0 mb-4 mt-5">
+                                                    <label>{{ trans('display.comp_country_name') }}:</label>
+                                                    <select class="form-control selectpicker datatable-input" data-live-search="true" name="search_country" id="search_country" data-col-index="5">
+                                                        <option value="">-- {{ trans('display.general_all') }} --</option>
+                                                        @forelse(@$countries as $country)
+                                                        <option value="{{ $country->id }}">{{ $country->name }}</option>
+                                                        @empty
+                                                        @endforelse
+                                                    </select>
+                                                </div>
+
+                                                <div class="col-lg-2 mb-lg-0 mb-6 mt-5">
+                                                    <label>Оролцогчдийн тоо:</label>
+                                                    <input type="text" class="form-control datatable-input" name="search_memberCount" id="search_memberCount" placeholder="Оролцогчдийн тоо бичнэ үү" data-col-index="8"/>
+                                                </div>
                                             </div>
                                             <div class="row mb-8">
                                                 <div class="col-lg-4 mb-lg-0 mb-6">
@@ -432,6 +448,8 @@ $(document).ready(function() {
                 d.is_disqualify = $('#event-registration-search-form select[id="search_is_disqualify"]').val();
                 d.amount = $('#event-registration-search-form select[id="search_amount"]').val();
                 d.reg_id = $('#event-registration-search-form input[id="search_reg_id"]').val();
+                d.countEntryWeight = $('#event-registration-search-form input[id="search_memberCount"]').val();   
+                d.country = $('#event-registration-search-form select[id="search_country"]').val();   
                 
                 d.date = dateArr;
             },
@@ -821,6 +839,7 @@ $(document).ready(function() {
             $("#search_is_disqualify").val('').selectpicker("refresh");
             $("#search_status").val('').selectpicker("refresh");
             $("#search_amount").val('').selectpicker("refresh");
+            $("#search_country").val('').selectpicker("refresh"); 
             
         });
         eventTable.draw();

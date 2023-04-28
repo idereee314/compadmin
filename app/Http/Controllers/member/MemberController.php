@@ -12,9 +12,11 @@ use Validator;
 use member\MemberRepository as Member;
 use user\UserRepository as User;
 use event\EventRegistrationRepository as EventRegistration;
+use country\CountryRepository as Country;
 
 //Models
 use member\Member as MemberModel;
+use country\Country as CountryModel;
 
 use \Auth as Auth;
 use Config;
@@ -26,12 +28,13 @@ class MemberController extends Controller
 {
     public $restful = true;
 
-    public function __construct(Member $member, User $user, EventRegistration $eventRegistration)
+    public function __construct(Member $member, User $user, EventRegistration $eventRegistration, Country $country)
     {
         $this->view_path = 'member';
         $this->member = $member;
         $this->user = $user;
         $this->eventRegistration = $eventRegistration;
+        $this->country = $country;
     }
 
     /**
@@ -56,7 +59,12 @@ class MemberController extends Controller
      */
     public function create()
     {
-        return view($this->view_path.'.add');
+        $countries = $this->country->all();
+        
+        $data['countries'] = $countries;
+        $data['view_path'] = $this->view_path;
+        
+        return view($this->view_path.'.add', $data);
     }
 
     /**
@@ -169,6 +177,9 @@ class MemberController extends Controller
     public function edit($id)
     {
         $member = $this->member->find($id);
+        $countries = $this->country->all();
+        
+        $data['countries'] = $countries;
         $data['member'] = $member;
 
         return view($this->view_path.'.edit', $data);
@@ -429,7 +440,9 @@ class MemberController extends Controller
         $athleteAcademyInfo = $this->member->getAthleteAcademyInfo($memberId);
         $athleteSchoolInfo = $this->member->getAthleteSchoolInfo($memberId);
         $athleteUniversityInfo = $this->member->getAthleteUniversityInfo($memberId);
-        // dd($member->age);
+        $countries = $this->country->find($member->country_id);
+        
+        $data['countries'] = $countries;
         $data['pastEventJiuJitsuData'] = $pastEventJiuJitsuData;
         $data['member'] = $member;
         $data['memberApprovedData'] = $memberApprovedData;
@@ -461,7 +474,7 @@ class MemberController extends Controller
         $member = $this->member->find($memberId);
         $memberApprovedData = $this->member->getMemberToProfileApprovedData($memberId);
         $memberAllData = $this->member->getMemberToProfileAllData($memberId);
-     
+        
         $data['member'] = $member;
         $data['memberApprovedData'] = $memberApprovedData;
         $data['memberAllData'] = $memberAllData;
