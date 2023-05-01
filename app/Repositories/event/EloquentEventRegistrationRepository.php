@@ -240,7 +240,8 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 						$member .= '<div class="symbol symbol-50 flex-shrink-0"><img src="/assets/images/default_profile.jpg" alt="Profile"></div>';
 					}
 					$member .= '<div class="ml-3">';
-					$member .= '<a href="/profile/' . $qry->member->id . '" class="text-dark-75 line-height-sm d-block pb-3" style="white-space: nowrap;" target="_blank">' . $qry->member->lastname . ' <strong>' . $qry->member->firstname . '</strong></a>';
+					// $member .= '<a href="/profile/' . $qry->member->id . '" class="text-dark-75 line-height-sm d-block pb-3" style="white-space: nowrap;" target="_blank">' . $qry->member->lastname . ' <strong>' . $qry->member->firstname . '</strong><img class="rounded" src="/assets/images/flags/4x3/'.$qry->member->country_id.'.svg" alt="flag" width="25" height="15"></a>';
+					$member .= '<a href="/profile/' . $qry->member->id . '" class="text-dark-75 line-height-sm d-block pb-3" style="white-space: nowrap;" target="_blank"><img class="mb-1 rounded" src="/assets/images/flags/4x3/mn.svg" alt="flag" width="25" height="15">' . $qry->member->lastname . ' <strong>' . $qry->member->firstname . '</strong></a>';
 					$member .= '<span class="text-dark-75 line-height-sm d-block pb-2"><i class="la la-address-book"></i>'.$qry->member->register_number.', <i class="la la-phone"></i>'.$qry->member->contact_phone.'</span>';
 					
 					$member .= '</div>';

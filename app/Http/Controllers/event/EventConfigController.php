@@ -408,10 +408,11 @@ class EventConfigController extends Controller
          
         $sport = $this->sport->find($sport_id);
 
+        $data['sport_id'] = $sport_id;
         $data['sport'] = $sport;
         $data['view_path'] = $this->view_path;
 
-        return view($this->view_path.'.rank/rank', $data);
+        return view('.ranking/rank', $data);
     }
 
     public function division($sport_id){
@@ -422,6 +423,6 @@ class EventConfigController extends Controller
         $data['sport'] = $sport;
         $data['view_path'] = $this->view_path;
 
-        return view($this->view_path.'.division/division', $data);
+        return view('.division/division', $data);
     }
 }

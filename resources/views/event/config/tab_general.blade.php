@@ -95,7 +95,7 @@
                 <input type="number" class="form-control" autocomplete="off" name="athlete_limit" id="athlete_limit"/>
             </div>
         </div>
-
+        @if(@$eventConfig->sport_id == 1)
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right"></label>
             <div class="col-md-9 col-lg-6">
@@ -106,6 +106,7 @@
                 </label>
             </div>
         </div>
+        @endif
 
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right"></label>

@@ -83,6 +83,7 @@ class EventRegistrationController extends Controller
                 $eventRegStatusCount = $this->eventRegistration->getEventRegStatusCount($event->id)->pluck('total', 'status')->toArray();
                 $academies = $this->academy->all();
                 $countries = $this->country->all();
+                
                 $eventFees = $this->eventRegistration->getPaymentByEventId(@$input['event_id'])->groupBy('amount');
 
                 $data['event'] = $event;
@@ -1031,6 +1032,8 @@ class EventRegistrationController extends Controller
         return view('event.bracket.print', $data);        
     }
 
+    // jiu jitsu stats START
+
     public function statistics($eventId)
     {
         $event = $this->event->find($eventId);
@@ -1049,7 +1052,7 @@ class EventRegistrationController extends Controller
         $eventRegistrationOrgTypeAllStats = $this->eventRegistration->getStatsOrgTypeAllFromEvent($eventId);
         $eventRegistrationCountryStats = $this->eventRegistration->getStatsCountryFromEvent($eventId);
         $eventRegistrationCountryAllStats = $this->eventRegistration->getStatsCountryAllFromEvent($eventId);
-        // dd($eventRegistrationCountryAllStats);
+        
         $data['event'] = $event;
         $data['progressPercent'] = round(@$eventRegStatusCount[@Config::get('smart.event_registration_status')['approved']] ? @$eventRegStatusCount[@Config::get('smart.event_registration_status')['approved']] / array_sum(@$eventRegStatusCount) * 100 : 0);
         $data['eventRegistration'] = $eventRegistration->groupBy(['entry.fullname', 'belt.name', 'age.name', 'weight.weight']);        
@@ -1071,7 +1074,7 @@ class EventRegistrationController extends Controller
         
         $data['view_path'] = $this->view_path;
 
-        return view($this->view_path.'.stats', $data);
+        return view('.stats/stats', $data);
     }
 
     public function results($eventId)
@@ -1085,8 +1088,8 @@ class EventRegistrationController extends Controller
         $data['event'] = $event;
 
         $data['view_path'] = $this->view_path;
-
-        return view($this->view_path.'.result', $data);
+        
+        return view('.stats/result', $data);
     }
 
     public function toplist($eventId)
@@ -1099,8 +1102,10 @@ class EventRegistrationController extends Controller
 
         $data['view_path'] = $this->view_path;
 
-        return view($this->view_path.'.toplist', $data);
+        return view('.stats/toplist', $data);
     }
+    
+    // jiu jitsu stats END
 
     //Team Member
     public function createTeamMember()
