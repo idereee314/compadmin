@@ -59,7 +59,18 @@
                                                             <label>{{trans('display.comp_academy_name')}}</label>
                                                             <input type="text" class="form-control datatable-input" name="name" id="name" data-col-index="1">
                                                         </div>
+                                                        <div class="col-lg-2 mb-lg-0 mb-6">
+                                                            <label>{{ trans('display.general_type') }}:</label>
+                                                            <select class="form-control selectpicker datatable-input" name="search_type" id="search_type" data-col-index="6">
+                                                                <option value="">-- {{ trans('display.general_all') }} --</option>
+                                                                @forelse(@Config::get('enums.org_type') as $key => $type)
+                                                                <option value="{{ $key }}">{{ $type }}</option>
+                                                                @empty
+                                                                @endforelse
+                                                            </select>
+                                                        </div>
                                                     </div>
+                                                    
                                                     <div class="row mt-8">
                                                         <div class="col-lg-12">
                                                             <button type="submit" class="btn btn-primary btn-primary--icon">
@@ -141,6 +152,7 @@ $(document).ready(function() {
             type: 'POST',
             data: function ( d ) {
                 d.name = $('#academy-search-form input[id="name"]').val();
+                d.type = $('#academy-search-form select[id="search_type"]').val();
             },
         },
         columns: [
@@ -190,6 +202,8 @@ $(document).ready(function() {
         $('.datatable-input').each(function() {
             $(this).val('');
             academyTable.column($(this).data('col-index')).search('', false, false);
+            
+            $("#search_type").val('').selectpicker("refresh");
         });
         academyTable.draw();
     });

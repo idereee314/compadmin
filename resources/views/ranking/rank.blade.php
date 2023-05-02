@@ -65,13 +65,16 @@
                                     <li class="breadcrumb-item text-muted">
                                         <a href="" class="text-muted">{{ $sport->name}}</a>
                                     </li>
-                    @if($sport_id == '1')
-                        @include('ranking.jiujitsu')
-                    @elseif($sport_id == '2')
-                        @include('ranking.volleyball')
-                    @elseif($sport_id == '3')
-                        @include('ranking.judo')
-                    @endif                   
+                                    <li class="breadcrumb-item text-muted">
+                                        <a href="" class="text-muted">Чансаа</a>
+                                    </li>
+                                    @if($sport_id == '1')
+                                        @include('ranking.jiujitsu')
+                                    @elseif($sport_id == '2')
+                                        @include('ranking.volleyball')
+                                    @elseif($sport_id == '3')
+                                        @include('ranking.judo')
+                                    @endif                   
                 </div>
                 <!--end::Container-->
             </div>

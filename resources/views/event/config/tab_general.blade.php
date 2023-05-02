@@ -100,7 +100,7 @@
             <label class="col-md-3 col-form-label text-right"></label>
             <div class="col-md-9 col-lg-6">
                 <label class="checkbox">
-                    <input type="checkbox" name="is_dq">
+                    <input type="checkbox" name="is_disqualify">
                     <span></span>&nbsp;
                     Жингээр хасагдсан бол шууд хасна.
                 </label>

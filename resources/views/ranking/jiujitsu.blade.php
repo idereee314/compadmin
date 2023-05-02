@@ -1,6 +1,4 @@
-<li class="breadcrumb-item text-muted">
-                    <a href="" class="text-muted">Чансаа</a>
-                </li>
+                
                 <li class="breadcrumb-item text-muted">
                     <a href="" style="color: black;"><strong>MJJF 2022-2023</strong></a>
                 </li>

@@ -82,6 +82,10 @@ class EloquentAcademyRepository implements AcademyRepository {
                     $qry->whereRaw('LOWER(name) like ?', array('%'.mb_strtolower($searchData->get('name')).'%'))
 						->orWhereRaw('LOWER(name_en) like ?', array('%'.mb_strtolower($searchData->get('name')).'%'));
                 }
+				if($searchData->has('type') && $searchData->get('type') !== null)
+                {
+					$qry->where('type', $searchData->get('type'));
+				}
             })
 			->editColumn('type', function($qry)
 			{
