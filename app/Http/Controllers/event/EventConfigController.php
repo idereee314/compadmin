@@ -139,7 +139,9 @@ class EventConfigController extends Controller
         $configWeights = $this->entryConfigWeight->getConfigWeightByEventId($eventConfig->event_id);
         $configEntriesFees = $this->eventEntriesFee->getEntriesFeeByEventId($eventConfig->event_id);
         $event = $this->event->find($eventConfig->event_id);
-
+        $sports = $this->sport->all();
+       
+        $data['sports'] = $sports;
         $data['eventConfig'] = $eventConfig;
         $data['entries'] = $eventConfig->event->entries;
         $data['configBelsts'] = $configBelsts->groupBy('entry_id');

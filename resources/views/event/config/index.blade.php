@@ -234,9 +234,9 @@
                                 <th width="5%">{{trans('display.comp_entry_belt')}}</th>
                                 <th width="5%">{{trans('display.comp_entry_age')}}</th>
                                 <th width="5%">{{trans('display.comp_entry_weight')}}</th>
+                                
                                 <th width="13%">{{trans('display.general_created_at')}}</th>
                                 <th width="12%">{{trans('display.general_manage')}}</th>
-
                             </tr>
                             </thead>
                         </table>
@@ -297,6 +297,7 @@ $(document).ready(function() {
             {data: 'config_belts_count', "defaultContent": ""},
             {data: 'config_ages_count', "defaultContent": ""},
             {data: 'config_weights_count', "defaultContent": ""},
+            
             {data: 'created_at'},
             {data: 'action'},
         ],

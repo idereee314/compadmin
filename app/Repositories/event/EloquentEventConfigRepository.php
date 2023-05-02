@@ -142,6 +142,10 @@ class EloquentEventConfigRepository implements EventConfigRepository {
 			{
 				return '<a href="javascript:;" class="show-count" data-configid="'.$qry->id.'" data-tabid="tab1-5">'.$qry->config_weights_count.'</a>';
 			})
+			// ->editColumn('config_fees_count', function($qry)
+			// {
+			// 	return '<a href="javascript:;" class="show-count" data-configid="'.$qry->id.'" data-tabid="tab1-6">'.$qry->config_fees_count.'</a>';
+			// })
             ->addColumn('action', function ($qry) {
 				$permissionEdit = SecurityHelper::checkPermission(@Config::get('permission.event_config'), Config::get('permission.editable'));
 				if($permissionEdit)
@@ -192,6 +196,10 @@ class EloquentEventConfigRepository implements EventConfigRepository {
 			{
 				return '<a href="javascript:;" class="show-count" data-configid="'.$qry->id.'" data-tabid="tab1-5">'.$qry->config_weights_count.'</a>';
 			})
+			// ->editColumn('config_fees_count', function($qry)
+			// {
+			// 	return '<a href="javascript:;" class="show-count" data-configid="'.$qry->id.'" data-tabid="tab1-6">'.$qry->config_fees_count.'</a>';
+			// })
             ->addColumn('action', function ($qry) {
 				$permissionEdit = SecurityHelper::checkPermission(@Config::get('permission.event_config'), Config::get('permission.editable'));
 				if($permissionEdit)
