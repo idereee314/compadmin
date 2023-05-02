@@ -452,7 +452,7 @@ class MemberController extends Controller
         $data['athleteSchoolInfo'] = $athleteSchoolInfo;
         $data['athleteUniversityInfo'] = $athleteUniversityInfo;
 
-        return view($this->view_path.'.profile/profile', $data); 
+        return view('.profile/profile', $data); 
     }
 
     public function profileResult($memberId)
@@ -466,7 +466,7 @@ class MemberController extends Controller
         $data['memberApprovedData'] = $memberApprovedData;
         $data['memberAllData'] = $memberAllData;
 
-        return view($this->view_path.'.profile/profileResults', $data); 
+        return view('.profile/profileResults', $data); 
     }
 
     public function profileEvent($memberId)
@@ -479,7 +479,7 @@ class MemberController extends Controller
         $data['memberApprovedData'] = $memberApprovedData;
         $data['memberAllData'] = $memberAllData;
 
-        return view($this->view_path.'.profile/profileEvents', $data); 
+        return view('.profile/profileEvents', $data); 
     }
 
     public function profileUpcoming()
@@ -488,7 +488,7 @@ class MemberController extends Controller
 
         $data['upcomingEventJiuJitsuData'] = $upcomingEventJiuJitsuData;
 
-        return view($this->view_path.'.profile/upcomingEvent', $data); 
+        return view('.profile/upcomingEvent', $data); 
     }
 
     public function profilePastEvent()
@@ -497,6 +497,6 @@ class MemberController extends Controller
 
         $data['pastEventJiuJitsuData'] = $pastEventJiuJitsuData;
 
-        return view($this->view_path.'.profile/pastEvent', $data); 
+        return view('.profile/pastEvent', $data); 
     }    
 }

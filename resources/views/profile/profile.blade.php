@@ -77,7 +77,7 @@
                         <div class="col-lg-4">
                             <div class="card">
                                 <div class="card-header" style="color: #0f4b63; ">
-                                    <strong>Академиуд</strong>
+                                    <strong>Академи</strong>
                                 </div>
                                 <div class="card-body" style="color: #0f4b63;">
                                     <ul>
