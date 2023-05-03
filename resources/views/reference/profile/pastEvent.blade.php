@@ -44,7 +44,6 @@
 @endsection
 @include('layouts.mobile_v2')
 @section('content')
-
 <!--begin::Main-->
 <!--begin::Wrapper-->
     <div class="d-flex flex-column flex-row-fluid wrapper" id="kt_wrapper" style="background-image: url('{{ asset('assets/media/bg/bg-3.jpg') }}');">
@@ -66,7 +65,7 @@
                                         <a href="/event/competition" class="text-muted">Тэмцээнүүд</a>
                                     </li>
                                     <li class="breadcrumb-item text-muted">
-                                        <a href="/upcoming" style="color: #f96815;"><strong> Удахгүй болох жюү жицүгийн тэмцээнүүд</strong></a>
+                                        <a href="/pastEvent" style="color: #f96815;"><strong>Болж өнгөрсөн жюү жицүгийн тэмцээнүүд</strong></a>
                                     </li>
                                 </ul>
                                 <!--end::Breadcrumb-->
@@ -76,29 +75,27 @@
                     </div>
                     <!--end::Subheader-->  
                     <div class="d-flex justify-content-center mb-5">
-                        <h1 class="text-center text-uppercase bold margin-bottom-xs-16 margin-bottom-sm-0" style="font-size: 4rem; color: #0f4b63;"><strong>Удахгүй болох жюү жицүгийн тэмцээнүүд</strong></h1>
+                        <h1 class="text-center text-uppercase bold margin-bottom-xs-16 margin-bottom-sm-0" style="font-size: 4rem; color: #0f4b63;"><strong>Болж өнгөрсөн жюү жицүгийн тэмцээнүүд</strong></h1>
                     </div>
-                    
                     <div class="d-flex justify-content-center mt-5 pt-5">
                         <div class="col-lg-8">
-                            <div>
-                            @foreach($upcomingEventJiuJitsuData as $upcomingjiujitsu)                               
-                                <div class="card" style="border-left-color: #f96815; border-left-width: 1rem; ">
-                                    <div class="card-content">
-                                        <div class="event-date">
-                                            <i class="flaticon-calendar-with-a-clock-time-tools mr-1" style="color:#f96815;"></i><small>{{date('Y-m-d', strtotime($upcomingjiujitsu->event_date))}}</small>                                                 
-                                        </div> 
-                                        <div class="event-name text-center">
-                                            {{ $upcomingjiujitsu->event_name }}
-                                        </div> 
-                                        <div class="event-location mb-2"">                                                
-                                            <small class="text-muted"> <i class="flaticon2-location mr-2" style="color:#f96815;"></i>{{ $upcomingjiujitsu->object_name }} </small>
+                            <div>                                
+                                @foreach($pastEventJiuJitsuData as $pastEventJiuJitsu)
+                                    <div class="card" style="border-left-color: #0f4b63; border-left-width: 1rem; ">
+                                        <div class="card-content">
+                                            <div class="event-date">
+                                                <i class="flaticon-calendar-with-a-clock-time-tools mr-1" style="color:#f96815;"></i><small>{{date('Y-m-d', strtotime($pastEventJiuJitsu->event_date))}}</small>                                                 
+                                            </div> 
+                                            <div class="event-name text-center">
+                                                {{ $pastEventJiuJitsu->event_name }}
+                                            </div> 
+                                            <div class="event-location mb-2"">                                                
+                                                <small class="text-muted"> <i class="flaticon2-location mr-2" style="color:#f96815;"></i>{{ $pastEventJiuJitsu->object_name }} </small>
+                                            </div>                                            
                                         </div>
-                                        
-                                    </div>
-                                </div>                                  
-                            </div>  
-                            @endforeach                                                            
+                                    </div>                                 
+                                @endforeach   
+                            </div>                                                                                      
                         </div>
                     </div>                         
                 </div>
@@ -113,5 +110,4 @@
     </div>
     <!--end::Wrapper-->
 <!--end::Main-->
-
 @stop

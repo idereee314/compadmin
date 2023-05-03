@@ -6,7 +6,6 @@
             <i aria-hidden="true" class="ki ki-close"></i>
         </button>
     </div>
-
     <div class="card-body m-4">
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.human_register_number')}}: <span class="text-danger">*</span></label>
@@ -16,7 +15,6 @@
                 <span class="form-text text-muted">Регистрын дугаарын үсгийг томоор бичнэ</span>
             </div>
         </div>
-
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.human_lastname')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9">
@@ -24,7 +22,6 @@
                 <div class="error-here"></div>
             </div>
         </div>
-
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.human_firstname')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9">
@@ -32,7 +29,6 @@
                 <div class="error-here"></div>
             </div>
         </div>
-
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.human_contact_phone')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9">
@@ -40,7 +36,6 @@
                 <div class="error-here"></div>
             </div>
         </div>
-
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.human_gender_code')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9">
@@ -56,7 +51,6 @@
                 </div>
             </div>
         </div>
-
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.human_birth')}}<span class="text-danger"> *</span></label>
             <div class="col-md-9">
@@ -71,7 +65,6 @@
                 <div class="error-here"></div>
             </div>
         </div>
-
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.human_country')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9">
@@ -84,7 +77,6 @@
                 </select>
             </div>
         </div>
-
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.profile_photo')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9">
@@ -93,21 +85,18 @@
                         <img alt="..." id="profile-image" src="{{\Storage::disk('s3')->url($member->profile_url)}}" style="max-width: 150px; max-height:120px">
                     @else
                         <img alt="..." id="profile-image" alt="" src="{{asset('/assets/media/users/100_1.jpg')}}" style="max-width: 150px; max-height:120px">
-                    @endif
-                   
+                    @endif                   
                     <label class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow" data-action="change" data-toggle="tooltip" title="" data-original-title="Change avatar">
                      <i class="fa fa-pen icon-sm text-muted"></i>
                      <input type="file" name="profile_photo" accept=".png, .jpg, .jpeg" onchange="changeImage(event)"/>
                      <input type="hidden" name="profile_photo_remove" id="profile_photo_remove"/>
-                    </label>
-                   
+                    </label>                   
                     <span class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"  onclick="removeImage()" data-action="cancel" data-toggle="tooltip" title="Cancel avatar">
                      <i class="ki ki-bold-close icon-xs text-muted"></i>
                     </span>
                 </div>
             </div>
-        </div>    
-        
+        </div>        
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.id_photo')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9">
@@ -121,13 +110,11 @@
                      <i class="fa fa-pen icon-sm text-muted"></i>
                      <input type="file" name="id_photo" src="" accept=".png, .jpg, .jpeg" onchange="changeIdImage(event)"/>
                      <input type="hidden" name="id_photo_remove" id="id_photo_remove"/>
-                    </label>
-                   
+                    </label>                   
                     <span class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"  onclick="removeIdImage()" data-action="cancel" data-toggle="tooltip" title="Cancel avatar">
                      <i class="ki ki-bold-close icon-xs text-muted"></i>
                     </span>
-                </div>
-               
+                </div>               
             </div>
         </div>  
         <div class="form-group row">
@@ -143,14 +130,11 @@
             </div>
         </div>
     </div>
-
     <div class="modal-footer text-right bg-gray-100 border-top-0">
         <button type="button" id="close" class="btn btn-light-primary font-weight-bold" data-dismiss="modal">{{trans('display.general_close')}}</button>
         <button type="submit" class="btn btn-primary font-weight-bold">{{trans('display.general_save')}}</button>
     </div>
-
 </form>
-
 <script>
     var profile_photo = document.getElementById("profile_photo");
     var id_photo = document.getElementById("id_photo");

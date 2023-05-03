@@ -1074,7 +1074,7 @@ class EventRegistrationController extends Controller
         
         $data['view_path'] = $this->view_path;
 
-        return view('.stats/stats', $data);
+        return view('.reference/stats/stats', $data);
     }
 
     public function results($eventId)
@@ -1089,7 +1089,7 @@ class EventRegistrationController extends Controller
 
         $data['view_path'] = $this->view_path;
         
-        return view('.stats/result', $data);
+        return view('.reference/stats/result', $data);
     }
 
     public function toplist($eventId)
@@ -1102,7 +1102,7 @@ class EventRegistrationController extends Controller
 
         $data['view_path'] = $this->view_path;
 
-        return view('.stats/toplist', $data);
+        return view('.reference/stats/toplist', $data);
     }
     
     // jiu jitsu stats END

@@ -71,7 +71,6 @@
 			                </div>                                                                                                   
                         </div>                        
                     </div>
-
                     <!--begin::Subheader-->
                     <div class="subheader py-2 py-lg-4 subheader-transparent" id="kt_subheader">
                         <div class="container d-flex align-items-center justify-content-between flex-wrap flex-sm-nowrap">
@@ -92,7 +91,6 @@
                         </div>
                     </div>
                     <!--end::Subheader-->
-
                     <div class="d-flex justify-content-center mt-5 pt-5">
                         <div class="col-lg-12">                            
                             <div class="card">

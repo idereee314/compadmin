@@ -47,7 +47,6 @@
 <!--begin::Main-->
 <!--begin::Wrapper-->
     <div class="d-flex flex-column flex-row-fluid wrapper" id="kt_wrapper" style="background-image: url('{{ asset('assets/media/bg/bg-3.jpg') }}');">
-
     @include('layouts.header_v2')
         <!--begin::Content-->
         <div class="content d-flex flex-column flex-column-fluid">
@@ -72,7 +71,6 @@
 			                </div>                                                                                                   
                         </div>                    
                     </div>
-
                     <div class="d-flex justify-content-center mt-5 pt-5">
                         <div class="col-lg-4">
                             <div class="card">
@@ -144,8 +142,6 @@
                         </div>
                         @endif
                     </div>
-
-
                     <div class="d-flex justify-content-center mt-5 pt-5">
                         <div class="col-lg-4">
                             <a href="/profile/{{ $member->id}}/results" target="_blank">
@@ -154,7 +150,6 @@
                                 </div>
                             </a>
                         </div>
-
                         <div class="col-lg-4">
                             <a href="/profile/{{ $member->id}}/event" target="_blank">
                                 <div class="card">
@@ -163,7 +158,6 @@
                             </a>
                         </div>
                     </div>
-                    
                     <div class="d-flex justify-content-center mt-5 pt-5">
                         <div class="col-lg-8" class="event-list">
                             <div class="d-flex align-items-center flex-wrap justify-content-start row mt-5 mx-5 mb-2">
@@ -177,32 +171,27 @@
                                 </div> 
                             </div>
                             <div>
-                                @foreach($upcomingEventJiuJitsuData as $upcomingjiujitsu)
+                                @for($i = 0; $i < 3 && $i < count($upcomingEventJiuJitsuData); $i++)
                                 <div class="event-list">
                                     <div class="card" style="border-left-color: #f96815; border-left-width: 1rem; ">
                                         <div class="card-content">                                            
-                                            <div class="event-date">
+                                            <div class="event-date text-center">
                                                 <i class="flaticon-calendar-with-a-clock-time-tools mr-1 mt-2" style="color:#f96815;"></i>
-                                                <small>{{date('Y-m-d', strtotime($upcomingjiujitsu->event_date))}}</small>                                                 
+                                                <small>{{date('Y-m-d', strtotime($upcomingEventJiuJitsuData[$i]->event_date))}}</small>                                                 
                                             </div> 
                                             <div class="event-name mt-2 text-center">
-                                                {{ $upcomingjiujitsu->event_name }}
+                                                {{ $upcomingEventJiuJitsuData[$i]->event_name }}
                                             </div>
-                                            <!-- <div class="event-reg-date">
-                                                <i class="flaticon-calendar-with-a-clock-time-tools mr-1 mt-2" style="color:#f96815;"></i>
-                                                <small class="text-muted">{{date('Y-m-d', strtotime($upcomingjiujitsu->reg_start_date))}} -> {{date('Y-m-d', strtotime($upcomingjiujitsu->reg_end_date))}}</small>                                                 
-                                            </div>  -->
                                             <div class="event-location mt-2 mb-2">                                                
-                                                <small class="text-muted"> <i class="flaticon2-location mr-2" style="color:#f96815;"></i>{{ $upcomingjiujitsu->object_name }} </small>
+                                                <small class="text-muted"> <i class="flaticon2-location mr-2" style="color:#f96815;"></i>{{ $upcomingEventJiuJitsuData[$i]->object_name }} </small>
                                             </div>                                            
                                         </div>
                                     </div>
                                 </div>
-                                @endforeach   
+                                @endfor   
                             </div>                                                              
                         </div>
-                    </div>
-                    
+                    </div>              
                     <div class="d-flex justify-content-center mt-5 pt-5">
                         <div class="col-lg-8" class="event-list">
                             <div class="d-flex align-items-center flex-wrap justify-content-start row mt-5 mx-5 mb-2">
@@ -249,5 +238,4 @@
     </div>
     <!--end::Wrapper-->
 <!--end::Main-->
-
 @stop
