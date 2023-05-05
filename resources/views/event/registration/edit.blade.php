@@ -116,6 +116,19 @@
         </div>
 
         <div class="form-group row">
+            <label class="col-3 col-form-label"></label>
+            <div class="col-9 col-form-label">
+                <div class="checkbox-inline">
+                    <label class="checkbox checkbox-primary">
+                        <input type="checkbox" name="is_disqualify" id="is_disqualify" {{ @$eventRegistration->is_disqualify ? 'checked' : ''}}/>
+                        <span></span>
+                        Хасагдсан
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">Жингээр хасагдсан эсэх</label>
 		    <div class="col-3">
 		    	<span class="switch switch-lg switch-icon">
@@ -125,19 +138,8 @@
 		    		</label>
 		    	</span>
 		    </div>
-        </div>
-        <!-- <div class="form-group row">
-            <label class="col-3 col-form-label"></label>
-            <div class="col-9 col-form-label">
-                <div class="checkbox-inline">                    
-                    <label class="checkbox checkbox-primary">
-                        <input type="checkbox" name="is_disqualify" id="is_disqualify" {{ @$eventRegistration->is_disqualify ? 'checked' : ''}}/>
-                        <span></span>
-                        Хасагдсан
-                    </label>
-                </div>
-            </div>
         </div> -->
+        
         @endif
     </div>
 

@@ -281,6 +281,7 @@ return [
     "human_middle_name" => "Ургийн овог",
     "human_email" => "И-мэйл хаяг",
     'human_register_number' => 'Регистрийн дугаар',
+    'human_passport_number' => 'Пасспортын дугаар',
     "human_phone_number" => "Утасны дугаар",
     'human_contact_phone' => 'Утасны дугаар',
     'human_birth' => 'Төрсөн огноо',

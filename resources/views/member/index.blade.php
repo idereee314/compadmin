@@ -385,7 +385,7 @@ function showAddModal( data ) {
         $('.selectpicker').selectpicker();
         $("#register_number").inputmask({ regex: "[А-Я]{2}[0-9]*"});
         $('.only-phone').inputmask("99 99 99 99");
-
+        
         $('#birth').datepicker({
             rtl: KTUtil.isRTL(),
             todayHighlight: true,
@@ -394,6 +394,16 @@ function showAddModal( data ) {
             templates: {
                 leftArrow: '<i class="la la-angle-right"></i>',
                 rightArrow: '<i class="la la-angle-left"></i>'
+            }
+        });
+        
+        $('#is_foreigner').on('change', function() {    
+            if (this.checked) {
+                $("#register_passport").prop('disabled', false);
+                $("#register_number").prop('disabled', true);
+            } else {
+                $("#register_passport").prop('disabled', true);
+                $("#register_number").prop('disabled', false);
             }
         });
 
@@ -469,6 +479,16 @@ function memberEditModal(data)
             templates: {
                 leftArrow: '<i class="la la-angle-right"></i>',
                 rightArrow: '<i class="la la-angle-left"></i>'
+            }
+        });
+        
+        $('#is_foreigner').on('change', function() {    
+            if (this.checked) {
+                $("#register_passport").prop('disabled', false);
+                $("#register_number").prop('disabled', true);
+            } else {
+                $("#register_passport").prop('disabled', true);
+                $("#register_number").prop('disabled', false);
             }
         });
 

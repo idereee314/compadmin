@@ -212,7 +212,7 @@
                                             <div class="event-date text-center">
                                                 <i class="flaticon-calendar-with-a-clock-time-tools mr-1 mt-2" style="color:#f96815;"></i>
                                                 <small>{{date('Y-m-d', strtotime($pastEventJiuJitsuData[$i]->event_date))}}</small>                                                 
-                                            </div> 
+                                            </div>
                                             <div class="event-name mt-2 text-center">
                                                 {{ $pastEventJiuJitsuData[$i]->event_name }}
                                             </div>

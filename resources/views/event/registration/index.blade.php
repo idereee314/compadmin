@@ -1068,7 +1068,6 @@ function showEditModal(data){
     $('#memberModal').on('shown.bs.modal', function(){
         $('#memberModal .modal-content').html(data);
         $('.selectpicker').selectpicker();
-
         $('#update-event-registration-form select[name=entry_age_id]').select2({
             placeholder: "-- {{ trans('display.general_select') }} --"
         });
@@ -1078,6 +1077,7 @@ function showEditModal(data){
         $('#update-event-registration-form select[name=entry_weight_id]').select2({
             placeholder: "-- {{ trans('display.general_select') }} --"
         });
+       
 
         $('#update-event-registration-form select[name=entry_id]').on('change', function(){
             var entryId = $(this).val();
@@ -1164,7 +1164,7 @@ function showEditModal(data){
                 templateResult: function (item) {
                     return item.weight;
                 }
-            }); 
+            });
         });
 
         $('#update-event-registration-form select[name=academy_id]').on('change', function(){

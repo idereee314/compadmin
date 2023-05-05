@@ -8,11 +8,29 @@
     </div>
     <div class="card-body m-4">
         <div class="form-group row">
+            <label class="col-md-3 col-form-label text-right">Гадаад хүн / Foreigner</label>
+		    <div class="col-3">
+		    	<span class="switch switch-lg switch-icon">
+		    		<label>
+		    			<input type="checkbox" name="is_foreigner" id="is_foreigner"/>
+		    			<span></span>
+		    		</label>
+		    	</span>
+		    </div>
+        </div>
+        <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.human_register_number')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9">
                 <input type="text" class="form-control" autocomplete="off" name="register_number" id="register_number" value="{{ $member->register_number }}"  data-inputmask-regex="^[А-ЯӨҮа-яөү]{2}[0-9]{8}$" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}" style="text-transform: uppercase;"/>
                 <div class="error-here"></div>
                 <span class="form-text text-muted">Регистрын дугаарын үсгийг томоор бичнэ</span>
+            </div>
+        </div>
+        <div class="form-group row" id="register-pass">
+            <label class="col-md-3 col-form-label text-right">{{trans('display.human_passport_number')}}: <span class="text-danger">*</span></label>
+            <div class="col-md-9">
+                <input type="text" class="form-control" autocomplete="off" name="register_number" disabled id="register_passport" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}" style="text-transform: uppercase;"/>
+                <div class="error-here"></div>
             </div>
         </div>
         <div class="form-group row">

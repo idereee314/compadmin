@@ -57,6 +57,7 @@ class EventConfigController extends Controller
         // $eventConfig = json_decode($eventConfigPage, true);
 
         // $data['eventConfig'] = $eventConfig['data'];
+        
         $data['view_path'] = $this->view_path;
         // dd($eventConfig);
         // $pagination = new LengthAwarePaginator($eventConfig['data'], @$eventConfig['total'], @$eventConfig['per_page'], @$eventConfig['current_page'], [

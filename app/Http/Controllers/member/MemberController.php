@@ -76,7 +76,8 @@ class MemberController extends Controller
     public function store(Request $request)
     {
         $input = Input::all();
-        $input['register_number'] = Str::upper($input['register_number']);
+        // dd($input);
+        // $input['register_number'] = Str::upper($input['register_number']);
 
         $validator = Validator::make($input, MemberModel::rules(0));
         if ($validator->fails())
@@ -118,7 +119,7 @@ class MemberController extends Controller
                         $validator->errors()->add('', $e->getMessage());
                     }
                 }
-
+                
                 if(@$idImage)
                 {
                     $imageName = 'memberid_' . date('YmdHis') . '_' . uniqid() . '.jpg';

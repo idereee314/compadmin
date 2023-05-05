@@ -83,7 +83,6 @@ class EventRegistrationController extends Controller
                 $eventRegStatusCount = $this->eventRegistration->getEventRegStatusCount($event->id)->pluck('total', 'status')->toArray();
                 $academies = $this->academy->all();
                 $countries = $this->country->all();
-                
                 $eventFees = $this->eventRegistration->getPaymentByEventId(@$input['event_id'])->groupBy('amount');
 
                 $data['event'] = $event;
@@ -331,8 +330,10 @@ class EventRegistrationController extends Controller
             $eventEntries = $this->eventEntries->getEntryByEventId($eventRegistration->event_id);
             $configBelts = $this->configBelt->getEntryBeltByEntryId($eventRegistration->entry_id);
             $configAges = $this->configAge->getEntryAgeByEntryId($eventRegistration->entry_id);
-            $configWeights = $this->configWeight->getEntryWeightByAgeId($eventRegistration->entry_age_id);   
-    
+            $configWeights = $this->configWeight->getEntryWeightByAgeId($eventRegistration->entry_age_id);
+            $weight = abs($this->configWeight->find($eventRegistration->entry_weight_id)->weight);
+
+            $data['weight'] = $weight;
             $data['eventRegistration'] = $eventRegistration;
             $data['eventEntries'] = $eventEntries;
             $data['configBelts'] = $configBelts;

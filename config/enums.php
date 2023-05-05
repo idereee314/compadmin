@@ -110,6 +110,13 @@ return array(
 		'3' => 'fas fa-medal icon-4x bronze-medal-icon',
 	],
 
+	'country_alpha' => [
+		'1' => 'mn',
+		'2' => 'ru',
+		'3' => 'cn',
+		'4' => 'kr',
+	],
+
 )
 
 ?>
