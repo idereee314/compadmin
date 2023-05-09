@@ -164,6 +164,7 @@
                         <span class="menu-text">Тэмцээн</span>
                     </a>
                 </li>
+                @if(Auth::user()->roles->first()->code == 'admin')
                 <li class="menu-item" aria-haspopup="true">
                     <a href="/event/config" class="menu-link">
                         <span class="svg-icon menu-icon">
@@ -179,6 +180,7 @@
                         <span class="menu-text">Тэмцээний тохиргоо</span>
                     </a>
                 </li>
+                @endif
             </ul>
             <!--end::Menu Nav-->
         </div>

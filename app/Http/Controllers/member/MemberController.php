@@ -103,11 +103,11 @@ class MemberController extends Controller
                 
                 if(@$profileImage)
                 {
-                    $imageName = 'memberpr_' . date('YmdHis') . '_' . uniqid() . '.jpg';
+                    $imageName = 'memberpr_' . date('YmdHis') . '_' . uniqid() . '.png';
                     $profileImagePathS3 = "/member/".$member->id."/".$imageName;
 
                     $image = Image::make($profileImage);
-                    $imageData = $image->encode('jpg');
+                    $imageData = $image->encode('png');
                     
                     try 
                     {
@@ -122,11 +122,11 @@ class MemberController extends Controller
                 
                 if(@$idImage)
                 {
-                    $imageName = 'memberid_' . date('YmdHis') . '_' . uniqid() . '.jpg';
+                    $imageName = 'memberid_' . date('YmdHis') . '_' . uniqid() . '.png';
                     $idImagePathS3 = "/member/".$member->id."/".$imageName;
 
                     $image = Image::make($idImage);
-                    $imageData = $image->encode('jpg');
+                    $imageData = $image->encode('png');
 
                     try 
                     {
@@ -217,11 +217,11 @@ class MemberController extends Controller
                         \Storage::disk('s3')->delete($member->profile_url);
                     }
 
-                    $imageName = 'memberpr_' . date('YmdHis') . '_' . uniqid() . '.jpg';
+                    $imageName = 'memberpr_' . date('YmdHis') . '_' . uniqid() . '.png';
                     $profileImagePathS3 = "/member/".$member->id."/".$imageName;
 
                     $image = Image::make($profileImage);
-                    $imageData = $image->encode('jpg');
+                    $imageData = $image->encode('png');
                     
                     try 
                     {
@@ -240,11 +240,11 @@ class MemberController extends Controller
                         \Storage::disk('s3')->delete(@$member->id_url);
                     }
 
-                    $imageName = 'memberid_' . date('YmdHis') . '_' . uniqid() . '.jpg';
+                    $imageName = 'memberid_' . date('YmdHis') . '_' . uniqid() . '.png';
                     $idImagePathS3 = "/member/".$member->id."/".$imageName;
 
                     $image = Image::make($idImage);
-                    $imageData = $image->encode('jpg');
+                    $imageData = $image->encode('png');
 
                     try 
                     {

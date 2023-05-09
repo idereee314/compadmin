@@ -166,19 +166,22 @@
                         <table class="table table-hover table-bordered">
                             <thead>
                                 <tr>
+                                    <th colspan="5" class="text-center" style="color: #0f4b63;"><strong>Бүсний ангилалгүй</strong></th>
+                                </tr> 
+                                <tr>
                                   <th class="text-center" style="color: #0f4b63;">Цагаан</th>
                                   <th class="text-center" style="color: #0f4b63;">Саарал</th>
                                   <th class="text-center" style="color: #0f4b63;">Шар</th>
                                   <th class="text-center" style="color: #0f4b63;">Улбар шар</th>
                                 </tr>
                             </thead>
-                            <tbody>                                                    
-                                <tr>
+                            <tbody>                                                
+                                <tr>                                    
                                     <td class="text-center border-right" style="color: #0f4b63;"><img src="/assets/images/belts/white.png" alt="white-belt" width="60" height="30"></td>                                                     
                                     <td class="text-center border-right" style="color: #0f4b63;"><img src="/assets/images/belts/grey.png" alt="grey-belt" width="60" height="30"></td>
                                     <td class="text-center border-right" style="color: #0f4b63;"><img src="/assets/images/belts/yellow.png" alt="yellow-belt" width="60" height="30"></td>
                                     <td class="text-center border-right" style="color: #0f4b63;"><img src="/assets/images/belts/orange.png" alt="orange-belt" width="60" height="30"></td>
-                                </tr>
+                                </tr>                                 
                             </tbody>
                         </table>                                        
                     </div>  
@@ -193,6 +196,9 @@
                         <table class="table table-hover table-bordered">
                             <thead>
                                 <tr>
+                                    <th colspan="5" class="text-center" style="color: #0f4b63;"><strong>Бүсний ангилалгүй</strong></th>
+                                </tr>  
+                                <tr>
                                   <th class="text-center" style="color: #0f4b63;">Цагаан</th>
                                   <th class="text-center" style="color: #0f4b63;">Цэнхэр</th>
                                   <th class="text-center" style="color: #0f4b63;">Ягаан</th>
@@ -203,7 +209,7 @@
                                     <td class="text-center border-right" style="color: #0f4b63;"><img src="/assets/images/belts/white.png" alt="white-belt" width="60" height="30"></td>                                                     
                                     <td class="text-center border-right" style="color: #0f4b63;"><img src="/assets/images/belts/blue.png" alt="blue-belt" width="60" height="30"></td>
                                     <td class="text-center border-right" style="color: #0f4b63;"><img src="/assets/images/belts/purple.png" alt="purple-belt" width="60" height="30"></td>
-                                </tr>
+                                </tr>                                
                             </tbody>
                         </table>                                        
                     </div>
@@ -217,6 +223,9 @@
                     <div class="table-responsive">
                         <table class="table table-hover table-bordered">
                             <thead>
+                                <tr>
+                                    <th colspan="5" class="text-center" style="color: #0f4b63;"><strong>Бүсний ангилалгүй</strong></th>
+                                </tr>
                                 <tr>
                                   <th class="text-center" style="color: #0f4b63;">Цагаан</th>
                                   <th class="text-center" style="color: #0f4b63;">Цэнхэр</th>
@@ -232,7 +241,7 @@
                                     <td class="text-center border-right" style="color: #0f4b63;"><img src="/assets/images/belts/purple.png" alt="purple-belt" width="60" height="30"></td>
                                     <td class="text-center border-right" style="color: #0f4b63;"><img src="/assets/images/belts/brown.png" alt="brown-belt" width="60" height="30"></td>
                                     <td class="text-center border-right" style="color: #0f4b63;"><img src="/assets/images/belts/black.png" alt="black-belt" width="60" height="30"></td>
-                                </tr>
+                                </tr>                                  
                             </tbody>
                         </table>                                        
                     </div>
@@ -248,14 +257,22 @@
                 <div class="card-body" style="color: #0f4b63;">
                     <div class="table-responsive">
                         <table class="table table-hover table-bordered">
-                            <thead>
+                            <thead>                                
                                 <tr>
-                                  <th class="text-center" style="color: #0f4b63;">Өсвөр үе 3 <small>Teen</small></th>
-                                  <th class="text-center" style="color: #0f4b63;">Өсвөр үе 2 <small>Junior</small></th>
-                                  <th class="text-center" style="color: #0f4b63;">Өсвөр үе 1 <small>Infant</small></th>
-                                  <th class="text-center" style="color: #0f4b63;">Бага нас 3 <small>Kids 3</small></th>
-                                  <th class="text-center" style="color: #0f4b63;">Бага нас 2 <small>Kids 2</small></th>
-                                  <th class="text-center" style="color: #0f4b63;">Бага нас 1 <small>Kids 1</small></th>
+                                    <th class="text-center" style="color: #0f4b63;">Өсвөр үе 3 <small>Teen</small></th>
+                                    <th class="text-center" style="color: #0f4b63;">Өсвөр үе 2 <small>Junior</small></th>
+                                    <th class="text-center" style="color: #0f4b63;">Өсвөр үе 1 <small>Infant</small></th>
+                                    <th class="text-center" style="color: #0f4b63;">Бага нас 3 <small>Kids 3</small></th>
+                                    <th class="text-center" style="color: #0f4b63;">Бага нас 2 <small>Kids 2</small></th>
+                                    <th class="text-center" style="color: #0f4b63;">Бага нас 1 <small>Kids 1</small></th>
+                                </tr>
+                                <tr>
+                                    <th class="text-center" style="color: #0f4b63;">3 минут</th>
+                                    <th class="text-center" style="color: #0f4b63;">3 минут</th>
+                                    <th class="text-center" style="color: #0f4b63;">3 минут</th>
+                                    <th class="text-center" style="color: #0f4b63;">2 минут</th>
+                                    <th class="text-center" style="color: #0f4b63;">2 минут</th>
+                                    <th class="text-center" style="color: #0f4b63;">2 минут</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -346,12 +363,20 @@
                         <table class="table table-hover table-bordered">
                             <thead>
                                 <tr>
-                                  <th class="text-center" style="color: #0f4b63;">Өсвөр үе 3 <small> Teen </small></th>
-                                  <th class="text-center" style="color: #0f4b63;">Өсвөр үе 2 <small> Junior </small></th>
-                                  <th class="text-center" style="color: #0f4b63;">Өсвөр үе 1 <small> Infant </small></th>
-                                  <th class="text-center" style="color: #0f4b63;">Бага нас 3 <small> Kids 3 </small></th>
-                                  <th class="text-center" style="color: #0f4b63;">Бага нас 2 <small> Kids 2 </small></th>
-                                  <th class="text-center" style="color: #0f4b63;">Бага нас 1 <small> Kids 1 </small></th>
+                                    <th class="text-center" style="color: #0f4b63;">Өсвөр үе 3 <small> Teen </small></th>
+                                    <th class="text-center" style="color: #0f4b63;">Өсвөр үе 2 <small> Junior </small></th>
+                                    <th class="text-center" style="color: #0f4b63;">Өсвөр үе 1 <small> Infant </small></th>
+                                    <th class="text-center" style="color: #0f4b63;">Бага нас 3 <small> Kids 3 </small></th>
+                                    <th class="text-center" style="color: #0f4b63;">Бага нас 2 <small> Kids 2 </small></th>
+                                    <th class="text-center" style="color: #0f4b63;">Бага нас 1 <small> Kids 1 </small></th>
+                                </tr>
+                                <tr>
+                                    <th class="text-center" style="color: #0f4b63;">3 минут</th>
+                                    <th class="text-center" style="color: #0f4b63;">3 минут</th>
+                                    <th class="text-center" style="color: #0f4b63;">3 минут</th>
+                                    <th class="text-center" style="color: #0f4b63;">2 минут</th>
+                                    <th class="text-center" style="color: #0f4b63;">2 минут</th>
+                                    <th class="text-center" style="color: #0f4b63;">2 минут</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -450,6 +475,14 @@
                                     <th class="text-center" style="color: #0f4b63;">Мастер 3 <small> Master 3</small></th>
                                     <th class="text-center" style="color: #0f4b63;">Мастер 4 <small> Master 4</small></th>
                                 </tr>
+                                <tr>
+                                    <th class="text-center" style="color: #0f4b63;">4 минут</th>
+                                    <th class="text-center" style="color: #0f4b63;">5 минут</th>
+                                    <th class="text-center" style="color: #0f4b63;">5 минут</th>
+                                    <th class="text-center" style="color: #0f4b63;">5 минут</th>
+                                    <th class="text-center" style="color: #0f4b63;">5 минут</th>
+                                    <th class="text-center" style="color: #0f4b63;">5 минут</th>
+                                </tr>
                             </thead>
                             <tbody>
                                 <tr>
@@ -535,6 +568,11 @@
                                     <th class="text-center" style="color: #0f4b63;">Насанд хүрэгч <small> Adult</small></th>
                                     <th class="text-center" style="color: #0f4b63;">Мастер 1 <small> Master 1</small></th>
                                 </tr>
+                                <tr>
+                                    <th class="text-center" style="color: #0f4b63;">4 минут</th>
+                                    <th class="text-center" style="color: #0f4b63;">5 минут</th>
+                                    <th class="text-center" style="color: #0f4b63;">5 минут</th>
+                                </tr>                                    
                             </thead>
                             <tbody>
                                 <tr>
