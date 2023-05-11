@@ -13,25 +13,12 @@
             <div class="col-md-9 col-lg-7">
                 <input class="form-control form-control-lg" disabled value="{{ $eventRegistration->member->fullname }}"/>
             </div>
-        </div> 
-        
-        @php
-            $disabled = ( Auth::user()->roles->first()->code == 'staff') ? 'disabled' : '';
-        @endphp
-        
-        @switch(Auth::user()->roles->first()->code)
-            @case('staff')
-                @php($disabled = 'disabled')
-                @break
-            @case('event')
-            @case('admin')
-                @break
-        @endswitch
+        </div>
         
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.comp_entry')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9 col-lg-7">
-                <select class="form-control selectpicker" id="entry_id" name="entry_id" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}" {!! $disabled !!}>
+                <select class="form-control selectpicker" id="entry_id" name="entry_id" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}" >
                     @forelse(@$eventEntries as $entry)
                         <option value="{{ $entry['id'] }}" {{ $eventRegistration->entry_id == @$entry->id ? 'selected' : ''}}>{{ $entry->name }}</option>
                     @empty
@@ -43,7 +30,7 @@
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.comp_entry_belt')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9 col-lg-7">
-                <select class="form-control form-control-input" id="entry_belt_id" name="entry_belt_id" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}" {!! $disabled !!}>
+                <select class="form-control form-control-input" id="entry_belt_id" name="entry_belt_id" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}" >
                     @forelse(@$configBelts as $belt)
                         <option value="{{ $belt->id }}" {{ $eventRegistration->entry_belt_id == $belt->id ? 'selected' : ''}}>{{ $belt->name }}</option>
                     @empty
@@ -55,7 +42,7 @@
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.comp_entry_age')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9 col-lg-7">
-                <select class="form-control form-control-input" id="entry_age_id" name="entry_age_id" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}" {!! $disabled !!}>
+                <select class="form-control form-control-input" id="entry_age_id" name="entry_age_id" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}">
                     @forelse(@$configAges as $age)
                     <option value="{{ $age->id }}" {{ $eventRegistration->entry_age_id == $age->id ? 'selected' : ''}}>{{ @$age->start_age }} - {{ @$age->end_age }}</option>
                     @empty

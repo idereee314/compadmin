@@ -342,10 +342,10 @@
                                                     </select>
                                                 </div>
 
-                                                <div class="col-lg-2 mb-lg-0 mb-6 mt-5">
+                                                <!-- <div class="col-lg-2 mb-lg-0 mb-6 mt-5">
                                                     <label>Оролцогчдийн тоо:</label>
                                                     <input type="text" class="form-control datatable-input" name="search_memberCount" id="search_memberCount" placeholder="Оролцогчдийн тоо бичнэ үү" data-col-index="8"/>
-                                                </div>
+                                                </div> -->
                                             </div>
                                             <div class="row mb-8">
                                                 <div class="col-lg-4 mb-lg-0 mb-6">

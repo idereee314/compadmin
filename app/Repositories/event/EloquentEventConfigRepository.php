@@ -153,12 +153,22 @@ class EloquentEventConfigRepository implements EventConfigRepository {
 					if($qry->event->users->contains(Auth::user()->id) || Auth::user()->roles->first()->code == 'admin')
 					{
 						$actionHtml = "";
-						if(Carbon\Carbon::parse($qry->reg_end_date) >= Carbon\Carbon::now())
-						{
+						if(Auth::user()->roles->first()->code == 'admin'){
 							$actionHtml .= 	'<a class="btn btn-icon btn-light btn-hover-primary btn-sm mr-3 edit" href="'.route('event.config.edit', $qry->id).'" title="'.trans('display.general_edit').'"><i class="la la-edit"></i></a>';
 							$actionHtml .= 	'<a class="btn btn-icon btn-light btn-hover-primary btn-sm delete mr-3" href="javascript:;" data-configid="'.$qry->id.'" title="'.trans('display.general_delete').'"><i class="la la-trash"></i></li>';
+							$actionHtml .= 	'<a class="btn btn-icon btn-light btn-hover-primary btn-sm copy mr-3" href="javascript:;" data-configid="'.$qry->id.'" title="'.trans('display.general_copy').'"><i class="far fa-copy"></i></li>';
 						}
-						$actionHtml .= 	'<a class="btn btn-icon btn-light btn-hover-primary btn-sm copy mr-3" href="javascript:;" data-configid="'.$qry->id.'" title="'.trans('display.general_copy').'"><i class="far fa-copy"></i></li>';
+						else
+						{
+							if(Carbon\Carbon::parse($qry->reg_end_date) >= Carbon\Carbon::now())
+							{
+								$actionHtml .= 	'<a class="btn btn-icon btn-light btn-hover-primary btn-sm mr-3 edit" href="'.route('event.config.edit', $qry->id).'" title="'.trans('display.general_edit').'"><i class="la la-edit"></i></a>';
+								$actionHtml .= 	'<a class="btn btn-icon btn-light btn-hover-primary btn-sm delete mr-3" href="javascript:;" data-configid="'.$qry->id.'" title="'.trans('display.general_delete').'"><i class="la la-trash"></i></li>';
+								$actionHtml .= 	'<a class="btn btn-icon btn-light btn-hover-primary btn-sm copy mr-3" href="javascript:;" data-configid="'.$qry->id.'" title="'.trans('display.general_copy').'"><i class="far fa-copy"></i></li>';
+							}
+						}
+							
+						
 						return $actionHtml;
 					}
 				}
