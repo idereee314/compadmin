@@ -123,53 +123,57 @@
                             </div>
                             <!--end::Info-->
                         </div>
-                        <!--end::Top-->
-                        @if(!@$eventFees->isEmpty())
-                        <!--begin::Separator-->
-                        <div class="separator separator-solid my-7"></div>
-                        <!--end::Separator-->
-                        <!--begin::Bottom-->
-                        <div class="d-flex align-items-center flex-wrap">
-                            <!--begin: Item-->
-                            <div class="d-flex align-items-center flex-lg-fill mr-10 my-1 btn btn-light-success btn-hover-success btn-filter-amount" data-amount="">
-                                <span class="mr-4">
-                                    <i class="flaticon-piggy-bank text-success icon-3x font-weight-bold"></i>
-                                </span>
-                                <div class="d-flex flex-column">
-                                    <span class="font-weight-bolder font-size-sm">{{ trans('display.general_total') }}/{{ $eventFees->flatten(1)->count() }}</span>
-                                    <span class="font-weight-bolder font-size-h5">
-                                    <span class="font-weight-bold">{{ trans('display.general_tug') }}</span>{{ number_format($eventFees->flatten(1)->sum('fee_amount'), 0) }}</span>
+                        
+                        @if(Auth::user()->roles->first()->code == 'admin' || Auth::user()->roles->first()->code == 'mjjf' || Auth::user()->roles[1]->code == 'mjjf')
+                            <!--end::Top-->
+                            @if(!@$eventFees->isEmpty())
+                            <!--begin::Separator-->
+                            <div class="separator separator-solid my-7"></div>
+                            <!--end::Separator-->
+                            <!--begin::Bottom-->
+                            <div class="d-flex align-items-center flex-wrap">
+                                <!--begin: Item-->
+                                <div class="d-flex align-items-center flex-lg-fill mr-10 my-1 btn btn-light-success btn-hover-success btn-filter-amount" data-amount="">
+                                    <span class="mr-4">
+                                        <i class="flaticon-piggy-bank text-success icon-3x font-weight-bold"></i>
+                                    </span>
+                                    <div class="d-flex flex-column">
+                                        <span class="font-weight-bolder font-size-sm">{{ trans('display.general_total') }}/{{ $eventFees->flatten(1)->count() }}</span>
+                                        <span class="font-weight-bolder font-size-h5">
+                                        <span class="font-weight-bold">{{ trans('display.general_tug') }}</span>{{ number_format($eventFees->flatten(1)->sum('fee_amount'), 0) }}</span>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="d-flex align-items-center flex-lg-fill mr-10 my-1 btn btn-light-success btn-hover-success btn-filter-amount" data-amount="">
-                                <span class="mr-4">
-                                    <i class="flaticon-piggy-bank text-success icon-3x font-weight-bold"></i>
-                                </span>
-                                <div class="d-flex flex-column">
-                                    <span class="font-weight-bolder font-size-sm">Зохион байгуулагчруу шилжих</span>
-                                    <span class="font-weight-bolder font-size-h5">
-                                    <span class="font-weight-bold">{{ trans('display.general_tug') }}</span>{{ number_format($eventFees->flatten(1)->sum('fee_amount') * 0.9, 0) }}</span>
+                                <div class="d-flex align-items-center flex-lg-fill mr-10 my-1 btn btn-light-success btn-hover-success btn-filter-amount" data-amount="">
+                                    <span class="mr-4">
+                                        <i class="flaticon-piggy-bank text-success icon-3x font-weight-bold"></i>
+                                    </span>
+                                    <div class="d-flex flex-column">
+                                        <span class="font-weight-bolder font-size-sm">Зохион байгуулагчруу шилжих</span>
+                                        <span class="font-weight-bolder font-size-h5">
+                                        <span class="font-weight-bold">{{ trans('display.general_tug') }}</span>{{ number_format($eventFees->flatten(1)->sum('fee_amount') * 0.9, 0) }}</span>
+                                    </div>
                                 </div>
-                            </div>
-                            <!--end: Item-->
-                            @forelse($eventFees as $key => $fee)
-                            <!--begin: Item-->
-                            <div class="d-flex align-items-center flex-lg-fill mr-5 my-1 btn btn-hover-light-success btn-filter-amount" data-amount="{{ $key }}">
-                                <span class="mr-4">
-                                    <i class="flaticon-pie-chart text-success icon-3x font-weight-bold"></i>
-                                </span>
-                                <div class="d-flex flex-column">
-                                    <span class="font-weight-bolder font-size-sm">{{ number_format($key, 0) }}/{{ count($fee) }}</span>
-                                    <span class="font-weight-bolder font-size-h5">
-                                    <span class="text-success font-weight-bold">{{ trans('display.general_tug') }}</span>{{ number_format($fee->sum('fee_amount'), 0) }}</span>
+                                <!--end: Item-->
+                                @forelse($eventFees as $key => $fee)
+                                <!--begin: Item-->
+                                <div class="d-flex align-items-center flex-lg-fill mr-5 my-1 btn btn-hover-light-success btn-filter-amount" data-amount="{{ $key }}">
+                                    <span class="mr-4">
+                                        <i class="flaticon-pie-chart text-success icon-3x font-weight-bold"></i>
+                                    </span>
+                                    <div class="d-flex flex-column">
+                                        <span class="font-weight-bolder font-size-sm">{{ number_format($key, 0) }}/{{ count($fee) }}</span>
+                                        <span class="font-weight-bolder font-size-h5">
+                                        <span class="text-success font-weight-bold">{{ trans('display.general_tug') }}</span>{{ number_format($fee->sum('fee_amount'), 0) }}</span>
+                                    </div>
                                 </div>
-                            </div>
-                            <!--end: Item-->
-                            @empty
-                            @endforelse
-                        </div>                        
-                        <!--end::Bottom-->
+                                <!--end: Item-->
+                                @empty
+                                @endforelse
+                            </div>                        
+                            <!--end::Bottom-->
+                            @endif
                         @endif
+                        
                     </div>
                 </div>
                 <!--begin::Card-->
