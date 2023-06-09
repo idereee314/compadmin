@@ -296,7 +296,7 @@
                                     <td class="text-center border-right" style="color: #0f4b63;">-46</td>
                                     <td class="text-center border-right" style="color: #0f4b63;">-41</td>
                                     <td class="text-center border-right" style="color: #0f4b63;">-37</td>
-                                    <td class="text-center border-right" style="color: #0f4b63;">-34</td>
+                                    <td class="text-center border-right" style="color: #0f4b63;">-30</td>
                                     <td class="text-center border-right" style="color: #0f4b63;">-23</td>
                                     <td class="text-center border-right" style="color: #0f4b63;">-21</td>
                                 </tr>
@@ -304,7 +304,7 @@
                                     <td class="text-center border-right" style="color: #0f4b63;">-50</td>
                                     <td class="text-center border-right" style="color: #0f4b63;">-45</td>
                                     <td class="text-center border-right" style="color: #0f4b63;">-41</td>
-                                    <td class="text-center border-right" style="color: #0f4b63;">-38</td>
+                                    <td class="text-center border-right" style="color: #0f4b63;">-34</td>                                    
                                     <td class="text-center border-right" style="color: #0f4b63;">-26</td>
                                     <td class="text-center border-right" style="color: #0f4b63;">-24</td>
                                 </tr>
@@ -312,7 +312,8 @@
                                     <td class="text-center border-right" style="color: #0f4b63;">-56</td>
                                     <td class="text-center border-right" style="color: #0f4b63;">-50</td>
                                     <td class="text-center border-right" style="color: #0f4b63;">-45</td>
-                                    <td class="text-center border-right" style="color: #0f4b63;">-42</td>
+                                    <td class="text-center border-right" style="color: #0f4b63;">-38</td>
+                                    
                                     <td class="text-center border-right" style="color: #0f4b63;">-30</td>
                                     <td class="text-center border-right" style="color: #0f4b63;">-28</td>
                                 </tr>
@@ -320,7 +321,8 @@
                                     <td class="text-center border-right" style="color: #0f4b63;">-62</td>
                                     <td class="text-center border-right" style="color: #0f4b63;">-55</td>
                                     <td class="text-center border-right" style="color: #0f4b63;">-50</td>
-                                    <td class="text-center border-right" style="color: #0f4b63;">-50</td>
+                                    <td class="text-center border-right" style="color: #0f4b63;">-42</td>
+                                    
                                     <td class="text-center border-right" style="color: #0f4b63;">-34</td>
                                     <td class="text-center border-right" style="color: #0f4b63;">-32</td>
                                 </tr>
@@ -328,7 +330,7 @@
                                     <td class="text-center border-right" style="color: #0f4b63;">-67</td>
                                     <td class="text-center border-right" style="color: #0f4b63;">-60</td>
                                     <td class="text-center border-right" style="color: #0f4b63;">-55</td>
-                                    <td class="text-center border-right" style="color: #0f4b63;"></td>
+                                    <td class="text-center border-right" style="color: #0f4b63;">-50</td>
                                     <td class="text-center border-right" style="color: #0f4b63;">-38</td>
                                     <td class="text-center border-right" style="color: #0f4b63;">-36</td>
                                 </tr>
@@ -576,45 +578,40 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td class="text-center border-right" style="color: #0f4b63;">-40</td>
-                                    <td class="text-center border-right" style="color: #0f4b63;">-49</td>
-                                    <td class="text-center border-right" style="color: #0f4b63;">-49</td>                        
-                                </tr>
-                                <tr>
-                                    <td class="text-center border-right" style="color: #0f4b63;">-44</td>
-                                    <td class="text-center border-right" style="color: #0f4b63;">-55</td>
-                                    <td class="text-center border-right" style="color: #0f4b63;">-55</td>                                                
-                                </tr>                                        
-                                <tr>
                                     <td class="text-center border-right" style="color: #0f4b63;">-48</td>
-                                    <td class="text-center border-right" style="color: #0f4b63;"></td>
-                                    <td class="text-center border-right" style="color: #0f4b63;"></td>
+                                    <td class="text-center border-right" style="color: #0f4b63;">-45</td>
+                                    <td class="text-center border-right" style="color: #0f4b63;">-45</td>                        
                                 </tr>
                                 <tr>
                                     <td class="text-center border-right" style="color: #0f4b63;">-52</td>
+                                    <td class="text-center border-right" style="color: #0f4b63;">-48</td>
+                                    <td class="text-center border-right" style="color: #0f4b63;">-48</td>                                                
+                                </tr>
+                                <tr>
+                                    <td class="text-center border-right" style="color: #0f4b63;">-57</td>
+                                    <td class="text-center border-right" style="color: #0f4b63;">-52</td>
+                                    <td class="text-center border-right" style="color: #0f4b63;">-52</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-center border-right" style="color: #0f4b63;">-63</td>
+                                    <td class="text-center border-right" style="color: #0f4b63;">-57</td>
+                                    <td class="text-center border-right" style="color: #0f4b63;">-57</td>                                                
+                                </tr>
+                                <tr>
+                                    <td class="text-center border-right" style="color: #0f4b63;">-95</td>
                                     <td class="text-center border-right" style="color: #0f4b63;">-62</td>
                                     <td class="text-center border-right" style="color: #0f4b63;">-62</td>                                                
                                 </tr>
                                 <tr>
-                                    <td class="text-center border-right" style="color: #0f4b63;">-57</td>
+                                    <td class="text-center border-right" style="color: #0f4b63;"></td>
                                     <td class="text-center border-right" style="color: #0f4b63;">-70</td>
                                     <td class="text-center border-right" style="color: #0f4b63;">-70</td>                                                
                                 </tr>
                                 <tr>
-                                    <td class="text-center border-right" style="color: #0f4b63;">-63</td>
+                                    <td class="text-center border-right" style="color: #0f4b63;"></td>
                                     <td class="text-center border-right" style="color: #0f4b63;">-95</td>
-                                    <td class="text-center border-right" style="color: #0f4b63;">-95</td>                                                
-                                </tr>
-                                <tr>
-                                    <td class="text-center border-right" style="color: #0f4b63;">-70</td>
-                                    <td class="text-center border-right" style="color: #0f4b63;"></td>
-                                    <td class="text-center border-right" style="color: #0f4b63;"></
-                                </tr>
-                                <tr>
-                                    <td class="text-center border-right" style="color: #0f4b63;">-82</td>
-                                    <td class="text-center border-right" style="color: #0f4b63;"></td>
-                                    <td class="text-center border-right" style="color: #0f4b63;"></td>                                                
-                                </tr>                                            
+                                    <td class="text-center border-right" style="color: #0f4b63;">-95</td>
+                                </tr>                                      
                             </tbody>
                         </table>
                     </div>

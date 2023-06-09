@@ -27,6 +27,7 @@ use team\TeamRepository as Team;
 use member\TeamMemberRepository as TeamMember;
 use member\TeamMemberAttributeRepository as MemberAttribute;
 use country\CountryRepository as Country;
+use sport\SportRepository as Sport;
 
 //Models
 use event\EventRegistration as EventRegistrationModel;
@@ -45,7 +46,7 @@ class EventRegistrationController extends Controller
 {
     public $restful = true;
 
-    public function __construct(Event $event, EventRegistration $eventRegistration, EventConfig $eventConfig, Academy $academy, Country $country, EventEntries $eventEntries, EntryConfigAge $configAge, EntryConfigBelt $configBelt, EntryConfigWeight $configWeight, Member $member, EventTeamRegistration $eventTeamRegistration, Team $team, TeamMember $teamMember, MemberAttribute $memberAttribute)
+    public function __construct(Event $event, EventRegistration $eventRegistration, EventConfig $eventConfig, Academy $academy, Country $country, EventEntries $eventEntries, EntryConfigAge $configAge, EntryConfigBelt $configBelt, EntryConfigWeight $configWeight, Member $member, EventTeamRegistration $eventTeamRegistration, Team $team, TeamMember $teamMember, MemberAttribute $memberAttribute, Sport $sport)
     {
         $this->view_path = 'event.registration';
         $this->event = $event;
@@ -62,6 +63,7 @@ class EventRegistrationController extends Controller
         $this->teamMember = $teamMember;
         $this->memberAttribute = $memberAttribute;
         $this->country = $country;
+        $this->sport = $sport;
     }
 
     /**
@@ -748,6 +750,17 @@ class EventRegistrationController extends Controller
 
         return view($this->view_path.'.card', $data)->with('pagination', @$pagination);
     }
+
+    public function showSportCard()
+    {
+        $sport = $this->sport->all()->toArray(); // Convert the object to an array
+        $sports = $sport;
+    
+        $viewPath = $this->view_path;
+    
+        return view($this->view_path . '.sportcard', compact('viewPath', 'sports'));
+    }
+
 
     public function printMandateByEventAndStatus()
     {
