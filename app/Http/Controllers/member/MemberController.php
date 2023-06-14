@@ -499,5 +499,25 @@ class MemberController extends Controller
         $data['pastEventJiuJitsuData'] = $pastEventJiuJitsuData;
 
         return view('.reference/profile/pastEvent', $data); 
-    }    
+    }
+
+    public function memberCard($memberId){
+        $member = $this->member->find($memberId);
+        $memberApprovedData = $this->member->getMemberToProfileApprovedData($memberId);
+        $memberAllData = $this->member->getMemberToProfileAllData($memberId);
+        $athleteAcademyInfo = $this->member->getAthleteAcademyInfo($memberId);
+        $athleteSchoolInfo = $this->member->getAthleteSchoolInfo($memberId);
+        $athleteUniversityInfo = $this->member->getAthleteUniversityInfo($memberId);
+        $countries = $this->country->find($member->country_id);
+
+        $data['countries'] = $countries;
+        $data['member'] = $member;
+        $data['memberApprovedData'] = $memberApprovedData;
+        $data['memberAllData'] = $memberAllData;
+        $data['athleteAcademyInfo'] = $athleteAcademyInfo;
+        $data['athleteSchoolInfo'] = $athleteSchoolInfo;
+        $data['athleteUniversityInfo'] = $athleteUniversityInfo;
+        
+        return view($this->view_path.'.membercard', $data);
+    }
 }

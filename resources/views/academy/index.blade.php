@@ -18,7 +18,6 @@
             <div class="d-flex flex-column flex-row-fluid wrapper" id="kt_wrapper">
                 <!--begin::Header-->
                 @include('layouts.header')
-                
                 <div class="d-flex flex-column-fluid">
                     <!--begin::Container-->
                     <div class="container">
@@ -31,7 +30,6 @@
                                 </div>
                             </div>
                             <div class="card-body">
-
                                 <div class="accordion accordion-light accordion-light-borderless accordion-svg-toggle" id="search">
                                     <div class="card">
                                         <div class="card-header">
@@ -216,8 +214,7 @@ function showAddModal( data ) {
     $('#academyModal').modal();
     $('#academyModal').on('shown.bs.modal', function(){
         $('#academyModal .modal-content').html(data);
-        $('.selectpicker').selectpicker();      
-
+        $('.selectpicker').selectpicker();
         $('#create-academy-form select[name=organization_id]').select2({
             width: 'resolve',
             dropdownAutoWidth : true,

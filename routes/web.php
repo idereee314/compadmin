@@ -81,8 +81,13 @@ Route::group([
     Route::get('/user/search/data', 'member\MemberController@searchUser')->name('user.search');
     Route::get('/member/create/status/{member}', 'member\MemberController@createMemberStatus')->name('create.member.status');
     Route::post('/member/update/status/{member}', 'member\MemberController@updateMemberStatus')->name('update.member.status');
-
     Route::get('/member/list/by/event/{member}', 'member\MemberController@memberListByEvent');
+
+    //Academy
+    Route::resource('/academy', 'academy\AcademyController', ['names' => 'academy']);
+    Route::any('/academy/data/list', 'academy\AcademyController@getDatatableList')->name('academy.data.list');
+    Route::post('/academy/isother', 'academy\AcademyController@getIsOther')->name('academy.isother');
+    Route::get('/academy/search/org', 'academy\AcademyController@findOrganizationByName')->name('academy.search.org');
 
      //Event Team
     Route::resource('/event/registration/team', 'event\EventRegistrationController', ['names' => 'event.team.registration']);
@@ -118,7 +123,6 @@ Route::group([
     Route::post('/event/registration/changed/status', 'event\EventRegistrationStatusController@changed')->name('event.registration.changed.status');
     Route::get('/event/registration/print/mandat', 'event\EventRegistrationController@printMandateByEventAndStatus')->name('event.registration.print.mandat');
     
-
     Route::resource('/event/config', 'event\EventConfigController', ['names' => 'event.config']);
     Route::any('/event/config/data/list', 'event\EventConfigController@getDatatableList')->name('event.config.data.list');
     Route::get('/event/search/data', 'event\EventConfigController@searchEvent')->name('event.search');
@@ -154,12 +158,6 @@ Route::group([
     //Entry Fee
     Route::resource('/event/entry/fee', 'reference\EventEntryFeeController', ['names' => 'event.entry.fee']);
 
-    //Academy
-    Route::resource('/academy', 'academy\AcademyController', ['names' => 'academy']);
-    Route::any('/academy/data/list', 'academy\AcademyController@getDatatableList')->name('academy.data.list');
-    Route::post('/academy/isother', 'academy\AcademyController@getIsOther')->name('academy.isother');
-    Route::get('/academy/search/org', 'academy\AcademyController@findOrganizationByName')->name('academy.search.org');
-
     //Country
     Route::resource('/country', 'country\CountryController', ['names' => 'country']);
     Route::any('/country/data/list', 'country\CountryController@getDatatableList')->name('country.data.list');
@@ -182,6 +180,9 @@ Route::get('/profile/{member}/event','member\MemberController@profileEvent')->na
 Route::get('/profile/{member}/results','member\MemberController@profileResult')->name('member.profile.results');
 Route::get('/upcoming','member\MemberController@profileUpcoming')->name('upcoming');
 Route::get('/pastEvent','member\MemberController@profilePastEvent')->name('pastEvent');
+
+//memberCard
+Route::get('/memberCard/{member}','member\MemberController@memberCard')->name('member.card');
 
 //Ranking
 Route::get('/{sport_id}/ranking','event\EventConfigController@ranking')->name('ranking');
