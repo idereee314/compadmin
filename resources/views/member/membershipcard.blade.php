@@ -4,13 +4,12 @@
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-
     <title>UniQ Membership Card</title>
-
     <style>
         body {
             margin: 0;
             padding: 0;
+            background: none;
         }
 
         .main_container {
@@ -51,6 +50,7 @@
         .image_container img {
             border-radius: 100%;
             border: 5px solid #000;
+            background: none;
         }
 
         .eventName {
@@ -178,7 +178,7 @@
             position: absolute;
             width: 250px;
             height: 20px;
-            bottom: 175px;
+            bottom: 160px;
             left: 40px;
             border-radius: 8px;
             font-family: 'Times New Roman', Times;
@@ -194,7 +194,7 @@
             position: absolute;
             width: 250px;
             height: 20px;
-            bottom: 145px;
+            bottom: 120px;
             left: 40px;
             border-radius: 8px;
             font-family: 'Times New Roman', Times;
@@ -265,12 +265,10 @@
             <div class="eventName">
                 UniQ Sport Membership Card
             </div>
+
             <div class="image_container">
                 <img src="{{\Storage::disk('s3')->url($member->profile_url)}}" width="100%" height="100%" />
             </div>
-            <!-- <div class="org">
-                {{ @$reg->academy->is_other ? @$reg->academy_name : @$reg->academy->name }}
-            </div> -->
             <div class="membershipNo">
                 Membership № : 00001
             </div>
@@ -290,24 +288,16 @@
                 Улс : <strong>{{$countries->name }}</strong>
             </div>
             <div class="plan">
-                Төрөл : <strong>Bronze</strong>
+                Гишүүнчлэлийн төрөл : <strong>Энгийн</strong>
             </div>
             <div class="expires">
-                Дуусах хугацаа : <strong> 2024.12.31</strong>
+                Хүчинтэй хугацаа : <strong> 2024.12.31 </strong>
             </div>
             <div class="academy">
-            Академи :
-                @foreach($athleteAcademyInfo as $academyInfo)
-                    @if($academyInfo->name == 'Бусад')   
-                        <strong>{{ $academyInfo->name }} </strong> - {{ $academyInfo->academy_name }}                                                        
-                    @else 
-                        <strong>{{ $academyInfo->name }}</strong>
-                    @endif
-                @endforeach
+            Академи : <strong>{{$academy->name}}</strong>
             </div>
             <div class="qrcode">
-                <img src="data:image/png;base64,{{\DNS2D::getBarcodePNG(strval(@$member->id), 'QRCODE')}}"
-                     width="150px" height="150px">
+                <img src="data:image/png;base64,{{\DNS2D::getBarcodePNG(strval(@$member->id), 'QRCODE')}}" width="150px" height="150px">
             </div>
             <div class="regid">
                 {{@$member->id}}

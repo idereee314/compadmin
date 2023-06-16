@@ -151,8 +151,8 @@ class EventConfigController extends Controller
         $data['configEntriesFees'] = $configEntriesFees->groupBy('entry_id');
         $data['eventUsers'] = $event->eventUsers;
 
-        $data['tabs'] = collect(Config::get("enums.event_config"))->sortBy('order')->toArray();
-        $data['tab_id'] = @$input['tab_id'] ? @$input['tab_id'] : 'tab1-1';
+        $data['tabs'] = collect(Config::get("enums.event_config_index"))->sortBy('order')->toArray();
+        $data['tab_id'] = @$input['tab_id'] ? @$input['tab_id'] : 'tab1-2';
         $data['eventConfig'] = $eventConfig;
         $data['view_path'] = $this->view_path;
 

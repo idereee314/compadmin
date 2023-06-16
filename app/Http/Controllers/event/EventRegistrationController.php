@@ -1066,7 +1066,8 @@ class EventRegistrationController extends Controller
         $eventRegistrationOrgTypeAllStats = $this->eventRegistration->getStatsOrgTypeAllFromEvent($eventId);
         $eventRegistrationCountryStats = $this->eventRegistration->getStatsCountryFromEvent($eventId);
         $eventRegistrationCountryAllStats = $this->eventRegistration->getStatsCountryAllFromEvent($eventId);
-        
+        $sports = $this->sport->all();
+
         $data['event'] = $event;
         $data['progressPercent'] = round(@$eventRegStatusCount[@Config::get('smart.event_registration_status')['approved']] ? @$eventRegStatusCount[@Config::get('smart.event_registration_status')['approved']] / array_sum(@$eventRegStatusCount) * 100 : 0);
         $data['eventRegistration'] = $eventRegistration->groupBy(['entry.fullname', 'belt.name', 'age.name', 'weight.weight']);        
@@ -1080,15 +1081,21 @@ class EventRegistrationController extends Controller
         $data['eventEntries'] = $event->entries;
         $data['academies'] = $academies;
         $data['eventFees'] = $eventFees;
-        $data['events'] = $event['data'];  
+        $data['events'] = $event['data'];
+        $data['sports'] = $sports;
         $data['eventRegistrationOrgTypeStats'] = $eventRegistrationOrgTypeStats;
         $data['eventRegistrationOrgTypeAllStats'] = $eventRegistrationOrgTypeAllStats;
         $data['eventRegistrationCountryStats'] = $eventRegistrationCountryStats;
         $data['eventRegistrationCountryAllStats'] = $eventRegistrationCountryAllStats;
-        
+        $data['tabs'] = collect(Config::get("enums.event_stats"))->sortBy('order')->toArray();
+        $data['tab_id'] = @$input['tab_id'] ? @$input['tab_id'] : 'tab1-1';
+
+
+
         $data['view_path'] = $this->view_path;
 
-        return view('.reference/stats/stats', $data);
+        return view($this->view_path.'.stats', $data);
+        // return view('.reference/stats/stats', $data);
     }
 
     public function results($eventId)
@@ -1118,8 +1125,6 @@ class EventRegistrationController extends Controller
 
         return view('.reference/stats/toplist', $data);
     }
-    
-    // jiu jitsu stats END
 
     //Team Member
     public function createTeamMember()

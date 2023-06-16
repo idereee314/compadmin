@@ -98,6 +98,11 @@ return array(
         '0' => array('title' => "Тамирчдын жагсаалт",'code' => 'general','name' => "tab_general", 'icon' => "fa-user-check",'number' => 'tab1-1'),
     ],
 
+	'event_stats' => [
+        '0' => array('title' => "Ерөнхий статистик",'code' => 'overview','name' => "tab_overview", 'icon' => "fa-calendar-alt",'number' => 'tab1-1'),
+        '1' => array('title' => "Гүйлгээнүүд",'code' => 'event_payments','name' => "tab_payments", 'icon' => "fa-list",'number' => 'tab1-2'),
+    ],
+
 	'org_type' => [
 		'academy' => 'Академи',
 		'highschool' => 'Дунд сургууль',

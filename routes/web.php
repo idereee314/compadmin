@@ -183,6 +183,7 @@ Route::get('/pastEvent','member\MemberController@profilePastEvent')->name('pastE
 
 //memberCard
 Route::get('/memberCard/{member}','member\MemberController@memberCard')->name('member.card');
+Route::get('memberCard/{member}/membership-card', [MemberController::class, 'generateMembershipCard'])->name('membership-card');
 
 //Ranking
 Route::get('/{sport_id}/ranking','event\EventConfigController@ranking')->name('ranking');

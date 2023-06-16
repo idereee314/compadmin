@@ -13,6 +13,7 @@ use member\MemberRepository as Member;
 use user\UserRepository as User;
 use event\EventRegistrationRepository as EventRegistration;
 use country\CountryRepository as Country;
+use academy\AcademyRepository as Academy;
 
 //Models
 use member\Member as MemberModel;
@@ -23,18 +24,20 @@ use Config;
 use \HTML;
 use Image;
 use Str;
+use PDF;
 
 class MemberController extends Controller
 {
     public $restful = true;
 
-    public function __construct(Member $member, User $user, EventRegistration $eventRegistration, Country $country)
+    public function __construct(Member $member, User $user, EventRegistration $eventRegistration, Country $country, Academy $academy)
     {
         $this->view_path = 'member';
         $this->member = $member;
         $this->user = $user;
         $this->eventRegistration = $eventRegistration;
         $this->country = $country;
+        $this->academy = $academy;
     }
 
     /**
@@ -501,23 +504,39 @@ class MemberController extends Controller
         return view('.reference/profile/pastEvent', $data); 
     }
 
-    public function memberCard($memberId){
-        $member = $this->member->find($memberId);
-        $memberApprovedData = $this->member->getMemberToProfileApprovedData($memberId);
-        $memberAllData = $this->member->getMemberToProfileAllData($memberId);
-        $athleteAcademyInfo = $this->member->getAthleteAcademyInfo($memberId);
-        $athleteSchoolInfo = $this->member->getAthleteSchoolInfo($memberId);
-        $athleteUniversityInfo = $this->member->getAthleteUniversityInfo($memberId);
+    public function memberCard($memberId)
+    {
+        $member = $this->member->find($memberId);       
         $countries = $this->country->find($member->country_id);
-
+        $academy = $this->academy->find($member->academy_id);
+    
         $data['countries'] = $countries;
         $data['member'] = $member;
-        $data['memberApprovedData'] = $memberApprovedData;
-        $data['memberAllData'] = $memberAllData;
-        $data['athleteAcademyInfo'] = $athleteAcademyInfo;
-        $data['athleteSchoolInfo'] = $athleteSchoolInfo;
-        $data['athleteUniversityInfo'] = $athleteUniversityInfo;
-        
-        return view($this->view_path.'.membercard', $data);
+        $data['academy'] = $academy;
+    
+        return view($this->view_path.'.membershipcard', $data);
+    }
+
+    public function generateMembershipCard($memberId)
+    {
+        $member = $this->member->find($memberId);       
+        $countries = $this->country->find($member->country_id);
+        $academy = $this->academy->find($member->academy_id);
+    
+        $data['countries'] = $countries;
+        $data['member'] = $member;
+        $data['academy'] = $academy;
+    
+        // Pass the data to the view and render it as HTML
+        $html = view($this->view_path . '.membershipcard', $data)->render();
+    
+        // Generate the PDF with specified paper size and orientation
+        $pdf = \PDF::loadHTML($html, ['paper' => 'a4', 'orientation' => 'landscape']);
+
+    
+        // Return the PDF as a response or save it to a file
+        return $pdf->stream('membership_card.pdf');
+        // Or, if you want to save the PDF to a file
+        // return $pdf->save('path/to/save/membership_card.pdf');
     }
 }
