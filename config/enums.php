@@ -127,6 +127,11 @@ return array(
 		'0' => 'waiting',
 	],
 
+	'payment_from_type' => [
+		'app' => 'Аппликэйшн',
+		'qpay' => 'QPAY',
+		'admin' => 'Админ',
+	],
 )
 
 ?>

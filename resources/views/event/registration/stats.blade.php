@@ -579,7 +579,7 @@
                             </div>
                             <div class="tab-pane fade in {{@$tab_id == $tab['number'] ? 'active show' : '' }}" id="tab1-2">
                                 <div class="table-responsive">
-                                    <table class="table table-hover table-bordered table-head-custom">
+                                    <table class="table table-hover table-bordered table-head-custom" id="financeTable" style="width:100%">
                                         <thead>
                                             <tr>
                                                 <th>#</th>
@@ -601,7 +601,7 @@
                                                     <td class="min-w-200px text-center border-right"><strong>{{ $payment->lastname }} {{ $payment->firstname }}</strong></td>
                                                     <td class="text-center border-right"><strong>{{ $payment->academyname }}</strong></td>
                                                     <td class="text-center border-right"><strong>{{ $payment->amount }}</strong></td>
-                                                    <td class="text-center border-right"><strong>{{ $payment->from_type }}</strong></td>
+                                                    <td class="text-center border-right"><strong>{{ Config::get("enums.payment_from_type")[$payment->from_type] }}</strong></td>
                                                     <td class="text-center border-right">
                                                         <span class="label label-{{ $payment->status == 1 ? 'success' : 'warning' }} label-inline font-weight-lighter mr-2">
                                                             {{ Config::get("enums.payment_status")[$payment->status] }}
@@ -656,8 +656,25 @@ $(document).ready(function() {
         $('a[name={{ old('tab_id')? old('tab_id'): $tab_id }}]').trigger('click');
     }
 
+    $('#financeTable').DataTable({
+        columnDefs: [
+            {
+                // The `data` parameter refers to the data for the cell (defined by the
+                // `data` option, which defaults to the column being worked with, in
+                // this case `data: 0`.
+                render: function (data, type, row) {
+                    return data;
+                },
+                targets: 1,
+            },
+            { visible: false, targets: [1] },
+        ],
+        order: [[2, 'asc']],
+    });
+
     // $('a[name=$('input[name=tab_id]').val()? $('input[name=tab_id]').val(): $tab_id]').trigger('click');
 }).ajaxStart($.blockUI).ajaxStop($.unblockUI);
+
 </script>
 @endsection
 @stop
