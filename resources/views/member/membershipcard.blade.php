@@ -224,8 +224,8 @@
         .barcode {
             position: absolute;
             width: 250px;
-            height: 90px;
-            bottom: 200px;
+            height: 100px;
+            bottom: 50px;
             right: 30px;
             border-radius: 8px;
             font-family: 'Times New Roman', Times;
@@ -298,6 +298,10 @@
             </div>
             <div class="qrcode">
                 <img src="data:image/png;base64,{{\DNS2D::getBarcodePNG(strval(@$member->id), 'QRCODE')}}" width="150px" height="150px">
+            </div>
+            <div class="barcode">
+            <img src="data:image/png;base64,{{DNS1D::getBarcodePNG(strval(@$member->id), 'C93')}}" alt="barcode" width="150px" height="50px"/>
+
             </div>
             <div class="regid">
                 {{@$member->id}}

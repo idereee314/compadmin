@@ -1096,8 +1096,8 @@ class EventRegistrationController extends Controller
 
         $data['view_path'] = $this->view_path;
 
-        return view($this->view_path.'.stats', $data);
-        // return view('.reference/stats/stats', $data);
+        // return view($this->view_path.'.stats', $data);
+        return view('.reference/stats/stats', $data);
     }
 
     public function results($eventId)

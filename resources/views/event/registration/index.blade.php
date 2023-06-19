@@ -123,8 +123,8 @@
                             </div>
                             <!--end::Info-->
                         </div>
-                        
-                        @if(Auth::user()->roles->first()->code == 'admin' || Auth::user()->roles->first()->code == 'mjjf' || Auth::user()->roles[1]->code == 'mjjf')
+                        @if(Auth::user()->roles->first() == null)
+                        @elseif(Auth::user()->roles->first()->code == 'admin' || Auth::user()->roles->first()->code == 'mjjf' || Auth::user()->roles[1]->code == 'mjjf')
                             <!--end::Top-->
                             @if(!@$eventFees->isEmpty())
                             <!--begin::Separator-->

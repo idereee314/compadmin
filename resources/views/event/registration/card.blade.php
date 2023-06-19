@@ -123,6 +123,8 @@
                                                                 <span class="navi-text">Оноолт харах</span>
                                                             </a>
                                                         </li>
+                                                        @if(Auth::user()->roles->first() == null)
+                                                        @elseif(Auth::user()->roles->first()->code == 'admin' || Auth::user()->roles->first()->code == 'event')
                                                         <li class="navi-item">
                                                             <a href="{{ route('event.statistics', @$event['id']) }}" class="navi-link">
                                                                 <span class="navi-icon">
@@ -131,6 +133,7 @@
                                                                 <span class="navi-text">Статистик</span>
                                                             </a>
                                                         </li>
+                                                        @endif
                                                         <li class="navi-item">
                                                             <a href="{{ route('event.toplist', @$event['id']) }}" class="navi-link">
                                                                 <span class="navi-icon">
