@@ -373,6 +373,20 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 		return $fees;
 	}
 
+	public function getFinanceByEventId($eventId)
+	{
+	    return DB::select("SELECT DISTINCT ON (uer.id)
+		uer.id,uer.member_id,um.firstname,um.lastname,ua.name as academyname,ueef.entrance_fee,uep.amount,uep.updated_at AS date,
+		uep.from_type,uep.id as paymentid,uep.status ,uep.is_team,uep.created_by
+			FROM uq_comp.uq_event_registration uer
+			JOIN uq_comp.uq_event_payment uep ON uer.id = uep.registration_id
+			JOIN uq_comp.uq_event_entries_fee ueef ON uer.entry_id = ueef.entry_id
+			JOIN uq_comp.uq_member um ON um.id = uer.member_id
+			JOIN uq_comp.uq_academy ua on ua.id = uer.academy_id 
+			WHERE uer.event_id = $eventId
+			ORDER BY uer.id, uep.updated_at ASC");
+	}
+
 	public function getRegistrationByStatus($evntId, $status, $searchData)
 	{ 
 		$registrations = "";

@@ -343,6 +343,8 @@ return [
     //Event-config-weight
     'weight' => 'Жин',
     
-
-
+    //Event finance
+    'payment_from_type' => 'Төлбөрийн төрөл',
+    'payment_date' => 'Төлбөр төлсөн огноо',
+    'payment_id' => 'Төлбөрийн ID',
 ];

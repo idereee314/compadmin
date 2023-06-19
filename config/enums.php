@@ -122,6 +122,11 @@ return array(
 		'4' => 'kr',
 	],
 
+	'payment_status' => [
+		'1' => 'ok',
+		'0' => 'waiting',
+	],
+
 )
 
 ?>

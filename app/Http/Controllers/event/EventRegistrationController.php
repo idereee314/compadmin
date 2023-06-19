@@ -1067,7 +1067,9 @@ class EventRegistrationController extends Controller
         $eventRegistrationCountryStats = $this->eventRegistration->getStatsCountryFromEvent($eventId);
         $eventRegistrationCountryAllStats = $this->eventRegistration->getStatsCountryAllFromEvent($eventId);
         $sports = $this->sport->all();
+        $finance = $this->eventRegistration->getFinanceByEventId(@$eventId);
 
+        $data['finance'] = $finance;
         $data['event'] = $event;
         $data['progressPercent'] = round(@$eventRegStatusCount[@Config::get('smart.event_registration_status')['approved']] ? @$eventRegStatusCount[@Config::get('smart.event_registration_status')['approved']] / array_sum(@$eventRegStatusCount) * 100 : 0);
         $data['eventRegistration'] = $eventRegistration->groupBy(['entry.fullname', 'belt.name', 'age.name', 'weight.weight']);        
