@@ -189,4 +189,4 @@ Route::get('memberCard/{member}/membership-card', [MemberController::class, 'gen
 Route::get('/{sport_id}/ranking','event\EventConfigController@ranking')->name('ranking');
 
 //Division information blade 
-Route::get('/{sport_id}/division','event\EventConfigController@division')->name('division.information');
+Route::get('/{sport_id}/reference','event\EventConfigController@reference')->name('reference.information');

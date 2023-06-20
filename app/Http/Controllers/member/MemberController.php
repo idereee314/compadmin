@@ -504,6 +504,16 @@ class MemberController extends Controller
         return view('.reference/profile/pastEvent', $data); 
     }
 
+    public function membership()
+    {
+        $memberGenderCount = $this->member->getGenderCode()->pluck('total', 'gender_code')->toArray();
+
+        $data['memberGenderCount'] = $memberGenderCount;
+        $data['view_path'] = $this->view_path;
+
+        return view($this->view_path.'.membership', $data);
+    }
+
     public function memberCard($memberId)
     {
         $member = $this->member->find($memberId);       

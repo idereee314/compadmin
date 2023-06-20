@@ -418,14 +418,16 @@ class EventConfigController extends Controller
         return view('.reference/ranking/rank', $data);
     }
 
-    public function division($sport_id){
+    public function reference($sport_id){
          
         $sport = $this->sport->find($sport_id);
 
         $data['sport_id'] = $sport_id;
         $data['sport'] = $sport;
+        $data['tabs'] = collect(Config::get("enums.reference_tabs"))->sortBy('order')->toArray();
+        $data['tab_id'] = @$input['tab_id'] ? @$input['tab_id'] : 'tab1-1';
         $data['view_path'] = $this->view_path;
 
-        return view('.reference/division/division', $data);
+        return view('.reference/reference', $data);
     }
 }

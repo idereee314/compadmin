@@ -40,6 +40,7 @@
 @extends('default')
 @section('css')
     <link rel="stylesheet" href="{{asset('assets/js/plugins/custom/jstree/dist/themes/default/style.min.css')}}">
+    <link rel="stylesheet" href="{{asset('assets/js/plugins/custom/datatables/datatables.bundle.css')}}">
 @endsection
 @include('layouts.mobile_v2')
 @section('content')
@@ -64,7 +65,17 @@
                                 <ul class="breadcrumb breadcrumb-transparent breadcrumb-dot font-weight-bold my-2 p-0">
                                     <li class="breadcrumb-item text-muted">
                                         <a href="" class="text-muted">{{ $sport->name}}</a>
+                                    </li>                                    
+                                    <li class="breadcrumb-item text-muted">
+                                        <a href="{{ route('event.config.index') }}" class="text-muted">Лавлагаа</a>
                                     </li>
+                                </ul>
+                                <!--end::Breadcrumb-->
+                            </div>
+                            <!--end::Details-->
+                        </div>
+                    </div>
+                    <!--end::Subheader-->
 
                     @if($sport_id == '1')
                         @include('reference.division.jiujitsu_division')
@@ -79,11 +90,23 @@
             <!--end::Entry-->
         </div>
         <!--end::Content-->
-        <!--begin::Footer-->
-        @include('layouts.footer')
-        <!--end::Footer-->
-    </div>
-    <!--end::Wrapper-->
+            <!--begin::Footer-->
+    @include('layouts.footer')
+    <!--end::Footer-->
+</div>
+@include ($view_path.'.modals')
+<!--end::Wrapper-->
 <!--end::Main-->
+@section('javascript')
+<script src="{{asset('assets/js/plugins/custom/datatables/datatables.bundle.js')}}"></script>
+<script type="text/javascript">
 
+$(document).ready(function() {
+    if ('{{ old('tab_id') }}' != '' || '{{ $tab_id }}' != '') {
+        $('a[name={{ old('tab_id')? old('tab_id'): $tab_id }}]').trigger('click');
+    }
+}).ajaxStart($.blockUI).ajaxStop($.unblockUI);
+
+</script>
+@endsection
 @stop

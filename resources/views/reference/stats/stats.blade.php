@@ -635,33 +635,13 @@
 <script type="text/javascript">
 
 $(document).ready(function() {
-
-    $("#config_tabs li a").on('click', function() {
-        var tab_id = $(this).data("tabid");
-        var name = $(this).data("tabname");
-        var event_config_id = $("#event_config_id").val();
-        var code = $(this).data("tabcode");
-
-        $.get('{!! route('event.config.tabs') !!}', {event_config_id: event_config_id, tab_id: tab_id, name: name, code: code})
-            .done(function(data) {
-                $(".tab-content").find("#" + tab_id).empty().html(data);
-            }).fail(function(xhr) {
-                if (xhr.status === 500) {
-                    $(".tab-content").find("#" + tab_id).html(xhr.responseText);
-                }
-            });
-    });
-
     if ('{{ old('tab_id') }}' != '' || '{{ $tab_id }}' != '') {
         $('a[name={{ old('tab_id')? old('tab_id'): $tab_id }}]').trigger('click');
     }
-
     $('#financeTable').DataTable({
+        responsive: true,
         columnDefs: [
             {
-                // The `data` parameter refers to the data for the cell (defined by the
-                // `data` option, which defaults to the column being worked with, in
-                // this case `data: 0`.
                 render: function (data, type, row) {
                     return data;
                 },
@@ -672,7 +652,6 @@ $(document).ready(function() {
         order: [[2, 'asc']],
     });
 
-    // $('a[name=$('input[name=tab_id]').val()? $('input[name=tab_id]').val(): $tab_id]').trigger('click');
 }).ajaxStart($.blockUI).ajaxStop($.unblockUI);
 
 </script>
