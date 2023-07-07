@@ -133,6 +133,9 @@ Route::group([
     Route::resource('/event/user', 'event\EventUserController', ['names' => 'event.user']);
 
     Route::get('/event/registration/bracket/generation', 'event\EventRegistrationController@bracketGeneration')->name('event.registration.bracket.generation');
+    
+    // test schedule
+    Route::get('/event/{eventId}/schedule', 'event\EventRegistrationController@schedule')->name('event.schedule');
 
     //Entry
     Route::resource('/event/entry', 'reference\EventEntryController', ['names' => 'event.entry']);

@@ -215,8 +215,7 @@
                                                 <div class="table-responsive">
                                                     <table class="table table-hover table-bordered table-head-custom">
                                                         <thead>
-                                                            <tr>
-                                                                <th>#</th>
+                                                            <tr>                                                                
                                                                 <th class="text-center">{{trans('display.general_status')}}</th>
                                                                 <th class="text-center">{{trans('display.general_athlete_count')}}</th>
                                                             </tr>
@@ -224,7 +223,6 @@
                                                         <tbody>
                                                             @foreach($eventRegistrationStatusStats as $stats)
                                                                 <tr>
-                                                                    <td class="text-center border-right">{{ ++$loop->index }}</td>                                                    
                                                                     <td class="min-w-200px border-right"><strong>{{ Config::get("enums.event_registration_status_for_stats")[@$stats->status] }}</strong></td>
                                                                     <td class="text-center border-right"><strong>{{ $stats->status_count }}</strong></td>
                                                                 </tr>
