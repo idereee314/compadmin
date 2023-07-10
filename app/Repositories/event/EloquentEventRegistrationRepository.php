@@ -285,6 +285,10 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 						{
 							$actionHtml .= 	'<a class="btn btn-icon btn-light btn-hover-primary btn-sm mr-3 edit" href="javascript:;" data-registrationid="'.$qry->id.'" title="'.trans('display.general_edit').'"><i class="la la-edit"></i></a>';
 						}
+						elseif($qry->is_weight_checked == TRUE)
+						{
+							$actionHtml .= 	'<a class="btn btn-icon btn-light btn-hover-primary btn-sm mr-3 edit" href="javascript:;" data-registrationid="'.$qry->id.'" title="'.trans('display.general_checked_weight').'" style="font-weight: bold;">'.$qry->current_weight.'</a>';
+						}
 						else
 						{
 							$actionHtml .= 	'<a class="btn btn-icon btn-light btn-hover-primary btn-sm mr-3 edit" href="javascript:;" data-registrationid="'.$qry->id.'" title="'.trans('display.general_check_weight').'"><i class="fas fa-tachometer-alt"></i></a>';

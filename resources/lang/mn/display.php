@@ -177,6 +177,7 @@ return [
     'general_sport_type' => 'Спортын төрөл',
     'general_event_stats' => 'Тэмцээний статистик',
     'general_check_weight' => 'Жин шалгах',
+    'general_checked_weight' => 'Шалгагдсан жин',
 
     // Search
     "general_search_list" => "Хайлт",
