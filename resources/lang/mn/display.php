@@ -348,4 +348,6 @@ return [
     'payment_from_type' => 'Төлбөрийн төрөл',
     'payment_date' => 'Төлбөр төлсөн огноо',
     'payment_id' => 'Төлбөрийн ID',
+    
+    'general_categories_name' => 'Ангиллын нэр',
 ];

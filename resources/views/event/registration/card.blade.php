@@ -133,15 +133,7 @@
                                                                 <span class="navi-text">Статистик</span>
                                                             </a>
                                                         </li>
-                                                        @endif
-                                                        <li class="navi-item">
-                                                            <a href="{{ route('event.toplist', @$event['id']) }}" class="navi-link">
-                                                                <span class="navi-icon">
-                                                                    <i class="flaticon-medal"></i>
-                                                                </span>
-                                                                <span class="navi-text">Багийн үр дүн</span>
-                                                            </a>
-                                                        </li>
+                                                        @endif                                                        
                                                         <li class="navi-item">
                                                             <a href="{{ route('event.results', @$event['id']) }}" class="navi-link">
                                                                 <span class="navi-icon">

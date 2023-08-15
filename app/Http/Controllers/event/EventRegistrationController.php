@@ -1068,7 +1068,15 @@ class EventRegistrationController extends Controller
         $eventRegistrationCountryAllStats = $this->eventRegistration->getStatsCountryAllFromEvent($eventId);
         $sports = $this->sport->all();
         $finance = $this->eventRegistration->getFinanceByEventId(@$eventId);
+        $statsWeightForOrg = $this->eventRegistration->getStatsForOrg(@$eventId);
+        $countedWeightForOrg = $this->eventRegistration->getCountedWeightForOrg(@$eventId);
+        $registredCountedWeightForOrgApproved = $this->eventRegistration->getRegistredCountedWeightForOrgApproved(@$eventId);
+        $registredCountedWeightForOrgAll = $this->eventRegistration->getRegistredCountedWeightForOrgAll(@$eventId);
 
+        $data['registredCountedWeightForOrgApproved'] = $registredCountedWeightForOrgApproved;
+        $data['registredCountedWeightForOrgAll'] = $registredCountedWeightForOrgAll;
+        $data['countedWeightForOrg'] = $countedWeightForOrg;
+        $data['statsWeightForOrg'] = $statsWeightForOrg;
         $data['finance'] = $finance;
         $data['event'] = $event;
         $data['progressPercent'] = round(@$eventRegStatusCount[@Config::get('smart.event_registration_status')['approved']] ? @$eventRegStatusCount[@Config::get('smart.event_registration_status')['approved']] / array_sum(@$eventRegStatusCount) * 100 : 0);
@@ -1103,27 +1111,21 @@ class EventRegistrationController extends Controller
         $event = $this->event->find($eventId);
         $eventResult = $this->eventRegistration->getResultFromEvent($eventId);
         $eventAllMedal = $this->eventRegistration->getAllMedalFromEvent($eventId);
+        $eventToplist = $this->eventRegistration->getToplistFromEvent($eventId);
+        $eventAllCategories = $this->eventRegistration->getCategoriesFromEvent($eventId);
+        $statsWeightForOrg = $this->eventRegistration->getStatsForOrg(@$eventId);
 
+        $data['statsWeightForOrg'] = $statsWeightForOrg;
         $data['eventAllMedal'] = $eventAllMedal;
         $data['eventResult'] = $eventResult;
         $data['event'] = $event;
-
+        $data['eventToplist'] = $eventToplist;
+        $data['eventAllCategories'] = $eventAllCategories;
+        $data['tabs'] = collect(Config::get("enums.event_results"))->sortBy('order')->toArray();
+        $data['tab_id'] = @$input['tab_id'] ? @$input['tab_id'] : 'tab1-1';
         $data['view_path'] = $this->view_path;
         
         return view('.reference/stats/result', $data);
-    }
-
-    public function toplist($eventId)
-    {
-        $event = $this->event->find($eventId);
-        $eventToplist = $this->eventRegistration->getToplistFromEvent($eventId);
-        
-        $data['event'] = $event;
-        $data['eventToplist'] = $eventToplist;
-
-        $data['view_path'] = $this->view_path;
-
-        return view('.reference/stats/toplist', $data);
     }
 
     //Team Member

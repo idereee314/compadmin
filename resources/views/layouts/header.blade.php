@@ -181,3 +181,35 @@
     </div>
     <!--end::Container-->
 </div>
+<!-- Add this script tag at the end of your HTML body -->
+<script>
+$(document).ready(function() {
+    $("#kt_quick_search_toggle").click(function() {
+        // Toggle the quick search dropdown
+        $("#kt_quick_search_dropdown").toggleClass("show");
+    });
+
+    $(".quick-search-form").submit(function(e) {
+        e.preventDefault();
+        var query = $(this).find("input[type='text']").val();
+        performSearch(query);
+    });
+
+    function performSearch(query) {
+        // Make an AJAX request to your search endpoint
+        $.ajax({
+            url: '/search', // Replace with your actual search URL
+            type: 'GET',
+            data: { query: query },
+            success: function(response) {
+                // Handle the response and update the UI
+                // For example, display search results in a specific section
+                $("#search_results").html(response);
+            },
+            error: function(xhr, textStatus, error) {
+                console.error(error);
+            }
+        });
+    }
+});
+</script>

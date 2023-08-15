@@ -523,13 +523,13 @@ $(document).ready(function() {
                     $.get('{!! route('event.registration.create') !!}?event_id='+$('#event-registration-search-form input[id="search_event"]').val(), showAddModal);
                 }
             },
-            {
-                text: '<i class="far fa-address-card"></i> Мандат хэвлэх',
-                className: "btn btn-light-success font-weight-bolder mb-2 {{ SecurityHelper::checkPermission(@Config::get('permission.event_registration'), Config::get('permission.editable')) ? '' : 'd-none' }}",
-                action: function ( e, dt, node, config ) {
-                    window.open('{!! route('event.registration.print.mandat') !!}?'+$('#event-registration-search-form').serialize(), '_blank');
-                }
-            },
+            // {
+            //     text: '<i class="far fa-address-card"></i> Мандат хэвлэх',
+            //     className: "btn btn-light-success font-weight-bolder mb-2 {{ SecurityHelper::checkPermission(@Config::get('permission.event_registration'), Config::get('permission.editable')) ? '' : 'd-none' }}",
+            //     action: function ( e, dt, node, config ) {
+            //         window.open('{!! route('event.registration.print.mandat') !!}?'+$('#event-registration-search-form').serialize(), '_blank');
+            //     }
+            // },
             {
                 extend: 'excelHtml5',
                 text: '<i class="fa fa-print"></i> Оролцогчдын жагсаалт {!! trans('display.general_excel') !!}',

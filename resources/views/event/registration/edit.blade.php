@@ -101,6 +101,15 @@
                 </div>
             </div>
         </div>
+
+        <div class="form-group row">
+            <label class="col-md-3 col-form-label text-right">Тайлбар</label>
+            <div class="col-md-9 col-lg-7">
+                
+                <input type="text" class="form-control" name="public_desc" id="public_desc" placeholder="Тайлбар" value="{{ @$eventRegistration->public_desc }}"/>                    
+            
+            </div>
+        </div>
  
         <div class="form-group row">
             <label class="col-3 col-form-label"></label>

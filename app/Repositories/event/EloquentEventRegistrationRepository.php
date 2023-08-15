@@ -66,6 +66,7 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 		$eventRegistraion->current_weight = @$input['current_weight'];
 		$eventRegistraion->weight_desc = @$input['weight_desc'];
 		$eventRegistraion->is_disqualify = @$input['is_disqualify'] ? true: false ;
+		$eventRegistraion->public_desc = @$input['public_desc'];
 
 		$eventRegistraion->save();
 		return $eventRegistraion;
@@ -582,6 +583,45 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 										group by academy_too.type");
 	}
 
+	public function getStatsForOrg($eventId)
+	{
+		return DB::select("select uee.id as entry_id, uee.name as entry_name , uee.event_id , uecw.weight , uecb.name as belt_name, uee.gender_code from uq_comp.uq_event_entries uee 
+		join uq_comp.uq_entry_config_weight uecw on uecw.entry_id = uee.id 
+		join uq_comp.uq_entry_config_belt uecb on uecb.entry_id = uee.id
+		where uee.event_id = $eventId
+		order by uee.id asc ,uecb.name asc, uecw.weight asc");
+	}
+
+	public function getCountedWeightForOrg($eventId)
+	{
+		return DB::select("select COUNT(uee.id) AS counted_weight FROM uq_comp.uq_event_entries uee
+		JOIN uq_comp.uq_entry_config_weight uecw ON uecw.entry_id = uee.id
+		JOIN uq_comp.uq_entry_config_belt uecb ON uecb.entry_id = uee.id
+		WHERE uee.event_id = $eventId");
+	}
+
+	public function getRegistredCountedWeightForOrgApproved($eventId)
+	{
+		return DB::select("select uee.id as entry_id ,uee.name as category_name, uecw.weight ,uecb.name as belt_name, count(uer.member_id) as athlete_count,
+		uee.gender_code from uq_comp.uq_event_registration uer
+		join uq_comp.uq_event_entries uee ON uee.id = uer.entry_id
+		join uq_comp.uq_entry_config_weight uecw on uecw.id = uer.entry_weight_id 
+		join uq_comp.uq_entry_config_belt uecb on uecb.id = uer.entry_belt_id 
+		where uer.event_id = $eventId and uer.status = 'approved'
+		GROUP by uee.id ,uee.name , uecw.weight ,uecb.name,uee.gender_code ");
+	}
+
+	public function getRegistredCountedWeightForOrgAll($eventId)
+	{
+		return DB::select("select uee.id as entry_id ,uee.name as category_name, uecw.weight ,uecb.name as belt_name, count(uer.member_id) as athlete_count, 
+		uee.gender_code  from uq_comp.uq_event_registration uer
+		join uq_comp.uq_event_entries uee ON uee.id = uer.entry_id
+		join uq_comp.uq_entry_config_weight uecw on uecw.id = uer.entry_weight_id 
+		join uq_comp.uq_entry_config_belt uecb on uecb.id = uer.entry_belt_id 
+		where uer.event_id = $eventId
+		GROUP by uee.id ,uee.name , uecw.weight ,uecb.name ,uee.gender_code");
+	}
+
 	// stats queries .end
 	//RESULTS queries .start
 
@@ -614,6 +654,15 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 			WHERE uer.event_id = $eventId and uee.gender_code = um.gender_code
 			GROUP BY uee.name, ua.name, fullname, uea.place_number, uecw.weight, uee.id, ua.name, bus, uer.academy_name, ueca.id, um.profile_url, memberid , uee.gender_code,um.gender_code
 			ORDER BY uee.id desc, ueca.id desc, bus , uecw.weight desc, uea.place_number asc");
+	}
+
+	public function getCategoriesFromEvent($eventId)
+	{
+		return DB::select("select uee.name as category_name, uecw.weight, uecb.name as belt, uee.gender_code, uee.event_id from uq_comp.uq_event_entries uee 
+		join uq_comp.uq_entry_config_weight uecw on uecw.entry_id = uee.id
+		join uq_comp.uq_entry_config_belt uecb on uecb.entry_id = uee.id
+		where uee.event_id = $eventId
+		order by uee.gender_code asc, uee.name, uecb.name, uecw.weight asc");
 	}
 
 	public function getAllMedalFromEvent($eventId)
