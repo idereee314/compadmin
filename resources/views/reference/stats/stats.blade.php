@@ -172,7 +172,7 @@
                             </div>                        
                             <!--end::Bottom-->
                             @endif
-                        <div class="separator separator-solid"></div>
+                        <!-- <div class="separator separator-solid"></div> -->
                     </div>
                     <input type="hidden" name="tab_id" id="tab_id" value="{{ isset($tab_id)? $tab_id: 'tab1-1'}}"/>
                     <input type="hidden" name="event_id" id="event_id" value="{{ @$eventConfig->event->id }}"/>
@@ -242,7 +242,7 @@
                                         <div class="card card-custom gutter-b">
                                             <div class="card-header">
                                                 <div class="card-title">
-                                                    <h3 class="card-label"><strong> {{ trans('display.comp_country_name') }} (Баталгаажсан) </strong></h3>
+                                                    <h3 class="card-label"><strong> {{ trans('display.comp_country_name') }} [Баталгаажсан] </strong></h3>
                                                 </div>
                                             </div>
                                             <div class="card-body">
@@ -278,7 +278,7 @@
                                         <div class="card card-custom gutter-b">
                                             <div class="card-header">
                                                 <div class="card-title">
-                                                    <h3 class="card-label"><strong> {{ trans('display.comp_country_name') }} (Бүгд)</strong></h3>
+                                                    <h3 class="card-label"><strong> {{ trans('display.comp_country_name') }} [Бүгд]</strong></h3>
                                                 </div>
                                             </div>
                                             <div class="card-body">
@@ -314,7 +314,7 @@
                                         <div class="card card-custom gutter-b">
                                             <div class="card-header">
                                                 <div class="card-title">
-                                                    <h3 class="card-label"><strong> Байгууллага (Баталгаажсан) </strong></h3>
+                                                    <h3 class="card-label"><strong> Байгууллага [Баталгаажсан] </strong></h3>
                                                 </div>
                                             </div>
                                             <div class="card-body">
@@ -350,7 +350,7 @@
                                         <div class="card card-custom gutter-b">
                                             <div class="card-header">
                                                 <div class="card-title">
-                                                    <h3 class="card-label"><strong> Байгууллага (Бүгд)</strong></h3>
+                                                    <h3 class="card-label"><strong> Байгууллага [Бүгд]</strong></h3>
                                                 </div>
                                             </div>
                                             <div class="card-body">
@@ -385,7 +385,7 @@
                                         <div class="card card-custom gutter-b">
                                             <div class="card-header">
                                                 <div class="card-title">
-                                                    <h3 class="card-label"><strong> Хүйс (Баталгаажсан) </strong></h3>
+                                                    <h3 class="card-label"><strong> Хүйс [Баталгаажсан] </strong></h3>
                                                 </div>
                                             </div>
                                             <div class="card-body">
@@ -420,7 +420,7 @@
                                         <div class="card card-custom gutter-b">
                                             <div class="card-header">
                                                 <div class="card-title">
-                                                    <h3 class="card-label"><strong> Хүйс (Бүгд)</strong></h3>
+                                                    <h3 class="card-label"><strong> Хүйс [Бүгд]</strong></h3>
                                                 </div>
                                             </div>
                                             <div class="card-body">
@@ -458,7 +458,7 @@
                                         <div class="card card-custom gutter-b">                            
                                             <div class="card-header">
                                                 <div class="card-title">
-                                                    <h3 class="card-label"><strong> Тэмцээний ангилал (Баталгаажсан)</strong></h3>
+                                                    <h3 class="card-label"><strong> Тэмцээний ангилал [Баталгаажсан]</strong></h3>
                                                 </div>
                                             </div>
                                             <div class="card-body">
@@ -497,7 +497,7 @@
                                         <div class="card card-custom gutter-b">
                                             <div class="card-header">
                                                 <div class="card-title">
-                                                    <h3 class="card-label"><strong> Тэмцээний ангилал (Бүгд) </strong></h3>
+                                                    <h3 class="card-label"><strong> Тэмцээний ангилал [Бүгд] </strong></h3>
                                                 </div>
                                             </div>
                                             <div class="card-body">
@@ -539,7 +539,7 @@
                                         <div class="card card-custom gutter-b">
                                             <div class="card-header">
                                                 <div class="card-title">
-                                                    <h3 class="card-label"><strong> Тэмцээнд бүртгүүлсэн академи (Баталгаажсан)</strong></h3>
+                                                    <h3 class="card-label"><strong> Тэмцээнд бүртгүүлсэн академи [Баталгаажсан]</strong></h3>
                                                 </div>
                                             </div>
                                             <div class="card-body">
@@ -574,45 +574,9 @@
                                         <!--end::Card-->
                                     </div>
                                 </div>
-                            </div>
-                            <div class="tab-pane fade in {{@$tab_id == $tab['number'] ? 'active show' : '' }}" id="tab1-2">
-                                <div class="table-responsive">
-                                    <table class="table table-hover table-bordered table-head-custom" id="financeTable" style="width:100%">
-                                        <thead>
-                                            <tr>
-                                                <th>#</th>
-                                                <th class="text-center">{{trans('display.payment_id')}}</th>
-                                                <th class="text-center">{{trans('display.payment_date')}}</th>
-                                                <th class="text-center">{{trans('display.profile_title')}}</th>
-                                                <th class="text-center">{{trans('display.comp_academy_name')}}</th>
-                                                <th class="text-center">{{trans('display.general_amount')}}</th>
-                                                <th class="text-center">{{trans('display.payment_from_type')}}</th>
-                                                <th class="text-center">{{trans('display.general_status')}}</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach($finance as $payment)
-                                                <tr>
-                                                    <td class="text-center border-right">{{ ++$loop->index }}</td>
-                                                    <td class="text-center border-right"><strong>{{ $payment->paymentid }}</strong></td>
-                                                    <td class="text-center border-right"><strong>{{ $payment->date }}</strong></td>
-                                                    <td class="min-w-200px text-center border-right"><strong>{{ $payment->lastname }} {{ $payment->firstname }}</strong></td>
-                                                    <td class="text-center border-right"><strong>{{ $payment->academyname }}</strong></td>
-                                                    <td class="text-center border-right"><strong>{{ $payment->amount }}</strong></td>
-                                                    <td class="text-center border-right"><strong>{{ Config::get("enums.payment_from_type")[$payment->from_type] }}</strong></td>
-                                                    <td class="text-center border-right">
-                                                        <span class="label label-{{ $payment->status == 1 ? 'success' : 'warning' }} label-inline font-weight-lighter mr-2">
-                                                            {{ Config::get("enums.payment_status")[$payment->status] }}
-                                                        </span>
-                                                    </td>
-                                                </tr>
-                                            @endforeach 
-                                        </tbody>  
-                                    </table>                                                                              
-                                </div>
-                            </div>
+                            </div>                            
 
-                            <div class="tab-pane fade in {{@$tab_id == $tab['number'] ? 'active show' : '' }}" id="tab1-3">
+                            <div class="tab-pane fade in {{@$tab_id == $tab['number'] ? 'active show' : '' }}" id="tab1-2">
                                 <div class="row">
                                     <div class="col-xl-12">
                                         <!--begin::Card-->
@@ -625,12 +589,12 @@
                                                         $totalCount += $counted->counted_weight;
                                                     }
                                                     ?>
-                                                    <h3 class="card-label"><strong> Нийт жингийн жагсаалт болон [Нийт <?php echo $totalCount; ?> жин байна.]</strong></h3>
+                                                    <h3 class="card-label"><strong> Нийт жингийн жагсаалт болон [Тэмцээнд нийт <?php echo $totalCount; ?> жин байна.]</strong></h3>
                                                 </div>
                                             </div>
                                             <div class="card-body">
                                                 <div class="table-responsive">
-                                                    <table class="table table-hover table-bordered table-head-custom" id="financeTable" style="width:100%">
+                                                    <table class="table table-hover table-bordered table-head-custom" style="width:100%">
                                                         <thead>
                                                             <tr>
                                                                 <th>#</th>
@@ -664,11 +628,17 @@
                                         <div class="card card-custom gutter-b">
                                             <div class="card-header">
                                                 <div class="card-title">
-                                                    <h3 class="card-label"><strong> Тамирчид бүртгүүлсэн ангилал (Баталгаажсан)</strong></h3>
+                                                    <?php
+                                                    $totalCount = 0;
+                                                    foreach ($registredCountedWeightForOrgApproved as $counted) {
+                                                        $totalCount += $counted->total_count;
+                                                    }
+                                                    ?>
+                                                    <h3 class="card-label"><strong> Тамирчид бүртгүүлсэн ангилал [Баталгаажсан] болон [Нийт <?php echo $totalCount; ?> жин байна.]</strong></h3>
                                                 </div>
                                             </div>
                                             <div class="card-body">
-                                            @if(count($registredCountedWeightForOrgApproved) > 0)
+                                            @if(count($registredWeightForOrgApproved) > 0)
                                                 <div class="table-responsive">
                                                     <table class="table table-hover table-bordered table-head-custom">
                                                         <thead>
@@ -682,7 +652,7 @@
                                                             </tr>
                                                         </thead>
                                                         <tbody>
-                                                            @foreach($registredCountedWeightForOrgApproved as $stats)
+                                                            @foreach($registredWeightForOrgApproved as $stats)
                                                                 <tr>
                                                                     <td class="text-center border-right">{{ ++$loop->index }}</td>
                                                                     <td class="min-w-200px text-center border-right"><strong>{{ $stats->category_name }}</strong></td>
@@ -707,11 +677,17 @@
                                         <div class="card card-custom gutter-b">
                                             <div class="card-header">
                                                 <div class="card-title">
-                                                    <h3 class="card-label"><strong> Тамирчид бүртгүүлсэн ангилал (Бүгд) </strong></h3>
+                                                    <?php
+                                                    $totalCount = 0;
+                                                    foreach ($registredCountedWeightForOrgAll as $counted) {
+                                                        $totalCount += $counted->total_count;
+                                                    }
+                                                    ?>
+                                                    <h3 class="card-label"><strong> Тамирчид бүртгүүлсэн ангилал [Бүгд] болон [Нийт <?php echo $totalCount; ?> жин байна.] </strong></h3>
                                                 </div>
                                             </div>
                                             <div class="card-body">                                            
-                                            @if(count($registredCountedWeightForOrgAll) > 0)
+                                            @if(count($registredWeightForOrgAll) > 0)
                                                 <div class="table-responsive">
                                                     <table class="table table-hover table-bordered table-head-custom">
                                                         <thead>
@@ -726,7 +702,7 @@
                                                             </tr>
                                                         </thead>
                                                         <tbody>
-                                                            @foreach($registredCountedWeightForOrgAll as $stats)
+                                                            @foreach($registredWeightForOrgAll as $stats)
                                                                 <tr>
                                                                     <td class="text-center border-right">{{ ++$loop->index }}</td>
                                                                     <td class="min-w-200px text-center border-right"><strong>{{ $stats->category_name }}</strong></td>
@@ -748,6 +724,43 @@
                                         </div>
                                         <!--end::Card-->
                                     </div>
+                                </div>
+                            </div>
+
+                            <div class="tab-pane fade in {{@$tab_id == $tab['number'] ? 'active show' : '' }}" id="tab1-3">
+                                <div class="table-responsive">
+                                    <table class="table table-hover table-bordered table-head-custom" id="financeTable" style="width:100%">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th class="text-center">{{trans('display.payment_id')}}</th>
+                                                <th class="text-center">{{trans('display.payment_date')}}</th>
+                                                <th class="text-center">{{trans('display.profile_title')}}</th>
+                                                <th class="text-center">{{trans('display.comp_academy_name')}}</th>
+                                                <th class="text-center">{{trans('display.general_amount')}}</th>
+                                                <th class="text-center">{{trans('display.payment_from_type')}}</th>
+                                                <th class="text-center">{{trans('display.general_status')}}</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach($finance as $payment)
+                                                <tr>
+                                                    <td class="text-center border-right">{{ ++$loop->index }}</td>
+                                                    <td class="text-center border-right"><strong>{{ $payment->paymentid }}</strong></td>
+                                                    <td class="text-center border-right"><strong>{{ $payment->date }}</strong></td>
+                                                    <td class="min-w-200px text-center border-right"><strong>{{ $payment->lastname }} {{ $payment->firstname }}</strong></td>
+                                                    <td class="text-center border-right"><strong>{{ $payment->academyname }}</strong></td>
+                                                    <td class="text-center border-right"><strong>{{ $payment->amount }}</strong></td>
+                                                    <td class="text-center border-right"><strong>{{ Config::get("enums.payment_from_type")[$payment->from_type] }}</strong></td>
+                                                    <td class="text-center border-right">
+                                                        <span class="label label-{{ $payment->status == 1 ? 'success' : 'warning' }} label-inline font-weight-lighter mr-2">
+                                                            {{ Config::get("enums.payment_status")[$payment->status] }}
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                            @endforeach 
+                                        </tbody>  
+                                    </table>                                                                              
                                 </div>
                             </div>
                         </div>

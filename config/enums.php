@@ -100,8 +100,8 @@ return array(
 
 	'event_stats' => [
         '0' => array('title' => "Ерөнхий статистик",'code' => 'overview','name' => "tab_overview", 'icon' => "fa-calendar-alt",'number' => 'tab1-1'),
-        '1' => array('title' => "Гүйлгээнүүд",'code' => 'event_payments','name' => "tab_payments", 'icon' => "fa-list",'number' => 'tab1-2'),
-		'2' => array('title' => "Жингийн мэдээллүүд",'code' => 'event_weight','name' => "tab_weights", 'icon' => "fa-list",'number' => 'tab1-3'),
+        '1' => array('title' => "Жингийн мэдээллүүд",'code' => 'event_weight','name' => "tab_weights", 'icon' => "fa-list",'number' => 'tab1-2'),
+		'2' => array('title' => "Гүйлгээнүүд",'code' => 'event_payments','name' => "tab_payments", 'icon' => "fa-list",'number' => 'tab1-3'),
     ],
 
 	'event_results' => [

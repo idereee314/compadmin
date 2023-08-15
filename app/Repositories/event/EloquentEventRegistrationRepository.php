@@ -600,7 +600,7 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 		WHERE uee.event_id = $eventId");
 	}
 
-	public function getRegistredCountedWeightForOrgApproved($eventId)
+	public function getRegistredWeightForOrgApproved($eventId)
 	{
 		return DB::select("select uee.id as entry_id ,uee.name as category_name, uecw.weight ,uecb.name as belt_name, count(uer.member_id) as athlete_count,
 		uee.gender_code from uq_comp.uq_event_registration uer
@@ -611,7 +611,21 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 		GROUP by uee.id ,uee.name , uecw.weight ,uecb.name,uee.gender_code ");
 	}
 
-	public function getRegistredCountedWeightForOrgAll($eventId)
+	public function getRegistredCountedWeightForOrgApproved($eventId)
+	{
+		return DB::select("SELECT COUNT(*) AS total_count
+		FROM (SELECT uee.id AS entry_id,uee.name AS category_name,uecw.weight,uecb.name AS belt_name,
+			COUNT(uer.member_id) AS athlete_count,uee.gender_code
+			FROM uq_comp.uq_event_registration uer
+			JOIN uq_comp.uq_event_entries uee ON uee.id = uer.entry_id
+			JOIN uq_comp.uq_entry_config_weight uecw ON uecw.id = uer.entry_weight_id
+			JOIN uq_comp.uq_entry_config_belt uecb ON uecb.id = uer.entry_belt_id
+			WHERE uer.event_id = $eventId and uer.status = 'approved'
+			GROUP BY uee.id, uee.name, uecw.weight, uecb.name, uee.gender_code) AS subquery;");
+	}
+
+
+	public function getRegistredWeightForOrgAll($eventId)
 	{
 		return DB::select("select uee.id as entry_id ,uee.name as category_name, uecw.weight ,uecb.name as belt_name, count(uer.member_id) as athlete_count, 
 		uee.gender_code  from uq_comp.uq_event_registration uer
@@ -620,6 +634,18 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 		join uq_comp.uq_entry_config_belt uecb on uecb.id = uer.entry_belt_id 
 		where uer.event_id = $eventId
 		GROUP by uee.id ,uee.name , uecw.weight ,uecb.name ,uee.gender_code");
+	}
+
+	public function getRegistredCountedWeightForOrgAll($eventId)
+	{
+		return DB::select("SELECT COUNT(*) AS total_count 
+		from (select uee.id as entry_id ,uee.name as category_name, uecw.weight ,uecb.name as belt_name, count(uer.member_id) as athlete_count, 
+		uee.gender_code  from uq_comp.uq_event_registration uer
+		join uq_comp.uq_event_entries uee ON uee.id = uer.entry_id
+		join uq_comp.uq_entry_config_weight uecw on uecw.id = uer.entry_weight_id 
+		join uq_comp.uq_entry_config_belt uecb on uecb.id = uer.entry_belt_id 
+		where uer.event_id = $eventId
+		GROUP by uee.id ,uee.name , uecw.weight ,uecb.name ,uee.gender_code) AS subquery;");
 	}
 
 	// stats queries .end

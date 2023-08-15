@@ -1070,11 +1070,15 @@ class EventRegistrationController extends Controller
         $finance = $this->eventRegistration->getFinanceByEventId(@$eventId);
         $statsWeightForOrg = $this->eventRegistration->getStatsForOrg(@$eventId);
         $countedWeightForOrg = $this->eventRegistration->getCountedWeightForOrg(@$eventId);
+        $registredWeightForOrgApproved = $this->eventRegistration->getRegistredWeightForOrgApproved(@$eventId);
+        $registredWeightForOrgAll = $this->eventRegistration->getRegistredWeightForOrgAll(@$eventId);
         $registredCountedWeightForOrgApproved = $this->eventRegistration->getRegistredCountedWeightForOrgApproved(@$eventId);
         $registredCountedWeightForOrgAll = $this->eventRegistration->getRegistredCountedWeightForOrgAll(@$eventId);
 
         $data['registredCountedWeightForOrgApproved'] = $registredCountedWeightForOrgApproved;
         $data['registredCountedWeightForOrgAll'] = $registredCountedWeightForOrgAll;
+        $data['registredWeightForOrgApproved'] = $registredWeightForOrgApproved;
+        $data['registredWeightForOrgAll'] = $registredWeightForOrgAll;
         $data['countedWeightForOrg'] = $countedWeightForOrg;
         $data['statsWeightForOrg'] = $statsWeightForOrg;
         $data['finance'] = $finance;
