@@ -171,26 +171,26 @@
               <!--end::Drag and Drop Container-->
             </div>
             <div class="col-xl-3">
-  <div class="card card-custom gutter-b" id="drag-and-drop-container">
-    <div class="card-header">
-      <div class="card-title title-center">
-        <h3 class="card-label"><strong> MAT 3</strong></h3>
-        <div class="d-flex justify-content-end">
-          <a href="https://ajptour.com/en/event/748/schedule/mat/6655" class="btn btn-default">View mat</a>
-        </div>
-      </div>
-    </div>
-    <div class="card-body">
-      <!-- Add your drag and drop content here -->
-      <!-- For example:
-      <div class="drag-item" draggable="true">Drag me</div>
-      <div class="drop-zone" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
-      -->
-    </div>
-    
-  </div>
-  <!--end::Drag and Drop Container-->
-</div>
+              <div class="card card-custom gutter-b" id="drag-and-drop-container">
+                <div class="card-header">
+                  <div class="card-title title-center">
+                    <h3 class="card-label"><strong> MAT 3</strong></h3>
+                    <div class="d-flex justify-content-end">
+                      <a href="https://ajptour.com/en/event/748/schedule/mat/6655" class="btn btn-default">View mat</a>
+                    </div>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <!-- Add your drag and drop content here -->
+                  <!-- For example:
+                  <div class="drag-item" draggable="true">Drag me</div>
+                  <div class="drop-zone" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+                  -->
+                </div>
+
+              </div>
+              <!--end::Drag and Drop Container-->
+            </div>
 
             <div class="col-xl-3">
               <div class="card card-custom gutter-b" id="drag-and-drop-container">

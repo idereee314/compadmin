@@ -222,4 +222,19 @@ class AcademyController extends Controller
 
         return json_encode($organization);
     }
+
+    public function academies($academyId)
+    {
+        $academy = $this->academy->find($academyId);
+        $athlete = $this->academy->getMemberOfAcademy($academyId);
+        // dd($athlete);
+        $data['academy'] = $academy;
+        $data['athlete'] = $athlete;
+
+        $data['tabs'] = collect(Config::get("enums.academy_tabs"))->sortBy('order')->toArray();
+        $data['tab_id'] = @$input['tab_id'] ? @$input['tab_id'] : 'tab1-1';
+
+        return view('.reference/academyProfile/academyProfile', $data); 
+    }
+
 }

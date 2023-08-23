@@ -383,18 +383,18 @@
                         <!--begin: Datatable-->
                         <table class="table table-separate table-head-custom" id="event-registration-datatable" style="margin-top: 13px !important">
                             <thead>
-                            <tr>
-                                <th width="5%">No.</th>
-                                <th width="30%">{{trans('display.comp_member')}}</th>
-                                <th width="10%">{{trans('display.comp_entry')}}</th>
-                                <th width="5%">{{trans('display.comp_entry_age')}}</th>
-                                <th width="8%">{{trans('display.comp_entry_belt')}}</th>
-                                <th width="5%">{{trans('display.comp_entry_weight')}}</th>
-                                <th width="15%">{{trans('display.comp_academy')}}</th>
-                                <th width="1%">{{trans('display.general_status')}}</th>
-                                <th width="8%">{{trans('display.general_created_at')}}</th>
-                                <th width="25%">{{trans('display.general_manage')}}</th>
-                            </tr>
+                                <tr>
+                                    <th width="5%">No.</th>
+                                    <th width="30%">{{trans('display.comp_member')}}</th>
+                                    <th width="10%">{{trans('display.comp_entry')}}</th>
+                                    <th width="5%">{{trans('display.comp_entry_age')}}</th>
+                                    <th width="8%">{{trans('display.comp_entry_belt')}}</th>
+                                    <th width="5%">{{trans('display.comp_entry_weight')}}</th>
+                                    <th width="15%">{{trans('display.comp_academy')}}</th>
+                                    <th width="1%">{{trans('display.general_status')}}</th>
+                                    <th width="8%">{{trans('display.general_created_at')}}</th>
+                                    <th width="25%">{{trans('display.general_manage')}}</th>
+                                </tr>
                             </thead>
                             <tbody>
                             </tbody>

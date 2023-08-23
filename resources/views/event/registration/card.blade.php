@@ -110,7 +110,7 @@
                                                                 <span class="navi-icon">
                                                                     <i class="flaticon-network"></i>
                                                                 </span>
-                                                                <span class="navi-text">Оноолт үүсгэх</span>
+                                                                <span class="navi-text">{{ trans('display.general_create_bracket') }}</span>
                                                             </a>
                                                         </li>
                                                         
@@ -120,7 +120,7 @@
                                                                 <span class="navi-icon">
                                                                     <i class="flaticon-calendar-1"></i>
                                                                 </span>
-                                                                <span class="navi-text">Оноолт харах</span>
+                                                                <span class="navi-text">{{ trans('display.general_show_bracket') }}</span>
                                                             </a>
                                                         </li>
                                                         @if(Auth::user()->roles->first() == null)
@@ -130,7 +130,7 @@
                                                                 <span class="navi-icon">
                                                                     <i class="flaticon2-graph-1"></i>
                                                                 </span>
-                                                                <span class="navi-text">Статистик</span>
+                                                                <span class="navi-text">{{ trans('display.general_statistic') }}</span>
                                                             </a>
                                                         </li>
                                                         @endif                                                        
@@ -139,7 +139,16 @@
                                                                 <span class="navi-icon">
                                                                     <i class="fas fa-medal"></i>
                                                                 </span>
-                                                                <span class="navi-text">Үр дүн</span>
+                                                                <span class="navi-text">{{ trans('display.general_result') }}</span>
+                                                            </a>
+                                                        </li>
+
+                                                        <li class="navi-item">
+                                                            <a href="{{ route('event.schedule', @$event['id']) }}" class="navi-link">
+                                                                <span class="navi-icon">
+                                                                    <i class="flaticon-calendar-with-a-clock-time-tools"></i>
+                                                                </span>
+                                                                <span class="navi-text">{{ trans('display.general_schedule') }}</span>
                                                             </a>
                                                         </li>
                                                     </ul>

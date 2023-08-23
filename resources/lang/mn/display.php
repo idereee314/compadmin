@@ -350,4 +350,8 @@ return [
     'payment_id' => 'Төлбөрийн ID',
     
     'general_categories_name' => 'Ангиллын нэр',
+    'general_schedule' => 'Хуваарь',
+    'general_statistic' => 'Статистик',
+    'general_show_bracket' => 'Оноолт харах',
+    'general_create_bracket' => 'Оноолт үүсгэх',
 ];

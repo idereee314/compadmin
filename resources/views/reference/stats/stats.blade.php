@@ -577,19 +577,46 @@
                             </div>                            
 
                             <div class="tab-pane fade in {{@$tab_id == $tab['number'] ? 'active show' : '' }}" id="tab1-2">
+                            <div class="row">
+                                <div class="col-xl-12">
+                                    <!--begin::Card-->
+                                    <div class="card card-custom gutter-b">                                        
+                                        <div class="card-body">
+                                            <?php
+                                            $totalWeights = 0;
+                                            $totalApprovalWeights = 0;
+                                            $totalRegAllWeights = 0;
+                                            foreach ($countedWeightForOrg as $counted) {
+                                                $totalWeights += $counted->counted_weight;
+                                            }
+                                            foreach ($registredCountedWeightForOrgApproved as $counted) {
+                                                $totalApprovalWeights += $counted->total_count;
+                                            }
+                                            foreach ($registredCountedWeightForOrgAll as $counted) {
+                                                $totalRegAllWeights += $counted->total_count;   
+                                            }                                         
+                                            ?>
+                                            <h3 class="card-label"><strong> Тэмцээнд нийт <?php echo $totalWeights; ?> жин байгаагаас <?php echo $totalRegAllWeights ?> жинд хүмүүс бүртгэгдэж үүнээс <?php echo $totalApprovalWeights; ?> жингийн хүмүүс бүртгэлээ баталгаажуулсан байна.</strong></h3>
+
+                                        </div>
+                                    </div>
+                                    <!--end::Card-->
+                                </div>
+                            </div>
+
                                 <div class="row">
                                     <div class="col-xl-12">
                                         <!--begin::Card-->
                                         <div class="card card-custom gutter-b">                            
                                             <div class="card-header">
                                                 <div class="card-title">
-                                                    <?php
-                                                    $totalCount = 0;
-                                                    foreach ($countedWeightForOrg as $counted) {
-                                                        $totalCount += $counted->counted_weight;
-                                                    }
-                                                    ?>
-                                                    <h3 class="card-label"><strong> Нийт жингийн жагсаалт болон [Тэмцээнд нийт <?php echo $totalCount; ?> жин байна.]</strong></h3>
+                                                <?php
+                                                $totalCount = 0;
+                                                foreach ($countedWeightForOrg as $counted) {
+                                                    $totalCount += $counted->counted_weight;
+                                                }
+                                                ?>
+                                                <h3 class="card-label"><strong> Нийт жингийн жагсаалт болон [Тэмцээнд нийт <?php echo $totalCount; ?> жин байна.]</strong></h3>
                                                 </div>
                                             </div>
                                             <div class="card-body">
@@ -783,27 +810,25 @@
 @section('javascript')
 <script src="{{asset('assets/js/plugins/custom/datatables/datatables.bundle.js')}}"></script>
 <script type="text/javascript">
-
-$(document).ready(function() {
-    if ('{{ old('tab_id') }}' != '' || '{{ $tab_id }}' != '') {
-        $('a[name={{ old('tab_id')? old('tab_id'): $tab_id }}]').trigger('click');
-    }
-    $('#financeTable').DataTable({
-        responsive: true,
-        columnDefs: [
-            {
-                render: function (data, type, row) {
-                    return data;
+    $(document).ready(function() {
+        if ('{{ old('tab_id') }}' != '' || '{{ $tab_id }}' != '') {
+            $('a[name={{ old('tab_id')? old('tab_id'): $tab_id }}]').trigger('click');
+        }
+        $('#financeTable').DataTable({
+            responsive: true,
+            columnDefs: [
+                {
+                    render: function (data, type, row) {
+                        return data;
+                    },
+                    targets: 1,
                 },
-                targets: 1,
-            },
-            { visible: false, targets: [1] },
-        ],
-        order: [[2, 'asc']],
-    });
+                { visible: false, targets: [1] },
+            ],
+            order: [[2, 'asc']],
+        });
 
-}).ajaxStart($.blockUI).ajaxStop($.unblockUI);
-
+    }).ajaxStart($.blockUI).ajaxStop($.unblockUI);
 </script>
 @endsection
 @stop

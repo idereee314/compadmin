@@ -120,4 +120,15 @@ class EloquentAcademyRepository implements AcademyRepository {
 
         return $data;
 	}
+
+	public function getMemberOfAcademy($academyId)
+	{
+	    return DB::select("select ua.id as academy_id, ua.name as academy_name, ua.name_en as academy_name_en, ua.type as academy_type, count(um.id), 
+		um.firstname as member_fname, um.lastname as member_lname, um.profile_url as member_profile_photo,
+		um.gender_code as member_gender, um.country_id as member_country, um.birth as member_birthday, um.id as member_id from uq_comp.uq_academy ua
+		join uq_comp.uq_event_registration uer on uer.academy_id = ua.id 
+		join uq_comp.uq_member um on um.id = uer.member_id 
+		where ua.type = 'academy' and ua.id = $academyId
+		group by ua.id, ua.name, ua.name_en, ua.type, um.id, um.firstname, um.lastname, um.profile_photo,um.profile_photo,um.gender_code,um.country_id,um.birth");
+	}
 }

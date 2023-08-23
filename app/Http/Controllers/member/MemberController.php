@@ -464,7 +464,6 @@ class MemberController extends Controller
         $member = $this->member->find($memberId);
         $memberApprovedData = $this->member->getMemberToProfileApprovedData($memberId);
         $memberAllData = $this->member->getMemberToProfileAllData($memberId);
-        // dd($memberData);
 
         $data['member'] = $member;
         $data['memberApprovedData'] = $memberApprovedData;

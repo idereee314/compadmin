@@ -184,6 +184,12 @@ Route::get('/profile/{member}/results','member\MemberController@profileResult')-
 Route::get('/upcoming','member\MemberController@profileUpcoming')->name('upcoming');
 Route::get('/pastEvent','member\MemberController@profilePastEvent')->name('pastEvent');
 
+//Academies Profile
+Route::get('/academies/{academyId}','academy\AcademyController@academies')->name('profile.academies');
+Route::get('/academies/{academyId}/members','academy\AcademyController@academyMembers')->name('academy.members');
+Route::get('/academies/{academyId}/statistics','academy\AcademyController@academyStatistics')->name('academy.statistics');
+Route::get('/academies/{academyId}/pastEvent','academy\AcademyController@pastEvent')->name('academy.pastEvent');
+
 //memberCard
 Route::get('/memberCard/{member}','member\MemberController@memberCard')->name('member.card');
 Route::get('memberCard/{member}/membership-card', [MemberController::class, 'generateMembershipCard'])->name('membership-card');
