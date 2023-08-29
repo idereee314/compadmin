@@ -143,14 +143,14 @@
                                                             </a>
                                                         </li>
 
-                                                        <li class="navi-item">
+                                                        <!-- <li class="navi-item">
                                                             <a href="{{ route('event.schedule', @$event['id']) }}" class="navi-link">
                                                                 <span class="navi-icon">
                                                                     <i class="flaticon-calendar-with-a-clock-time-tools"></i>
                                                                 </span>
                                                                 <span class="navi-text">{{ trans('display.general_schedule') }}</span>
                                                             </a>
-                                                        </li>
+                                                        </li> -->
                                                     </ul>
                                                     <!--end::Navigation-->
                                                 </div>

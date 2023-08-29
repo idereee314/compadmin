@@ -381,13 +381,12 @@
                                 </div>
                             </div>
 
-                            <div class="tab-pane fade {{ @$tab_id == $tab['number'] ? 'active show' : '' }}" id="tab1-4">
+                            <!-- <div class="tab-pane fade {{ @$tab_id == $tab['number'] ? 'active show' : '' }}" id="tab1-4">
                                 <div class="table-responsive">
                                     <table class="table table-hover table-bordered table-head-custom" style="width: 100%">
                                         <thead>
                                             <tr>
                                                 <th>#</th>
-                                                <!-- <th class="text-center">{{ trans('display.general_categories_name') }}</th> -->
                                                 <th class="text-center">{{trans('display.general_category')}}</th>
                                                 <th class="text-center">{{trans('display.human_gender_code')}}</th>
                                                 <th class="text-center">{{trans('display.comp_entry_weight')}}</th>
@@ -402,7 +401,6 @@
                                             @foreach($statsWeightForOrg as $weights)
                                                 <tr>
                                                     <td class="text-center border-right">{{ ++$loop->index }}</td>
-                                                    <!-- <td class="text-center border-right"><strong>{{ Config::get("enums.gender_code")[@$weights->gender_code] }} {{ $weights->entry_name }} {{ $weights->weight }} {{ $weights->belt_name }}</strong></td> -->
                                                     <td class="text-center border-right"><strong>{{ $weights->entry_name }}</strong></td>
                                                     <td class="text-center border-right"><strong>{{ Config::get("enums.gender_code")[@$weights->gender_code] }}</strong></td>
                                                     <td class="text-center border-right"><strong>{{ $weights->weight }}</strong></td>
@@ -416,7 +414,7 @@
                                         </tbody>
                                     </table>
                                 </div>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                 </div>
