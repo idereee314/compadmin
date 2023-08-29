@@ -765,12 +765,13 @@ class EventRegistrationController extends Controller
     public function printMandateByEventAndStatus()
     {
         $input = Input::all(); 
+        
         $eventConfig = $this->eventConfig->findByEventId(@$input['search_event']);
         $list = $this->eventRegistration->getRegistrationByStatus(@$input['search_event'], @Config::get('smart.event_registration_status')['approved'], $input);
-
-        $data['regs'] = $list->load(['academy:id,name,is_other','member:id,lastname,firstname,profile_url,birth,gender_code', 'weight:id,weight', 'entry:id,name', 'belt:id,name'])->chunk(4);
-        $view = $this->view_path.'.mandat/mandat_'.@$eventConfig->mandat_template;
         
+        $data['regs'] = $list->load(['academy:id,name,is_other','member:id,lastname,firstname,profile_url,birth,gender_code', 'weight:id,weight', 'entry:id,name', 'belt:id,name'])->chunk(4);
+        $data['eventConfig'] = $eventConfig;
+        $view = $this->view_path.'.mandat/event_credentials';
         
         if(\View::exists($view))
         {
@@ -799,7 +800,7 @@ class EventRegistrationController extends Controller
 
         $registration = $this->eventRegistration->getRegistrationByMember(@$input['event_id'], @$input['member_id']);
 
-        $view = $this->view_path.'.mandat/certificate';
+        $view = $this->view_path.'.mandat/certificate'; 
 
         $data["reg"] = $registration;
         $data["eventConfig"] = $eventConfig;
