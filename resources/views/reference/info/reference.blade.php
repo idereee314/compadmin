@@ -78,11 +78,11 @@
                     <!--end::Subheader-->
 
                     @if($sport_id == '1')
-                        @include('reference.division.jiujitsu_division')
+                        @include('reference.info.sports.jiujitsu_division')
                     @elseif($sport_id == '2')
-                        @include('reference.division.volleyball_division')
+                        @include('reference.info.sports.volleyball_division')
                     @elseif($sport_id == '3')
-                        @include('reference.division.judo_division')
+                        @include('reference.info.sports.judo_division')
                     @endif
                 </div>
                 <!--end::Container-->

@@ -112,8 +112,8 @@ return array(
 
 	'reference_tabs' => [
         '0' => array('title' => "Жин бүс нас",'code' => 'division','name' => "tab_division", 'icon' => "la-info-circle",'number' => 'tab1-1'),
-        '1' => array('title' => "Тамирчны гишүүнчлэл",'code' => 'athlete_membership','name' => "tab_athlete", 'icon' => "fa-list",'number' => 'tab1-2'),
-		'2' => array('title' => "Академийн гишүүнчлэл",'code' => 'academy_membership','name' => "tab_academy", 'icon' => "fa-list",'number' => 'tab1-3'),
+        // '1' => array('title' => "Тамирчны гишүүнчлэл",'code' => 'athlete_membership','name' => "tab_athlete", 'icon' => "fa-list",'number' => 'tab1-2'),
+		// '2' => array('title' => "Академийн гишүүнчлэл",'code' => 'academy_membership','name' => "tab_academy", 'icon' => "fa-list",'number' => 'tab1-3'),
 		'3' => array('title' => "Дүрэм",'code' => 'rules','name' => "tab_rules", 'icon' => "fa-list",'number' => 'tab1-4'),
     ],
 

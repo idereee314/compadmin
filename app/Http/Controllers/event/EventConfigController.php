@@ -428,6 +428,6 @@ class EventConfigController extends Controller
         $data['tab_id'] = @$input['tab_id'] ? @$input['tab_id'] : 'tab1-1';
         $data['view_path'] = $this->view_path;
 
-        return view('.reference/reference', $data);
+        return view('.reference/info/reference', $data);
     }
 }
