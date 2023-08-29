@@ -11,6 +11,7 @@ use Validator;
 //Repositories
 use academy\AcademyRepository as Academy;
 use organization\OrganizationRepository as Organization;
+use member\MemberRepository as Member;
 
 //Models
 use academy\Academy as AcademyModel;
@@ -24,11 +25,12 @@ class AcademyController extends Controller
 {
     public $restful = true;
 
-    public function __construct(Academy $academy, Organization $organization)
+    public function __construct(Academy $academy, Organization $organization, Member $member)
     {
         $this->view_path = 'academy';
         $this->academy = $academy;
         $this->organization = $organization;
+        $this->member = $member;
     }
 
     /**
@@ -227,10 +229,24 @@ class AcademyController extends Controller
     {
         $academy = $this->academy->find($academyId);
         $athlete = $this->academy->getMemberOfAcademy($academyId);
-        // dd($athlete);
+        $upcomingEventJiuJitsuData = $this->member->getUpcomingJiuJitsuEvent();
+        $pastEventJiuJitsuData = $this->academy->getPastEventRegisteredAcademy($academyId);
+        // dd($pastEventJiuJitsuData);
+        //days left start
+        // Check if there are upcoming events before proceeding
+        $eventDate = $upcomingEventJiuJitsuData[0]->event_date;
+        $now = time();
+        $eventTimestamp = strtotime($eventDate);
+        $timeDifference = $eventTimestamp - $now;
+        // Convert the time difference to days
+        $daysLeft = floor($timeDifference / (60 * 60 * 24));
+        //days left end
+
+        $data['daysLeft'] = $daysLeft;
+        $data['upcomingEventJiuJitsuData'] = $upcomingEventJiuJitsuData;
         $data['academy'] = $academy;
         $data['athlete'] = $athlete;
-
+        $data['pastEventJiuJitsuData'] = $pastEventJiuJitsuData;
         $data['tabs'] = collect(Config::get("enums.academy_tabs"))->sortBy('order')->toArray();
         $data['tab_id'] = @$input['tab_id'] ? @$input['tab_id'] : 'tab1-1';
 

@@ -121,7 +121,7 @@ return array(
 	'academy_tabs' => [
         '0' => array('title' => "Нүүр",'code' => 'home','name' => "tab_home", 'icon' => "flaticon2-analytics",'number' => 'tab1-1'),
         '1' => array('title' => "Статистик",'code' => 'stats','name' => "tab_stats", 'icon' => "flaticon2-pie-chart-2",'number' => 'tab1-2'),
-		'2' => array('title' => "Тамирчид",'code' => 'academy_membership','name' => "tab_athlete", 'icon' => "flaticon2-layers",'number' => 'tab1-3'),
+		'2' => array('title' => "Тамирчид",'code' => 'athletes','name' => "tab_athlete", 'icon' => "flaticon2-group",'number' => 'tab1-3'),
 		'3' => array('title' => "Бусад",'code' => 'others','name' => "tab_others", 'icon' => "flaticon2-box-1",'number' => 'tab1-4'),
     ],
 

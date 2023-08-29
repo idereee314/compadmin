@@ -1,7 +1,9 @@
 <title>Тэмцээний Удирдлагын Систем Статистик</title>
 @extends('default')
 @section('css')
+<link rel="stylesheet" href="{{asset('assets/js/plugins/custom/jstree/dist/themes/default/style.min.css')}}">
 <link rel="stylesheet" href="{{asset('assets/js/plugins/custom/datatables/datatables.bundle.css')}}">
+
 @endsection
 <style>
     .nav-text {
@@ -19,6 +21,8 @@
 </style>
 
 @section('content')
+@include('layouts.mobile')
+@include('layouts.aside')
 <!--begin::Main-->
 <!--begin::Wrapper-->
 <div class="d-flex flex-column flex-row-fluid wrapper" id="kt_wrapper" style="background-image: url('{{ asset('assets/media/bg/bg-3.jpg') }}');">
@@ -35,6 +39,7 @@
                             <!--begin::Pic-->
                             <!-- <div class="flex-shrink-0 mr-7">
                                 <div class="symbol symbol-50 symbol-lg-120">
+
                                 </div>
                             </div> -->
                             <!--end::Pic-->
@@ -150,11 +155,8 @@
                         <input type="hidden" name="tab_id" id="tab_id" value="{{ isset($tab_id) ? $tab_id : 'tab1-1' }}"/>
                         <ul class="nav nav-tabs nav-bold flex-column nav-pills nav-tabs-line-3x">
                             @forelse($tabs as $tab)
-                                <li class="nav-item mr-3">
-                                    <a href="#{{ $tab['number'] }}" data-toggle="tab"
-                                       class="nav-link app_tab {{ $tab_id == $tab['number'] ? 'active' : '' }}"
-                                       data-tabid="{{ $tab['number'] }}" data-tabcode="{{ $tab['code'] }}"
-                                       data-tabname="{{ $tab['name'] }}">
+                                <li class="nav-item mr-3 {{ $tab_id == $tab['number'] ? 'active' : '' }}">
+                                    <a href="#{{ $tab['number'] }}" data-toggle="tab" name="{{ $tab['number'] }}" class="nav-link app_tab" data-tabid="{{ $tab['number'] }}" data-tabcode="{{ $tab['code'] }}" data-tabname="{{ $tab['name'] }}">
                                         <span class="nav-icon">
                                             <i class="fas {{ $tab['icon'] }}"></i>
                                         </span>
@@ -167,20 +169,77 @@
                     </div>
                     <div class="col-10">
                         <div class="tab-content">
-                            @foreach($tabs as $tab)
-                                <div class="tab-pane fade {{ $tab_id == $tab['number'] ? 'active show' : '' }}"
-                                     id="{{ $tab['number'] }}">
-                                    <div class="card-header">
-                                        {{ $tab['title'] }} - {{ $tab['number'] }}
-                                    </div>
-                                    <div class="card-body">
-                                        @include("reference.academyProfile.{$tab['name']}")
+                            <div class="tab-pane fade in {{@$tab_id == $tab['number'] ? 'active show' : '' }}" id="tab1-1">
+                                <div class="card-header">
+                                    Home
+                                </div>
+                                <div class="card-body">
+                                    <a href="">test1</a>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade in {{@$tab_id == $tab['number'] ? 'active show' : '' }}" id="tab1-2">
+                                <div class="card-header">
+                                    stats
+                                </div>
+                                <div class="card-body">
+                                    @include('reference.academyProfile.stats')
+                                </div>
+                            </div>
+                            <div class="tab-pane fade in {{@$tab_id == $tab['number'] ? 'active show' : '' }}" id="tab1-3">
+                                <div class="card-header">
+                                    <h1>Тамирчид</h1>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="cell-border" id="athleteTable" style="width:100%">
+                                        <!-- <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th class="text-center">{{trans('display.payment_id')}}</th>
+                                                <th class="text-center">{{trans('display.payment_date')}}</th>
+                                                <th class="text-center">{{trans('display.profile_title')}}</th>                                                
+                                            </tr>
+                                        </thead> -->
+                                        <tbody>
+                                            @foreach($athlete as $athletes)
+                                                <tr>
+                                                    <td class="text-center align-middle"><strong>{{ $loop->index + 1 }}</strong></td>
+                                                    <td class="text-center"><img class="mb-1" alt="profile" src="{{ \Storage::disk('s3')->url($athletes->member_profile_photo) }}" style="width: 80px; height: 80px; border-radius: 50%" /></td>
+                                                    <td>
+                                                        <strong>                                                                
+                                                                <img class="mb-1 rounded" src="/assets/images/flags/4x3/{{ Config::get('enums.country_alpha')[$athletes->member_country] }}.svg" alt="flag" width="25" height="15">
+                                                                {{ $athletes->member_lname }} <strong>{{ $athletes->member_fname }}</strong>
+                                                        </strong>
+                                                        <span class="text-dark-75 line-height-sm d-block pb-2">
+                                                            <i class="la la-address-book"></i> {{ $athletes->member_birthday }},
+                                                            <i class="la la-phone"></i> {{ Config::get("enums.gender_code")[@$athletes->member_gender] }}
+                                                        </span>
+                                                        <span class="text-dark-75 line-height-sm d-block pb-2">
+                                                            <a href="/profile/{{$athletes->member_id}}" type="button" class="btn btn-primary" target="_blank">View profile</a>
+                                                        </span>
+                                                    </td>
+                                                    <td>{{ $athletes->member_birthday }}</td>
+                                                    <td>{{ Config::get("enums.gender_code")[@$athletes->member_gender] }}</td>
+                                                    <td><a href="/profile/{{$athletes->member_id}}" type="button" class="btn btn-primary" target="_blank">View profile</a></td>
+                                                </tr>
+                                            @endforeach 
+                                        </tbody>
+                                        </table>                                                                              
                                     </div>
                                 </div>
-                            @endforeach
+                            </div>
+                            <div class="tab-pane fade in {{@$tab_id == $tab['number'] ? 'active show' : '' }}" id="tab1-4">
+                                <div class="card-header">
+                                    {{ $tab['title'] }}
+                                </div>
+                                <div class="card-body">
+                                    <a href="">test4</a>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
+
             </div>
             <!--end::Container-->
         </div>
@@ -188,26 +247,37 @@
     </div>
     <!--end::Content-->
     <!--begin::Footer-->
-    @include('layouts.footer_v2')
+    @include('layouts.footer')
     <!--end::Footer-->
 </div>
 <!--end::Wrapper-->
 <!--end::Main-->
 @section('javascript')
 <script src="{{asset('assets/js/plugins/custom/datatables/datatables.bundle.js')}}"></script>
-
 <script type="text/javascript">
 
-    $(document).ready(function() {
-        if ('{{ old('tab_id') }}' != '' || '{{ $tab_id }}' != '') {
-            var tabId = '{{ old('tab_id') ? old('tab_id') : $tab_id }}';
-            console.log("Trying to activate tab:", tabId);
-            $('a[name=' + tabId + ']').trigger('click');
-        }
+$(document).ready(function() {
+    if ('{{ old('tab_id') }}' != '' || '{{ $tab_id }}' != '') {
+        $('a[name={{ old('tab_id')? old('tab_id'): $tab_id }}]').trigger('click');
+    }
 
-        
-    }).ajaxStart($.blockUI).ajaxStop($.unblockUI);
-
+    $('#athleteTable').DataTable({
+        responsive: true,
+        columnDefs: [
+            {
+                render: function (data, type, row) {
+                    return data;
+                },
+                targets: 1,
+            },
+            { visible: false, targets: [1] },
+        ],
+        order: [[2, 'asc']],
+    });
+    
+}).ajaxStart($.blockUI).ajaxStop($.unblockUI);
+    
+    
 </script>
 @endsection
 @stop

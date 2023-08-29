@@ -131,4 +131,18 @@ class EloquentAcademyRepository implements AcademyRepository {
 		where ua.type = 'academy' and ua.id = $academyId
 		group by ua.id, ua.name, ua.name_en, ua.type, um.id, um.firstname, um.lastname, um.profile_photo,um.profile_photo,um.gender_code,um.country_id,um.birth");
 	}
+
+	public function getPastEventRegisteredAcademy($academyId)
+	{
+		return DB::select("select re.event_date, uer.event_id, re.name as event_name,rep.url FROM uq_comp.uq_academy ua 
+		join uq_comp.uq_event_registration uer on uer.academy_id = ua.id 
+		join uq_comp.uq_member um on um.id = uer.member_id 
+		join rt_listing.rti_event re on re.id = uer.event_id 
+		join rt_listing.rti_organization_event roe on roe.event_id = uer.event_id 
+		join rt_listing.rti_organization ro on ro.id = roe.organization_id
+		join rt_listing.rti_event_picture rep on rep.event_id = re.id 
+		WHERE ua.type = 'academy' and re.event_date < now() and rep.picture_type_id = 15 and uer.academy_id = $academyId
+		GROUP BY uer.event_id, re.event_date, re.name,rep.url
+		order by re.event_date desc");
+	}
 }

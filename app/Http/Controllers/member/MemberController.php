@@ -488,7 +488,7 @@ class MemberController extends Controller
     public function profileUpcoming()
     {
         $upcomingEventJiuJitsuData = $this->member->getUpcomingJiuJitsuEvent();
-
+        
         $data['upcomingEventJiuJitsuData'] = $upcomingEventJiuJitsuData;
 
         return view('.reference/profile/upcomingEvent', $data); 

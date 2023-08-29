@@ -275,14 +275,18 @@ class EloquentMemberRepository implements MemberRepository {
 	public function getUpcomingJiuJitsuEvent()
 	{
 		return DB::select("select uec.event_id, uec.is_active , uec.sport_id , uec.is_team , uec.reg_start_date , uec.reg_end_date , re.name as event_name , 
-		re.event_date , re.description as event_description , rel.object_location_id ,rol.object_name from uniqdb.uq_comp.uq_event_config uec 
+		re.event_date , re.description as event_description , rel.object_location_id ,rol.object_name, rep.picture_type_id, rep.url, rel.object_location_id, 
+		ro.name as org_name from uniqdb.uq_comp.uq_event_config uec 
 			left join uniqdb.rt_listing.rti_event re on re.id = uec.event_id 
 			left join uniqdb.rt_listing.rti_event_location rel on rel.event_id = uec.event_id 
 			left join uniqdb.rt_listing.rti_object_location rol on rol.id = rel.object_location_id 
-			where uec.sport_id = 1 and re.event_date > now() 
-			group by uec.event_id, uec.is_active , uec.sport_id , uec.is_team , uec.reg_start_date , uec.reg_end_date , re.name , re.event_date , re.description , rel.object_location_id ,rol.object_name
-			order by re.event_date asc
-			");
+			left join uniqdb.rt_listing.rti_event_picture rep on rep.event_id = re.id 
+			left join uniqdb.rt_listing.rti_organization_event roe on roe.event_id = uec.event_id 
+			left join uniqdb.rt_listing.rti_organization ro on ro.id = roe.organization_id 
+			where uec.sport_id = 1 and re.event_date > now() and rep.picture_type_id = 15
+			group by uec.event_id, uec.is_active , uec.sport_id , uec.is_team , uec.reg_start_date , uec.reg_end_date , re.name , 
+			re.event_date , re.description , rel.object_location_id ,rol.object_name,rep.picture_type_id, rep.url, rel.object_location_id, ro.name
+			order by re.event_date asc");
 	}
 
 	public function getPastJiuJitsuEvent()

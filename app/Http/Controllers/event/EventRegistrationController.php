@@ -1128,7 +1128,7 @@ class EventRegistrationController extends Controller
         $data['tab_id'] = @$input['tab_id'] ? @$input['tab_id'] : 'tab1-1';
         $data['view_path'] = $this->view_path;
         
-        return view('.reference/stats/result', $data);
+        return view('.reference/result/result', $data);
     }
 
     //Team Member
