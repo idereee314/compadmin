@@ -354,4 +354,7 @@ return [
     'general_statistic' => 'Статистик',
     'general_show_bracket' => 'Оноолт харах',
     'general_create_bracket' => 'Оноолт үүсгэх',
+
+    //rules
+    'rules_book_download' => 'Дүрмийн ном татах',
 ];
