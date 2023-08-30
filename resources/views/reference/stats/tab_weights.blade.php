@@ -185,7 +185,7 @@
                                                         <th class="text-center">{{trans('display.general_athlete_count')}}</th>
                                                         <th class="text-center">{{trans('display.general_athlete_count')}}</th>
                                                         <th class="text-center">{{trans('display.general_athlete_count')}}</th>
-                                                        <th class="text-center">{{trans('display.general_athlete_count')
+                                                        <th class="text-center">{{trans('display.general_athlete_count')}}</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
