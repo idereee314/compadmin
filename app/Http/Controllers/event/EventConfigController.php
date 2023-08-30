@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\URL;
 //Repositories
 use event\EventConfigRepository as EventConfig;
 use event\EventRepository as Event;
+use event\EventCategoryRepository as EventCategory;
+use event\EventRankSeasonRepository as EventRankSeason;
 use academy\AcademyRepository as Academy;
 use reference\EventEntriesRepository as EventEntries;
 use reference\EntryConfigBeltRepository as EntryConfigBelt;
@@ -33,7 +35,7 @@ class EventConfigController extends Controller
 {
     public $restful = true;
 
-    public function __construct(EventConfig $eventConfig, Event $event, EventEntries $eventEntries, EntryConfigBelt $entryConfigBelt, EntryConfigAge $entryConfigAge, EntryConfigWeight $entryConfigWeight, EventEntriesFee $eventEntriesFee, Sport $sport)
+    public function __construct(EventConfig $eventConfig, Event $event, EventCategory $eventCategory, EventEntries $eventEntries, EntryConfigBelt $entryConfigBelt, EntryConfigAge $entryConfigAge, EntryConfigWeight $entryConfigWeight, EventEntriesFee $eventEntriesFee, Sport $sport, EventRankSeason $eventRankSeason)
     {
         $this->view_path = 'event.config';
         $this->eventConfig = $eventConfig;
@@ -44,6 +46,8 @@ class EventConfigController extends Controller
         $this->entryConfigWeight = $entryConfigWeight;
         $this->eventEntriesFee = $eventEntriesFee;
         $this->sport = $sport;
+        $this->eventCategory = $eventCategory;
+        $this->eventRankSeason = $eventRankSeason;
     }
 
     /**
@@ -75,7 +79,11 @@ class EventConfigController extends Controller
     public function create()
     {
         $sports = $this->sport->all();
-       
+        $eventCategory = $this->eventCategory->all();
+        $eventRankSeason = $this->eventRankSeason->all();
+        
+        $data['eventRankSeason'] = $eventRankSeason;
+        $data['eventCategory'] = $eventCategory;
         $data['sports'] = $sports;
         $data['view_path'] = $this->view_path;
     
@@ -141,7 +149,11 @@ class EventConfigController extends Controller
         $configEntriesFees = $this->eventEntriesFee->getEntriesFeeByEventId($eventConfig->event_id);
         $event = $this->event->find($eventConfig->event_id);
         $sports = $this->sport->all();
-       
+        $eventCategory = $this->eventCategory->all();
+        $eventRankSeason = $this->eventRankSeason->all();
+        
+        $data['eventRankSeason'] = $eventRankSeason;
+        $data['eventCategory'] = $eventCategory;
         $data['sports'] = $sports;
         $data['eventConfig'] = $eventConfig;
         $data['entries'] = $eventConfig->event->entries;
@@ -351,7 +363,11 @@ class EventConfigController extends Controller
         $configEntriesFees = $this->eventEntriesFee->getEntriesFeeByEventId($eventConfig->event_id);
         $event = $this->event->find($eventConfig->event_id);
         $sports = $this->sport->all();
-       
+        $eventCategory = $this->eventCategory->all();
+        $eventRankSeason = $this->eventRankSeason->all();
+        
+        $data['eventRankSeason'] = $eventRankSeason;
+        $data['eventCategory'] = $eventCategory;
         $data['sports'] = $sports;
         $data['eventConfig'] = $eventConfig;
         $data['entries'] = $eventConfig->event->entries;

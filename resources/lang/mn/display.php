@@ -61,6 +61,8 @@ return [
     'general_sub_part' => 'Дэд хэсэг',
     'general_minute' => 'минут',
     'general_category' => 'Ангилал',
+    'general_event_category' => 'Тэмцээний ангилал',
+    'general_rank_season' => 'Улирал',
     'general_total_score' => 'Нийт оноо',
     'general_you_are_here' => 'Таны байгаа газар',
     'general_group' => 'Бүлэглэх',

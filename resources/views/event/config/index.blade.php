@@ -334,6 +334,8 @@ function showAddModal( data ) {
     $('#eventConfigModal').on('shown.bs.modal', function(){
         $('#eventConfigModal .modal-content').html(data);
         $('#sport_id').selectpicker();
+        $('#eventCategory').selectpicker();
+        $('#eventRankSeason').selectpicker();
         $('#kt_reg_date').daterangepicker({
             buttonClasses: ' btn',
             applyClass: 'btn-primary',

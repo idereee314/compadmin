@@ -20,6 +20,32 @@
                 </select>
                 <div class="error-here"></div>
             </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-md-3 col-form-label text-right">{{trans('display.general_rank_season')}}: <span class="text-danger">*</span></label>
+            <div class="col-md-9 col-lg-6">
+                <select class="form-control selectpicker" id="eventRankSeason" name="eventRankSeason" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}">
+                    <option value="0">-- {{ trans('display.general_select') }} --</option>
+                    @foreach($eventRankSeason as $season)
+                        <option value="{{ $season->id }}" {{ $season->id == @$eventConfig->event_rank_season_id ? 'selected': '' }}>{{ $season->name }} - {{ Config::get("enums.sport_category")[$season->sport_id] }}</option>
+                    @endforeach
+                </select>
+                <div class="error-here"></div>
+            </div>
+        </div> 
+
+        <div class="form-group row">
+            <label class="col-md-3 col-form-label text-right">{{trans('display.general_event_category')}}: <span class="text-danger">*</span></label>
+            <div class="col-md-9 col-lg-6">
+                <select class="form-control selectpicker" id="eventCategory" name="eventCategory" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}">
+                    <option value="0">-- {{ trans('display.general_select') }} --</option>
+                    @foreach($eventCategory as $category)
+                        <option value="{{ $category->id }}" {{ $category->id == @$eventConfig->event_category_id ? 'selected': '' }}>{{ $category->name }}</option>
+                    @endforeach
+                </select>
+                <div class="error-here"></div>
+            </div>
         </div> 
 
         <div class="form-group row">
@@ -150,6 +176,9 @@
 <script>
 $(document).ready(function() {
     $('#sport_id').selectpicker();
+    $('#eventCategory').selectpicker();
+    $('#eventRankSeason').selectpicker();
+    
     $('#kt_reg_date').daterangepicker({
         buttonClasses: ' btn',
         applyClass: 'btn-primary',
