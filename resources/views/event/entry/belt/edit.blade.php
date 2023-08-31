@@ -37,13 +37,20 @@
         </div>
 
         <div class="form-group row">
-            <label class="col-md-3 col-form-label text-right">{{trans('display.possible_belts')}}: </label>
+            <label class="col-md-3 col-form-label text-right">{{trans('display.possible_belts')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9 col-lg-6">
-                <input type="number" class="form-control" value="{{@$eventEntryBelt->possible_belts}}" autocomplete="off" name="possible_belts"/>
+                <select class="form-control select2" id="possible_belts" name="possible_belts[]" multiple="multiple" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}">
+                    <option value="0">-- {{ trans('display.general_select') }} --</option>
+                    @forelse(@$beltGroup as $belt)
+                    <option value="{{ $belt->id }}" {{ \Illuminate\Support\Str::contains(@$eventEntryBelt->possible_belts, $belt->id) ? 'selected="selected"' : '' }}>{{ $belt->name }}</option>
+                    @empty
+                    @endforelse
+                </select>
+                <div class="error-here"></div>
             </div>
-        </div>
+        </div> 
+    
     </div>
-
     <div class="modal-footer text-right bg-gray-100 border-top-0">
         <button type="button" id="close" class="btn btn-light-primary font-weight-bold" data-dismiss="modal">{{trans('display.general_close')}}</button>
         <button type="submit" class="btn btn-primary font-weight-bold">{{trans('display.general_save')}}</button>

@@ -48,7 +48,8 @@ class EloquentEventConfigRepository implements EventConfigRepository {
 		$eventConfig->sport_id = @$input['sport_id'];
 		$eventConfig->is_team = @$input['is_team'] ? $input['is_team'] : false;
 		$eventConfig->event_category_id = @$input['eventCategory'];
-		
+		$eventConfig->event_rank_season_id = @$input['eventRankSeason'];
+
 		$eventConfig->save();
 		return $eventConfig;
 	}
@@ -67,6 +68,7 @@ class EloquentEventConfigRepository implements EventConfigRepository {
 		$eventConfig->sport_id = @$input['sport_id'];
 		$eventConfig->is_team = @$input['is_team'] ? $input['is_team'] : false;
 		$eventConfig->event_category_id = @$input['eventCategory'];
+		$eventConfig->event_rank_season_id = @$input['eventRankSeason'];
 
 		$eventConfig->save();
 		return $eventConfig;

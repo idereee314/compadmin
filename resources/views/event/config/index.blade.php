@@ -216,7 +216,6 @@ $(document).ready(function() {
             {data: 'config_belts_count', "defaultContent": ""},
             {data: 'config_ages_count', "defaultContent": ""},
             {data: 'config_weights_count', "defaultContent": ""},
-            
             {data: 'created_at'},
             {data: 'action'},
         ],

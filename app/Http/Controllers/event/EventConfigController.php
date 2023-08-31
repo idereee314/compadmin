@@ -21,6 +21,7 @@ use reference\EntryConfigBeltRepository as EntryConfigBelt;
 use reference\EntryConfigAgeRepository as EntryConfigAge;
 use reference\EntryConfigWeightRepository as EntryConfigWeight;
 use reference\EventEntriesFeeRepository as EventEntriesFee;
+use reference\BeltGroupRepository as BeltGroup;
 use sport\SportRepository as Sport;
 
 //Models
@@ -35,7 +36,7 @@ class EventConfigController extends Controller
 {
     public $restful = true;
 
-    public function __construct(EventConfig $eventConfig, Event $event, EventCategory $eventCategory, EventEntries $eventEntries, EntryConfigBelt $entryConfigBelt, EntryConfigAge $entryConfigAge, EntryConfigWeight $entryConfigWeight, EventEntriesFee $eventEntriesFee, Sport $sport, EventRankSeason $eventRankSeason)
+    public function __construct(EventConfig $eventConfig, Event $event, EventCategory $eventCategory, EventEntries $eventEntries, EntryConfigBelt $entryConfigBelt, EntryConfigAge $entryConfigAge, EntryConfigWeight $entryConfigWeight, EventEntriesFee $eventEntriesFee, Sport $sport, EventRankSeason $eventRankSeason, BeltGroup $beltGroup)
     {
         $this->view_path = 'event.config';
         $this->eventConfig = $eventConfig;
@@ -48,6 +49,7 @@ class EventConfigController extends Controller
         $this->sport = $sport;
         $this->eventCategory = $eventCategory;
         $this->eventRankSeason = $eventRankSeason;
+        $this->beltGroup = $beltGroup;
     }
 
     /**
@@ -365,7 +367,9 @@ class EventConfigController extends Controller
         $sports = $this->sport->all();
         $eventCategory = $this->eventCategory->all();
         $eventRankSeason = $this->eventRankSeason->all();
-        
+        $beltGroup = $this->beltGroup->all();
+
+        $data['beltGroup'] = $beltGroup;
         $data['eventRankSeason'] = $eventRankSeason;
         $data['eventCategory'] = $eventCategory;
         $data['sports'] = $sports;
@@ -426,7 +430,13 @@ class EventConfigController extends Controller
     public function ranking($sport_id){
          
         $sport = $this->sport->find($sport_id);
-
+        $eventCategory = $this->eventCategory->all();
+        $eventRankSeason = $this->eventRankSeason->all();
+        $beltGroup = $this->beltGroup->all();
+        
+        $data['beltGroup'] = $beltGroup;
+        $data['eventRankSeason'] = $eventRankSeason;
+        $data['eventCategory'] = $eventCategory;
         $data['sport_id'] = $sport_id;
         $data['sport'] = $sport;
         $data['view_path'] = $this->view_path;

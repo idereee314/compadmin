@@ -11,6 +11,7 @@ use Validator;
 //Repositories
 use reference\EntryConfigBeltRepository as EventEntryBelt;
 use reference\EventEntriesRepository as EventEntry;
+use reference\BeltGroupRepository as BeltGroup;
 
 //Models
 use reference\EntryConfigBelt as EventEntryBeltModel;
@@ -24,11 +25,12 @@ class EventEntryBeltController extends Controller
 {
     public $restful = true;
 
-    public function __construct(EventEntryBelt $eventEntryBelt, EventEntry $eventEntry)
+    public function __construct(EventEntryBelt $eventEntryBelt, EventEntry $eventEntry,BeltGroup $beltGroup)
     {
         $this->view_path = 'event.entry.belt';
         $this->eventEntryBelt = $eventEntryBelt;
         $this->eventEntry = $eventEntry;
+        $this->beltGroup = $beltGroup;
     }
 
     /**
@@ -38,6 +40,9 @@ class EventEntryBeltController extends Controller
      */
     public function index()
     {
+        $beltGroup = $this->beltGroup->all();
+        
+        $data['beltGroup'] = $beltGroup;
         $data['view_path'] = $this->view_path;
 
         return view($this->view_path.'.index', $data);
@@ -51,7 +56,9 @@ class EventEntryBeltController extends Controller
     public function create()
     {
         $input = Input::all();
-
+        $beltGroup = $this->beltGroup->all();
+        
+        $data['beltGroup'] = $beltGroup;
         $data['eventEntries'] = $this->eventEntry->getEntryByEventId($input['eventId']);
         $data['eventId'] = $input['eventId'];
 
@@ -121,7 +128,9 @@ class EventEntryBeltController extends Controller
         $input = Input::all();
         $eventEntryBelt = $this->eventEntryBelt->find($id);
         $eventEntries = $this->eventEntry->getEntryByEventId(@$input['eventId']);
+        $beltGroup = $this->beltGroup->all();
 
+        $data['beltGroup'] = $beltGroup;
         $data['eventEntries'] = $eventEntries;
         $data['eventEntryBelt'] = $eventEntryBelt;
 

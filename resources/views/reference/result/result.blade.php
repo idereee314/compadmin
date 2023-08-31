@@ -208,10 +208,9 @@
                                     </div>
                                 </div>
                                 <!--end::Row-->
-                                
                             </div>
                             <div class="tab-pane fade in {{@$tab_id == $tab['number'] ? 'active show' : '' }}" id="tab1-2">
-                                
+                                <!--begin::Row-->
                                 <div class="row">                        
                                     <div class="col-xl-12">
                                         <!--begin::Card-->
@@ -241,7 +240,6 @@
                                                             @endforeach 
                                                         </tbody> 
                                                     </table>
-
                                                 </div>        
                                             </div>
                                         </div>
@@ -274,14 +272,12 @@
                                                                         <table class="table table-hover table-bordered table-head-custom" id="event-team-registration-datatable">                                                                        
                                                                             <tbody>
                                                                                 @foreach($weights as $result)
-                                    
                                                                                     <tr>
-                                                                                        @if($result->place_number > 3)     
+                                                                                        @if($result->place_number > 3)
                                                                                             <td class="text-center border-right"><strong>{{ $result->place_number }}</strong></td>
                                                                                         @else
                                                                                             <td class="text-center border-right"><strong><i class="{{ Config::get("enums.event_award")[@$result->place_number] }}"></i></strong></td>
-                                                                                        @endif               
-                                    
+                                                                                        @endif
                                                                                         <td class="text-center border-right">
                                                                                             <div class="d-flex align-items-center">
                                                                                                 @if(@$result->profile_url xor ((@env('production') && \Storage::disk('s3')->exists($result->profile_url)) || @env('local')))
@@ -296,25 +292,7 @@
                                                                                                     <span class="text-dark-75 line-height-sm d-block pb-2">{{ $result->academy_name }}</span>
 			                                                                                    </div>                                                                              
                                                                                             </div>
-                                    
                                                                                         </td>
-                                    
-                                                                                        <!-- <td class="text-center border-right"><strong>{{ $result->fullname }}</strong></td> 
-                                    
-                                                                                        @if($result->academy_name == 'Бусад')                       
-                                                                                            <td class="text-center border-right"><strong>{{ $result->busad }}</strong></td>                                                                                                        
-                                                                                        @else 
-                                                                                            <td class="text-center border-right"><strong>{{ $result->academy_name }}</strong></td>  	            
-                                                                                        @endif            -->
-                                    
-                                                                                        <!-- <td class="text-left border-right">
-                                                                                            <h3><strong>{{ $result->fullname }}</strong></h3>
-                                                                                            @if($result->academy_name == 'Бусад')
-                                                                                                <h4><small>{{ $result->busad }}</small></h4>
-                                                                                            @else
-                                                                                                <h4><small>{{ $result->academy_name }}</small></h4>
-                                                                                            @endif
-                                                                                        </td> -->
                                                                                     </tr>
                                                                                 @endforeach 
                                                                             </tbody>                                        
@@ -332,7 +310,6 @@
                                 </div>                    
                                 <!--end::Row-->
                             </div>
-
                             <div class="tab-pane fade {{ @$tab_id == $tab['number'] ? 'active show' : '' }}" id="tab1-3">
                                 <div class="table-responsive">
                                     <table class="table table-hover table-bordered table-head-custom" id="categoriesTable" style="width: 100%">

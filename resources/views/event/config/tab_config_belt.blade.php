@@ -36,7 +36,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse(@$configBelsts as $key => $group)
+                @forelse(@$configBelsts as $key => $group)
                     <tr class="table-secondary">
                         <td colspan="6" class="text-primary font-weight-bolder"><i class="mr-5"></i>{{++$loop->index}}. {{ @$entries->where('id', @$key)->first()->fullname }}</td>
                     </tr>
@@ -97,7 +97,7 @@ $("#entry-add-belt").on('click', function(){
 		$('#eventEntryModal').on('shown.bs.modal', function(){
 			$('#eventEntryModal .modal-content').html(data);
             $('.selectpicker').selectpicker();
-
+            $('#possible_belts').select2();
 			$('#create-event-entry-belt-form').validate({
 				ignore: [],
 				highlight:function(element) {
@@ -158,6 +158,7 @@ $(".edit-belt").on('click', function(){
 		$('#eventEntryModal').on('shown.bs.modal', function(){
 			$('#eventEntryModal .modal-content').html(data);
             $('.selectpicker').selectpicker();
+            $('#possible_belts').select2();
 
 			$('#update-event-entry-belt-form').validate({
 				ignore: [],

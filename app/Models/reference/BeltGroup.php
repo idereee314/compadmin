@@ -10,28 +10,16 @@ use reference\EventEntries;
 use Auth;
 use Carbon;
 
-class EntryConfigBelt extends Model
+class BeltGroup extends Model
 {
-    protected $table = 'uq_entry_config_belt';
+    protected $table = 'uq_bjj_belt_group';
     protected $primaryKey = 'id';
     
-    public static $rules = array(
-        'entry_id' => 'required',
-        'name' => 'required',
-        'name_en' => 'required',
-        // 'possible_belts' => 'required'
-    );
-
-    public function entry()
+    public function configBelts()
     {
-        return $this->belongsTo(EventEntries::class, 'entry_id');
+        return $this->hasMany('reference\EntryConfigBelt', 'possible_belts');
     }
 
-    public function belts()
-    {
-        return $this->belongsTo('reference\BeltGroup', 'belt_id');
-    }
-    
     public static function boot()
     {
         parent::boot();
