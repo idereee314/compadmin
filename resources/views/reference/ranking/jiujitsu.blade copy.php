@@ -1,25 +1,25 @@
-<!--begin::Subheader-->
-<div class="subheader py-2 py-lg-4 subheader-transparent mb-5" id="kt_subheader">
-    <div class="container d-flex align-items-center justify-content-between flex-wrap flex-sm-nowrap">
-        <!--begin::Details-->
-        <div class="d-flex align-items-center flex-wrap mr-2">
-            <!--begin::Breadcrumb-->
-            <ul class="breadcrumb breadcrumb-transparent breadcrumb-dot font-weight-bold my-2 p-0">
-                <li class="breadcrumb-item text-muted">
-                    <a href="" class="text-muted">{{ $sport->name}}</a>
-                </li>
-                <li class="breadcrumb-item text-muted">
-                    <a href="" class="text-muted">Чансаа</a>
-                </li>
-                <li class="breadcrumb-item text-muted" id="season">
-                    
-                </li>
-            </ul>
-            <!--end::Breadcrumb-->
+<section class="">
+    <!--begin::Details-->
+    <div class="d-flex align-items-center flex-wrap mr-2">
+                    <!--begin::Breadcrumb-->
+                    <ul class="breadcrumb breadcrumb-transparent breadcrumb-dot font-weight-bold my-2 p-0">
+                        <li class="breadcrumb-item text-muted">
+                            <a href="" class="text-muted">{{ $sport->name}}</a>
+                        </li>
+                        <li class="breadcrumb-item text-muted">
+                            <a href="" class="text-muted">Чансаа</a>
+                        </li>
+                    <li class="breadcrumb-item text-muted" id="test">
+                        <a href="" style="color: black;"><strong>MJJF 2022-2023</strong></a>
+                    </li>
+                </ul>
+                <!--end::Breadcrumb-->
+            </div>
+            <!--end::Details-->   
         </div>
-        <!--end::Details-->   
     </div>
-</div>
+</section>               
+
 <section class="deed-select">
     <div class="container">
         <div class="form-group row">
@@ -36,6 +36,8 @@
         </div>
     </div>
 </section>
+
+
 
 <section class="contents">
     <div class="row">

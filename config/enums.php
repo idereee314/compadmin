@@ -83,6 +83,7 @@ return array(
 		'4' => array('title' => "Жин",'code' => 'entry_config_weight','name' => "tab_config_weight", 'icon' => "fa-weight",'number' => 'tab1-5'),
 		'5' => array('title' => "Төлбөр",'code' => 'event_entries_fee','name' => "tab_entries_fee", 'icon' => "fa-money-bill",'number' => 'tab1-6'),
 		'6' => array('title' => "Хэрэглэгч",'code' => 'event_event_user','name' => "tab_event_user", 'icon' => "fa-user-check",'number' => 'tab1-7'),
+		// '7' => array('title' => "Хуваарь",'code' => 'event_schedule','name' => "tab_event_schedule", 'icon' => "flaticon2-analytics",'number' => 'tab1-8'),
     ],
 	'event_config_index' => [
         // '0' => array('title' => "Ерөнхий мэдээлэл",'code' => 'general','name' => "tab_general", 'icon' => "fa-calendar-alt",'number' => 'tab1-1'),
@@ -98,13 +99,13 @@ return array(
         '0' => array('title' => "Тамирчдын жагсаалт",'code' => 'general','name' => "tab_general", 'icon' => "fa-user-check",'number' => 'tab1-1'),
     ],
 
-	'event_stats' => [
+	'event_stat_tabs' => [
         '0' => array('title' => "Ерөнхий статистик",'code' => 'overview','name' => "tab_overview", 'icon' => "fa-calendar-alt",'number' => 'tab1-1'),
         '1' => array('title' => "Жингийн мэдээллүүд",'code' => 'event_weight','name' => "tab_weights", 'icon' => "fa-list",'number' => 'tab1-2'),
 		'2' => array('title' => "Гүйлгээнүүд",'code' => 'event_payments','name' => "tab_payments", 'icon' => "fa-list",'number' => 'tab1-3'),
     ],
 
-	'event_results' => [
+	'event_result_tabs' => [
         '0' => array('title' => "Багийн үр дүн",'code' => 'team_result','name' => "tab_team_result", 'icon' => "fa-calendar-alt",'number' => 'tab1-1'),
         '1' => array('title' => "Тамирчдын үр дүн",'code' => 'athlete_result','name' => "tab_athlete_result", 'icon' => "fa-list",'number' => 'tab1-2'),
 		'2' => array('title' => "Нийт төрлүүд",'code' => 'categories','name' => "tab_categories", 'icon' => "fa-list",'number' => 'tab1-3'),
@@ -122,6 +123,12 @@ return array(
         '1' => array('title' => "Статистик",'code' => 'stats','name' => "tab_stats", 'icon' => "flaticon2-pie-chart-2",'number' => 'tab1-2'),
 		'2' => array('title' => "Тамирчид",'code' => 'athletes','name' => "tab_athlete", 'icon' => "flaticon2-group",'number' => 'tab1-3'),
 		'3' => array('title' => "Бусад",'code' => 'others','name' => "tab_others", 'icon' => "flaticon2-box-1",'number' => 'tab1-4'),
+    ],
+
+	'ranking_tabs' => [
+        '0' => array('title' => "Ерөнхий ранк",'code' => 'overview','name' => "tab_overview", 'icon' => "flaticon2-analytics",'number' => 'tab1-1'),
+        '1' => array('title' => "Тамирчдын ранк",'code' => 'athlete_rank','name' => "tab_athlete_rank", 'icon' => "flaticon2-group",'number' => 'tab1-2'),
+		'2' => array('title' => "Академийн ранк",'code' => 'academy_rank','name' => "tab_academy_rank", 'icon' => "fa-list",'number' => 'tab1-3'),
     ],
 
 	'org_type' => [

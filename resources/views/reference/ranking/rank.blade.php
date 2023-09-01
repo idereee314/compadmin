@@ -55,26 +55,14 @@
             <div class="d-flex flex-column-fluid">
                 <!--begin::Container-->
                 <div class="container">
-                    <!--begin::Subheader-->
-                    <div class="subheader py-2 py-lg-4 subheader-transparent mb-5" id="kt_subheader">
-                        <div class="container d-flex align-items-center justify-content-between flex-wrap flex-sm-nowrap">
-                            <!--begin::Details-->
-                            <div class="d-flex align-items-center flex-wrap mr-2">
-                                <!--begin::Breadcrumb-->
-                                <ul class="breadcrumb breadcrumb-transparent breadcrumb-dot font-weight-bold my-2 p-0">
-                                    <li class="breadcrumb-item text-muted">
-                                        <a href="" class="text-muted">{{ $sport->name}}</a>
-                                    </li>
-                                    <li class="breadcrumb-item text-muted">
-                                        <a href="" class="text-muted">Чансаа</a>
-                                    </li>
-                                    @if($sport_id == '1')
-                                        @include('reference.ranking.jiujitsu')
-                                    @elseif($sport_id == '2')
-                                        @include('reference.ranking.volleyball')
-                                    @elseif($sport_id == '3')
-                                        @include('reference.ranking.judo')
-                                    @endif                   
+                    
+                    @if($sport_id == '1')
+                        @include('reference.ranking.jiujitsu')
+                    @elseif($sport_id == '2')
+                        @include('reference.ranking.volleyball')
+                    @elseif($sport_id == '3')
+                        @include('reference.ranking.judo')
+                    @endif                   
                 
                 </div>
                 <!--end::Container-->
@@ -88,5 +76,51 @@
     </div>
     <!--end::Wrapper-->
 <!--end::Main-->
+@include ($view_path.'.modals')
+<!--end::Wrapper-->
+<!--end::Main-->
+@section('javascript')
+<script src="{{asset('assets/js/plugins/custom/datatables/datatables.bundle.js')}}"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
+<script type="text/javascript">
+    $(document).ready(function() {
+        if ('{{ old('tab_id') }}' != '' || '{{ $tab_id }}' != '') {
+            $('a[name={{ old('tab_id')? old('tab_id'): $tab_id }}]').trigger('click');
+        }
+
+        // Get the initial content of the breadcrumb item
+        var initialContent = $("#breadcrumb-item-text").html();
+
+        // Listen for changes in the selectpicker
+        $(".selectpicker").on("change", function () {
+            var selectedOption = $(this).find("option:selected");
+            var seasonName = selectedOption.text();
+            
+            // Update the breadcrumb item with the selected season name
+            $("#season").html('<a href="" style="color: black;"><strong>' + seasonName + '</strong></a>');
+        });
+    }).ajaxStart($.blockUI).ajaxStop($.unblockUI);
+
+    var KTBootstrapSelect = function () {
+
+    // Private functions
+    var demos = function () {
+        // minimum setup
+        $('.kt-selectpicker').selectpicker();
+    }
+    
+    return {
+        // public functions
+        init: function() {
+            demos();
+        }
+    };
+    }();
+    
+    jQuery(document).ready(function() {
+    KTBootstrapSelect.init();
+    });
+</script>
+@endsection
 @stop

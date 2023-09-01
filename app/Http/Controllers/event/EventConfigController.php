@@ -433,14 +433,17 @@ class EventConfigController extends Controller
         $eventCategory = $this->eventCategory->all();
         $eventRankSeason = $this->eventRankSeason->all();
         $beltGroup = $this->beltGroup->all();
-        
+
         $data['beltGroup'] = $beltGroup;
         $data['eventRankSeason'] = $eventRankSeason;
         $data['eventCategory'] = $eventCategory;
         $data['sport_id'] = $sport_id;
         $data['sport'] = $sport;
-        $data['view_path'] = $this->view_path;
 
+        $data['tabs'] = collect(Config::get("enums.ranking_tabs"))->sortBy('order')->toArray();
+        $data['tab_id'] = @$input['tab_id'] ? @$input['tab_id'] : 'tab1-1';
+        $data['view_path'] = $this->view_path;
+        
         return view('.reference/ranking/rank', $data);
     }
 

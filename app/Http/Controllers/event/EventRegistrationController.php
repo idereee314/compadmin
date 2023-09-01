@@ -1103,7 +1103,7 @@ class EventRegistrationController extends Controller
         $data['eventRegistrationCountryStats'] = $eventRegistrationCountryStats;
         $data['eventRegistrationCountryAllStats'] = $eventRegistrationCountryAllStats;
         
-        $data['tabs'] = collect(Config::get("enums.event_stats"))->sortBy('order')->toArray();
+        $data['tabs'] = collect(Config::get("enums.event_stat_tabs"))->sortBy('order')->toArray();
         $data['tab_id'] = @$input['tab_id'] ? @$input['tab_id'] : 'tab1-1';
         $data['view_path'] = $this->view_path;
 
@@ -1125,7 +1125,7 @@ class EventRegistrationController extends Controller
         $data['event'] = $event;
         $data['eventToplist'] = $eventToplist;
         $data['eventAllCategories'] = $eventAllCategories;
-        $data['tabs'] = collect(Config::get("enums.event_results"))->sortBy('order')->toArray();
+        $data['tabs'] = collect(Config::get("enums.event_result_tabs"))->sortBy('order')->toArray();
         $data['tab_id'] = @$input['tab_id'] ? @$input['tab_id'] : 'tab1-1';
         $data['view_path'] = $this->view_path;
         
