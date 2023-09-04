@@ -245,7 +245,7 @@
                 },
                 { visible: false, targets: [1] },
             ],
-            order: [[2, 'asc']],
+            order: [[2, 'desc']],
         });
 
     }).ajaxStart($.blockUI).ajaxStop($.unblockUI);
