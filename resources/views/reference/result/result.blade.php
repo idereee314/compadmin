@@ -40,7 +40,7 @@
                 <!--begin::Details-->
                 <div class="d-flex align-items-center flex-wrap mr-2">
                     <!--begin::Title-->
-                    <h2 class="d-flex align-items-center text-dark font-weight-bold my-1 mr-3">Тэмцээний Статистик</h2>
+                    <h2 class="d-flex align-items-center text-dark font-weight-bold my-1 mr-3">Тэмцээний Үр дүн</h2>
                     <!--end::Title-->
                     <!--begin::Breadcrumb-->
                     <ul class="breadcrumb breadcrumb-transparent breadcrumb-dot font-weight-bold my-2 p-0">
@@ -48,7 +48,7 @@
                             <a href="javascript:;" class="text-muted">Бүртгэл</a>
                         </li>
                         <li class="breadcrumb-item text-muted">
-                            <a href="{{ route('event.config.index') }}" class="text-muted">Статистик</a>
+                            <a href="{{ route('event.config.index') }}" class="text-muted">Үр дүн</a>
                         </li>
                     </ul>
                     <!--end::Breadcrumb-->
@@ -165,11 +165,19 @@
                                 <div class="row">
                                     <div class="col-xl-12">
                                         <!--begin::Card-->
-                                        <div class="card card-custom gutter-b">
+                                        <div class="card card-custom gutter-b" id="toplist">
                                             <div class="card-header">
                                                 <div class="card-title text-center">
                                                     <h3 class="card-label"><strong>{{trans('display.best_academy')}}</strong></h3>
                                                 </div>
+                                                <div class="card-toolbar">
+		                                        	<a href="#" class="btn btn-icon btn-circle btn-sm btn-light-primary mr-1" data-card-tool="toggle">
+		                                        	<i class="ki ki-arrow-down icon-nm"></i>
+		                                        	</a>
+		                                        	<a href="#" class="btn btn-icon btn-circle btn-sm btn-light-success mr-1" data-card-tool="reload">
+		                                        	<i class="ki ki-reload icon-nm"></i>
+		                                        	</a>
+		                                        </div>
                                             </div>
                                             <div class="card-body">
                                             @if(count($eventToplist) > 0)
@@ -437,6 +445,27 @@ $(document).ready(function() {
         location.reload();
     }, 600000); // 10 minutes = 300000 milliseconds
 
+    // This card is lazy initialized using data-card="true" attribute. You can access to the card object as shown below and override its behavior
+    var card = new KTCard('toplist');
+
+    // Reload event handlers
+    card.on('reload', function (card) {
+    	toastr.info('Дахин ачааллаа');
+
+    	KTApp.block(card.getSelf(), {
+    		overlayColor: '#ffffff',
+    		type: 'loader',
+    		state: 'primary',
+    		opacity: 0.3,
+    		size: 'lg'
+    	});
+
+    	// update the content here
+
+    	setTimeout(function () {
+    		KTApp.unblock(card.getSelf());
+    	}, 2000);
+    });
 
 }).ajaxStart($.blockUI).ajaxStop($.unblockUI);
 
