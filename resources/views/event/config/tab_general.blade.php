@@ -89,6 +89,20 @@
                 <div class="error-here"></div>
             </div>
         </div>
+
+        <div class="form-group row">
+            <label class="col-md-3 col-form-label text-right">{{trans('display.general_result_type')}}: <span class="text-danger">*</span></label>
+            <div class="col-md-9 col-lg-6">
+                <select class="form-control selectpicker" id="eventResultType" name="eventResultType" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}">
+                    <option value="0">-- {{ trans('display.general_select') }} --</option>
+                    @foreach($eventResultType as $type)
+                        <option value="{{ $type->id }}" {{ $type->id == @$eventConfig->event_result_type_id ? 'selected': '' }}>- {{ $type->name }} </option>
+                    @endforeach
+                </select>
+                <div class="error-here"></div>
+            </div>
+        </div> 
+
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.comp_org_type')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9 col-lg-6">
@@ -177,7 +191,7 @@ $(document).ready(function() {
     $('#sport_id').selectpicker();
     $('#eventCategory').selectpicker();
     $('#eventRankSeason').selectpicker();
-    
+    $('#eventResultType').selectpicker();
     $('#kt_reg_date').daterangepicker({
         buttonClasses: ' btn',
         applyClass: 'btn-primary',

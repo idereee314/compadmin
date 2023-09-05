@@ -130,8 +130,6 @@
                             </div>
                             <!--end::Info-->
                         </div>
-                        
-                        
                         <div class="separator separator-solid"></div>
                     </div>
                     <input type="hidden" name="tab_id" id="tab_id" value="{{ isset($tab_id)? $tab_id: 'tab1-1'}}"/>
@@ -160,6 +158,7 @@
                     <!--end::Card header-->
                     <div class="card-body">
                         <div class="tab-content">
+                            @if($resultType == 1) 
                             <div class="tab-pane fade in {{@$tab_id == $tab['number'] ? 'active show' : '' }}" id="tab1-1">
                                 <!--begin::Row-->
                                 <div class="row">
@@ -216,8 +215,69 @@
                                     </div>
                                 </div>
                                 <!--end::Row-->
+                            </div>        
+                            @else 
+                            <div class="tab-pane fade in {{@$tab_id == $tab['number'] ? 'active show' : '' }}" id="tab1-1">
+                                <!--begin::Row-->
+                                <div class="row">
+                                    <div class="col-xl-12">
+                                        <!--begin::Card-->
+                                        <div class="card card-custom gutter-b" id="toplist_point">
+                                            <div class="card-header">
+                                                <div class="card-title text-center">
+                                                    <h3 class="card-label"><strong>{{trans('display.best_academy')}}</strong></h3>
+                                                </div>
+                                                <div class="card-toolbar">
+		                                        	<a href="#" class="btn btn-icon btn-circle btn-sm btn-light-primary mr-1" data-card-tool="toggle">
+		                                        	<i class="ki ki-arrow-down icon-nm"></i>
+		                                        	</a>
+		                                        	<a href="#" class="btn btn-icon btn-circle btn-sm btn-light-success mr-1" data-card-tool="reload">
+		                                        	<i class="ki ki-reload icon-nm"></i>
+		                                        	</a>
+		                                        </div>
+                                            </div>
+                                            <div class="card-body">
+                                            @if(count($eventToplistPoint) > 0)
+                                                <div class="table-responsive">
+                                                    <table class="table table-hover table-bordered table-head-custom">
+                                                    <thead>
+                                                        <tr>
+                                                            <th class="text-center">#</th>
+                                                            <th class="text-center">{{trans('display.comp_academy_name')}}</th>
+                                                            <th class="text-center"><i class="fas fa-medal icon-2x gold-medal-icon"></i> АЛТ</th>
+                                                            <th class="text-center"><i class="fas fa-medal icon-2x silver-medal-icon"></i> МӨНГӨ</th>
+                                                            <th class="text-center"><i class="fas fa-medal icon-2x bronze-medal-icon"></i> ХҮРЭЛ</th>
+                                                            <th class="text-center"> НИЙТ ОНОО</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach($eventToplistPoint as $results)
+                                                            <tr>
+                                                                <td class="text-center border-right">{{ ++$loop->index }}</td>
+                                                                <td class="min-w-200px text-center border-right"><strong>{{ $results->name }}</strong></td>
+                                                                <td class="text-center border-right"><strong>{{ $results->gold }}</strong></td>
+                                                                <td class="text-center border-right"><strong>{{ $results->silver }}</strong></td>
+                                                                <td class="text-center border-right"><strong>{{ $results->bronze }}</strong></td>
+                                                                <td class="text-center border-right"><strong>{{ $results->total_point }}</strong></td>
+                                                            </tr>
+                                                        @endforeach 
+                                                    </table>
+                                                    </tbody>                                        
+                                                </div>
+                                            @else
+                                                <tr>
+                                                    <td colspan="12" class="text-center"><strong>{{ trans('messages.empty_toplist') }}</strong></td>
+                                                </tr>
+                                            @endif
+                                            </div>
+                                        </div>
+                                        <!--end::Card-->                            
+                                    </div>
+                                </div>
+                                <!--end::Row-->
                             </div>
-                            <div class="tab-pane fade in {{@$tab_id == $tab['number'] ? 'active show' : '' }}" id="tab1-2">
+                            @endif
+                            <div class="tab-pane fade in {{@$tab_id == $tab['number'] ? 'active show' : '' }}" id="tab1-3">
                                 <!--begin::Row-->
                                 <div class="row">                        
                                     <div class="col-xl-12">
@@ -318,7 +378,7 @@
                                 </div>                    
                                 <!--end::Row-->
                             </div>
-                            <div class="tab-pane fade {{ @$tab_id == $tab['number'] ? 'active show' : '' }}" id="tab1-3">
+                            <div class="tab-pane fade {{ @$tab_id == $tab['number'] ? 'active show' : '' }}" id="tab1-4">
                                 <div class="table-responsive">
                                     <table class="table table-hover table-bordered table-head-custom" id="categoriesTable" style="width: 100%">
                                         <thead>
@@ -365,41 +425,6 @@
                                     </table>
                                 </div>
                             </div>
-
-                            <!-- <div class="tab-pane fade {{ @$tab_id == $tab['number'] ? 'active show' : '' }}" id="tab1-4">
-                                <div class="table-responsive">
-                                    <table class="table table-hover table-bordered table-head-custom" style="width: 100%">
-                                        <thead>
-                                            <tr>
-                                                <th>#</th>
-                                                <th class="text-center">{{trans('display.general_category')}}</th>
-                                                <th class="text-center">{{trans('display.human_gender_code')}}</th>
-                                                <th class="text-center">{{trans('display.comp_entry_weight')}}</th>
-                                                <th class="text-center">{{trans('display.comp_entry_belt')}}</th>
-                                                <th class="text-center">Оролцож буй тамирчдын тоо</th>
-                                                <th class="text-center">Дууссан эсэх</th>
-                                                <th class="text-center">Медаль гардуулсан эсэх</th>
-                                                <th class="text-center">{{ trans('display.general_manage') }}</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach($statsWeightForOrg as $weights)
-                                                <tr>
-                                                    <td class="text-center border-right">{{ ++$loop->index }}</td>
-                                                    <td class="text-center border-right"><strong>{{ $weights->entry_name }}</strong></td>
-                                                    <td class="text-center border-right"><strong>{{ Config::get("enums.gender_code")[@$weights->gender_code] }}</strong></td>
-                                                    <td class="text-center border-right"><strong>{{ $weights->weight }}</strong></td>
-                                                    <td class="text-center border-right"><strong>{{ $weights->belt_name }}</strong></td>
-                                                    <td class="text-center border-right"><strong></strong></td>
-                                                    <td class="text-center border-right"><strong><input type="checkbox" name="checkboxes[]"></strong></td>
-                                                    <td class="text-center border-right"><strong></strong></td>
-                                                    <td class="text-center border-right"><strong></strong></td>
-                                                </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div> -->
                         </div>
                     </div>
                 </div>
@@ -447,7 +472,7 @@ $(document).ready(function() {
 
     // This card is lazy initialized using data-card="true" attribute. You can access to the card object as shown below and override its behavior
     var card = new KTCard('toplist');
-
+    var card = new KTCard('toplist_point');
     // Reload event handlers
     card.on('reload', function (card) {
     	toastr.info('Дахин ачааллаа');
@@ -466,6 +491,7 @@ $(document).ready(function() {
     		KTApp.unblock(card.getSelf());
     	}, 2000);
     });
+
 
 }).ajaxStart($.blockUI).ajaxStop($.unblockUI);
 

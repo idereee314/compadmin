@@ -665,6 +665,32 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 			ORDER BY gold desc, silver desc, bronze desc");
 	}
 
+	public function getToplistByPointFromEvent($eventId)
+	{
+		return DB::select("SELECT ua.id AS academy_id,
+		ua.name ,
+				SUM(CASE WHEN uea.place_number = 1 THEN 1 ELSE 0 END) AS gold,
+				SUM(CASE WHEN uea.place_number = 2 THEN 1 ELSE 0 END) AS silver,
+				SUM(CASE WHEN uea.place_number = 3 THEN 1 ELSE 0 END) AS bronze,
+				COALESCE(SUM(CASE 
+							 WHEN uea.place_number = 1 THEN urp.result_point
+							 WHEN uea.place_number = 2 THEN urp.result_point
+							 WHEN uea.place_number = 3 THEN urp.result_point
+							 ELSE 0
+							END), 0) AS total_point
+ 		FROM uq_comp.uq_event_award uea
+ 		JOIN uq_comp.uq_event_registration uer ON uer.id = uea.event_registration_id
+ 		JOIN uq_comp.uq_academy ua ON ua.id = uer.academy_id
+ 		LEFT JOIN uniqdb.uq_comp.uq_ranking_point urp ON (
+			 (uea.place_number = 1 AND urp.start_pos = 1) OR
+			 (uea.place_number = 2 AND urp.start_pos = 2) OR
+			 (uea.place_number = 3 AND urp.start_pos = 3)
+ 		)
+ 		WHERE uer.event_id = $eventId
+ 		GROUP BY ua.id, ua.name
+ 		order by total_point desc");
+	}
+
 	public function getResultFromEvent($eventId)
 	{
 		return DB::select("select CONCAT(um.lastname, ' ',um.firstname) AS fullname, uea.place_number, uee.name as category_name, uecw.weight, 
@@ -750,6 +776,16 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 								where b.event_id = ".$eventId."  and b.entry_id = ".$entryId." and b.entry_age_id = ".$entryAgeId."  
 								and b.entry_belt_id = ".$entryBeltId." and b.entry_weight_id = ".$entryWeightId."
 								order by b.id");
+	}
+
+	public function getEventConfig($eventId)
+	{
+		return DB::select("SELECT uec.*
+		FROM uq_comp.uq_event_registration uer
+		JOIN uq_comp.uq_event_config uec ON uec.event_id = uer.event_id
+		WHERE uer.event_id = $eventId
+		LIMIT 1;
+		");
 	}
 
 	public function deleteEventBracket($eventId, $entryId, $entryAgeId, $entryBeltId, $entryWeightId)

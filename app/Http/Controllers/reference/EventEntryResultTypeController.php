@@ -1,0 +1,218 @@
+<?php
+
+namespace reference;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Input;
+use Validator;
+
+//Repositories
+use reference\EntryResultTypeRepository as EventEntryResultType;
+use reference\EventEntriesRepository as EventEntry;
+
+//Models
+use reference\EntryResultType as EventEntryResultTypeModel;
+
+use \Auth as Auth;
+use Config;
+use \HTML;
+use Image;
+
+class EventEntryResultTypeController extends Controller
+{
+    public $restful = true;
+
+    public function __construct(EventEntryResultType $eventEntryResultType, EventEntry $eventEntry)
+    {
+        $this->view_path = 'event.entry.result';
+        $this->eventEntryResultType = $eventEntryResultType;
+        $this->eventEntry = $eventEntry;
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        $data['view_path'] = $this->view_path;
+
+        return view($this->view_path.'.index', $data);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        $input = Input::all();
+
+        $data['eventEntries'] = $this->eventEntry->getEntryByEventId($input['eventId']);
+
+        return view($this->view_path.'.add', $data);
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        $input = Input::all();
+
+
+        $validator = Validator::make($input, EventEntryAgeModel::rules(0));
+
+        if ($validator->fails())
+        {
+            $response = array(
+                'status' => 'error',
+                'msg' => trans('messages.error_save'),
+                'errors' => html_entity_decode(HTML::ul($validator->errors()->all()))
+            );
+        }
+        else
+        {
+            try
+            {
+                $event = $this->eventEntryAge->create($input);
+
+                $response = array(
+                    'status' => 'success',
+                    'msg' => trans('messages.success_save')
+                );
+
+            }
+            catch(\Illuminate\Database\QueryException $e)
+            {
+                $response = array(
+                    'status' => 'error',
+                    'msg' => trans('messages.error_save'),
+                    'errors' => $e->getMessage()
+                );
+
+            }
+        }
+        return $response;
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+    {
+        $input = Input::all();
+        $eventEntryAge = $this->eventEntryAge->find($id);
+
+        $data['eventEntries'] = $this->eventEntry->getEntryByEventId($input['eventId']);
+        $data['eventEntryAge'] = $eventEntryAge;
+
+        return view($this->view_path.'.edit', $data);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        $input = Input::all();
+
+        $validator = Validator::make($input, EventEntryAgeModel::rules($id));
+
+        if ($validator->fails())
+		{
+        	$response = array(
+                'status' => 'error',
+                'msg' => trans('messages.error_save'),
+                'errors' => html_entity_decode(HTML::ul($validator->errors()->all()))
+            );
+        } else {
+			try {
+                $event = $this->eventEntryAge->update($id, $input);
+            
+				$response = array(
+					'status' => 'success',
+					'msg' => trans('messages.success_update')
+				);
+			}
+			catch(Exception $e)
+			{
+				$response = array(
+					'status' => 'error',
+					'msg' => trans('messages.error_save'),
+					'errors' => $e->getMessage()
+				);
+			}
+		}
+
+        return $response;
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        try {
+        
+            $this->eventEntryAge->delete($id);
+
+            $response = array(
+                'status' => 'success',
+                'msg' => trans('messages.success_delete')
+            );
+    
+        } catch(\Illuminate\Database\QueryException $e)
+        {
+            $response = array(
+                'status' => 'error',
+                'msg' => trans('messages.error_delete'),
+                'errors' => $e->getMessage()
+            );
+        }
+
+        return $response;
+    }
+
+    public function getDatatableList(Request $request)
+    {
+        return $this->eventEntryAge->getDatatableList($request);
+    }
+
+    public function getEntryAgeByEntryId()
+    {
+        $input = Input::all();
+        $ages = $this->eventEntryAge->getEntryAgeByEntryId(@$input['entry_id']);   
+
+        return json_encode($ages);
+    }
+
+}

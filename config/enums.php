@@ -74,7 +74,6 @@ return array(
         'visit' => 'Харах',
 	    'editable' => 'Засварлах',
     ],
-
 	'event_config' => [
         '0' => array('title' => "Ерөнхий мэдээлэл",'code' => 'general','name' => "tab_general", 'icon' => "fa-calendar-alt",'number' => 'tab1-1'),
         '1' => array('title' => "Төрөл",'code' => 'event_entries','name' => "tab_entries", 'icon' => "fa-list",'number' => 'tab1-2'),
@@ -107,6 +106,12 @@ return array(
 
 	'event_result_tabs' => [
         '0' => array('title' => "Багийн үр дүн",'code' => 'team_result','name' => "tab_team_result", 'icon' => "fa-calendar-alt",'number' => 'tab1-1'),
+        '1' => array('title' => "Тамирчдын үр дүн",'code' => 'athlete_result','name' => "tab_athlete_result", 'icon' => "fa-list",'number' => 'tab1-2'),
+		'2' => array('title' => "Нийт төрлүүд",'code' => 'categories','name' => "tab_categories", 'icon' => "fa-list",'number' => 'tab1-3'),
+    ],
+
+	'event_result_point_tabs' => [
+        '0' => array('title' => "Багийн үр дүн",'code' => 'team_result_point','name' => "tab_team_result_point", 'icon' => "fa-calendar-alt",'number' => 'tab1-1'),
         '1' => array('title' => "Тамирчдын үр дүн",'code' => 'athlete_result','name' => "tab_athlete_result", 'icon' => "fa-list",'number' => 'tab1-2'),
 		'2' => array('title' => "Нийт төрлүүд",'code' => 'categories','name' => "tab_categories", 'icon' => "fa-list",'number' => 'tab1-3'),
     ],

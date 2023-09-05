@@ -22,6 +22,7 @@ use reference\EntryConfigAgeRepository as EntryConfigAge;
 use reference\EntryConfigWeightRepository as EntryConfigWeight;
 use reference\EventEntriesFeeRepository as EventEntriesFee;
 use reference\BeltGroupRepository as BeltGroup;
+use reference\EntryResultTypeRepository as EventResultType;
 use sport\SportRepository as Sport;
 
 //Models
@@ -36,7 +37,7 @@ class EventConfigController extends Controller
 {
     public $restful = true;
 
-    public function __construct(EventConfig $eventConfig, Event $event, EventCategory $eventCategory, EventEntries $eventEntries, EntryConfigBelt $entryConfigBelt, EntryConfigAge $entryConfigAge, EntryConfigWeight $entryConfigWeight, EventEntriesFee $eventEntriesFee, Sport $sport, EventRankSeason $eventRankSeason, BeltGroup $beltGroup)
+    public function __construct(EventConfig $eventConfig, Event $event, EventCategory $eventCategory, EventEntries $eventEntries, EntryConfigBelt $entryConfigBelt, EntryConfigAge $entryConfigAge, EntryConfigWeight $entryConfigWeight, EventEntriesFee $eventEntriesFee, Sport $sport, EventRankSeason $eventRankSeason, BeltGroup $beltGroup, EventResultType $eventResultType)
     {
         $this->view_path = 'event.config';
         $this->eventConfig = $eventConfig;
@@ -50,6 +51,7 @@ class EventConfigController extends Controller
         $this->eventCategory = $eventCategory;
         $this->eventRankSeason = $eventRankSeason;
         $this->beltGroup = $beltGroup;
+        $this->eventResultType = $eventResultType; 
     }
 
     /**
@@ -83,7 +85,9 @@ class EventConfigController extends Controller
         $sports = $this->sport->all();
         $eventCategory = $this->eventCategory->all();
         $eventRankSeason = $this->eventRankSeason->all();
-        
+        $eventResultType = $this->eventResultType->all();
+
+        $data['eventResultType'] = $eventResultType;
         $data['eventRankSeason'] = $eventRankSeason;
         $data['eventCategory'] = $eventCategory;
         $data['sports'] = $sports;
@@ -368,7 +372,9 @@ class EventConfigController extends Controller
         $eventCategory = $this->eventCategory->all();
         $eventRankSeason = $this->eventRankSeason->all();
         $beltGroup = $this->beltGroup->all();
+        $eventResultType = $this->eventResultType->all();
 
+        $data['eventResultType'] = $eventResultType;
         $data['beltGroup'] = $beltGroup;
         $data['eventRankSeason'] = $eventRankSeason;
         $data['eventCategory'] = $eventCategory;

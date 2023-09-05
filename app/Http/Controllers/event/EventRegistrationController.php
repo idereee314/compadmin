@@ -1116,14 +1116,22 @@ class EventRegistrationController extends Controller
         $eventResult = $this->eventRegistration->getResultFromEvent($eventId);
         $eventAllMedal = $this->eventRegistration->getAllMedalFromEvent($eventId);
         $eventToplist = $this->eventRegistration->getToplistFromEvent($eventId);
+        $eventToplistPoint = $this->eventRegistration->getToplistByPointFromEvent($eventId);
         $eventAllCategories = $this->eventRegistration->getCategoriesFromEvent($eventId);
         $statsWeightForOrg = $this->eventRegistration->getStatsForOrg(@$eventId);
-
+        
+        $resultType = null;
+        $configArray = $this->eventRegistration->getEventConfig($eventId);
+        if (!empty($configArray) && isset($configArray[0]->event_result_type_id)) {
+            $resultType = $configArray[0]->event_result_type_id;
+        }
+        $data['resultType'] = $resultType;
         $data['statsWeightForOrg'] = $statsWeightForOrg;
         $data['eventAllMedal'] = $eventAllMedal;
         $data['eventResult'] = $eventResult;
         $data['event'] = $event;
         $data['eventToplist'] = $eventToplist;
+        $data['eventToplistPoint'] = $eventToplistPoint;
         $data['eventAllCategories'] = $eventAllCategories;
         $data['tabs'] = collect(Config::get("enums.event_result_tabs"))->sortBy('order')->toArray();
         $data['tab_id'] = @$input['tab_id'] ? @$input['tab_id'] : 'tab1-1';
