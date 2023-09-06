@@ -205,6 +205,7 @@
                                 </div> 
                             </div>
                             <div>
+                                
                                 @for($i = 0; $i < 3 && $i < count($pastEventJiuJitsuData); $i++)
                                 <div class="event-list">
                                     <div class="card" style="border-left-color: #0f4b63; border-left-width: 1rem; ">
@@ -218,7 +219,10 @@
                                             </div>
                                             <div class="event-location mt-2 mb-2">                                                
                                                 <small class="text-muted"> <i class="flaticon2-location mr-2" style="color:#f96815;"></i>{{ $pastEventJiuJitsuData[$i]->object_name }} </small>
-                                            </div>                                            
+                                            </div>
+                                            <div class="event-result mt-2 mb-2">                                                
+                                                <a href="/event/{{$pastEventJiuJitsuData[$i]->event_id}}/results" class="btn btn-danger btn-shadow font-weight-bold mr-2" target="_blank">{{trans('display.general_result')}}</a>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

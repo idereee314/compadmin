@@ -42,7 +42,7 @@
                 <select class="form-control select2" id="possible_belts" name="possible_belts[]" multiple="multiple" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}">
                     <option value="0">-- {{ trans('display.general_select') }} --</option>
                     @forelse(@$beltGroup as $belt)
-                    <option value="{{ $belt->id }}">{{ $belt->name }}</option>
+                    <option value="{{ $belt->id }}">{{ $belt->name }} - {{ $belt->age_category }}</option>
                     @empty
                     @endforelse
                 </select>
