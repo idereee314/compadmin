@@ -15,7 +15,7 @@
                 <select class="form-control selectpicker" id="sport_id" name="sport_id" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}">
                     <option value="0">-- {{ trans('display.general_select') }} --</option>
                     @foreach($sports as $type)
-                        <option value="{{ $type->id }}" {{ $type->id == @$eventConfig->sport_id ? 'selected': '' }}>{{ $type->name }}</option>
+                        <option value="{{ $type->id }}" {{ $type->id == @$eventConfig->sport_id ? 'selected': '' }}>- {{ $type->name }}</option>
                     @endforeach
                 </select>
                 <div class="error-here"></div>
@@ -27,7 +27,7 @@
                 <select class="form-control selectpicker" id="eventRankSeason" name="eventRankSeason" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}">
                     <option value="0">-- {{ trans('display.general_select') }} --</option>
                     @foreach($eventRankSeason as $season)
-                        <option value="{{ $season->id }}" {{ $season->id == @$eventConfig->event_rank_season_id ? 'selected': '' }}>{{ $season->name }} - {{ Config::get("enums.sport_category")[$season->sport_id] }}</option>
+                        <option value="{{ $season->id }}" {{ $season->id == @$eventConfig->event_rank_season_id ? 'selected': '' }}>- {{ $season->name }} - {{ Config::get("enums.sport_category")[$season->sport_id] }}</option>
                     @endforeach
                 </select>
                 <div class="error-here"></div>
@@ -40,7 +40,7 @@
                 <select class="form-control selectpicker" id="eventCategory" name="eventCategory" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}">
                     <option value="0">-- {{ trans('display.general_select') }} --</option>
                     @foreach($eventCategory as $category)
-                        <option value="{{ $category->id }}" {{ $category->id == @$eventConfig->event_category_id ? 'selected': '' }}>{{ $category->name }}</option>
+                        <option value="{{ $category->id }}" {{ $category->id == @$eventConfig->point_type_id ? 'selected': '' }}>- {{ $category->name }}</option>
                     @endforeach
                 </select>
                 <div class="error-here"></div>

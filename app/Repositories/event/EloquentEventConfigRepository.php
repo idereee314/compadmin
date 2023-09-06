@@ -47,7 +47,7 @@ class EloquentEventConfigRepository implements EventConfigRepository {
 		$eventConfig->update_final_date = @$input['reg_update_date'];
 		$eventConfig->sport_id = @$input['sport_id'];
 		$eventConfig->is_team = @$input['is_team'] ? $input['is_team'] : false;
-		$eventConfig->event_category_id = @$input['eventCategory'];
+		$eventConfig->point_type_id = @$input['eventCategory'];
 		$eventConfig->event_rank_season_id = @$input['eventRankSeason'];
 		$eventConfig->event_result_type_id = @$input['eventResultType'];
 
@@ -68,7 +68,7 @@ class EloquentEventConfigRepository implements EventConfigRepository {
 		$eventConfig->update_final_date = @$input['reg_update_date'];
 		$eventConfig->sport_id = @$input['sport_id'];
 		$eventConfig->is_team = @$input['is_team'] ? $input['is_team'] : false;
-		$eventConfig->event_category_id = @$input['eventCategory'];
+		$eventConfig->point_type_id = @$input['eventCategory'];
 		$eventConfig->event_rank_season_id = @$input['eventRankSeason'];
 
 		$eventConfig->save();

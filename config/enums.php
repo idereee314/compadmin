@@ -109,13 +109,7 @@ return array(
         '1' => array('title' => "Тамирчдын үр дүн",'code' => 'athlete_result','name' => "tab_athlete_result", 'icon' => "fa-list",'number' => 'tab1-2'),
 		'2' => array('title' => "Нийт төрлүүд",'code' => 'categories','name' => "tab_categories", 'icon' => "fa-list",'number' => 'tab1-3'),
     ],
-
-	'event_result_point_tabs' => [
-        '0' => array('title' => "Багийн үр дүн",'code' => 'team_result_point','name' => "tab_team_result_point", 'icon' => "fa-calendar-alt",'number' => 'tab1-1'),
-        '1' => array('title' => "Тамирчдын үр дүн",'code' => 'athlete_result','name' => "tab_athlete_result", 'icon' => "fa-list",'number' => 'tab1-2'),
-		'2' => array('title' => "Нийт төрлүүд",'code' => 'categories','name' => "tab_categories", 'icon' => "fa-list",'number' => 'tab1-3'),
-    ],
-
+	
 	'reference_tabs' => [
         '0' => array('title' => "Жин бүс нас",'code' => 'division','name' => "tab_division", 'icon' => "la-info-circle",'number' => 'tab1-1'),
         // '1' => array('title' => "Тамирчны гишүүнчлэл",'code' => 'athlete_membership','name' => "tab_athlete", 'icon' => "fa-list",'number' => 'tab1-2'),

@@ -673,9 +673,9 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 				SUM(CASE WHEN uea.place_number = 2 THEN 1 ELSE 0 END) AS silver,
 				SUM(CASE WHEN uea.place_number = 3 THEN 1 ELSE 0 END) AS bronze,
 				COALESCE(SUM(CASE 
-							 WHEN uea.place_number = 1 THEN urp.result_point
-							 WHEN uea.place_number = 2 THEN urp.result_point
-							 WHEN uea.place_number = 3 THEN urp.result_point
+							 WHEN uea.place_number = 1 THEN urp.point
+							 WHEN uea.place_number = 2 THEN urp.point
+							 WHEN uea.place_number = 3 THEN urp.point
 							 ELSE 0
 							END), 0) AS total_point
  		FROM uq_comp.uq_event_award uea

@@ -158,8 +158,8 @@
                     <!--end::Card header-->
                     <div class="card-body">
                         <div class="tab-content">
-                            @if($resultType == 1) 
                             <div class="tab-pane fade in {{@$tab_id == $tab['number'] ? 'active show' : '' }}" id="tab1-1">
+                                @if($resultType == 1) 
                                 <!--begin::Row-->
                                 <div class="row">
                                     <div class="col-xl-12">
@@ -181,7 +181,7 @@
                                             <div class="card-body">
                                             @if(count($eventToplist) > 0)
                                                 <div class="table-responsive">
-                                                    <table class="table table-hover table-bordered table-head-custom" id="event-team-registration-datatable">
+                                                    <table class="table table-hover table-bordered table-head-custom">
                                                     <thead>
                                                         <tr>
                                                             <th class="text-center">#</th>
@@ -215,9 +215,7 @@
                                     </div>
                                 </div>
                                 <!--end::Row-->
-                            </div>        
-                            @else 
-                            <div class="tab-pane fade in {{@$tab_id == $tab['number'] ? 'active show' : '' }}" id="tab1-1">
+                                @else 
                                 <!--begin::Row-->
                                 <div class="row">
                                     <div class="col-xl-12">
@@ -275,9 +273,9 @@
                                     </div>
                                 </div>
                                 <!--end::Row-->
+                                @endif
                             </div>
-                            @endif
-                            <div class="tab-pane fade in {{@$tab_id == $tab['number'] ? 'active show' : '' }}" id="tab1-3">
+                            <div class="tab-pane fade in {{@$tab_id == $tab['number'] ? 'active show' : '' }}" id="tab1-2">
                                 <!--begin::Row-->
                                 <div class="row">                        
                                     <div class="col-xl-12">
@@ -290,7 +288,7 @@
                                             </div>
                                             <div class="card-body">                                
                                                 <div class="table-responsive">
-                                                    <table class="table table-hover table-bordered table-head-custom" id="event-team-registration-datatable">
+                                                    <table class="table table-hover table-bordered table-head-custom">
                                                         <thead>
                                                             <tr>                                                                                        
                                                                 <th class="text-center"><i class="fas fa-medal icon-2x gold-medal-icon"></i> АЛТ</th>
@@ -337,7 +335,7 @@
                                                                 </div>
                                                                 <div class="card-body">                                                              
                                                                     <div class="table-responsive">
-                                                                        <table class="table table-hover table-bordered table-head-custom" id="event-team-registration-datatable">                                                                        
+                                                                        <table class="table table-hover table-bordered table-head-custom">                                                                        
                                                                             <tbody>
                                                                                 @foreach($weights as $result)
                                                                                     <tr>
@@ -378,7 +376,7 @@
                                 </div>                    
                                 <!--end::Row-->
                             </div>
-                            <div class="tab-pane fade {{ @$tab_id == $tab['number'] ? 'active show' : '' }}" id="tab1-4">
+                            <div class="tab-pane fade {{ @$tab_id == $tab['number'] ? 'active show' : '' }}" id="tab1-3">
                                 <div class="table-responsive">
                                     <table class="table table-hover table-bordered table-head-custom" id="categoriesTable" style="width: 100%">
                                         <thead>
