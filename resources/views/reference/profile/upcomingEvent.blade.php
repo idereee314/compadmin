@@ -82,7 +82,7 @@
                         <div>
                         @foreach($upcomingEventJiuJitsuData as $upcomingjiujitsu)                               
                             <div class="card" style="border-left-color: #f96815; border-left-width: 1rem; ">
-                                <div class="card-content">
+                                <div class="card-content mt-5">
                                     <div class="event-date">
                                         <i class="flaticon-calendar-with-a-clock-time-tools mr-1" style="color:#f96815;"></i><small>{{date('Y-m-d', strtotime($upcomingjiujitsu->event_date))}}</small>                                                 
                                     </div> 
@@ -91,7 +91,10 @@
                                     </div> 
                                     <div class="event-location mb-2"">                                                
                                         <small class="text-muted"> <i class="flaticon2-location mr-2" style="color:#f96815;"></i>{{ $upcomingjiujitsu->object_name }} </small>
-                                    </div>                                        
+                                    </div>
+                                    <div class="event-organizer mt-2 mb-2">                                                
+                                        <small><strong>Зохион байгууллагч :</strong> {{ $upcomingjiujitsu->org_name }} </small>
+                                    </div>
                                 </div>
                             </div>
                         @endforeach

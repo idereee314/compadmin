@@ -62,10 +62,10 @@
                                 <!--begin::Breadcrumb-->
                                 <ul class="breadcrumb breadcrumb-transparent breadcrumb-dot font-weight-bold my-2 p-0">
                                     <li class="breadcrumb-item text-muted">
-                                        <a href="/event/competition" class="text-muted">Тэмцээнүүд</a>
+                                        <a href="/event/competition" class="text-muted">{{trans('display.comp_title')}}</a>
                                     </li>
                                     <li class="breadcrumb-item text-muted">
-                                        <a href="/pastEvent" style="color: #f96815;"><strong>Болж өнгөрсөн жюү жицүгийн тэмцээнүүд</strong></a>
+                                        <a href="/pastEvent" style="color: #f96815;"><strong>{{trans('display.past_event')}}</strong></a>
                                     </li>
                                 </ul>
                                 <!--end::Breadcrumb-->
@@ -75,14 +75,14 @@
                     </div>
                     <!--end::Subheader-->  
                     <div class="d-flex justify-content-center mb-5">
-                        <h1 class="text-center text-uppercase bold margin-bottom-xs-16 margin-bottom-sm-0" style="font-size: 4rem; color: #0f4b63;"><strong>Болж өнгөрсөн жюү жицүгийн тэмцээнүүд</strong></h1>
+                        <h1 class="text-center text-uppercase bold margin-bottom-xs-16 margin-bottom-sm-0" style="font-size: 4rem; color: #0f4b63;"><strong>{{trans('display.past_event')}}</strong></h1>
                     </div>
                     <div class="d-flex justify-content-center mt-5 pt-5">
                         <div class="col-lg-8">
-                            <div>                                
+                            <div>
                                 @foreach($pastEventJiuJitsuData as $pastEventJiuJitsu)
                                     <div class="card" style="border-left-color: #0f4b63; border-left-width: 1rem; ">
-                                        <div class="card-content">
+                                        <div class="card-content mt-5">
                                             <div class="event-date">
                                                 <i class="flaticon-calendar-with-a-clock-time-tools mr-1" style="color:#f96815;"></i><small>{{date('Y-m-d', strtotime($pastEventJiuJitsu->event_date))}}</small>                                                 
                                             </div> 
@@ -91,11 +91,17 @@
                                             </div> 
                                             <div class="event-location mb-2"">                                                
                                                 <small class="text-muted"> <i class="flaticon2-location mr-2" style="color:#f96815;"></i>{{ $pastEventJiuJitsu->object_name }} </small>
-                                            </div>                                            
+                                            </div>
+                                            <div class="event-organizer mt-2 mb-2">                                                
+                                                <small><strong>Зохион байгууллагч :</strong> {{ $pastEventJiuJitsu->org_name }} </small>
+                                            </div>
+                                            <div class="event-result mt-2 mb-2">                                                
+                                                <a href="/event/{{$pastEventJiuJitsu->event_id}}/results" class="btn btn-danger btn-shadow font-weight-bold mr-2" target="_blank">{{trans('display.general_result')}}</a>
+                                            </div>                                       
                                         </div>
-                                    </div>                                 
+                                    </div>
                                 @endforeach   
-                            </div>                                                                                      
+                            </div>
                         </div>
                     </div>                         
                 </div>

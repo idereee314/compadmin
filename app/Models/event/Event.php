@@ -57,6 +57,11 @@ class Event extends Model
         return $this->hasMany('event\EventUser', 'event_id');
     }
 
+    public function eventToplistPoint()
+    {
+        return $this->hasMany('reference\EventToplistPoint', 'event_id');
+    }
+
 	public static function boot()
     {
         parent::boot();    

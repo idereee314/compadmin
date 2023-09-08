@@ -82,7 +82,10 @@ return array(
 		'4' => array('title' => "Жин",'code' => 'entry_config_weight','name' => "tab_config_weight", 'icon' => "fa-weight",'number' => 'tab1-5'),
 		'5' => array('title' => "Төлбөр",'code' => 'event_entries_fee','name' => "tab_entries_fee", 'icon' => "fa-money-bill",'number' => 'tab1-6'),
 		'6' => array('title' => "Хэрэглэгч",'code' => 'event_event_user','name' => "tab_event_user", 'icon' => "fa-user-check",'number' => 'tab1-7'),
+		'7' => array('title' => "Багийн үр дүнгийн оноо",'code' => 'toplist_point','name' => "tab_config_toplist_point", 'icon' => "flaticon2-analytics",'number' => 'tab1-8'),
+		
 		// '7' => array('title' => "Хуваарь",'code' => 'event_schedule','name' => "tab_event_schedule", 'icon' => "flaticon2-analytics",'number' => 'tab1-8'),
+
     ],
 	'event_config_index' => [
         // '0' => array('title' => "Ерөнхий мэдээлэл",'code' => 'general','name' => "tab_general", 'icon' => "fa-calendar-alt",'number' => 'tab1-1'),

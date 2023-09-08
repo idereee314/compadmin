@@ -23,6 +23,7 @@ use reference\EntryConfigWeightRepository as EntryConfigWeight;
 use reference\EventEntriesFeeRepository as EventEntriesFee;
 use reference\BeltGroupRepository as BeltGroup;
 use reference\EntryResultTypeRepository as EventResultType;
+use reference\EventToplistPointRepository as EventToplistPoint;
 use sport\SportRepository as Sport;
 
 //Models
@@ -37,7 +38,7 @@ class EventConfigController extends Controller
 {
     public $restful = true;
 
-    public function __construct(EventConfig $eventConfig, Event $event, EventCategory $eventCategory, EventEntries $eventEntries, EntryConfigBelt $entryConfigBelt, EntryConfigAge $entryConfigAge, EntryConfigWeight $entryConfigWeight, EventEntriesFee $eventEntriesFee, Sport $sport, EventRankSeason $eventRankSeason, BeltGroup $beltGroup, EventResultType $eventResultType)
+    public function __construct(EventConfig $eventConfig, Event $event, EventCategory $eventCategory, EventEntries $eventEntries, EntryConfigBelt $entryConfigBelt, EntryConfigAge $entryConfigAge, EntryConfigWeight $entryConfigWeight, EventEntriesFee $eventEntriesFee, Sport $sport, EventRankSeason $eventRankSeason, BeltGroup $beltGroup, EventResultType $eventResultType, EventToplistPoint $eventToplistPoint)
     {
         $this->view_path = 'event.config';
         $this->eventConfig = $eventConfig;
@@ -51,7 +52,8 @@ class EventConfigController extends Controller
         $this->eventCategory = $eventCategory;
         $this->eventRankSeason = $eventRankSeason;
         $this->beltGroup = $beltGroup;
-        $this->eventResultType = $eventResultType; 
+        $this->eventResultType = $eventResultType;
+        $this->eventToplistPoint = $eventToplistPoint; 
     }
 
     /**
@@ -374,6 +376,7 @@ class EventConfigController extends Controller
         $beltGroup = $this->beltGroup->all();
         $eventResultType = $this->eventResultType->all();
 
+        $data['eventToplistPoint'] = $event->eventToplistPoint;
         $data['eventResultType'] = $eventResultType;
         $data['beltGroup'] = $beltGroup;
         $data['eventRankSeason'] = $eventRankSeason;
@@ -411,6 +414,11 @@ class EventConfigController extends Controller
         }
 
         else if($input['code'] == 'event_event_user') 
+        {   
+            
+            
+        }
+        else if($input['code'] == 'toplist_point') 
         {   
             
             

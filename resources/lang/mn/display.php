@@ -297,8 +297,11 @@ return [
     'comp_entry_belt' => 'Бүс',
     'comp_entry_weight' => 'Жин',
     'comp_academy' => 'Академи',
+    'comp_university' => 'Их сургууль',
+    'comp_school' => 'Сургууль',
     'comp_academy_name' => 'Академи нэр',
     'comp_country_name' => 'Улсын нэр',
+    'comp_country' => 'Улс',
     'comp_member' => 'Оролцогч',
     'comp_title' => 'Тэмцээн',
     'comp_award_place' => 'Байр эзлүүлэх',
@@ -360,4 +363,15 @@ return [
 
     //rules
     'rules_book_download' => 'Дүрмийн ном татах',
+
+    //Profile 
+    'results_competition' => 'Оролцсон тэмцээн үр дүн',
+    'upcoming_event' => 'Удахгүй болох жюү жицүгийн тэмцээнүүд',
+    'past_event' => 'Болж өнгөрсөн жюү жицүгийн тэмцээнүүд',
+    'registered_event' => 'Бүртгүүлсэн тэмцээн',
+
+    //Event-toplist-point
+    'general_point' => 'Оноо',
+    'start_position' => 'Эхлэх байр',
+    'end_position' => 'Төгсөх байр',
 ];

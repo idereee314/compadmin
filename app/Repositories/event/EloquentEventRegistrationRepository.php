@@ -667,28 +667,22 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 
 	public function getToplistByPointFromEvent($eventId)
 	{
-		return DB::select("SELECT ua.id AS academy_id,
-		ua.name ,
-				SUM(CASE WHEN uea.place_number = 1 THEN 1 ELSE 0 END) AS gold,
-				SUM(CASE WHEN uea.place_number = 2 THEN 1 ELSE 0 END) AS silver,
-				SUM(CASE WHEN uea.place_number = 3 THEN 1 ELSE 0 END) AS bronze,
-				COALESCE(SUM(CASE 
-							 WHEN uea.place_number = 1 THEN urp.point
-							 WHEN uea.place_number = 2 THEN urp.point
-							 WHEN uea.place_number = 3 THEN urp.point
-							 ELSE 0
-							END), 0) AS total_point
- 		FROM uq_comp.uq_event_award uea
- 		JOIN uq_comp.uq_event_registration uer ON uer.id = uea.event_registration_id
- 		JOIN uq_comp.uq_academy ua ON ua.id = uer.academy_id
- 		LEFT JOIN uniqdb.uq_comp.uq_ranking_point urp ON (
-			 (uea.place_number = 1 AND urp.start_pos = 1) OR
-			 (uea.place_number = 2 AND urp.start_pos = 2) OR
-			 (uea.place_number = 3 AND urp.start_pos = 3)
- 		)
- 		WHERE uer.event_id = $eventId
- 		GROUP BY ua.id, ua.name
- 		order by total_point desc");
+		return DB::select("SELECT ua.id AS academy_id,ua.name ,
+						SUM(CASE WHEN uea.place_number = 1 THEN 1 ELSE 0 END) AS gold,
+						SUM(CASE WHEN uea.place_number = 2 THEN 1 ELSE 0 END) AS silver,
+						SUM(CASE WHEN uea.place_number = 3 THEN 1 ELSE 0 END) AS bronze,
+						COALESCE(SUM(point), 0) AS total_point
+					FROM uq_comp.uq_event_award uea
+					JOIN uq_comp.uq_event_registration uer ON uer.id = uea.event_registration_id
+					JOIN uq_comp.uq_academy ua ON ua.id = uer.academy_id
+					left join lateral (
+						select uetp.point
+						from uq_comp.uq_event_toplist_point uetp 
+						where uer.event_id = uetp.event_id and uea.place_number between uetp.start_pos and uetp.end_pos 
+					) point on true 
+					WHERE uer.event_id = $eventId
+					GROUP BY ua.id, ua.name
+					order by total_point desc");
 	}
 
 	public function getResultFromEvent($eventId)

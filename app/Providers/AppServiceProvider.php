@@ -46,6 +46,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind('reference\EventEntriesFeeRepository', 'reference\EloquentEventEntriesFeeRepository'); 
         $this->app->bind('reference\BeltGroupRepository', 'reference\EloquentBeltGroupRepository'); 
         $this->app->bind('reference\EntryResultTypeRepository', 'reference\EloquentEntryResultTypeRepository');
+        $this->app->bind('reference\EventToplistPointRepository', 'reference\EloquentEventToplistPointRepository');
     }
 
     /**

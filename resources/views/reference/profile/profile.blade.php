@@ -65,17 +65,17 @@
                                 <h1 class="text-center text-uppercase bold margin-bottom-xs-16 margin-bottom-sm-0" style="font-size: 4rem; color: #0f4b63;"><img class="mb-3 mr-2" src="/assets/images/flags/4x3/{{$countries->abbreviation}}.svg" alt="flag" width="60" height="40 "><strong>{{$member->lastname}} {{$member->firstname}}</strong></h1>
 			                </div>  
                             <div class="ml-5">                                            
-                                <span class="text-center mr-5" style="font-size: 20px;color: #0f4b63;"><strong>Нас : {{$member->age}}</strong></span>
-                                <span class="text-center ml-5" style="font-size: 20px;color: #0f4b63;"><strong>Хүйс : {{ Config::get("enums.gender_code")[@$member->gender_code] }}</strong></span>
-                                <span class="text-center ml-5" style="font-size: 20px;color: #0f4b63;"><strong>Улс : {{$countries->name }}</strong></span>
+                                <span class="text-center mr-5" style="font-size: 20px;color: #0f4b63;"><strong>{{trans('display.age_title')}} : {{$member->age}}</strong></span>
+                                <span class="text-center ml-5" style="font-size: 20px;color: #0f4b63;"><strong>{{trans('display.human_gender_code')}} : {{ Config::get("enums.gender_code")[@$member->gender_code] }}</strong></span>
+                                <span class="text-center ml-5" style="font-size: 20px;color: #0f4b63;"><strong>{{trans('display.comp_country')}} : {{$countries->name }}</strong></span>
 			                </div>                                                                                                   
                         </div>                    
                     </div>
                     <div class="d-flex justify-content-center mt-5 pt-5">
-                        <div class="col-lg-4">
+                        <div class="col-lg-8">
                             <div class="card">
                                 <div class="card-header" style="color: #0f4b63; ">
-                                    <strong>Академи</strong>
+                                    <strong>{{trans('display.comp_academy')}}</strong>
                                 </div>
                                 <div class="card-body" style="color: #0f4b63;">
                                     <ul>
@@ -90,15 +90,37 @@
                                                 </a>
                                             </li>
                                         @endforeach
+                                        @foreach($athleteUniversityInfo as $universityInfo)
+                                            <li>
+                                                <a href="#" style="color: #0f4b63; font-size: 16px">                                                  
+                                                    @if($universityInfo->name == 'Бусад')   
+                                                        <strong>{{ $universityInfo->name }} </strong> - {{ $universityInfo->academy_name }}                                                        
+                                                    @else 
+                                                        {{ $universityInfo->name }}                                                                                        
+                                                    @endif
+                                                </a>
+                                            </li>
+                                        @endforeach
+                                        @foreach($athleteSchoolInfo as $schoolInfo)
+                                            <li>
+                                                <a href="#" style="color: #0f4b63; font-size: 16px">
+                                                    @if($schoolInfo->name == 'Бусад')   
+                                                        <strong>{{ $schoolInfo->name }} </strong> - {{ $schoolInfo->academy_name }}                                                        
+                                                    @else 
+                                                        {{ $schoolInfo->name }}                                                                                        
+                                                    @endif
+                                                </a>
+                                            </li>
+                                        @endforeach
                                     </ul>
                                 </div>
                             </div>
                         </div>
-                        @if($member->age > 18)
+                        <!-- @if($member->age > 18)
                         <div class="col-lg-4">
                             <div class="card">
                                 <div class="card-header" style="color: #0f4b63; ">
-                                    <strong>Их сургууль</strong>
+                                    <strong>{{trans('display.comp_university')}}</strong>
                                 </div>
                                 <div class="card-body" style="color: #0f4b63;">
                                     <ul>
@@ -121,7 +143,7 @@
                         <div class="col-lg-4">
                             <div class="card">
                                 <div class="card-header" style="color: #0f4b63; ">
-                                    <strong>Сургууль</strong>
+                                    <strong>{{trans('display.comp_school')}}</strong>
                                 </div>
                                 <div class="card-body" style="color: #0f4b63;">
                                     <ul>
@@ -140,20 +162,20 @@
                                 </div>
                             </div>
                         </div>
-                        @endif
+                        @endif -->
                     </div>
                     <div class="d-flex justify-content-center mt-5 pt-5">
                         <div class="col-lg-4">
                             <a href="/profile/{{ $member->id}}/results" target="_blank">
                                 <div class="card">
-                                <div class="card-content text-center" style="color: #0f4b63;"><i class="fas fa-medal icon-4x" style="color: #f96815;"></i>Оролцсон тэмцээн үр дүн</div>
+                                <div class="card-content text-center" style="color: #0f4b63;"><i class="fas fa-medal icon-4x" style="color: #f96815;"></i>{{trans('display.results_competition')}}</div>
                                 </div>
                             </a>
                         </div>
                         <div class="col-lg-4">
                             <a href="/profile/{{ $member->id}}/event" target="_blank">
                                 <div class="card">
-                                    <div class="card-content text-center" style="color: #0f4b63;"><i class="la la-trophy icon-4x" style="color: #f96815;"></i>Бүртгүүлсэн тэмцээн</div>
+                                    <div class="card-content text-center" style="color: #0f4b63;"><i class="la la-trophy icon-4x" style="color: #f96815;"></i>{{trans('display.registered_event')}}</div>
                                 </div>
                             </a>
                         </div>
@@ -162,11 +184,11 @@
                         <div class="col-lg-8" class="event-list">
                             <div class="d-flex align-items-center flex-wrap justify-content-start row mt-5 mx-5 mb-2">
                                 <div class="col-lg-6">
-                                    <span class="action-title" style="font-size: 16px"><strong> Удахгүй болох жюү жицүгийн тэмцээнүүд </strong></span> 
+                                    <span class="action-title" style="font-size: 16px"><strong> {{trans('display.upcoming_event')}} </strong></span> 
                                 </div>
                                 <div class="col-lg-6 text-right">
                                     <a href="/upcoming" class="" target="_blank">
-                                        <span class="action-link" style="color:#f96815; font-size: 16px">Бүгдийг харах<span class="ml-2"><i class="fas fa-chevron-right"></i></span></span>
+                                        <span class="action-link" style="color:#f96815; font-size: 16px">{{trans('display.general_see_all')}}<span class="ml-2"><i class="fas fa-chevron-right"></i></span></span>
                                     </a>
                                 </div> 
                             </div>
@@ -184,7 +206,10 @@
                                             </div>
                                             <div class="event-location mt-2 mb-2">                                                
                                                 <small class="text-muted"> <i class="flaticon2-location mr-2" style="color:#f96815;"></i>{{ $upcomingEventJiuJitsuData[$i]->object_name }} </small>
-                                            </div>                                            
+                                            </div>
+                                            <div class="event-organizer mt-2 mb-2">                                                
+                                                <small><strong>Зохион байгууллагч :</strong> {{ $upcomingEventJiuJitsuData[$i]->org_name }} </small>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -196,11 +221,11 @@
                         <div class="col-lg-8" class="event-list">
                             <div class="d-flex align-items-center flex-wrap justify-content-start row mt-5 mx-5 mb-2">
                                 <div class="col-lg-6">
-                                    <span class="action-title" style="font-size: 16px"><strong> Болж өнгөрсөн жюү жицүгийн тэмцээнүүд </strong></span> 
+                                    <span class="action-title" style="font-size: 16px"><strong> {{trans('display.past_event')}}</strong></span> 
                                 </div>
                                 <div class="col-lg-6 text-right">
                                     <a href="/pastEvent" class="" target="_blank">
-                                        <span class="action-link" style="color:#f96815; font-size: 16px">Бүгдийг харах<span class="ml-2"><i class="fas fa-chevron-right"></i></span></span>
+                                        <span class="action-link" style="color:#f96815; font-size: 16px">{{trans('display.general_see_all')}}<span class="ml-2"><i class="fas fa-chevron-right"></i></span></span>
                                     </a>
                                 </div> 
                             </div>
@@ -219,6 +244,9 @@
                                             </div>
                                             <div class="event-location mt-2 mb-2">                                                
                                                 <small class="text-muted"> <i class="flaticon2-location mr-2" style="color:#f96815;"></i>{{ $pastEventJiuJitsuData[$i]->object_name }} </small>
+                                            </div>
+                                            <div class="event-organizer mt-2 mb-2">                                                
+                                                <small><strong>Зохион байгууллагч :</strong> {{ $pastEventJiuJitsuData[$i]->org_name }} </small>
                                             </div>
                                             <div class="event-result mt-2 mb-2">                                                
                                                 <a href="/event/{{$pastEventJiuJitsuData[$i]->event_id}}/results" class="btn btn-danger btn-shadow font-weight-bold mr-2" target="_blank">{{trans('display.general_result')}}</a>

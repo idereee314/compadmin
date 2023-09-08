@@ -132,6 +132,8 @@ Route::group([
 
     Route::resource('/event/user', 'event\EventUserController', ['names' => 'event.user']);
 
+    Route::resource('/event/toplist/point', 'reference\EventToplistPointController', ['names' => 'event.toplist.point']);
+    
     Route::get('/event/registration/bracket/generation', 'event\EventRegistrationController@bracketGeneration')->name('event.registration.bracket.generation');
     
     // test schedule
