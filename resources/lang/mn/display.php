@@ -374,4 +374,7 @@ return [
     'general_point' => 'Оноо',
     'start_position' => 'Эхлэх байр',
     'end_position' => 'Төгсөх байр',
+
+    //refund
+    'general_refund' => 'Буцаалт',
 ];

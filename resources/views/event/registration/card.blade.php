@@ -133,6 +133,15 @@
                                                                 <span class="navi-text">{{ trans('display.general_statistic') }}</span>
                                                             </a>
                                                         </li>
+                                                        <li class="navi-item">
+                                                            <a href="/event/refund/request?event_id={{ @$event['id'] }}" class="navi-link">
+
+                                                                <span class="navi-icon">
+                                                                    <i class="flaticon2-graph-1"></i>
+                                                                </span>
+                                                                <span class="navi-text">{{ trans('display.general_refund') }}</span>
+                                                            </a>
+                                                        </li>
                                                         @endif                                                        
                                                         <li class="navi-item">
                                                             <a href="{{ route('event.results', @$event['id']) }}" class="navi-link">
