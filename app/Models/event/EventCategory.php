@@ -9,7 +9,7 @@ use Config;
 
 class EventCategory extends Model
 {
-    protected $table = 'uq_point_type';
+    protected $table = 'uq_event_type';
     protected $primaryKey = 'id';
 
     public function config()

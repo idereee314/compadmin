@@ -63,6 +63,12 @@ return array(
 		'approved' => 'Баталгаажсан',
 		'canceled' => 'Цуцалсан',
 	],
+	
+	'event_refund_request_status' => [
+		'requested' => 'Хүсэлт илгээсэн',
+		'approved' => 'Шилжүүлсэн',
+		'rejected' => 'Цуцалсан',
+	],
 
 	'boolean_type' => 
 	[

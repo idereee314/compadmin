@@ -62,6 +62,12 @@ class Event extends Model
         return $this->hasMany('reference\EventToplistPoint', 'event_id');
     }
 
+    public function eventRefundRequest()
+    {
+        return $this->hasMany('event\EventRefundRequest', 'event_id');
+    }
+
+
 	public static function boot()
     {
         parent::boot();    

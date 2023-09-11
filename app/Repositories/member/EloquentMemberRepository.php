@@ -283,7 +283,7 @@ class EloquentMemberRepository implements MemberRepository {
 			left join uniqdb.rt_listing.rti_event_picture rep on rep.event_id = re.id 
 			left join uniqdb.rt_listing.rti_organization_event roe on roe.event_id = uec.event_id 
 			left join uniqdb.rt_listing.rti_organization ro on ro.id = roe.organization_id 
-			where uec.sport_id = 1 and re.event_date > now() and rep.picture_type_id = 15
+			where uec.sport_id = 1 and re.event_date > now() and rep.picture_type_id = 15 and uec.is_active = TRUE
 			group by uec.event_id, uec.is_active , uec.sport_id , uec.is_team , uec.reg_start_date , uec.reg_end_date , re.name , 
 			re.event_date , re.description , rel.object_location_id ,rol.object_name,rep.picture_type_id, rep.url, rel.object_location_id, ro.name
 			order by re.event_date asc");
@@ -298,7 +298,7 @@ class EloquentMemberRepository implements MemberRepository {
 			left join uniqdb.rt_listing.rti_object_location rol on rol.id = rel.object_location_id 
 			left join uniqdb.rt_listing.rti_organization_event roe on roe.event_id = uec.event_id 
 			left join uniqdb.rt_listing.rti_organization ro on ro.id = roe.organization_id 
-			where uec.sport_id = 1 and re.event_date < now() 
+			where uec.sport_id = 1 and re.event_date < now() and uec.is_active = TRUE
 			group by uec.event_id, uec.is_active , uec.sport_id , uec.is_team , uec.reg_start_date , uec.reg_end_date , re.name , re.event_date , re.description , rel.object_location_id ,rol.object_name, ro.name
 			order by re.event_date desc
 			");

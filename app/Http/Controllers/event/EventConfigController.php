@@ -376,7 +376,6 @@ class EventConfigController extends Controller
         $beltGroup = $this->beltGroup->all();
         $eventResultType = $this->eventResultType->all();
 
-        $data['eventToplistPoint'] = $event->eventToplistPoint;
         $data['eventResultType'] = $eventResultType;
         $data['beltGroup'] = $beltGroup;
         $data['eventRankSeason'] = $eventRankSeason;
@@ -389,6 +388,7 @@ class EventConfigController extends Controller
         $data['configWeights'] = $configWeights->groupBy(['entry_id', 'entry_age_id']);
         $data['configEntriesFees'] = $configEntriesFees->groupBy('entry_id');
         $data['eventUsers'] = $event->eventUsers;
+        $data['eventToplistPoint'] = $event->eventToplistPoint;
         
         if($input['code'] == 'entry_config_belt') 
         {

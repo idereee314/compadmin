@@ -35,6 +35,18 @@ return array(
 		'canceled' => ['approved'],
 	],
 
+	'event_refund_request_status' => [
+		'requested' => 'requested',
+		'approved' => 'approved',
+		'rejected' => 'rejected ',
+	],
+
+	'event_refund_request_status_class' => [
+		'requested' => 'warning',
+		'approved' => 'success',
+		'rejected' => 'danger ',
+	],
+
 	'event_registration_source_type' => [
 		'app' => 'app',
 		'admin' => 'admin'

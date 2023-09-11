@@ -7,7 +7,7 @@
     </div>
 
     <div class="card-body">
-        <input type="text" hidden name="event_id" value={{$eventId}} >
+        <input type="hidden" name="event_id" value={{$eventId}} >
         
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.start_position')}}: <span class="text-danger">*</span></label>

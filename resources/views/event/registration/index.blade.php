@@ -123,13 +123,14 @@
                             </div>
                             <!--end::Info-->
                         </div>
+                        <!--end::Top-->
                         @if(Auth::user()->roles->first() == null || Auth::user()->roles->first()->code == 'staff')
                         @elseif(Auth::user()->roles->first()->code == 'admin' || 
                                 Auth::user()->roles->first()->code == 'mjjf' || 
                                 (isset(Auth::user()->roles[1]) && Auth::user()->roles[1]->code == 'mjjf') || 
                                 Auth::user()->roles->first()->code == 'event')
                             
-                            <!--end::Top-->
+                            
                             @if(!@$eventFees->isEmpty())
                             <!--begin::Separator-->
                             <div class="separator separator-solid my-7"></div>

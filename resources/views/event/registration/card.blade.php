@@ -172,18 +172,31 @@
                                             <span class="d-block font-weight-bold mb-4">Дуусах</span>
                                             <span class="btn btn-light-danger btn-sm font-weight-bold btn-upper btn-text">{{ Carbon\Carbon::parse(@$event['reg_end_date'])->format('y M, d') }}</span>
                                         </div>
-                                        <!--begin::Progress-->
+                                        <!--begin::Progress for "Бүртгэлийн явц"-->
                                         <div class="flex-row-fluid mb-7">
                                             <span class="d-block font-weight-bold mb-4">Бүртгэлийн явц</span>
-                                            <div class="d-flex align-items-center pt-2">
+                                            <div class="d-flex align-items-center pt-2 mr-3">
                                                 <div class="progress progress-xs mt-2 mb-2 w-100">
-                                                    <div class="progress-bar bg-warning" role="progressbar" style="width: {{ round(@$event['status_approved'] ? @$event['status_approved'] / @$event['registration_count'] * 100 : 0) }}%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                                                    <div class="progress-bar bg-warning" role="progressbar" style="width: {{ round(@$event['status_approved'] ? @$event['status_approved'] / @$event['registration_count'] * 100 : 0) }}%;" aria-valuenow="{{ round(@$event['status_approved'] ? @$event['status_approved'] / @$event['registration_count'] * 100 : 0) }}" aria-valuemin="0" aria-valuemax="100"></div>
                                                 </div>
                                                 <span class="ml-3 font-weight-bolder">{{ round(@$event['status_approved'] ? @$event['status_approved'] / @$event['registration_count'] * 100 : 0) }}%</span>
                                             </div>
                                         </div>
-                                        <!--end::Progress-->
+                                        <!--end::Progress for "Бүртгэлийн явц"-->
+                                    
+                                        <!--begin::Progress for "Буцаалтын явц"-->
+                                        <div class="flex-row-fluid mb-7">
+                                            <span class="d-block font-weight-bold mb-4">Буцаалтын явц</span>
+                                            <div class="d-flex align-items-center pt-2">
+                                                <div class="progress progress-xs mt-2 mb-2 w-100">
+                                                    <div class="progress-bar bg-warning" role="progressbar" style="width: {{ round(@$event['status_returned'] ? @$event['status_returned'] / @$event['registration_count'] * 100 : 0) }}%;" aria-valuenow="{{ round(@$event['status_returned'] ? @$event['status_returned'] / @$event['registration_count'] * 100 : 0) }}" aria-valuemin="0" aria-valuemax="100"></div>
+                                                </div>
+                                                <span class="ml-3 font-weight-bolder">{{ round(@$event['status_returned'] ? @$event['status_returned'] / @$event['registration_count'] * 100 : 0) }}%</span>
+                                            </div>
+                                        </div>
+                                        <!--end::Progress for "Буцаалтын явц"-->
                                     </div>
+
                                     <!--end::Content-->
                                     <!--begin::Text-->
                                     <p class="mb-7 mt-3">{{ Str::words(strip_tags(@$event['description']), 20, '...') }}</p>

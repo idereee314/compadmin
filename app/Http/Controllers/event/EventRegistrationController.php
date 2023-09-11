@@ -28,6 +28,7 @@ use member\TeamMemberRepository as TeamMember;
 use member\TeamMemberAttributeRepository as MemberAttribute;
 use country\CountryRepository as Country;
 use sport\SportRepository as Sport;
+use event\EventRefundRequestRepository as EventRefundRequest;
 
 //Models
 use event\EventRegistration as EventRegistrationModel;
@@ -46,7 +47,7 @@ class EventRegistrationController extends Controller
 {
     public $restful = true;
 
-    public function __construct(Event $event, EventRegistration $eventRegistration, EventConfig $eventConfig, Academy $academy, Country $country, EventEntries $eventEntries, EntryConfigAge $configAge, EntryConfigBelt $configBelt, EntryConfigWeight $configWeight, Member $member, EventTeamRegistration $eventTeamRegistration, Team $team, TeamMember $teamMember, MemberAttribute $memberAttribute, Sport $sport)
+    public function __construct(Event $event, EventRegistration $eventRegistration, EventConfig $eventConfig, Academy $academy, Country $country, EventEntries $eventEntries, EntryConfigAge $configAge, EntryConfigBelt $configBelt, EntryConfigWeight $configWeight, Member $member, EventTeamRegistration $eventTeamRegistration, Team $team, TeamMember $teamMember, MemberAttribute $memberAttribute, Sport $sport, EventRefundRequest $eventRefundRequest)
     {
         $this->view_path = 'event.registration';
         $this->event = $event;
@@ -64,6 +65,7 @@ class EventRegistrationController extends Controller
         $this->memberAttribute = $memberAttribute;
         $this->country = $country;
         $this->sport = $sport;
+        $this->eventRefundRequest = $eventRefundRequest;
     }
 
     /**
@@ -743,7 +745,7 @@ class EventRegistrationController extends Controller
         
         $data['view_path'] = $this->view_path;
         $data['events'] = $event['data'];
-
+        
         $pagination = new LengthAwarePaginator($event['data'], @$event['total'], @$event['per_page'], @$event['current_page'], [
             'path'  => URL::current()
         ]);

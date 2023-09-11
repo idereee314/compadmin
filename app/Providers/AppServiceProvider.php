@@ -36,6 +36,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind('organization\OrganizationRepository', 'organization\EloquentOrganizationRepository'); 
 
         $this->app->bind('country\CountryRepository', 'country\EloquentCountryRepository');
+        $this->app->bind('event\EventRefundRequestRepository', 'event\EloquentEventRefundRequestRepository'); 
 
         //reference
         $this->app->bind('reference\EventEntriesRepository', 'reference\EloquentEventEntriesRepository'); 
