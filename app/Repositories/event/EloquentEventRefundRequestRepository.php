@@ -50,12 +50,12 @@ class EloquentEventRefundRequestRepository implements EventRefundRequestReposito
 	{
 		$eventRefundRequest = $this->find($id);
 		$eventRefundRequest->event_id = $input['event_id'];
-		$eventRefundRequest->member_id = $input['member_id'];
+		$eventRefundRequest->member_id = @$input['member_id'];
 		$eventRefundRequest->academy_id = @$input['academy_id'];
 		$eventRefundRequest->status = @$input['status'];
 		$eventRefundRequest->amount = @$input['amount'];
 		$eventRefundRequest->description = @$input['description'];
-
+		
 		$eventRefundRequest->save();
 		return $eventRefundRequest;
 	}

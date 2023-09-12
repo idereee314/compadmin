@@ -8,11 +8,12 @@
     </div>
 
     <div class="card-body">
-       
+        <input hidden name="event_id" id="event_id" value="{{ @$eventRefundRequest->event->id}}"/>
         <div class="form-group row">
-            <label class="col-md-3 col-form-label text-right">{{trans('display.comp_member')}}: <span class="text-danger">*</span></label>
+            <label class="col-md-3 col-form-label text-right">{{trans('display.comp_member')}}: </label>
             <div class="col-md-9 col-lg-6">
                 <input class="form-control form-control-lg" disabled value="{{ $eventRefundRequest->member->fullname }}"/>
+                <input class="form-control form-control-lg" id="member_id" name="member_id" hidden value="{{ $eventRefundRequest->member->id }}"/>
             </div>
         </div>
 
@@ -53,7 +54,7 @@
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">Тайлбар</label>
             <div class="col-md-9 col-lg-6">         
-                <input type="text" class="form-control" name="public_desc" id="public_desc" placeholder="Тайлбар" value="{{ @$eventRefundRequest->description }}"/>                    
+                <textarea name="description" id="description" class="form-control" cols="10"  placeholder="Тайлбар" value="{{ @$eventRefundRequest->description }}"></textarea>
             </div>
         </div>
     </div>
