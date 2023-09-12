@@ -14,15 +14,13 @@
                 padding: 0;
             }
             .main_container{
-                width: 1050px;
-                height: 1484px;
                 background: #eee;
                 margin: 0 auto;
                 position: relative;
                 padding: 0;
             }
             .container{
-                width: 525px;
+                width: 550px;
                 height: 742px;
                 background: #ddd;
                 margin: 0 auto;
@@ -40,15 +38,28 @@
             }
             .image_container{
                 position: absolute;
-                width: 120px;
-                height: 120px;
+                width: 130px;
+                height: 130px;
                 background: #222;
                 bottom: 375px;
                 left: 50px;
                 border-radius: 50%;
             }
             .image_container img{
-                border-radius: 50%;
+                border-radius: 100%;
+                border: 5px solid #000;
+            }
+            .eventName{
+                position: absolute;
+                width: 400px;
+                height: 20px;
+                bottom: 650px;
+                left: 30px;
+                border-radius: 8px;
+                font-family: 'Times New Roman', Times;
+                font-style: normal;
+                font-weight: bold;
+                font-size: 30px;
             }
             .org{
                 position: absolute;
@@ -58,7 +69,7 @@
                 left: 230px;
                 border-radius: 8px;
                 font-family: 'Times New Roman', Times;
-                font-style: italic;
+                font-style: normal;
                 font-weight: bold;
                 font-size: 18px;
                 
@@ -72,9 +83,9 @@
                 /* right: 100px; */
                 border-radius: 8px;
                 font-family: 'Times New Roman', Times;
-                /* font-style: italic; */
+                /* font-style: normal; */
                 font-weight: bold;
-                font-size: 26px;
+                font-size: 30px;
                 line-height: 26px;
                 color: #222;
                 text-align: left;
@@ -84,10 +95,10 @@
                 width: 250px;
                 height: 40px;
                 bottom: 195px;
-                left: 150px;
+                left: 40px;
                 border-radius: 8px;
                 font-family: 'Times New Roman', Times;
-                font-style: italic;
+                font-style: normal;
                 font-weight: bold;
                 font-size: 20px;
                 color: #222;
@@ -99,38 +110,56 @@
                 width: 250px;
                 height: 40px;
                 bottom: 233px;
-                left: 130px;
+                left: 40px;
                 border-radius: 8px;
                 font-family: 'Times New Roman', Times;
                 font-weight: bold;
-                font-style: italic;
+                font-style: normal;
                 font-size: 20px;
                 color: #222;
                 line-height: 20px;
                 text-align: left;
             }
-            .eventName{
+            .gender{
                 position: absolute;
-                width: 400px;
+                width: 250px;
                 height: 20px;
-                bottom: 650px;
-                left: 10px;
+                bottom: 180px;
+                left: 40px;
                 border-radius: 8px;
                 font-family: 'Times New Roman', Times;
-                font-style: normal;
                 font-weight: bold;
-                font-size: 30px;
+                font-style: normal;
+                font-size: 20px;
+                color: #222;
+                line-height: 20px;
+                text-align: left;
+            }
+            .birthdate{
+                position: absolute;
+                width: 250px;
+                height: 20px;
+                bottom: 320px;
+                left: 40px;
+                border-radius: 8px;
+                font-family: 'Times New Roman', Times;
+                font-weight: bold;
+                font-style: normal;
+                font-size: 20px;
+                color: #222;
+                line-height: 20px;
+                text-align: left;
             }
             .qrcode{
                 position: absolute;
                 width: 250px;
-                height: 40px;
+                height: 90px;
                 bottom: 260px;
                 right: 30px;
                 border-radius: 8px;
                 font-family: 'Times New Roman', Times;
                 font-weight: bold;
-                font-style: italic;
+                font-style: normal;
                 font-size: 20px;
                 color: #222;
                 line-height: 20px;
@@ -141,11 +170,11 @@
                 width: 250px;
                 height: 40px;
                 bottom: 150px;
-                right: 60px;
+                right: 80px;
                 border-radius: 8px;
                 font-family: 'Times New Roman', Times;
                 font-weight: bold;
-                font-style: italic;
+                font-style: normal;
                 font-size: 20px;
                 color: #222;
                 line-height: 20px;
@@ -153,13 +182,13 @@
             }
             .category{
                 position: absolute;
-                width: 250px;
+                width: 280px;
                 height: 40px;
                 bottom: 273px;
-                left: 130px;
+                left: 40px;
                 border-radius: 8px;
                 font-family: 'Times New Roman', Times;
-                font-style: italic;
+                font-style: normal;
                 font-weight: bold;
                 font-size: 20px;
                 text-align: left;
@@ -172,16 +201,14 @@
         
     </head>
     <body>
-        @forelse(@$regs as $chunk)
         <div class="main_container">
-            @foreach($chunk as $reg)
             <div class="container">
                 <div class="content">
+                    <div class="eventName">
+                        {{ @$eventConfig->event->name }}
+                    </div>
                     <div class="image_container">
                         <img src="{{ \Storage::disk('s3')->url($reg->member->profile_url) }}" width="100%" height="100%" />
-                    </div>
-                    <div class="eventName"> 
-                        {{ @$eventConfig->event->name }}
                     </div>
                     <div class="org">
                         {{ @$reg->academy->is_other ? @$reg->academy_name : @$reg->academy->name }}
@@ -190,25 +217,30 @@
                         {{ @$reg->member->lastname }} {{ @$reg->member->firstname }}
                     </div>
                     <div class="weight">
-                        {{ @$reg->weight->weight }}кг
+                        Жин : {{ @$reg->weight->weight }}кг
                     </div>
-                    <div class="category">{{$reg->entry->name}}</div>
+                    <div class="category">
+                        Ангилал : {{$reg->entry->name}}
+                    </div>
                     <div class="belt">
-                        {{@$reg->belt->name}}
+                        Бүс : {{@$reg->belt->name}}
+                    </div>
+                    <div class="gender">
+                        Хүйс : {{ Config::get("enums.gender_code")[@$reg->member->gender_code] }}
+                    </div>
+                    <div class="birthdate">
+                        Төрсөн огноо : {{@$reg->member->birth}}
                     </div>
                     
                     <div class="qrcode">
-                        <img src="data:image/png;base64,{{\DNS2D::getBarcodePNG(strval(@$reg->id), 'QRCODE')}}" width="100px" height="100px">
+                        <img src="data:image/png;base64,{{\DNS2D::getBarcodePNG(strval(@$reg->id), 'QRCODE')}}" width="150px" height="150px">
                     </div>
                     <div class="regid">
                         {{@$reg->id}}
                     </div>
                 </div>
             </div>
-            @endforeach                              
         </div>
         <div style="break-after:always; clear:both"></div> 
-        @empty
-        @endforelse
     </body>
 </html>

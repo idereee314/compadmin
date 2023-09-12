@@ -63,7 +63,7 @@
                                     <!--begin::User-->
                                     <div class="mr-3">
                                         <!--begin::Name-->
-                                        <a href="javascript:;" class="d-flex align-items-center text-dark text-hover-primary font-size-h5 font-weight-bold mr-3">{{@$event->name}} 
+                                        <a href="{{ route('event.registration.index').'?event_id='.@$event->id }}" class="d-flex align-items-center text-dark text-hover-primary font-size-h5 font-weight-bold mr-3">{{@$event->name}} 
                                         <i class="flaticon2-correct text-success icon-md ml-2"></i></a>
                                         <!--end::Name-->
                                         <!--begin::Contacts-->
@@ -172,7 +172,7 @@
                                     <td class="text-center">{{$request->member->fullname}}</td>
                                     <td class="text-center">{{$request->academy->name}}</td>
                                     <td class="text-center">{{$request->amount}}</td>
-                                    <td class="text-center">{{$request->description}}</td>
+                                    <td class="text-center">{{ Str::words(strip_tags(@$request->description), 20, '...') }}</td>
                                     <td class="text-center">
                                         <button type="button" class="btn btn-light-{{ Config::get('smart.event_refund_request_status_class')[$request->status] }} btn-sm btn-status" data-requestid="{{ $request->id }}">{{ Config::get('enums.event_refund_request_status')[$request->status] }}</button>
                                     </td>

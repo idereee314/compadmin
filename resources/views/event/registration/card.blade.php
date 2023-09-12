@@ -137,7 +137,7 @@
                                                             <a href="/event/refund/request?event_id={{ @$event['id'] }}" class="navi-link">
 
                                                                 <span class="navi-icon">
-                                                                    <i class="flaticon2-graph-1"></i>
+                                                                    <i class="far fa-money-bill-alt"></i>
                                                                 </span>
                                                                 <span class="navi-text">{{ trans('display.general_refund') }}</span>
                                                             </a>
@@ -183,7 +183,11 @@
                                         </div>
                                         <!--begin::Progress for "Бүртгэлийн явц"-->
                                         <div class="flex-row-fluid mb-7">
-                                            <span class="d-block font-weight-bold mb-4">Бүртгэлийн явц</span>
+                                            <span class="d-block font-weight-bold mb-4">
+                                                <button type="button" class="btn" data-toggle="popover" data-trigger="click" title="Бүртгэлийн явц" data-content="{{ @$event['registration_count'] }} {{ @Config::get('enums.event_registration_status')['created'] }} - {{ @$event['status_approved'] }} {{ @Config::get('enums.event_registration_status')['approved'] }}">
+                                                    Бүртгэлийн явц
+                                                </button>
+                                            </span>
                                             <div class="d-flex align-items-center pt-2 mr-3">
                                                 <div class="progress progress-xs mt-2 mb-2 w-100">
                                                     <div class="progress-bar bg-warning" role="progressbar" style="width: {{ round(@$event['status_approved'] ? @$event['status_approved'] / @$event['registration_count'] * 100 : 0) }}%;" aria-valuenow="{{ round(@$event['status_approved'] ? @$event['status_approved'] / @$event['registration_count'] * 100 : 0) }}" aria-valuemin="0" aria-valuemax="100"></div>
@@ -195,12 +199,17 @@
                                     
                                         <!--begin::Progress for "Буцаалтын явц"-->
                                         <div class="flex-row-fluid mb-7">
-                                            <span class="d-block font-weight-bold mb-4">Буцаалтын явц</span>
+                                            
+                                            <span class="d-block font-weight-bold mb-4">
+                                                <button type="button" class="btn" data-toggle="popover" data-trigger="click" title="Буцаалтын явц" data-content="{{ @$event['event_refund_request_count'] }} {{ @Config::get('enums.event_registration_status')['created'] }} - {{ @$event['refund_status_approved'] }} {{ @Config::get('enums.event_refund_request_status')['approved'] }}">
+                                                    Буцаалтын явц
+                                                </button>
+                                            </span>
                                             <div class="d-flex align-items-center pt-2">
                                                 <div class="progress progress-xs mt-2 mb-2 w-100">
-                                                    <div class="progress-bar bg-warning" role="progressbar" style="width: {{ round(@$event['status_returned'] ? @$event['status_returned'] / @$event['registration_count'] * 100 : 0) }}%;" aria-valuenow="{{ round(@$event['status_returned'] ? @$event['status_returned'] / @$event['registration_count'] * 100 : 0) }}" aria-valuemin="0" aria-valuemax="100"></div>
+                                                    <div class="progress-bar bg-warning" role="progressbar" style="width: {{ round(@$event['refund_status_approved'] ? @$event['refund_status_approved'] / @$event['event_refund_request_count'] * 100 : 0) }}%;" aria-valuenow="{{ round(@$event['refund_status_approved'] ? @$event['refund_status_approved'] / @$event['event_refund_request_count'] * 100 : 0) }}" aria-valuemin="0" aria-valuemax="100"></div>
                                                 </div>
-                                                <span class="ml-3 font-weight-bolder">{{ round(@$event['status_returned'] ? @$event['status_returned'] / @$event['registration_count'] * 100 : 0) }}%</span>
+                                                <span class="ml-3 font-weight-bolder">{{ round(@$event['refund_status_approved'] ? @$event['refund_status_approved'] / @$event['event_refund_request_count'] * 100 : 0) }}%</span>
                                             </div>
                                         </div>
                                         <!--end::Progress for "Буцаалтын явц"-->

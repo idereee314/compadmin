@@ -65,6 +65,9 @@ class EloquentEventRepository implements EventRepository {
 		        ->withCount(['registration', 'registration as status_approved' => function ($q) {
 		            $q->where('uq_event_registration.status', @Config::get('smart.event_registration_status')['approved']);
 		        }])
+				->withCount(['eventRefundRequest', 'eventRefundRequest as refund_status_approved' => function ($q) {
+		            $q->where('uq_event_refund_request.status', @Config::get('smart.event_refund_request_status')['approved']);
+		        }])
 				->orderBy('rti_event.event_date', 'desc');
 		} else {
 		    $qry = Event::selectRaw('rti_event.id, rti_event.name, rti_event.description, rti_event.event_date, rti_event.due_date, uq_event_config.reg_start_date, uq_event_config.reg_end_date')
