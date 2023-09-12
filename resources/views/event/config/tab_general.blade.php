@@ -10,6 +10,20 @@
         </div> 
 
         <div class="form-group row">
+            <label class="col-md-3 col-form-label text-right">{{trans('display.general_event_date')}}<span class="text-danger"> *</span></label>
+            <div class="col-md-9 col-lg-6">
+                <div class="input-group">
+                    <input type="text" name="event_date" id="event_date" disabled data-toggle="datetimepicker" class="form-control datetimepicker-input" readonly="readonly" value="{{ Carbon\Carbon::parse(@$eventConfig->event->event_date)->format('Y-m-d')}}">
+                    <div class="input-group-append">
+                        <span class="input-group-text">
+                            <i class="la la-calendar-check-o"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.general_sport_type')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9 col-lg-6">
                 <select class="form-control selectpicker" id="sport_id" name="sport_id" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}">

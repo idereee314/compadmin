@@ -181,6 +181,7 @@ return [
     'general_event_stats' => 'Тэмцээний статистик',
     'general_check_weight' => 'Жин шалгах',
     'general_checked_weight' => 'Шалгагдсан жин',
+    'general_event_date' => 'Тэмцээний өдөр',
 
     // Search
     "general_search_list" => "Хайлт",
