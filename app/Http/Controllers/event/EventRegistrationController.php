@@ -826,6 +826,37 @@ class EventRegistrationController extends Controller
         */
     }
 
+    public function printCertificateByEvent()
+    {
+        $input = Input::all(); 
+        
+        $eventConfig = $this->eventConfig->findByEventId(@$input['event_id']);
+        dd($eventConfig);
+        $registration = $this->eventRegistration->getRegistrationByMember(@$input['event_id'], @$input['member_id']);
+        
+        $data['regs'] = $registration;
+        $data['eventConfig'] = $eventConfig;
+        $view = $this->view_path.'.certificate/certificate';
+        
+        if(\View::exists($view))
+        {
+            return view($view, $data);
+        }
+        else 
+        {
+
+        }
+        
+        /*
+        $pdf = PDF::loadView($this->view_path.'.mandat_cm', $data, [], [
+            'format' => 'A4-P'
+        ]);
+
+        return $pdf->stream('mandat.pdf');
+        return $pdf->download('mandat.pdf');
+        */
+    }
+
     public function treeBracket($eventId)
     {
         $event = $this->event->find($eventId);

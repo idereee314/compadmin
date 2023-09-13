@@ -107,8 +107,8 @@ class EventRefundRequestController extends Controller
         $data['event_id'] = @$input['event_id'];
         $data['academies'] = $academies;
         $data['countries'] = $countries;
-        $data['eventRefundRequest'] = $event->eventRefundRequest; 
-
+        $data['eventRefundRequest'] = $event->eventRefundRequest;
+        
         return view($this->view_path.'.refundRequest/add', $data);
         
     }

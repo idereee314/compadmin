@@ -128,7 +128,8 @@
                 </div>
                 <!--begin::Card-->
                 <div class="card card-custom">
-                    <input type="hidden" name="event_id" id="event_id" value="{{ @$eventRefundRequest[0]->event_id}}"/>
+                    <input type="hidden" name="event_id" id="event_id" value="{{ $event->id}}"/>
+                   
                     <div class="card-header flex-wrap border-0 pt-6 pb-0">
                         <div class="card-toolbar">
                             <!--begin::Button-->
@@ -147,7 +148,7 @@
                             <!--end::Button-->
                         </div>
                     </div>
-                    <div class="card-body" id="eventTable">
+                    <div class="card-body">
                         <div class="separator separator-solid mb-5"></div>
                         <!--begin::Table-->
                         <table class="table table-separate table-head-custom" id="event-refund-request-datatable" style="margin-top: 13px !important">                            
@@ -228,7 +229,6 @@
 $(document).ready(function () {
     $("#refund-add-request").on('click', function(){
         var eventId = $("#event_id").val();
-        var eventTable = document.getElementById("eventTable");
         
     	$.get('{!! route('event.refund.request.create') !!}?eventId='+eventId, function( data ) {
     		$('#memberModal').modal();
