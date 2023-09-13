@@ -25,7 +25,7 @@
 @include('layouts.mobile')
 <!--end::Header Mobile-->
 <!--begin::Aside-->
-@include('layouts.aside')
+
 <!--end::Aside-->
 <!--begin::Wrapper-->
 <div class="d-flex flex-column flex-row-fluid wrapper" id="kt_wrapper">

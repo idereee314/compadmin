@@ -1086,8 +1086,7 @@ function showEditModal(data){
         $('#update-event-registration-form select[name=entry_weight_id]').select2({
             placeholder: "-- {{ trans('display.general_select') }} --"
         });
-       
-
+        
         $('#update-event-registration-form select[name=entry_id]').on('change', function(){
             var entryId = $(this).val();
             var jsonDataConfig;

@@ -225,66 +225,223 @@
 @section('javascript')
 <script src="{{asset('assets/js/plugins/custom/datatables/datatables.bundle.js')}}"></script>
 <script>
-$("#refund-add-request").on('click', function(){
-    var eventId = $("#event_id").val();
-    
-	$.get('{!! route('event.refund.request.create') !!}?eventId='+eventId, function( data ) {
-		$('#memberModal').modal();
-		$('#memberModal').on('shown.bs.modal', function(){
-			$('#memberModal .modal-content').html(data);
-            $('.selectpicker').selectpicker();
+$(document).ready(function () {
+    $("#refund-add-request").on('click', function(){
+        var eventId = $("#event_id").val();
+        
+    	$.get('{!! route('event.refund.request.create') !!}?eventId='+eventId, function( data ) {
+    		$('#memberModal').modal();
+    		$('#memberModal').on('shown.bs.modal', function(){
+    			$('#memberModal .modal-content').html(data);
+                $('.selectpicker').selectpicker();
 
-            $('#create-event-refund-request-form select[name=member_id]').select2();
-            $('#create-event-refund-request-form input[name=academy_id]').select2({data: ""});
+                $('#create-event-refund-request-form select[name=member_id]').select2();
+                $('#create-event-refund-request-form input[name=academy_id]').select2({data: ""});
 
-            $('#create-event-refund-request-form select[name=member_id]').select2({
-                width: 'resolve',
-                dropdownAutoWidth : true,
-                dropdownParent: $('#memberModal'),
-                placeholder: "-- {{ trans('display.general_select') }} --",
-                minimumInputLength: 3,
-                ajax: {
-                    url: '{!! route('member.search') !!}',
-                    delay: 1500,
-                    data: function (params) {
-                        var query = {
-                            q: params.term
+                $('#create-event-refund-request-form select[name=member_id]').select2({
+                    width: 'resolve',
+                    dropdownAutoWidth : true,
+                    dropdownParent: $('#memberModal'),
+                    placeholder: "-- {{ trans('display.general_select') }} --",
+                    minimumInputLength: 3,
+                    ajax: {
+                        url: '{!! route('member.search') !!}',
+                        delay: 1500,
+                        data: function (params) {
+                            var query = {
+                                q: params.term
+                            }
+                            return query;
+                        },
+
+                        processResults: function (data) {
+                            console.log(data);
+                            return {
+                                results: JSON.parse(data)
+                            };
+                        },
+                        cache: true
+                    },
+                    templateSelection: function (item) {
+                        return item.fullname;
+                    },
+                    templateResult: function (item) {
+                        return item.fullname;
+                    }
+                });
+
+                $('#create-event-refund-request-form select[name=academy_id]').on('change', function(){
+                    var academyId = $(this).val(); 
+                    $.ajax({
+                        type: 'POST',
+                        url: '{!! route('academy.isother') !!}',
+                        data: {academy_id: academyId},
+                        success: function (data) {
+                            $('#academy_name_other').addClass('d-none');
+                            $("#academy_name").attr("disabled", true);
+                            $("#academy_name").val("");
+                            jsonData = JSON.parse(data);
+                        
+                            if(jsonData) {
+                                $('#academy_name_other').removeClass('d-none');
+                                $("#academy_name").attr("disabled", false);
+                            }              
+                        },
+                        error: function (xhr, textStatus, error) {
+                            console.log(xhr.statusText);
+                            console.log(textStatus);
+                            console.log(error);
+                        },
+                        async: false
+                    });
+                })
+
+    			$('#create-event-refund-request-form').validate({
+    				ignore: [],
+    				highlight:function(element) {
+    					$(element).parents('.form-group').addClass('has-error has-feedback');
+    				},
+    				unhighlight: function(element) {
+    					$(element).parents('.form-group').removeClass('has-error');
+    				},
+    				submitHandler: function(form) {
+    					$.ajax({
+                            url: form.action,
+    						type: form.method,
+    						data: $(form).serialize(),
+    						success: function(response) {
+    							if(response.status == 'success')
+                                {
+                                    $('#memberModal').find("#close").trigger('click');   
+                                    toastr.success(response.msg);
+                                    $('#event-refund-request-datatable').draw();
+                                }
+                                else {
+                                    toastr.error(response.errors, response.msg, {
+                                        "closeButton": true,
+                                        "timeOut": "0",
+                                        "extendedTimeOut": "0",
+                                    });
+                                }     
+    						},
+    						error: function (xhr, textStatus, error) {
+    							console.log(xhr.statusText);
+    							console.log(textStatus);
+    							console.log(error);
+    						},
+    						async: false          
+    					});
+    				},
+    				errorPlacement: function(error, element) {
+    					error.insertAfter(element);
+    				}
+    			});
+
+    			$(this).off('shown.bs.modal');
+    		});
+        
+    		$('#memberModal').on('hidden.bs.modal', function(){
+    			$('#memberModal .panel-body').empty();
+    		});
+        
+    	});
+    });
+
+    $(".edit-request").on('click', function(){
+        var eventId = $("#event_id").val();
+        var requestId = $(this).data("requestid");
+
+        $.get('/event/refund/request/'+requestId+'/edit?eventId=' + eventId, function( data ) {
+    		$('#memberModal').modal();
+    		$('#memberModal').on('shown.bs.modal', function(){
+    			$('#memberModal .modal-content').html(data);
+                $('.selectpicker').selectpicker();
+
+    			$('#update-event-refund-request-form').validate({
+    				ignore: [],
+    				highlight:function(element) {
+    					$(element).parents('.form-group').addClass('has-error has-feedback');
+    				},
+    				unhighlight: function(element) {
+    					$(element).parents('.form-group').removeClass('has-error');
+    				},
+    				submitHandler: function(form) {
+    					$.ajax({
+    						url: form.action,
+    						type: form.method,
+    						data: $(form).serialize(),
+    						success: function(response) {                           
+                                if(response.status == 'success')
+                                {
+                                    $('#memberModal').find("#close").trigger('click');
+                                    toastr.success(response.msg);
+                                }
+                                else {
+                                    toastr.error(response.errors, response.msg, {
+                                        "closeButton": true,
+                                        "timeOut": "0",
+                                        "extendedTimeOut": "0",
+                                    });
+                                }   
+    						},
+    						error: function (xhr, textStatus, error) {
+    							console.log(xhr.statusText);
+    							console.log(textStatus);
+    							console.log(error);
+    						},
+    						async: false,        
+    					});
+    				},
+    				errorPlacement: function(error, element) {
+    					error.insertAfter(element);
+                        if($(element).parents('.form-group').find(".error-here").length > 0){
+                            error.appendTo($(element).parents('.form-group').find(".error-here"));
+                        } else {
+                            error.insertAfter(element);
                         }
-                        return query;
-                    },
+    				}
+    			});
 
-                    processResults: function (data) {
-                        console.log(data);
-                        return {
-                            results: JSON.parse(data)
-                        };
-                    },
-                    cache: true
-                },
-                templateSelection: function (item) {
-                    return item.fullname;
-                },
-                templateResult: function (item) {
-                    return item.fullname;
-                }
-            });
+    			$(this).off('shown.bs.modal');
+    		});
 
-            $('#create-event-refund-request-form select[name=academy_id]').on('change', function(){
-                var academyId = $(this).val(); 
+    		$('#memberModal').on('hidden.bs.modal', function(){
+    			$('#memberModal .modal-content').empty();
+    		});
+    	});
+    });
+
+    $(".delete-request").on('click', function(){
+        var requestId = $(this).data("requestid");
+
+        Swal.fire({
+            title: "Та устгахдаа итгэлтэй байна уу",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Тийм",
+            cancelButtonText: 'Үгүй',
+            customClass: {
+                confirmButton: "btn btn-primary",
+                cancelButton: 'btn btn-secondary'
+            },
+        }).then(function(result) {
+            if (result.value) {
                 $.ajax({
-                    type: 'POST',
-                    url: '{!! route('academy.isother') !!}',
-                    data: {academy_id: academyId},
-                    success: function (data) {
-                        $('#academy_name_other').addClass('d-none');
-                        $("#academy_name").attr("disabled", true);
-                        $("#academy_name").val("");
-                        jsonData = JSON.parse(data);
-                    
-                        if(jsonData) {
-                            $('#academy_name_other').removeClass('d-none');
-                            $("#academy_name").attr("disabled", false);
-                        }              
+                    url: '/event/refund/request/'+requestId,
+                    type: 'DELETE',
+                    success: function (response) {
+                        if(response.status == 'success')
+                        {
+                            $('#memberModal').find("#close").trigger('click');
+                            toastr.success(response.msg);
+                        }
+                        else {
+                            toastr.error(response.errors, response.msg, {
+                                "closeButton": true,
+                                "timeOut": "0",
+                                "extendedTimeOut": "0",
+                            });
+                        }  
                     },
                     error: function (xhr, textStatus, error) {
                         console.log(xhr.statusText);
@@ -293,166 +450,10 @@ $("#refund-add-request").on('click', function(){
                     },
                     async: false
                 });
-            })
-
-			$('#create-event-refund-request-form').validate({
-				ignore: [],
-				highlight:function(element) {
-					$(element).parents('.form-group').addClass('has-error has-feedback');
-				},
-				unhighlight: function(element) {
-					$(element).parents('.form-group').removeClass('has-error');
-				},
-				submitHandler: function(form) {
-					$.ajax({
-                        url: form.action,
-						type: form.method,
-						data: $(form).serialize(),
-						success: function(response) {
-							if(response.status == 'success')
-                            {
-                                $('#memberModal').find("#close").trigger('click');   
-                                $("#event-refund-request-datatable").find("li a.active").trigger('click');
-                                toastr.success(response.msg);
-                            }
-                            else {
-                                toastr.error(response.errors, response.msg, {
-                                    "closeButton": true,
-                                    "timeOut": "0",
-                                    "extendedTimeOut": "0",
-                                });
-                            }     
-						},
-						error: function (xhr, textStatus, error) {
-							console.log(xhr.statusText);
-							console.log(textStatus);
-							console.log(error);
-						},
-						async: false          
-					});
-				},
-				errorPlacement: function(error, element) {
-					error.insertAfter(element);
-				}
-			});
-
-			$(this).off('shown.bs.modal');
-		});
-		
-		$('#memberModal').on('hidden.bs.modal', function(){
-			$('#memberModal .panel-body').empty();
-		});
-		
-	});
-});
-
-$(".edit-request").on('click', function(){
-    var eventId = $("#event_id").val();
-    var requestId = $(this).data("requestid");
-    
-    $.get('/event/refund/request/'+requestId+'/edit?eventId=' + eventId, function( data ) {
-		$('#memberModal').modal();
-		$('#memberModal').on('shown.bs.modal', function(){
-			$('#memberModal .modal-content').html(data);
-            $('.selectpicker').selectpicker();
-
-			$('#update-event-refund-request-form').validate({
-				ignore: [],
-				highlight:function(element) {
-					$(element).parents('.form-group').addClass('has-error has-feedback');
-				},
-				unhighlight: function(element) {
-					$(element).parents('.form-group').removeClass('has-error');
-				},
-				submitHandler: function(form) {
-					$.ajax({
-						url: form.action,
-						type: form.method,
-						data: $(form).serialize(),
-						success: function(response) {                           
-                            if(response.status == 'success')
-                            {
-                                $('#memberModal').find("#close").trigger('click');
-                                $("#event-refund-request-datatable").find("li a.active").trigger('click');
-                                toastr.success(response.msg);
-                            }
-                            else {
-                                toastr.error(response.errors, response.msg, {
-                                    "closeButton": true,
-                                    "timeOut": "0",
-                                    "extendedTimeOut": "0",
-                                });
-                            }   
-						},
-						error: function (xhr, textStatus, error) {
-							console.log(xhr.statusText);
-							console.log(textStatus);
-							console.log(error);
-						},
-						async: false,        
-					});
-				},
-				errorPlacement: function(error, element) {
-					error.insertAfter(element);
-                    if($(element).parents('.form-group').find(".error-here").length > 0){
-                        error.appendTo($(element).parents('.form-group').find(".error-here"));
-                    } else {
-                        error.insertAfter(element);
-                    }
-				}
-			});
-
-			$(this).off('shown.bs.modal');
-		});
-
-		$('#memberModal').on('hidden.bs.modal', function(){
-			$('#memberModal .modal-content').empty();
-		});
-	});
-});
-
-$(".delete-request").on('click', function(){
-    var requestId = $(this).data("requestid");
-    
-    Swal.fire({
-        title: "Та устгахдаа итгэлтэй байна уу",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonText: "Тийм",
-        cancelButtonText: 'Үгүй',
-        customClass: {
-            confirmButton: "btn btn-primary",
-            cancelButton: 'btn btn-secondary'
-        },
-    }).then(function(result) {
-        if (result.value) {
-            $.ajax({
-                url: '/event/refund/request/'+requestId,
-                type: 'DELETE',
-                success: function (response) {
-                    if(response.status == 'success')
-                    {
-                        $('#memberModal').find("#close").trigger('click');
-                        $("#event-refund-request-datatable").find("li a.active").trigger('click');
-                        toastr.success(response.msg);
-                    }
-                    else {
-                        toastr.error(response.errors, response.msg, {
-                            "closeButton": true,
-                            "timeOut": "0",
-                            "extendedTimeOut": "0",
-                        });
-                    }  
-                },
-                error: function (xhr, textStatus, error) {
-                    console.log(xhr.statusText);
-                    console.log(textStatus);
-                    console.log(error);
-                },
-                async: false
-            });
-        }
+            }
+        });
     });
+
 });
 </script>
 @endsection
