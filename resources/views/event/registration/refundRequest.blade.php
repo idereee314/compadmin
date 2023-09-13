@@ -147,7 +147,7 @@
                             <!--end::Button-->
                         </div>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body" id="eventTable">
                         <div class="separator separator-solid mb-5"></div>
                         <!--begin::Table-->
                         <table class="table table-separate table-head-custom" id="event-refund-request-datatable" style="margin-top: 13px !important">                            
@@ -228,6 +228,7 @@
 $(document).ready(function () {
     $("#refund-add-request").on('click', function(){
         var eventId = $("#event_id").val();
+        var eventTable = document.getElementById("eventTable");
         
     	$.get('{!! route('event.refund.request.create') !!}?eventId='+eventId, function( data ) {
     		$('#memberModal').modal();
@@ -237,7 +238,7 @@ $(document).ready(function () {
 
                 $('#create-event-refund-request-form select[name=member_id]').select2();
                 $('#create-event-refund-request-form input[name=academy_id]').select2({data: ""});
-
+                
                 $('#create-event-refund-request-form select[name=member_id]').select2({
                     width: 'resolve',
                     dropdownAutoWidth : true,
@@ -314,7 +315,7 @@ $(document).ready(function () {
                                 {
                                     $('#memberModal').find("#close").trigger('click');   
                                     toastr.success(response.msg);
-                                    $('#event-refund-request-datatable').draw();
+                                    $("#eventTable").page(page).draw("page");
                                 }
                                 else {
                                     toastr.error(response.errors, response.msg, {
