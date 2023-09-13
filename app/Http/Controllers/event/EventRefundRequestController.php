@@ -101,10 +101,12 @@ class EventRefundRequestController extends Controller
         $input = Input::all();
         
         $event = $this->event->find(@$input['eventId']);
+        
         $countries = $this->country->all();
         $academies = $this->academy->all();
 
-        $data['event_id'] = @$input['event_id'];
+        $data['event'] = @$event;
+        $data['event_id'] = @$event->id;
         $data['academies'] = $academies;
         $data['countries'] = $countries;
         $data['eventRefundRequest'] = $event->eventRefundRequest;
@@ -123,7 +125,6 @@ class EventRefundRequestController extends Controller
     {
         $input = Input::all();
         
-        $is_team = $this->event->find(request()->event_id)->config->is_team;
         $validator = Validator::make($input, EventRefundRequestModel::rules(0));
 
         if ($validator->fails())

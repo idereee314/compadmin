@@ -7,7 +7,8 @@
     </div>
 
     <div class="card-body">
-        <input type="hidden" name="event_id" id="event_id" value="{{ @$eventRefundRequest[0]->event_id}}"/>
+        <input type="hidden" name="event_id" id="event_id" value="{{ @$event_id}}"/>
+        
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.comp_member')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9 col-lg-6">

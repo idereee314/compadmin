@@ -129,7 +129,6 @@
                 <!--begin::Card-->
                 <div class="card card-custom">
                     <input type="hidden" name="event_id" id="event_id" value="{{ $event->id}}"/>
-                   
                     <div class="card-header flex-wrap border-0 pt-6 pb-0">
                         <div class="card-toolbar">
                             <!--begin::Button-->
