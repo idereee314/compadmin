@@ -923,7 +923,7 @@ function showAddModal( data ) {
 
             $('#create-event-registration-form input[name=entry_weight_id]').select2({data: ""});
         });
-
+        
         $('#create-event-registration-form input[name=entry_age_id]').on('change', function(){
             var ageId = $(this).val();
             var jsonDataWeight;
