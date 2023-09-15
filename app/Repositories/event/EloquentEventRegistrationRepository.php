@@ -450,7 +450,7 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 			->where('event_id', $eventId)
 			->where('member_id', $memberId);
 
-			$qry->with(['academy:id,name,is_other','member:id,lastname,firstname,profile_url,birth,gender_code', 'weight:id,weight', 'entry:id,name', 'belt:id,name']);
+			$qry->with(['academy:id,name,is_other','member:id,lastname,firstname,profile_url,birth,gender_code', 'weight:id,weight', 'entry:id,name', 'belt:id,name', 'award:event_registration_id,place_number']);
 			
 			return $qry->first();
 		}

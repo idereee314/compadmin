@@ -826,26 +826,33 @@ class EventRegistrationController extends Controller
         */
     }
 
-    public function printCertificateByEvent()
+    public function printUrgumjlulByMember()
     {
         $input = Input::all(); 
-        
+
         $eventConfig = $this->eventConfig->findByEventId(@$input['event_id']);
-        dd($eventConfig);
+        
         $registration = $this->eventRegistration->getRegistrationByMember(@$input['event_id'], @$input['member_id']);
         
-        $data['regs'] = $registration;
-        $data['eventConfig'] = $eventConfig;
-        $view = $this->view_path.'.certificate/certificate';
+        $data["reg"] = $registration;
+        $data["eventConfig"] = $eventConfig;
+        // $view = $this->view_path.'.certificate/certificate';
         
-        if(\View::exists($view))
-        {
-            return view($view, $data);
-        }
-        else 
-        {
+        $pdf = PDF::loadView($this->view_path.'.certificate/certificate', $data, [], [
+            'format' => 'A4-L'
+        ]);
 
-        }
+        return $pdf->stream('mandat.pdf');
+        
+        // if(\View::exists($view))
+        // {
+            
+        //     return view($view, $data);
+        // }
+        // else 
+        // {
+
+        // }
         
         /*
         $pdf = PDF::loadView($this->view_path.'.mandat_cm', $data, [], [

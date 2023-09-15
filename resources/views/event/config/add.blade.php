@@ -31,9 +31,9 @@
         </div>
 
         <div class="form-group row">
-            <label class="col-md-3 col-form-label text-right">{{trans('display.general_rank_season')}}: <span class="text-danger">*</span></label>
+            <label class="col-md-3 col-form-label text-right">{{trans('display.general_rank_season')}}:</label>
             <div class="col-md-9 col-lg-6">
-                <select class="form-control selectpicker" id="eventRankSeason" name="eventRankSeason" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}">
+                <select class="form-control selectpicker" id="eventRankSeason" name="eventRankSeason">
                     <option value="0">-- {{ trans('display.general_select') }} --</option>
                     @foreach($eventRankSeason as $season)
                         <option value="{{ $season->id }}">{{ $season->name }} - {{ Config::get("enums.sport_category")[$season->sport_id] }}</option>
@@ -44,9 +44,9 @@
         </div> 
 
         <div class="form-group row">
-            <label class="col-md-3 col-form-label text-right">{{trans('display.general_event_category')}}: <span class="text-danger">*</span></label>
+            <label class="col-md-3 col-form-label text-right">{{trans('display.general_event_category')}}: </label>
             <div class="col-md-9 col-lg-6">
-                <select class="form-control selectpicker" id="eventCategory" name="eventCategory" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}">
+                <select class="form-control selectpicker" id="eventCategory" name="eventCategory">
                     <option value="0">-- {{ trans('display.general_select') }} --</option>
                     @foreach($eventCategory as $category)
                         <option value="{{ $category->id }}">{{ $category->name }}</option>
@@ -87,10 +87,10 @@
         </div>
 
         <div class="form-group row">
-            <label class="col-md-3 col-form-label text-right">{{trans('display.reg_update_date')}}<span class="text-danger"> *</span></label>
+            <label class="col-md-3 col-form-label text-right">{{trans('display.reg_update_date')}}</label>
             <div class="col-md-9 col-lg-6">
                 <div class="input-group" id="kt_reg_update_date">
-                    <input type="text" name="reg_update_date" id="reg_update_date" data-toggle="datetimepicker" data-target="#reg_update_date" class="form-control datetimepicker-input" readonly="readonly" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}">
+                    <input type="text" name="reg_update_date" id="reg_update_date" data-toggle="datetimepicker" data-target="#reg_update_date" class="form-control datetimepicker-input" readonly="readonly" >
                     <div class="input-group-append">
                         <span class="input-group-text">
                             <i class="la la-calendar-check-o"></i>
@@ -116,9 +116,9 @@
         </div> 
 
         <div class="form-group row">
-            <label class="col-md-3 col-form-label text-right">{{trans('display.general_result_type')}}: <span class="text-danger">*</span></label>
+            <label class="col-md-3 col-form-label text-right">{{trans('display.general_result_type')}}: </label>
             <div class="col-md-9 col-lg-6">
-                <select class="form-control selectpicker" id="eventResultType" name="eventResultType" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}">
+                <select class="form-control selectpicker" id="eventResultType" name="eventResultType" >
                     <option value="0">-- {{ trans('display.general_select') }} --</option>
                     @foreach($eventResultType as $type)
                         <option value="{{ $type->id }}">- {{ $type->name }} </option>

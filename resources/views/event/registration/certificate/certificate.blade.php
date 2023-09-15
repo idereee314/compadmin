@@ -20,74 +20,78 @@
                 padding: 0;
             }
             .container{
-                width: 550px;
-                height: 742px;
+                width: 2000px;
+                height: 1414px;
                 background: #ddd;
                 margin: 0 auto;
                 float: left;
                 position: relative;
                 padding: 0;
                 margin: 0;
-                background: url('/assets/images/certificate.jpg') no-repeat center center;
+                background: url('/assets/images/event_certificates/elf_cup.png') no-repeat center center;
                 background-size: contain;
                 border-top: 2px solid #fff;
             }
             .content{
                 position: relative;
-                margin-top: 738px;
-            }
-            .image_container{
-                position: absolute;
-                width: 130px;
-                height: 130px;
-                background: #222;
-                bottom: 375px;
-                left: 50px;
-                border-radius: 50%;
-            }
-            .image_container img{
-                border-radius: 100%;
-                border: 5px solid #000;
-            }
-            .eventName{
-                position: absolute;
-                width: 400px;
-                height: 20px;
-                bottom: 650px;
-                left: 30px;
-                border-radius: 8px;
-                font-family: 'Times New Roman', Times;
-                font-style: normal;
-                font-weight: bold;
-                font-size: 30px;
+                margin-top: 1000px;
             }
             .org{
                 position: absolute;
-                width: 200px;
-                height: 20px;
-                bottom: 390px;
-                left: 230px;
+                width: 500px;
+                height: 90px;
+                bottom: 360px;
+                left: 900px;
                 border-radius: 8px;
                 font-family: 'Times New Roman', Times;
                 font-style: normal;
                 font-weight: bold;
                 font-size: 18px;
-                
             }
             .name{
                 position: absolute;
-                width: 280px;
+                width: 500px;
                 height: 70px;
-                bottom: 400px;
-                left: 230px;
+                bottom: 360px;
+                left: 830px;
                 /* right: 100px; */
                 border-radius: 8px;
                 font-family: 'Times New Roman', Times;
                 /* font-style: normal; */
                 font-weight: bold;
-                font-size: 30px;
+                font-size: 50px;
                 line-height: 26px;
                 color: #222;
+                text-align: left;
+            }
+            .entry{
+                position: absolute;
+                width: 500px;
+                height: 40px;
+                bottom: 250px;
+                left: 420px;
+                border-radius: 8px;
+                font-family: 'Times New Roman', Times;
+                font-style: normal;
+                font-weight: bold;
+                font-size: 30px;
+                color: #222;
+                line-height: 25px;
+                text-align: left;
+            }
+            .award{
+                position: absolute;
+                width: 500px;
+                height: 40px;
+                bottom: 250px;
+                left: 1130px;
+                border-radius: 8px;
+                font-family: 'Times New Roman', Times;
+                font-style: normal;
+                font-weight: bold;
+                font-size: 30px;
+                color: #222;
+                line-height: 25px;
                 text-align: left;
             }
             .weight{
@@ -120,57 +124,12 @@
                 line-height: 20px;
                 text-align: left;
             }
-            .gender{
-                position: absolute;
-                width: 250px;
-                height: 20px;
-                bottom: 180px;
-                left: 40px;
-                border-radius: 8px;
-                font-family: 'Times New Roman', Times;
-                font-weight: bold;
-                font-style: normal;
-                font-size: 20px;
-                color: #222;
-                line-height: 20px;
-                text-align: left;
-            }
-            .birthdate{
-                position: absolute;
-                width: 250px;
-                height: 20px;
-                bottom: 320px;
-                left: 40px;
-                border-radius: 8px;
-                font-family: 'Times New Roman', Times;
-                font-weight: bold;
-                font-style: normal;
-                font-size: 20px;
-                color: #222;
-                line-height: 20px;
-                text-align: left;
-            }
             .qrcode{
                 position: absolute;
                 width: 250px;
                 height: 90px;
                 bottom: 260px;
                 right: 30px;
-                border-radius: 8px;
-                font-family: 'Times New Roman', Times;
-                font-weight: bold;
-                font-style: normal;
-                font-size: 20px;
-                color: #222;
-                line-height: 20px;
-                text-align: right;
-            }
-            .regid{
-                position: absolute;
-                width: 250px;
-                height: 40px;
-                bottom: 150px;
-                right: 80px;
                 border-radius: 8px;
                 font-family: 'Times New Roman', Times;
                 font-weight: bold;
@@ -204,39 +163,19 @@
         <div class="main_container">
             <div class="container">
                 <div class="content">
-                    <div class="eventName">
-                        {{ @$eventConfig->event->name }}
-                    </div>
-                    <div class="image_container">
-                        <img src="{{ \Storage::disk('s3')->url($reg->member->profile_url) }}" width="100%" height="100%" />
-                    </div>
-                    <div class="org">
+                    
+                    
+                    <!-- <div class="org">
                         {{ @$reg->academy->is_other ? @$reg->academy_name : @$reg->academy->name }}
-                    </div>
+                    </div> -->
                     <div class="name">
                         {{ @$reg->member->lastname }} {{ @$reg->member->firstname }}
                     </div>
-                    <div class="weight">
-                        Жин : {{ @$reg->weight->weight }}кг
+                    <div class="entry">
+                        {{$reg->entry->name}} / {{@$reg->belt->name}} /{{ @$reg->weight->weight }}кг 
                     </div>
-                    <div class="category">
-                        Ангилал : {{$reg->entry->name}}
-                    </div>
-                    <div class="belt">
-                        Бүс : {{@$reg->belt->name}}
-                    </div>
-                    <div class="gender">
-                        Хүйс : {{ Config::get("enums.gender_code")[@$reg->member->gender_code] }}
-                    </div>
-                    <div class="birthdate">
-                        Төрсөн огноо : {{@$reg->member->birth}}
-                    </div>
-                    
-                    <div class="qrcode">
-                        <img src="data:image/png;base64,{{\DNS2D::getBarcodePNG(strval(@$reg->id), 'QRCODE')}}" width="150px" height="150px">
-                    </div>
-                    <div class="regid">
-                        {{@$reg->id}}
+                    <div class="award">
+                        {{$reg->award->place_number}}
                     </div>
                 </div>
             </div>
