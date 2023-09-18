@@ -146,9 +146,9 @@ return array(
 	],
 
 	'event_award' => [
-		'1' => 'fas fa-medal icon-4x gold-medal-icon',
-		'2' => 'fas fa-medal icon-4x silver-medal-icon',
-		'3' => 'fas fa-medal icon-4x bronze-medal-icon',
+		'1' => 'la la-medal icon-4x gold-medal-icon',
+		'2' => 'la la-medal icon-4x silver-medal-icon',
+		'3' => 'la la-medal icon-4x bronze-medal-icon',
 	],
 
 	'country_alpha' => [

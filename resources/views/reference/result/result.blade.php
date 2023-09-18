@@ -186,9 +186,9 @@
                                                         <tr>
                                                             <th class="text-center">#</th>
                                                             <th class="text-center">{{trans('display.comp_academy_name')}}</th>
-                                                            <th class="text-center"><i class="fas fa-medal icon-2x gold-medal-icon"></i> АЛТ</th>
-                                                            <th class="text-center"><i class="fas fa-medal icon-2x silver-medal-icon"></i> МӨНГӨ</th>
-                                                            <th class="text-center"><i class="fas fa-medal icon-2x bronze-medal-icon"></i> ХҮРЭЛ</th>
+                                                            <th class="text-center"><i class="la la-medal icon-2x gold-medal-icon"></i></th>
+                                                            <th class="text-center"><i class="la la-medal icon-2x silver-medal-icon"></i></th>
+                                                            <th class="text-center"><i class="la la-medal icon-2x bronze-medal-icon"></i></th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -242,9 +242,9 @@
                                                         <tr>
                                                             <th class="text-center">#</th>
                                                             <th class="text-center">{{trans('display.comp_academy_name')}}</th>
-                                                            <th class="text-center"><i class="fas fa-medal icon-2x gold-medal-icon"></i> АЛТ</th>
-                                                            <th class="text-center"><i class="fas fa-medal icon-2x silver-medal-icon"></i> МӨНГӨ</th>
-                                                            <th class="text-center"><i class="fas fa-medal icon-2x bronze-medal-icon"></i> ХҮРЭЛ</th>
+                                                            <th class="text-center"><i class="la la-medal icon-2x gold-medal-icon"></i></th>
+                                                            <th class="text-center"><i class="la la-medal icon-2x silver-medal-icon"></i></th>
+                                                            <th class="text-center"><i class="la la-medal icon-2x bronze-medal-icon"></i></th>
                                                             <th class="text-center"> НИЙТ ОНОО</th>
                                                         </tr>
                                                     </thead>
@@ -291,9 +291,9 @@
                                                     <table class="table table-hover table-bordered table-head-custom">
                                                         <thead>
                                                             <tr>                                                                                        
-                                                                <th class="text-center"><i class="fas fa-medal icon-2x gold-medal-icon"></i> АЛТ</th>
-                                                                <th class="text-center"><i class="fas fa-medal icon-2x silver-medal-icon"></i> МӨНГӨ</th>
-                                                                <th class="text-center"><i class="fas fa-medal icon-2x bronze-medal-icon"></i> ХҮРЭЛ</th>
+                                                                <th class="text-center"><i class="la la-medal icon-2x gold-medal-icon"></i> АЛТ</th>
+                                                                <th class="text-center"><i class="la la-medal icon-2x silver-medal-icon"></i> МӨНГӨ</th>
+                                                                <th class="text-center"><i class="la la-medal icon-2x bronze-medal-icon"></i> ХҮРЭЛ</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
