@@ -309,7 +309,7 @@ class EloquentMemberRepository implements MemberRepository {
 		return DB::select("select ua.name, uer.academy_name from uniqdb.uq_comp.uq_event_registration uer 
 				join uniqdb.uq_comp.uq_member um on um.id = uer.member_id 
 				join uniqdb.uq_comp.uq_academy ua on ua.id = uer.academy_id 
-				where um.id = $memberId and ua.type = 'academy'
+				where um.id = $memberId and ua.type = 'academy' and uer.status = 'approved'
 				group by ua.name, uer.academy_name");
 	}
 
@@ -318,7 +318,7 @@ class EloquentMemberRepository implements MemberRepository {
 		return DB::select("select ua.name , uer.academy_name from uniqdb.uq_comp.uq_event_registration uer 
 				join uniqdb.uq_comp.uq_member um on um.id = uer.member_id 
 				join uniqdb.uq_comp.uq_academy ua on ua.id = uer.academy_id 
-				where um.id = $memberId and ua.type = 'highschool'
+				where um.id = $memberId and ua.type = 'highschool' and uer.status = 'approved'
 				group by ua.name, uer.academy_name");
 	}
 	
