@@ -5,7 +5,7 @@
         <meta charset="utf-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-
+        
         <title>UniQ Certificate</title>
 
         <style>
@@ -64,7 +64,7 @@
                 color: #222;
                 text-align: left;
             }
-            .entry{
+            .category{
                 position: absolute;
                 width: 500px;
                 height: 40px;
@@ -138,20 +138,6 @@
                 color: #222;
                 line-height: 20px;
                 text-align: right;
-            }
-            .category{
-                position: absolute;
-                width: 280px;
-                height: 40px;
-                bottom: 273px;
-                left: 40px;
-                border-radius: 8px;
-                font-family: 'Times New Roman', Times;
-                font-style: normal;
-                font-weight: bold;
-                font-size: 20px;
-                text-align: left;
-                color: #222;
             }
 
             footer {page-break-after: always;}

@@ -7,9 +7,9 @@ use Auth;
 use Carbon;
 use Config;
 
-class EventCategory extends Model
+class EventType extends Model
 {
-    protected $table = 'uq_event_category';
+    protected $table = 'uq_event_type';
     protected $primaryKey = 'id';
 
     public function config()

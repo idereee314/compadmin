@@ -32,6 +32,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind('team\TeamRepository', 'team\EloquentTeamRepository');  
         $this->app->bind('member\TeamMemberRepository', 'member\EloquentTeamMemberRepository');  
         $this->app->bind('member\TeamMemberAttributeRepository', 'member\EloquentTeamMemberAttributeRepository');  
+        $this->app->bind('event\EventTypeRepository', 'event\EloquentEventTypeRepository');
 
         $this->app->bind('organization\OrganizationRepository', 'organization\EloquentOrganizationRepository'); 
 

@@ -284,7 +284,7 @@ $(document).ready(function () {
                             if(jsonData) {
                                 $('#academy_name_other').removeClass('d-none');
                                 $("#academy_name").attr("disabled", false);
-                            }              
+                            }
                         },
                         error: function (xhr, textStatus, error) {
                             console.log(xhr.statusText);
