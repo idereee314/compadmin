@@ -237,7 +237,6 @@ $(document).ready(function () {
 
                 $('#create-event-refund-request-form select[name=member_id]').select2();
                 $('#create-event-refund-request-form input[name=academy_id]').select2({data: ""});
-                
                 $('#create-event-refund-request-form select[name=member_id]').select2({
                     width: 'resolve',
                     dropdownAutoWidth : true,
@@ -314,7 +313,7 @@ $(document).ready(function () {
                                 {
                                     $('#memberModal').find("#close").trigger('click');   
                                     toastr.success(response.msg);
-                                    $("#eventTable").page(page).draw("page");
+                                    location.reload();
                                 }
                                 else {
                                     toastr.error(response.errors, response.msg, {
@@ -375,6 +374,7 @@ $(document).ready(function () {
                                 {
                                     $('#memberModal').find("#close").trigger('click');
                                     toastr.success(response.msg);
+                                    location.reload();
                                 }
                                 else {
                                     toastr.error(response.errors, response.msg, {
@@ -434,6 +434,7 @@ $(document).ready(function () {
                         {
                             $('#memberModal').find("#close").trigger('click');
                             toastr.success(response.msg);
+                            location.reload();
                         }
                         else {
                             toastr.error(response.errors, response.msg, {

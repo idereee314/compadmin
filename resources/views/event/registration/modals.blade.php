@@ -40,6 +40,7 @@
         <div class="modal-content">
         <div class="modal-header bg-gray-100">
             <h5 class="modal-title" id="exampleModalLabel">UniQ Bracket System</h5>
+            
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <i aria-hidden="true" class="ki ki-close"></i>
             </button>

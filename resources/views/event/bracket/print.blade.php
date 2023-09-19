@@ -2,11 +2,11 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>UniQ Bracket System</title>
+    <link rel="shortcut icon" href="{{asset('assets/images/logo/uniq_logo.ico')}}" />
+    <title>UniQ Sport Bracket System</title>
     <style>
         body{
             font-family: Tahoma;
-            
         }
         
         #table1 {
@@ -24,7 +24,7 @@
     $width = "800px";
     $background = "gray";
 ?>
-<body style="background-color: {{ $background }};">      
+<body style="background-color: {{ $background }};">
     @include('event.bracket.print_bracket')
 </body>
 </html>
