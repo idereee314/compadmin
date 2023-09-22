@@ -40,8 +40,9 @@ class EloquentEntryConfigBeltRepository implements EntryConfigBeltRepository {
 		$entryConfigBelt->entry_id = $input['entry_id'];
 		$entryConfigBelt->name = $input['name'];
 		$entryConfigBelt->name_en = $input['name_en'];
-		$entryConfigBelt->possible_belts = '{'.implode(", ", @$input['possible_belts']).'}';
-		
+
+		$entryConfigBelt->possible_belts = '{'.collect(@$input['possible_belts'])->implode(',').'}';
+
 		$entryConfigBelt->save();
 		return $entryConfigBelt;
 	}
@@ -53,7 +54,7 @@ class EloquentEntryConfigBeltRepository implements EntryConfigBeltRepository {
 		$entryConfigBelt->entry_id = $input['entry_id'];
 		$entryConfigBelt->name = $input['name'];
 		$entryConfigBelt->name_en = $input['name_en'];
-		$entryConfigBelt->possible_belts = '{'.implode(", ", @$input['possible_belts']).'}';
+		$entryConfigBelt->possible_belts = '{'.collect(@$input['possible_belts'])->implode(',').'}';
 
 		$entryConfigBelt->save();
 

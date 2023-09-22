@@ -256,49 +256,6 @@ class EventRegistrationController extends Controller
         return view($this->view_path.'.team/athlete_team/athlete', $data);
     }
 
-    public function MeduulegPrint($id)
-    {        
-        $eventTeamRegistration = $this->eventTeamRegistration->find($id);
-        $event = $eventTeamRegistration->event;
-        $eventEntries = $event->entries->find($eventTeamRegistration->entry_id);
-        $athlete_list = $eventTeamRegistration->teamathlete->where('team_id', $eventTeamRegistration->team_id);
-        
-        $data['athlete_list'] = $athlete_list;
-        $data['eventEntries'] = $eventEntries;
-        $data['athlete_list'] = $athlete_list;
-        $data['event_id'] = $event->id;
-		$data['eventTeamRegistration'] = $eventTeamRegistration;
-        $data['event'] = $event;
-
-        return view($this->view_path.'.team/athlete_team/print', $data);    
-    }
-
-    public function generatePdf($id)
-    {
-        $eventTeamRegistration = $this->eventTeamRegistration->find($id);
-        $event = $eventTeamRegistration->event;
-        $eventEntries = $event->entries->find($eventTeamRegistration->entry_id);
-        $athlete_list = $eventTeamRegistration->teamathlete->where('team_id', $eventTeamRegistration->team_id);
-        
-        $data['athlete_list'] = $athlete_list;
-        $data['eventEntries'] = $eventEntries;
-        $data['athlete_list'] = $athlete_list;
-        $data['event_id'] = $event->id;
-		$data['eventTeamRegistration'] = $eventTeamRegistration;
-        $data['event'] = $event;
-
-        // $pdf = PDF::loadView('pdf_meduuleg.view', $data);
-
-        // return $pdf->download('file.pdf');
-
-        // return PDF::loadView('pdf_meduuleg.view', $data);
-
-        // return view($this->view_path.'.team/athlete_team/pdf_meduuleg', $data);  
-        $pdf = PDF::loadView($this->view_path.'.team.athlete_team.pdf_meduuleg', $data);
-        // $pdf->setPaper('a4', 'landscape');
-        return $pdf->download('file.pdf');
-    }
-
     /**
      * Show the form for editing the specified resource.
      *
@@ -745,6 +702,48 @@ class EventRegistrationController extends Controller
         return view($this->view_path . '.sportcard', compact('viewPath', 'sports'));
     }
 
+    public function MeduulegPrint($id)
+    {        
+        $eventTeamRegistration = $this->eventTeamRegistration->find($id);
+        $event = $eventTeamRegistration->event;
+        $eventEntries = $event->entries->find($eventTeamRegistration->entry_id);
+        $athlete_list = $eventTeamRegistration->teamathlete->where('team_id', $eventTeamRegistration->team_id);
+        
+        $data['athlete_list'] = $athlete_list;
+        $data['eventEntries'] = $eventEntries;
+        $data['athlete_list'] = $athlete_list;
+        $data['event_id'] = $event->id;
+		$data['eventTeamRegistration'] = $eventTeamRegistration;
+        $data['event'] = $event;
+
+        return view($this->view_path.'.team/athlete_team/print', $data);    
+    }
+
+    public function generatePdf($id)
+    {
+        $eventTeamRegistration = $this->eventTeamRegistration->find($id);
+        $event = $eventTeamRegistration->event;
+        $eventEntries = $event->entries->find($eventTeamRegistration->entry_id);
+        $athlete_list = $eventTeamRegistration->teamathlete->where('team_id', $eventTeamRegistration->team_id);
+        
+        $data['athlete_list'] = $athlete_list;
+        $data['eventEntries'] = $eventEntries;
+        $data['athlete_list'] = $athlete_list;
+        $data['event_id'] = $event->id;
+		$data['eventTeamRegistration'] = $eventTeamRegistration;
+        $data['event'] = $event;
+
+        // $pdf = PDF::loadView('pdf_meduuleg.view', $data);
+
+        // return $pdf->download('file.pdf');
+
+        // return PDF::loadView('pdf_meduuleg.view', $data);
+
+        // return view($this->view_path.'.team/athlete_team/pdf_meduuleg', $data);  
+        $pdf = PDF::loadView($this->view_path.'.team.athlete_team.pdf_meduuleg', $data);
+        // $pdf->setPaper('a4', 'landscape');
+        return $pdf->download('file.pdf');
+    }
 
     public function printMandateByEventAndStatus()
     {
@@ -1136,7 +1135,7 @@ class EventRegistrationController extends Controller
     {
         $event = $this->event->find($eventId);
         $eventResult = $this->eventRegistration->getResultFromEvent($eventId);
-        $eventAllMedal = $this->eventRegistration->getAllMedalFromEvent($eventId);
+        $getToplistByGoldMedalFromEvent = $this->eventRegistration->getToplistByGoldMedalFromEvent($eventId);
         $eventToplist = $this->eventRegistration->getToplistFromEvent($eventId);
         $eventToplistPoint = $this->eventRegistration->getToplistByPointFromEvent($eventId);
         $eventAllCategories = $this->eventRegistration->getCategoriesFromEvent($eventId);
@@ -1149,7 +1148,7 @@ class EventRegistrationController extends Controller
         }
         $data['resultType'] = $resultType;
         $data['statsWeightForOrg'] = $statsWeightForOrg;
-        $data['eventAllMedal'] = $eventAllMedal;
+        $data['getToplistByGoldMedalFromEvent'] = $getToplistByGoldMedalFromEvent;
         $data['eventResult'] = $eventResult;
         $data['event'] = $event;
         $data['eventToplist'] = $eventToplist;

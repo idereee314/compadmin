@@ -25,11 +25,6 @@ class EntryConfigBelt extends Model
     public function entry()
     {
         return $this->belongsTo(EventEntries::class, 'entry_id');
-    }   
-
-    public function belts()
-    {
-        return $this->belongsToMany(BeltGroup::class, 'uq_bjj_belt_group', 'entry_id', 'belt_group_id')->withPivot('possible_belts');;
     }
     
     public static function boot()

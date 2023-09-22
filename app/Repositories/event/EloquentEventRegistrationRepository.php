@@ -665,25 +665,7 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 			ORDER BY gold desc, silver desc, bronze desc");
 	}
 
-	public function getToplistByPointFromEvent($eventId)
-	{
-		return DB::select("SELECT ua.id AS academy_id,ua.name ,
-						SUM(CASE WHEN uea.place_number = 1 THEN 1 ELSE 0 END) AS gold,
-						SUM(CASE WHEN uea.place_number = 2 THEN 1 ELSE 0 END) AS silver,
-						SUM(CASE WHEN uea.place_number = 3 THEN 1 ELSE 0 END) AS bronze,
-						COALESCE(SUM(point), 0) AS total_point
-					FROM uq_comp.uq_event_award uea
-					JOIN uq_comp.uq_event_registration uer ON uer.id = uea.event_registration_id
-					JOIN uq_comp.uq_academy ua ON ua.id = uer.academy_id
-					left join lateral (
-						select uetp.point
-						from uq_comp.uq_event_toplist_point uetp 
-						where uer.event_id = uetp.event_id and uea.place_number between uetp.start_pos and uetp.end_pos 
-					) point on true 
-					WHERE uer.event_id = $eventId
-					GROUP BY ua.id, ua.name
-					order by total_point desc");
-	}
+	
 
 	public function getResultFromEvent($eventId)
 	{
@@ -711,7 +693,7 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 		order by uee.gender_code asc, uee.name, uecb.name, uecw.weight asc");
 	}
 
-	public function getAllMedalFromEvent($eventId)
+	public function getToplistByGoldMedalFromEvent($eventId)
 	{
 		return DB::select("select 
 			SUM(CASE WHEN uea.place_number = 1 THEN 1 ELSE 0 END) as gold,
@@ -720,6 +702,26 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 			FROM uq_comp.uq_event_award uea
 			LEFT JOIN uniqdb.uq_comp.uq_event_registration uer ON uer.id = uea.event_registration_id 			
 			WHERE uer.event_id = $eventId");
+	}
+
+	public function getToplistByPointFromEvent($eventId)
+	{
+		return DB::select("SELECT ua.id AS academy_id,ua.name ,
+						SUM(CASE WHEN uea.place_number = 1 THEN 1 ELSE 0 END) AS gold,
+						SUM(CASE WHEN uea.place_number = 2 THEN 1 ELSE 0 END) AS silver,
+						SUM(CASE WHEN uea.place_number = 3 THEN 1 ELSE 0 END) AS bronze,
+						COALESCE(SUM(point), 0) AS total_point
+					FROM uq_comp.uq_event_award uea
+					JOIN uq_comp.uq_event_registration uer ON uer.id = uea.event_registration_id
+					JOIN uq_comp.uq_academy ua ON ua.id = uer.academy_id
+					left join lateral (
+						select uetp.point
+						from uq_comp.uq_event_toplist_point uetp 
+						where uer.event_id = uetp.event_id and uea.place_number between uetp.start_pos and uetp.end_pos 
+					) point on true 
+					WHERE uer.event_id = $eventId
+					GROUP BY ua.id, ua.name
+					order by total_point desc");
 	}
 	
 	//RESULTS queries .end
@@ -747,7 +749,7 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 								and r.entry_belt_id = ".$entryBeltId." and r.entry_weight_id = ".$entryWeightId."
 								order by r.academy_id, r.academy_name, r.id");
 	}
-
+ 
 	public function getBracketGenerationFromEvent($eventId, $entryId, $entryAgeId, $entryBeltId, $entryWeightId)
 	{
 		return DB::select("select ro.id as ro, ro.is_disqualify as is_dq_one, ro.is_weight_checked as is_weight_checked_one, um.firstname as firstname_one, um.lastname as lastname_one, case when ao.is_other = 1 then ro.academy_name else ao.name end as acname_one, 

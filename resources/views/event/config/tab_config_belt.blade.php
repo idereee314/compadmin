@@ -45,7 +45,7 @@
                         <td class="text-center">{{$loop->parent->index+1}}. {{++$loop->index}}</td>
                         <td>{{$belt->name}}</td>
                         <td>{{$belt->name_en}}</td>
-                        <td class="text-center">{{$belt->possible_belts}}</td>
+                        <td>{{$belt->possible_belts }}</td>
                         <td class="text-center">{{$belt->created_at}}</td>
                         <td class="text-center">
                             <a href="javascript:;" class="btn btn-icon btn-light btn-hover-primary btn-sm mx-3 edit-belt" data-beltid="{{$belt->id}}">
@@ -81,7 +81,7 @@
                     <tr>
                         <td colspan="7" class="text-center">{{ trans('display.general_no_record') }}</td>
                     </tr>
-                    @endforelse
+                @endforelse
                 </tbody>
             </table>
             <!--end::Table-->

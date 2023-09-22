@@ -173,9 +173,9 @@
 		                                        	<a href="#" class="btn btn-icon btn-circle btn-sm btn-light-primary mr-1" data-card-tool="toggle">
 		                                        	<i class="ki ki-arrow-down icon-nm"></i>
 		                                        	</a>
-		                                        	<a href="#" class="btn btn-icon btn-circle btn-sm btn-light-success mr-1" data-card-tool="reload">
+		                                        	<!-- <a href="#" class="btn btn-icon btn-circle btn-sm btn-light-success mr-1" data-card-tool="reload">
 		                                        	<i class="ki ki-reload icon-nm"></i>
-		                                        	</a>
+		                                        	</a> -->
 		                                        </div>
                                             </div>
                                             <div class="card-body">
@@ -229,9 +229,9 @@
 		                                        	<a href="#" class="btn btn-icon btn-circle btn-sm btn-light-primary mr-1" data-card-tool="toggle">
 		                                        	<i class="ki ki-arrow-down icon-nm"></i>
 		                                        	</a>
-		                                        	<a href="#" class="btn btn-icon btn-circle btn-sm btn-light-success mr-1" data-card-tool="reload">
+		                                        	<!-- <a href="#" class="btn btn-icon btn-circle btn-sm btn-light-success mr-1" data-card-tool="reload">
 		                                        	<i class="ki ki-reload icon-nm"></i>
-		                                        	</a>
+		                                        	</a> -->
 		                                        </div>
                                             </div>
                                             <div class="card-body">
@@ -297,7 +297,7 @@
                                                             </tr>
                                                         </thead>
                                                         <tbody>
-                                                            @foreach($eventAllMedal as $medals)
+                                                            @foreach($getToplistByGoldMedalFromEvent as $medals)
                                                                 <tr>                                                    
                                                                     <td class="text-center border-right"><strong>{{ $medals->gold }}</strong></td>
                                                                     <td class="text-center border-right"><strong>{{ $medals->silver }}</strong></td>
@@ -373,7 +373,7 @@
                                             @endforeach 
                                         @endforeach 
                                     @endforeach
-                                </div>                    
+                                </div>
                                 <!--end::Row-->
                             </div>
                             <div class="tab-pane fade {{ @$tab_id == $tab['number'] ? 'active show' : '' }}" id="tab1-3">
@@ -475,21 +475,18 @@ $(document).ready(function() {
     card.on('reload', function (card) {
     	toastr.info('Дахин ачааллаа');
 
-    	KTApp.block(card.getSelf(), {
-    		overlayColor: '#ffffff',
-    		type: 'loader',
-    		state: 'primary',
-    		opacity: 0.3,
-    		size: 'lg'
-    	});
-
-    	// update the content here
+    	// KTApp.block(card.getSelf(), {
+    	// 	overlayColor: '#ffffff',
+    	// 	type: 'loader',
+    	// 	state: 'primary',
+    	// 	opacity: 0.3,
+    	// 	size: 'lg'
+    	// });
 
     	setTimeout(function () {
     		KTApp.unblock(card.getSelf());
     	}, 2000);
     });
-
 
 }).ajaxStart($.blockUI).ajaxStop($.unblockUI);
 
