@@ -87,8 +87,7 @@ class CompadRoleController extends Controller
             }
         }
 
-        $data['response'] = $response;
-        return view('core.alert.messages', $data);
+        return $response;
     }
 
     /**
@@ -160,8 +159,7 @@ class CompadRoleController extends Controller
             }            
         }
 
-        $data['response'] = $response;
-        return view('core.alert.messages', $data);
+        return $response;
     }
 
     /**
@@ -188,8 +186,7 @@ class CompadRoleController extends Controller
             );
         }
 
-        $data['response'] = $response;
-        return view('core.alert.messages', $data);
+        return $response;
     }
 
     public function viewMenu($id)

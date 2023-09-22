@@ -94,9 +94,8 @@ class CompadUserController extends Controller
 
             }
         }
-        // $data['response'] = $response;
-        // return view('core.alert.messages', $data);
-        $response;
+        
+        return $response;
     }
 
     /**
@@ -164,8 +163,6 @@ class CompadUserController extends Controller
 			}
 		}
 
-        // $data['response'] = $response;
-        // return view('core.alert.messages', $data);
         return $response;
     }
 
@@ -195,9 +192,7 @@ class CompadUserController extends Controller
             );
         }
 
-        // $data['response'] = $response;
-        // return view('core.alert.messages', $data);
-        $response;
+        return $response;
     }
 
     public function getDatatableList(Request $request)
@@ -259,8 +254,7 @@ class CompadUserController extends Controller
 			}
 		}
 
-        $data['response'] = $response;
-        return view('core.alert.messages', $data);
+        return $response;
     }
 
     public function changeUserPassword($id)
@@ -307,8 +301,7 @@ class CompadUserController extends Controller
 			}
 		}
 
-        $data['response'] = $response;
-        return view('core.alert.messages', $data);
+        return $response;
     }
 
     public function searchUser()
@@ -360,8 +353,6 @@ class CompadUserController extends Controller
             );
         }
 
-        $data['response'] = $response;
-        return view('core.alert.messages', $data);
-
+        return $response;
     }
 }

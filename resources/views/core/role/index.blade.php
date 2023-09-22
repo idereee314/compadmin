@@ -156,8 +156,18 @@ $(document).ready(function() {
                     url: 'role/' + roleId,
                     type: 'DELETE',
                     success: function(response) {
-                        $('.panel-sub-heading').html(response).fadeIn().delay(5000).fadeOut();
-                        rolerTable.draw();
+                        if(response.status == 'success')
+                        {
+                            toastr.success(response.msg);
+                            rolerTable.draw();
+                        }
+                        else {
+                            toastr.error(response.errors, response.msg, {
+                                "closeButton": true,
+                                "timeOut": "0",
+                                "extendedTimeOut": "0",
+                            });
+                        }
                     },
                     error: function (xhr, textStatus, error) {
                         console.log(xhr.statusText);
@@ -199,9 +209,19 @@ $(document).ready(function() {
                         type: form.method,
                         data: new FormData(form),
                         success: function(response) {
-                            $('#roleModal').find("#close").trigger('click');
-                            $('.panel-sub-heading').html(response).fadeIn().delay(5000).fadeOut();
-                            rolerTable.draw();
+                            if(response.status == 'success')
+                            {
+                                $('#roleModal').find("#close").trigger('click');
+                                toastr.success(response.msg);
+                                rolerTable.draw();
+                            }
+                            else {
+                                toastr.error(response.errors, response.msg, {
+                                    "closeButton": true,
+                                    "timeOut": "0",
+                                    "extendedTimeOut": "0",
+                                });
+                            }
                         },
                         error: function (xhr, textStatus, error) {
                             console.log(xhr.statusText);
@@ -259,9 +279,23 @@ $(document).ready(function() {
                         type: form.method,
                         data:  new FormData(form),
                         success: function(response) {
-                            $('#roleModal').find("#close").trigger('click');
-                            $('.panel-sub-heading').html(response).fadeIn().delay(5000).fadeOut();
-                            rolerTable.draw();
+                            if(response.status == 'success'){
+                            $('#roleModal').find('#close').trigger('click');
+                            toastr.success(response.msg);
+                            if(rolerTable != undefined)
+                            {
+                                var page = rolerTable.page.info().page;
+                                rolerTable.page(page).draw('page');
+                            }
+                            }
+                            else 
+                            {
+                            toastr.error(response.errors, response.msg, {
+                                "closeButton": true,
+                                "timeOut": "0",
+                                "extendedTimeOut": "0",
+                                });
+                            }
                         },
                         error: function (xhr, textStatus, error) {
                             console.log(xhr.statusText);
