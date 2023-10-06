@@ -126,7 +126,8 @@
                         <!--end::Top-->
                         @if(Auth::user()->roles->first() == null || Auth::user()->roles->first()->code == 'staff')
                         @elseif(Auth::user()->roles->first()->code == 'admin' || 
-                                Auth::user()->roles->first()->code == 'mjjf' || 
+                                Auth::user()->roles->first()->code == 'mjjf' ||
+                                Auth::user()->roles->first()->code == 'organizer' || 
                                 (isset(Auth::user()->roles[1]) && Auth::user()->roles[1]->code == 'mjjf') || 
                                 Auth::user()->roles->first()->code == 'event')
                             
