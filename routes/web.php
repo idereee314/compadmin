@@ -138,7 +138,7 @@ Route::group([
     Route::resource('/event/toplist/point', 'reference\EventToplistPointController', ['names' => 'event.toplist.point']);
     Route::resource('/event/refund/request', 'event\EventRefundRequestController', ['names' => 'event.refund.request']);
     Route::any('/event/refund/request/data/list', 'event\EventRefundRequestController@getDatatableList')->name('event.refund.request.data.list');
-
+    Route::resource('/event/config/mat', 'reference\ConfigMatController', ['names' => 'config.mat']);
     
     Route::get('/event/registration/bracket/generation', 'event\EventRegistrationController@bracketGeneration')->name('event.registration.bracket.generation');
     

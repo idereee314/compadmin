@@ -389,6 +389,7 @@ class EventConfigController extends Controller
         $data['configEntriesFees'] = $configEntriesFees->groupBy('entry_id');
         $data['eventUsers'] = $event->eventUsers;
         $data['eventToplistPoint'] = $event->eventToplistPoint;
+        $data['matSettings'] = $event->configMat;
         
         if($input['code'] == 'entry_config_belt') 
         {
@@ -421,6 +422,9 @@ class EventConfigController extends Controller
         else if($input['code'] == 'toplist_point') 
         {   
             
+        }
+        else if($input['code'] == 'mat_settings') 
+        {   
             
         }
 

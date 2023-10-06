@@ -124,7 +124,7 @@
                                                             </a>
                                                         </li>
                                                         @if(Auth::user()->roles->first() == null)
-                                                        @elseif(Auth::user()->roles->first()->code == 'admin' || Auth::user()->roles->first()->code == 'event')
+                                                        @elseif(Auth::user()->roles->first()->code == 'admin' || Auth::user()->roles->first()->code == 'event' || Auth::user()->roles->first()->code == 'organizer')
                                                         <li class="navi-item">
                                                             <a href="{{ route('event.statistics', @$event['id']) }}" class="navi-link">
                                                                 <span class="navi-icon">

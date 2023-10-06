@@ -16,6 +16,7 @@ use reference\EventEntriesRepository as EventEntries;
 use reference\EntryConfigAgeRepository as EntryConfigAge;
 use reference\EntryConfigBeltRepository as EntryConfigBelt;
 use reference\EntryConfigWeightRepository as EntryConfigWeight;
+use reference\ConfigMatRepository as ConfigMat;
 
 use event\EventRegistrationRepository as EventRegistration;
 use event\EventTeamRegistrationRepository as EventTeamRegistration;
@@ -48,7 +49,7 @@ class EventRegistrationController extends Controller
 {
     public $restful = true;
 
-    public function __construct(Event $event, EventRegistration $eventRegistration, EventConfig $eventConfig, Academy $academy, Country $country, EventEntries $eventEntries, EntryConfigAge $configAge, EntryConfigBelt $configBelt, EntryConfigWeight $configWeight, Member $member, EventTeamRegistration $eventTeamRegistration, Team $team, TeamMember $teamMember, MemberAttribute $memberAttribute, Sport $sport, EventRefundRequest $eventRefundRequest, EventType $eventType)
+    public function __construct(Event $event, EventRegistration $eventRegistration, EventConfig $eventConfig, Academy $academy, Country $country, EventEntries $eventEntries, EntryConfigAge $configAge, EntryConfigBelt $configBelt, EntryConfigWeight $configWeight, Member $member, EventTeamRegistration $eventTeamRegistration, Team $team, TeamMember $teamMember, MemberAttribute $memberAttribute, Sport $sport, EventRefundRequest $eventRefundRequest, EventType $eventType, ConfigMat $configMat)
     {
         $this->view_path = 'event.registration';
         $this->event = $event;
@@ -68,6 +69,7 @@ class EventRegistrationController extends Controller
         $this->sport = $sport;
         $this->eventRefundRequest = $eventRefundRequest;
         $this->eventType = $eventType;
+        $this->configMat = $configMat;
     }
 
     /**
@@ -1376,7 +1378,9 @@ class EventRegistrationController extends Controller
     public function schedule($eventId)
     {
         $event = $this->event->find($eventId);
+        $mat = $event->configMat;
         
+        $data['mat'] = $mat;
         $data['event'] = $event;
         $data['view_path'] = $this->view_path;
         

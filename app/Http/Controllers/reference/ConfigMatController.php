@@ -9,25 +9,25 @@ use Illuminate\Support\Facades\Input;
 use Validator;
 
 //Repositories
-use reference\EventToplistPointRepository as EventToplistPoint;
+use reference\ConfigMatRepository as ConfigMat;
 use event\EventRepository as Event;
 
 //Models
-use reference\EventToplistPoint as EventToplistPointModel;
+use reference\ConfigMat as ConfigMatModel;
 
 use \Auth as Auth;
 use Config;
 use \HTML;
 use Image;
 
-class EventToplistPointController extends Controller
+class ConfigMatController extends Controller
 {
     public $restful = true;
 
-    public function __construct(EventToplistPoint $eventToplistPoint, Event $event)
+    public function __construct(ConfigMat $configMat, Event $event)
     {
-        $this->view_path = 'event.entry.point';
-        $this->eventToplistPoint = $eventToplistPoint;
+        $this->view_path = 'event.entry.mat';
+        $this->configMat = $configMat;
         $this->event = $event;
     }
 
@@ -69,7 +69,7 @@ class EventToplistPointController extends Controller
         $input = Input::all();
 
 
-        $validator = Validator::make($input, EventToplistPointModel::rules(0));
+        $validator = Validator::make($input, ConfigMatModel::rules(0));
 
         if ($validator->fails())
         {
@@ -83,7 +83,7 @@ class EventToplistPointController extends Controller
         {
             try
             {
-                $event = $this->eventToplistPoint->create($input);
+                $event = $this->configMat->create($input);
 
                 $response = array(
                     'status' => 'success',
@@ -124,10 +124,10 @@ class EventToplistPointController extends Controller
     public function edit($id)
     {
         $input = Input::all();
-        $eventToplistPoint = $this->eventToplistPoint->find($id);
-
+        $configMat = $this->configMat->find($id);
+        
         $data['eventId'] = $input['eventId'];
-        $data['eventToplistPoint'] = $eventToplistPoint;
+        $data['configMat'] = $configMat;
 
         return view($this->view_path.'.edit', $data);
     }
@@ -143,7 +143,7 @@ class EventToplistPointController extends Controller
     {
         $input = Input::all();
 
-        $validator = Validator::make($input, EventToplistPointModel::rules($id));
+        $validator = Validator::make($input, ConfigMatModel::rules($id));
 
         if ($validator->fails())
 		{
@@ -154,7 +154,7 @@ class EventToplistPointController extends Controller
             );
         } else {
 			try {
-                $event = $this->eventToplistPoint->update($id, $input);
+                $event = $this->configMat->update($id, $input);
             
 				$response = array(
 					'status' => 'success',
@@ -183,7 +183,7 @@ class EventToplistPointController extends Controller
     public function destroy($id)
     {
         try {
-            $this->eventToplistPoint->delete($id);
+            $this->configMat->delete($id);
 
             $response = array(
                 'status' => 'success',
