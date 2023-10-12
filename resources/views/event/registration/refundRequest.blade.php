@@ -156,6 +156,7 @@
                                     <th class="w-55px text-center">#</th>
                                     <th class="min-w-200px text-center">{{trans('display.event_title')}}</th> 
                                     <th class="min-w-100px text-center">{{trans('display.general_name')}}</th>
+                                    <th class="min-w-125px text-center">{{trans('display.human_register_number')}}</th>
                                     <th class="min-w-125px text-center">{{trans('display.comp_academy_name')}}</th>
                                     <th class="min-w-125px text-center">{{trans('display.general_amount')}}</th>
                                     <th class="min-w-125px text-center">{{trans('display.general_description')}}</th>
@@ -170,6 +171,7 @@
                                     <td class="text-center">{{++$loop->index}}</td>
                                     <td class="text-center">{{$request->event->name}}</td>
                                     <td class="text-center">{{$request->member->fullname}}</td>
+                                    <td class="text-center">{{$request->member->register_number}}</td>
                                     <td class="text-center">{{$request->academy->name}}</td>
                                     <td class="text-center">{{$request->amount}}</td>
                                     <td class="text-center">{{ Str::words(strip_tags(@$request->description), 20, '...') }}</td>

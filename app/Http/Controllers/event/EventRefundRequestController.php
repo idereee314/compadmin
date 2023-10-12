@@ -101,7 +101,6 @@ class EventRefundRequestController extends Controller
         $input = Input::all();
         
         $event = $this->event->find(@$input['eventId']);
-        
         $countries = $this->country->all();
         $academies = $this->academy->all();
 
