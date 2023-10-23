@@ -236,41 +236,8 @@ $(document).ready(function () {
     		$('#memberModal').on('shown.bs.modal', function(){
     			$('#memberModal .modal-content').html(data);
                 $('.selectpicker').selectpicker();
-
-                $('#create-event-refund-request-form select[name=member_id]').select2();
+                
                 $('#create-event-refund-request-form input[name=academy_id]').select2({data: ""});
-                $('#create-event-refund-request-form select[name=member_id]').select2({
-                    width: 'resolve',
-                    dropdownAutoWidth : true,
-                    dropdownParent: $('#memberModal'),
-                    placeholder: "-- {{ trans('display.general_select') }} --",
-                    minimumInputLength: 3,
-                    ajax: {
-                        url: '{!! route('member.search') !!}',
-                        delay: 1500,
-                        data: function (params) {
-                            var query = {
-                                q: params.term
-                            }
-                            return query;
-                        },
-
-                        processResults: function (data) {
-                            console.log(data);
-                            return {
-                                results: JSON.parse(data)
-                            };
-                        },
-                        cache: true
-                    },
-                    templateSelection: function (item) {
-                        return item.fullname;
-                    },
-                    templateResult: function (item) {
-                        return item.fullname;
-                    }
-                });
-
                 $('#create-event-refund-request-form select[name=academy_id]').on('change', function(){
                     var academyId = $(this).val(); 
                     $.ajax({

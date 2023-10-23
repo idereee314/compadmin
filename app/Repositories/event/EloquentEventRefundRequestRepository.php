@@ -37,11 +37,12 @@ class EloquentEventRefundRequestRepository implements EventRefundRequestReposito
 	public function create($input)
 	{
 		$eventRefundRequest = new EventRefundRequest;
-		$eventRefundRequest->member_id = $input['member_id'];
+		$eventRefundRequest->member_id = $input['athlete_id'];
 		$eventRefundRequest->event_id = $input['event_id'];
 		$eventRefundRequest->academy_id = @$input['academy_id'];
 		$eventRefundRequest->amount = @$input['amount'];
-
+		$eventRefundRequest->description = @$input['description'];
+		
 		$eventRefundRequest->save();
 		return $eventRefundRequest;
 	}
@@ -50,7 +51,7 @@ class EloquentEventRefundRequestRepository implements EventRefundRequestReposito
 	{
 		$eventRefundRequest = $this->find($id);
 		$eventRefundRequest->event_id = $input['event_id'];
-		$eventRefundRequest->member_id = @$input['member_id'];
+		$eventRefundRequest->member_id = @$input['athlete_id'];
 		$eventRefundRequest->academy_id = @$input['academy_id'];
 		$eventRefundRequest->status = @$input['status'];
 		$eventRefundRequest->amount = @$input['amount'];
@@ -98,4 +99,12 @@ class EloquentEventRefundRequestRepository implements EventRefundRequestReposito
 		return $fees;
 	}
 
+	public function getRegisteredEvent($eventId)
+	{
+		return DB::select("select * from uq_comp.uq_event_registration uer 
+		left join uq_comp.uq_member um on um.id = uer.member_id 
+		where uer.event_id = $eventId and uer.status = 'approved'
+		");
+	}
+	
 }

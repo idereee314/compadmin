@@ -8,16 +8,20 @@
 
     <div class="card-body">
         <input type="hidden" name="event_id" id="event_id" value="{{ @$event_id}}"/>
-        
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.comp_member')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9 col-lg-6">
-                <select class="form-control" id="member_id" name="member_id" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}">
-                    <option value="0">-- {{ trans('display.general_select') }} --</option>
+                <select class="form-control selectpicker" id="athlete_id" name="athlete_id" data-live-search="true" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}">
+                    <option value="">-- {{ trans('display.general_select') }} --</option>
+                    @forelse(@$athletes as $athlete)
+                    <option value="{{ $athlete->member_id }}">{{ $athlete->lastname }} {{ $athlete->firstname }}</option>
+                    @empty
+                    @endforelse
                 </select>
                 <div class="error-here"></div>
             </div>
         </div>
+
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.comp_academy')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9 col-lg-6">

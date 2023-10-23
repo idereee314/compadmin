@@ -18,10 +18,14 @@ class EventRefundRequest extends Model
     public static function rules($id) 
     {
 		return array(
-            'member_id' => 'required',
             'academy_id' => 'required',
 		);
 	}
+
+    public function registration()
+    {
+        return $this->hasMany('event\EventRegistration', 'event_id')->orderBy('uq_event_registration.created_at', 'desc');
+    }
 
     public function event()
     {

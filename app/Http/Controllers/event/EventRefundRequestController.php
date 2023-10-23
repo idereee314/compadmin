@@ -103,7 +103,9 @@ class EventRefundRequestController extends Controller
         $event = $this->event->find(@$input['eventId']);
         $countries = $this->country->all();
         $academies = $this->academy->all();
+        $athletes = $this->eventRefundRequest->getRegisteredEvent(@$input['eventId']);
 
+        $data['athletes'] = @$athletes;
         $data['event'] = @$event;
         $data['event_id'] = @$event->id;
         $data['academies'] = $academies;
@@ -185,7 +187,9 @@ class EventRefundRequestController extends Controller
         $event = $this->event->find(@$input['eventId']);
         $countries = $this->country->all();
         $academies = $this->academy->all();
-        
+        $athletes = $this->eventRefundRequest->getRegisteredEvent(@$input['eventId']);
+
+        $data['athletes'] = @$athletes;
         $data['event_id'] = @$input['event_id'];
         $data['academies'] = $academies;
         $data['countries'] = $countries;
