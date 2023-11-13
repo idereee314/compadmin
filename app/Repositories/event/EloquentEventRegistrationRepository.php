@@ -493,6 +493,16 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
         						order by uer.status asc, academy_count desc");
 	}
 
+	public function getStatsAcademyAllFromEvent($eventId)
+	{
+		return DB::select("select count(uer.academy_id) as academy_count, uer.academy_id, ua.name
+        						from uq_comp.uq_event_registration uer
+								left join uq_comp.uq_academy ua on uer.academy_id = ua.id
+        						where uer.event_id = $eventId
+        						group by uer.event_id, uer.academy_id, uer.status, ua.name
+        						order by uer.status asc, academy_count desc");
+	}
+
 	public function getStatsEntriesFromEvent($eventId)
 	{
 		return DB::select("select count(uer.entry_id) as entry_count, uer.entry_id, uee.name, uee.gender_code

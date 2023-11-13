@@ -1081,6 +1081,7 @@ class EventRegistrationController extends Controller
         $academies = $this->academy->all();
         $eventFees = $this->eventRegistration->getPaymentByEventId(@$eventId)->groupBy('amount');
         $eventRegistrationAcademyStats = $this->eventRegistration->getStatsAcademyFromEvent($eventId);
+        $eventRegistrationAllAcademyStats = $this->eventRegistration->getStatsAcademyAllFromEvent($eventId);
         $eventRegistrationEntriesStats = $this->eventRegistration->getStatsEntriesFromEvent($eventId);
         $eventRegistrationEntriesAllStats = $this->eventRegistration->getStatsEntriesAllFromEvent($eventId);
         $eventRegistrationStatusStats = $this->eventRegistration->getStatsStatusFromEvent($eventId);
@@ -1125,6 +1126,7 @@ class EventRegistrationController extends Controller
         $data['eventRegistrationOrgTypeAllStats'] = $eventRegistrationOrgTypeAllStats;
         $data['eventRegistrationCountryStats'] = $eventRegistrationCountryStats;
         $data['eventRegistrationCountryAllStats'] = $eventRegistrationCountryAllStats;
+        $data['eventRegistrationAllAcademyStats'] = $eventRegistrationAllAcademyStats;
         
         $data['tabs'] = collect(Config::get("enums.event_stat_tabs"))->sortBy('order')->toArray();
         $data['tab_id'] = @$input['tab_id'] ? @$input['tab_id'] : 'tab1-1';
