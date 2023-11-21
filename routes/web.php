@@ -124,7 +124,6 @@ Route::group([
     Route::get('/event/registration/print/mandat', 'event\EventRegistrationController@printMandateByEventAndStatus')->name('event.registration.print.mandat');
 
     Route::get('/event/registration/print/certificate', 'event\EventRegistrationController@printUrgumjlulByMember')->name('event.registration.print.certificate');
-
     
     Route::resource('/event/config', 'event\EventConfigController', ['names' => 'event.config']);
     Route::any('/event/config/data/list', 'event\EventConfigController@getDatatableList')->name('event.config.data.list');
