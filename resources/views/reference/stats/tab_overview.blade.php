@@ -84,7 +84,7 @@
                         <thead>
                             <tr>                                
                                 <th class="text-center"> {{ trans('display.comp_country_name') }} </th>
-                                <th class="text-center">{{trans('display.general_org_count')}}</th>
+                                <th class="text-center">{{trans('display.general_athlete_count')}}</th>
                             </tr>
                         </thead>
                         <tbody>
