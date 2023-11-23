@@ -757,7 +757,7 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 								where status = 'approved' and event_id = ".$eventId." 
 								and r.entry_id = ".$entryId." and r.entry_age_id = ".$entryAgeId." 
 								and r.entry_belt_id = ".$entryBeltId." and r.entry_weight_id = ".$entryWeightId."
-								order by r.academy_id, r.academy_name, r.id");
+								order by r.academy_id, r.academy_name");
 	}
  
 	public function getBracketGenerationFromEvent($eventId, $entryId, $entryAgeId, $entryBeltId, $entryWeightId)

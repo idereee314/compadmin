@@ -143,7 +143,8 @@ return array(
 	'org_type' => [
 		'academy' => 'Академи',
 		'highschool' => 'Дунд сургууль',
-		'university' => 'Их, дээд сургууль, коллеж'
+		'university' => 'Их, дээд сургууль, коллеж',
+		'mnue' => 'Зөвхөн МУБИС',
 	],
 
 	'event_award' => [

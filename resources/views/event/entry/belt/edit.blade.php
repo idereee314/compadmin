@@ -37,9 +37,9 @@
         </div>
 
         <div class="form-group row">
-            <label class="col-md-3 col-form-label text-right">{{trans('display.possible_belts')}}: <span class="text-danger">*</span></label>
+            <label class="col-md-3 col-form-label text-right">{{trans('display.possible_belts')}}: </label>
             <div class="col-md-9 col-lg-6">
-                <select class="form-control select2" id="possible_belts" name="possible_belts[]" multiple="multiple" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}">
+                <select class="form-control select2" id="possible_belts" name="possible_belts[]" multiple="multiple">
                     <option value="0">-- {{ trans('display.general_select') }} --</option>
                     @forelse(@$beltGroup as $belt) 
                     <option value="{{ $belt->id }}" {{ in_array($belt->id, explode(',', \Str::between(@$eventEntryBelt->possible_belts,'{', '}'))) ? 'selected="selected"' : ''}}>{{ $belt->name }} - {{ $belt->age_category }}</option>
