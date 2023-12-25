@@ -49,7 +49,7 @@
         </div>
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">Тайлбар</label>
-            <div class="col-md-9 col-lg-6">         
+            <div class="col-md-9 col-lg-6">
                 <textarea name="description" id="description" class="form-control" cols="10"  placeholder="Тайлбар">{{ @$eventRefundRequest->description }}</textarea>
             </div>
         </div>

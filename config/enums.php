@@ -144,7 +144,7 @@ return array(
 		'academy' => 'Академи',
 		'highschool' => 'Дунд сургууль',
 		'university' => 'Их, дээд сургууль, коллеж',
-		'mnue' => 'Зөвхөн МУБИС',
+		'mnue' => 'МУБИС',
 	],
 
 	'event_award' => [
