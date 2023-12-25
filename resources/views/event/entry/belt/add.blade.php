@@ -19,7 +19,6 @@
                 </select>
             </div>
         </div>
-
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.general_name')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9 col-lg-6">
@@ -27,7 +26,6 @@
                 <div class="error-here"></div>
             </div>
         </div>
-
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.general_name_en')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9 col-lg-6">
@@ -35,7 +33,6 @@
                 <div class="error-here"></div>
             </div>
         </div>
-
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.possible_belts')}}:</label>
             <div class="col-md-9 col-lg-6">
@@ -49,7 +46,6 @@
                 <div class="error-here"></div>
             </div>
         </div>
-
     </div>
 
     <div class="modal-footer text-right bg-gray-100 border-top-0">

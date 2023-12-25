@@ -143,7 +143,6 @@ $(document).ready(function() {
 
 //Modal
 function showAddModal( data ) {
-
     $('#compadUserAddModal').modal();
     $('#compadUserAddModal').on('shown.bs.modal', function(){
         $('#compadUserAddModal .modal-content').html(data);
@@ -412,8 +411,6 @@ function roleEditModal(data){
     $('#roleEditModal').on('hidden.bs.modal', function(){
         $('#roleEditModal .modal-body').empty();
     });
-
 }
-
 </script>
 @endsection

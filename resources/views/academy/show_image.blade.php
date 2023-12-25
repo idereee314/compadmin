@@ -5,6 +5,7 @@
             <i aria-hidden="true" class="ki ki-close"></i>
         </button>
     </div>
+    
     <div class="card-body m-4">
         <div class="form-group d-flex justify-content-center">
             @if($profile_photo)

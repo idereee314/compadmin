@@ -16,7 +16,6 @@
                 <div class="error-here"></div>
             </div>
         </div>
-
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.general_sport_type')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9 col-lg-6">
@@ -29,7 +28,6 @@
                 <div class="error-here"></div>
             </div>
         </div>
-
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.general_rank_season')}}:</label>
             <div class="col-md-9 col-lg-6">
@@ -41,8 +39,7 @@
                 </select>
                 <div class="error-here"></div>
             </div>
-        </div> 
-
+        </div>
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.general_event_category')}}: </label>
             <div class="col-md-9 col-lg-6">
@@ -54,8 +51,7 @@
                 </select>
                 <div class="error-here"></div>
             </div>
-        </div> 
-    
+        </div>
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.reg_date')}}<span class="text-danger"> *</span></label>
             <div class="col-md-9 col-lg-6">
@@ -70,7 +66,6 @@
                 <div class="error-here"></div>
             </div>
         </div>
-
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.reg_payment_date')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9 col-lg-6">
@@ -85,7 +80,6 @@
                 <div class="error-here"></div>
             </div>
         </div>
-
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.reg_update_date')}}</label>
             <div class="col-md-9 col-lg-6">
@@ -100,7 +94,6 @@
                 <div class="error-here"></div>
             </div>
         </div>
-
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.comp_org_type')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9 col-lg-6">
@@ -113,8 +106,7 @@
                 </select>
                 <div class="error-here"></div>
             </div>
-        </div> 
-
+        </div>
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.general_result_type')}}: </label>
             <div class="col-md-9 col-lg-6">

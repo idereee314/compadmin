@@ -41,7 +41,7 @@
                                             <table class="table table-separate table-head-custom" id="role-datatable" style="margin-top: 13px !important">
                                                 <thead>
                                                     <tr>
-                                                        <th class="text-center border-right" width="15px">No.</th>
+                                                        <th class="text-center border-right" width="15px">№</th>
                                                         <th width="">{{trans('display.general_name')}}</th>
                                                         <th width="">{{trans('display.general_code')}}</th>
                                                         <th width="">{{trans('display.menus_count')}}</th>

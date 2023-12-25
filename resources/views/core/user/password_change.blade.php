@@ -9,90 +9,84 @@
 <section id="kt_body" class="header-fixed header-mobile-fixed subheader-enabled subheader-fixed aside-enabled aside-fixed page-loading">
     <!--begin::Main-->
     <!--begin::Header Mobile-->
-        @include('layouts.mobile')
+    @include('layouts.mobile')
     <!--end::Header Mobile-->
-        <!--begin::Aside-->
-        @include('layouts.aside')
-        <!--end::Aside-->
-        <!--begin::Wrapper-->
-            <div class="d-flex flex-column flex-row-fluid wrapper" id="kt_wrapper">
-                <!--begin::Header-->
-                @include('layouts.header')
-                
-                <div class="d-flex flex-column-fluid">
-                    <!--begin::Container-->
-                    <div class="container">
-                        <!--begin::Card-->
-                        <div class="card card-custom">
-                            <div class="card-header flex-wrap py-5">
-                                <div class="card-title">
-                                    <h3 class="card-label">Нууц үг солих 
-                                    <span class="d-block text-muted pt-2 font-size-sm">Хэрэглэгч</span></h3>
-                                </div>
-                            </div>
-                            <form id="change-password-form" class="form-horizontal smart-form" action="{{ route('user.update.password', $id) }}" method="POST">
-                                <div class="card-body">
-                                <!--begin: Datatable-->
-                                    @csrf 
-                                        <div class="panel-sub-heading"></div>
-                                        <div class="form-group row">
-                                            <label class="col col-md-4 col-form-label text-right">{{trans('display.user_current_password')}}: <span class="text-danger">*</span></label>
-                                            <div class="col col-md-6">
-                                                <div class="input-group">
-                                                    <div class="input-group-prepend"><span class="input-group-text"><i class="fa fa-lock"></i></span></div>
-                                                    <input type="password" autocomplete="off" class="form-control" name="current_password" id="current_password" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}" data-rule-minlength="8" data-msg-minlength="{{ trans('messages.validation_register_field_password_min') }}">
-                                                    </div>
-                                                <div class="error-here"></div>
-                                            </div>
-                                        </div>
-                
-                                        <div class="form-group row">
-                                            <label class="col col-md-4 col-form-label text-right">{{trans('display.user_password')}}: <span class="text-danger">*</span></label>
-                                            <div class="col col-md-6">
-                                                <div class="input-group">
-                                                    <div class="input-group-prepend"><span class="input-group-text"><i class="fa fa-unlock"></i></span></div>
-                                                    <input type="password" autocomplete="off" class="form-control" name="password" id="password" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}" data-rule-minlength="8" data-msg-minlength="{{ trans('messages.validation_register_field_password_min') }}">
-                                                    </div>
-                                                <div class="error-here"></div>
-                                            </div>
-                                        </div>
-                
-                                        <div class="form-group row">
-                                            <label class="col col-md-4 col-form-label text-right">{{trans('display.user_password_confirm')}}: <span class="text-danger">*</span></label>
-                                            <div class="col col-md-6">
-                                                <div class="input-group">
-                                                    <div class="input-group-prepend"><span class="input-group-text"><i class="fa fa-unlock-alt"></i></span></div>
-                                                        <input type="password" autocomplete="off" class="form-control" name="password_confirmation" id="password_confirmation" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}" data-rule-equalTo="#password" data-msg-equalTo="{{trans('messages.validation_register_field_password_confirmed')}}">
-                                                    </div>
-                                                <div class="error-here"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                               
-                                    <!--end: Datatable-->
-                                    <div class="card-footer">
-                                        <div class="float-right">
-                                            <button class="btn btn-success" type="submit">{{trans('display.general_save')}}</button>
-                                        </div>
-                                    </div>
-                                </form>
+    <!--begin::Aside-->
+    @include('layouts.aside')
+    <!--end::Aside-->
+    <!--begin::Wrapper-->
+        <div class="d-flex flex-column flex-row-fluid wrapper" id="kt_wrapper">
+            <!--begin::Header-->
+            @include('layouts.header')
+            <div class="d-flex flex-column-fluid">
+                <!--begin::Container-->
+                <div class="container">
+                    <!--begin::Card-->
+                    <div class="card card-custom">
+                        <div class="card-header flex-wrap py-5">
+                            <div class="card-title">
+                                <h3 class="card-label">Нууц үг солих 
+                                <span class="d-block text-muted pt-2 font-size-sm">Хэрэглэгч</span></h3>
                             </div>
                         </div>
-                        <!--end::Card-->
+                        <form id="change-password-form" class="form-horizontal smart-form" action="{{ route('user.update.password', $id) }}" method="POST">
+                            <div class="card-body">
+                            <!--begin: Datatable-->
+                                @csrf 
+                                    <div class="panel-sub-heading"></div>
+                                    <div class="form-group row">
+                                        <label class="col col-md-4 col-form-label text-right">{{trans('display.user_current_password')}}: <span class="text-danger">*</span></label>
+                                        <div class="col col-md-6">
+                                            <div class="input-group">
+                                                <div class="input-group-prepend"><span class="input-group-text"><i class="fa fa-lock"></i></span></div>
+                                                <input type="password" autocomplete="off" class="form-control" name="current_password" id="current_password" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}" data-rule-minlength="8" data-msg-minlength="{{ trans('messages.validation_register_field_password_min') }}">
+                                                </div>
+                                            <div class="error-here"></div>
+                                        </div>
+                                    </div>                
+                                    <div class="form-group row">
+                                        <label class="col col-md-4 col-form-label text-right">{{trans('display.user_password')}}: <span class="text-danger">*</span></label>
+                                        <div class="col col-md-6">
+                                            <div class="input-group">
+                                                <div class="input-group-prepend"><span class="input-group-text"><i class="fa fa-unlock"></i></span></div>
+                                                <input type="password" autocomplete="off" class="form-control" name="password" id="password" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}" data-rule-minlength="8" data-msg-minlength="{{ trans('messages.validation_register_field_password_min') }}">
+                                                </div>
+                                            <div class="error-here"></div>
+                                        </div>
+                                    </div>                
+                                    <div class="form-group row">
+                                        <label class="col col-md-4 col-form-label text-right">{{trans('display.user_password_confirm')}}: <span class="text-danger">*</span></label>
+                                        <div class="col col-md-6">
+                                            <div class="input-group">
+                                                <div class="input-group-prepend"><span class="input-group-text"><i class="fa fa-unlock-alt"></i></span></div>
+                                                    <input type="password" autocomplete="off" class="form-control" name="password_confirmation" id="password_confirmation" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}" data-rule-equalTo="#password" data-msg-equalTo="{{trans('messages.validation_register_field_password_confirmed')}}">
+                                                </div>
+                                            <div class="error-here"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                           
+                                <!--end: Datatable-->
+                                <div class="card-footer">
+                                    <div class="float-right">
+                                        <button class="btn btn-success" type="submit">{{trans('display.general_save')}}</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
                     </div>
-                    <!--end::Container-->
+                    <!--end::Card-->
                 </div>
-                <!--begin::Footer-->
-                @include('layouts.footer')
-                <!--end::Footer-->
+                <!--end::Container-->
             </div>
-            <!--end::Wrapper-->
-        <!--end::Main-->
+            <!--begin::Footer-->
+            @include('layouts.footer')
+            <!--end::Footer-->
+        </div>
+        <!--end::Wrapper-->
+    <!--end::Main-->
 </section>
-
 @section('javascript')
-
-
 <script>
 $(document).ready(function() {
     $('#change-password-form').validate({

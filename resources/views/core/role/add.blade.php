@@ -15,7 +15,6 @@
                 <div class="error-here"></div>
             </div>
         </div>
-
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.general_code')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9">
@@ -23,7 +22,6 @@
                 <div class="error-here"></div>
             </div>
         </div>
-
         <div class="form-group row">
             <label class="col-3 col-form-label text-right">{{trans('display.menu_title')}}:</label>
             <div class="col-9 col-form-label">
@@ -80,6 +78,7 @@
             </div>
         </div>
     </div>
+    
     <div class="modal-footer text-right bg-gray-100 border-top-0">
         <button type="button" id="close" class="btn btn-light-primary font-weight-bold" data-dismiss="modal">{{trans('display.general_close')}}</button>
         <button type="submit" class="btn btn-primary font-weight-bold">{{trans('display.general_save')}}</button>

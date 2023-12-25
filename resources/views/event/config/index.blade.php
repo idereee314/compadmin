@@ -178,7 +178,6 @@
 <!--end::Main-->
 @section('javascript')
 <script src="{{asset('assets/js/plugins/custom/datatables/datatables.bundle.js')}}"></script>
-
 <script>
 $(document).ready(function() {
     eventConfigTable = $("#event-config-datatable").DataTable({

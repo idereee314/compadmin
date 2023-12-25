@@ -14,7 +14,6 @@
                 <div class="error-here"></div>
             </div>
         </div>
-
         <div class="form-group row"> 
             <label class="col-md-3 col-form-label text-right">Өдрийн тоо: <span class="text-danger">*</span></label>
             <div class="col-md-9 col-lg-6">
@@ -22,7 +21,6 @@
                 <div class="error-here"></div>
             </div>
         </div>
-
         <div class="form-group row"> 
             <label class="col-md-3 col-form-label text-right">Тэмцээн хэдэн цагт эхлэх: <span class="text-danger">*</span></label>
             <div class="col-md-9 col-lg-6">
@@ -30,7 +28,6 @@
                 <div class="error-here"></div>
             </div>
         </div>
-
         <div class="form-group row"> 
             <label class="col-md-3 col-form-label text-right">Эхлэх ангилал: <span class="text-danger">*</span></label>
             <div class="col-md-9 col-lg-6">

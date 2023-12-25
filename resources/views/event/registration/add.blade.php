@@ -16,8 +16,7 @@
                 </select>
                 <div class="error-here"></div>
             </div>
-        </div> 
-
+        </div>
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.comp_entry')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9">
@@ -30,29 +29,25 @@
                 </select>
                 <div class="error-here"></div>
             </div>
-        </div> 
-
+        </div>
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.comp_entry_belt')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9">
                 <input class="form-control" id="entry_belt_id" name="entry_belt_id" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}"/>
             </div>
         </div>
-
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.comp_entry_age')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9">
                 <input class="form-control" id="entry_age_id" name="entry_age_id" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}"/>
             </div>
         </div> 
-
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.comp_entry_weight')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9">
                 <input class="form-control" id="entry_weight_id" name="entry_weight_id" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}"/>
             </div>
         </div>
-
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.comp_academy')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9">
@@ -65,7 +60,6 @@
                 </select>
             </div>
         </div>
-
         <div class="form-group row d-none" id="academy_name_other">
             <label class="col-md-3 col-form-label text-right">{{trans('display.comp_academy_name')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9">

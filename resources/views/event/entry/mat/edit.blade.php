@@ -14,22 +14,19 @@
             <div class="col-md-9 col-lg-6">
                 <input type="text" class="form-control" value="{{$configMat->name}}" autocomplete="off" name="name"  data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}"/>
             </div>
-        </div>
-        
+        </div>        
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.general_name_en')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9 col-lg-6">
                 <input type="text" class="form-control" value="{{$configMat->name_en}}" autocomplete="off" name="name_en"  data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}"/>
             </div>
         </div>
-
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">Prefix: <span class="text-danger">*</span></label>
             <div class="col-md-9 col-lg-6">
                 <input type="text" class="form-control" value="{{$configMat->prefix}}" autocomplete="off" name="prefix"/>
             </div>
         </div>
-
     </div>
 
     <div class="modal-footer text-right bg-gray-100 border-top-0">

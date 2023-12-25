@@ -100,7 +100,7 @@
                                             <table class="table table-separate table-head-custom table-checkable dataTable no-footer dtr-inline" id="academy_datatable" role="grid" aria-describedby="kt_datatable_info" style="width: 1235px;">
                                                 <thead>
                                                     <tr role="row">
-                                                        <th>No.</th>
+                                                        <th>№</th>
                                                         <th width="15%">{{trans('display.general_type')}}</th>
                                                         <th width="20%">{{trans('display.organization')}}</th>
                                                         <th width="20%">{{trans('display.general_name')}}</th>
@@ -133,7 +133,6 @@
 @section('javascript')
 <script src="{{asset('assets/js/plugins/custom/datatables/datatables.js')}}"></script>
 <script src="{{asset('assets/js/smart.js')}}"></script>
-
 <script>
 $(document).ready(function() {
     academyTable = $("#academy_datatable").DataTable({
@@ -210,7 +209,6 @@ $(document).ready(function() {
 
 //Modal
 function showAddModal( data ) {
-
     $('#academyModal').modal();
     $('#academyModal').on('shown.bs.modal', function(){
         $('#academyModal .modal-content').html(data);

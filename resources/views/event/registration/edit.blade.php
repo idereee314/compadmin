@@ -25,8 +25,7 @@
                     @endforelse
                 </select>
             </div>
-        </div>
-        
+        </div>        
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.comp_entry_belt')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9 col-lg-7">
@@ -38,7 +37,6 @@
                 </select>
             </div>
         </div>
-
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.comp_entry_age')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9 col-lg-7">
@@ -49,8 +47,7 @@
                     @endforelse
                 </select>
             </div>
-        </div> 
-
+        </div>
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.comp_entry_weight')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9 col-lg-7">
@@ -62,7 +59,6 @@
                 </select>
             </div>
         </div>
-
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.comp_academy')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9 col-lg-7">
@@ -75,14 +71,13 @@
                 </select>
             </div>
         </div>
-
         <div class="form-group row {{$eventRegistration->academy->is_other == 0 ? 'd-none' : ''}}" id="academy_name_other">
             <label class="col-md-3 col-form-label text-right">{{trans('display.comp_academy_name')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9 col-lg-7">
                 <input class="form-control" id="academy_name" name="academy_name" {{ $eventRegistration->academy->is_other == 0 ? 'disabled' : '' }} value="{{$eventRegistration->academy_name}}" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}"/>
             </div>
         </div>
-        
+
         @if($eventRegistration->status == @Config::get('smart.event_registration_status')['approved'])
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">Жингийн мэдээлэл </label>
@@ -100,17 +95,13 @@
                     <input type="text" class="form-control" name="weight_desc" id="weight_desc" placeholder="Жингийн шүүгчийн нэр" {{ @$eventRegistration->is_weight_checked ? '' : 'disabled'}} value="{{ @$eventRegistration->weight_desc }}"/>                    
                 </div>
             </div>
-        </div>
-
+        </div>        
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">Тайлбар</label>
-            <div class="col-md-9 col-lg-7">
-                
-                <input type="text" class="form-control" name="public_desc" id="public_desc" placeholder="Тайлбар" value="{{ @$eventRegistration->public_desc }}"/>                    
-            
+            <div class="col-md-9 col-lg-7">                
+                <input type="text" class="form-control" name="public_desc" id="public_desc" placeholder="Тайлбар" value="{{ @$eventRegistration->public_desc }}"/>            
             </div>
-        </div>
- 
+        </div> 
         <div class="form-group row">
             <label class="col-3 col-form-label"></label>
             <div class="col-9 col-form-label">

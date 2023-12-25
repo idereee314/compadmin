@@ -14,43 +14,37 @@
             <div class="col-md-9">
                 <p class="form-control-plaintext text-muted">{{ mb_substr(@$eventRegistration->member->lastname,0,1).'.'.@$eventRegistration->member->firstname }}</p>
             </div>
-        </div> 
-
+        </div>
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.comp_title')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9">
                 <p class="form-control-plaintext text-muted">{{ @$eventRegistration->event->name }}</p>
             </div>
         </div>
-
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.comp_entry')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9">
                 <p class="form-control-plaintext text-muted">{{ @$eventRegistration->entry->name }}</p>
             </div>
-        </div> 
-
+        </div>
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.comp_entry_belt')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9">
                 <p class="form-control-plaintext text-muted">{{ @$eventRegistration->belt->name }}</p>
             </div>
         </div>
-
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.comp_entry_age')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9">
                 <p class="form-control-plaintext text-muted">{{ @$eventRegistration->age->name }}</p>
             </div>
-        </div> 
-
+        </div>
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.comp_entry_weight')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9">
                 <p class="form-control-plaintext text-muted">{{ @$eventRegistration->weight->weight }}</p>
             </div>
         </div>
-
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.comp_place_number')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9 col-lg-5">

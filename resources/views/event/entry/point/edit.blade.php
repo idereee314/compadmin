@@ -8,8 +8,7 @@
     </div>
 
     <div class="card-body">
-        <input type="hidden" name="event_id" value={{$eventId}} >
-        
+        <input type="hidden" name="event_id" value={{$eventId}}>        
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.start_position')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9 col-lg-6">
@@ -17,14 +16,12 @@
                 <div class="error-here"></div>
             </div>
         </div>
-
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.end_position')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9 col-lg-6">
                 <input type="number" class="form-control" autocomplete="off" name="end_pos" value="{{$eventToplistPoint->end_pos}}"/>
             </div>
         </div>
-
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.general_point')}}: </label>
             <div class="col-md-9 col-lg-6">

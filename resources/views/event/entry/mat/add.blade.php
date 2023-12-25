@@ -8,7 +8,6 @@
 
     <div class="card-body">
         <input type="hidden" name="event_id" value={{$eventId}} >
-        
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.general_name')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9 col-lg-6">

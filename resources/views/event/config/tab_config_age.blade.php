@@ -91,7 +91,6 @@
 <script>
 $("#entry-add-age").on('click', function(){
     var eventId = $("#event_id").val();
-
 	$.get('{!! route('event.entry.age.create') !!}?eventId='+eventId, function( data ) {
 		$('#eventEntryModal').modal();
 		$('#eventEntryModal').on('shown.bs.modal', function(){
@@ -145,7 +144,6 @@ $("#entry-add-age").on('click', function(){
 		$('#eventEntryModal').on('hidden.bs.modal', function(){
 			$('#eventEntryModal .panel-body').empty();
 		});
-		
 	});
 });
 
@@ -207,7 +205,6 @@ $(".edit-age").on('click', function(){
 
 			$(this).off('shown.bs.modal');
 		});
-
 		$('#eventEntryModal').on('hidden.bs.modal', function(){
 			$('#eventEntryModal .modal-content').empty();
 		});
