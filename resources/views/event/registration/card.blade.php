@@ -249,7 +249,7 @@
                                             <div class="symbol-group symbol-hover">
                                                 @php $count = 0; @endphp
                                                 @forelse(@$event['members'] as $member)
-                                                @if($count < 10)
+                                                @if($count < 10 && !empty($member['profile_url']))
                                                     <div class="symbol symbol-30 symbol-circle" data-toggle="tooltip" title="{{ $member['firstname'] }} {{ $member['lastname'] }}">
                                                         <img alt="Pic" src="{{ \Storage::disk('s3')->url(@$member['profile_url']) }}" style="width: 30px; height: 30px"/>
                                                     </div>

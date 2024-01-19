@@ -5,7 +5,7 @@ namespace core;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Config;
-use Illuminate\Support\Facades\Input;
+use Input;
 use Validator;
 //Repositories
 use user\CompadRoleRepository as Role;

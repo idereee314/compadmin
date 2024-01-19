@@ -155,6 +155,10 @@ class RulesetStandardLibrary
      */
     public function parseUrl($url)
     {
+        if (is_null($url)) {
+            return null;
+        }
+
         $parsed = parse_url($url);
 
         if ($parsed === false || !empty($parsed['query'])) {
@@ -227,7 +231,7 @@ class RulesetStandardLibrary
 
         $arn = [];
         $parts = explode(':', $arnString, 6);
-        if (sizeof($parts) > 6) {
+        if (sizeof($parts) < 6) {
             return null;
         }
 
@@ -244,8 +248,7 @@ class RulesetStandardLibrary
             return null;
         }
         $resource = $arn['resourceId'];
-        $delimiter = strpos($resource, ':') !== false ? ':' : '/';
-        $arn['resourceId'] = explode($delimiter, $resource);
+        $arn['resourceId'] = preg_split("/[:\/]/", $resource);
 
         return $arn;
     }
@@ -316,7 +319,7 @@ class RulesetStandardLibrary
         }
 
         $result = call_user_func_array(
-            ['Aws\EndpointV2\Ruleset\RulesetStandardLibrary', $funcName],
+            [RulesetStandardLibrary::class, $funcName],
             $funcArgs
         );
 
