@@ -169,11 +169,11 @@
                                 @foreach($eventRefundRequest as $request)
                                 <tr>
                                     <td class="text-center">{{++$loop->index}}</td>
-                                    <td class="text-center">{{$request->event->name}}</td>
-                                    <td class="text-center">{{$request->member->fullname}}</td>
-                                    <td class="text-center">{{$request->member->register_number}}</td>
-                                    <td class="text-center">{{$request->academy->name}}</td>
-                                    <td class="text-center">{{$request->amount}}</td>
+                                    <td class="text-center">{{@$request->event->name}}</td>
+                                    <td class="text-center">{{@$request->member->fullname}}</td>
+                                    <td class="text-center">{{@$request->member->register_number}}</td>
+                                    <td class="text-center">{{@$request->academy->name}}</td>
+                                    <td class="text-center">{{@$request->amount}}</td>
                                     <td class="text-center">{{ Str::words(strip_tags(@$request->description), 20, '...') }}</td>
                                     <td class="text-center">
                                         <button type="button" class="btn btn-light-{{ Config::get('smart.event_refund_request_status_class')[$request->status] }} btn-sm btn-status" data-requestid="{{ $request->id }}">{{ Config::get('enums.event_refund_request_status')[$request->status] }}</button>
@@ -318,7 +318,7 @@ $(document).ready(function () {
     $(".edit-request").on('click', function(){
         var eventId = $("#event_id").val();
         var requestId = $(this).data("requestid");
-
+        console.log('fdfdfd');
         $.get('/event/refund/request/'+requestId+'/edit?eventId=' + eventId, function( data ) {
     		$('#memberModal').modal();
     		$('#memberModal').on('shown.bs.modal', function(){

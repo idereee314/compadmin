@@ -30,7 +30,7 @@
                 position: relative;
                 padding: 0;
                 margin: 0;
-                background: url('/assets/images/certificate.jpg') no-repeat center center;
+                background: url('/assets/images/{{$eventConfig->sport_id}}_certificate.jpg') no-repeat center center;
                 background-size: contain;
                 border-top: 2px solid #fff;
             }
