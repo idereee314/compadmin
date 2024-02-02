@@ -786,7 +786,7 @@ class EventRegistrationController extends Controller
         
         $registration = $this->eventRegistration->getRegistrationByMember(@$input['event_id'], @$input['member_id']);
 
-        $view = $this->view_path.'.mandat/event_credentials'; 
+        $view = $this->view_path.'.mandat/certificate'; 
 
         $data["reg"] = $registration;
         $data["eventConfig"] = $eventConfig;
