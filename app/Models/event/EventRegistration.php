@@ -5,6 +5,7 @@ namespace event;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Validation\Rule;
 
 use Auth;
 use Carbon;
@@ -14,10 +15,17 @@ class EventRegistration extends Model
 {
     protected $table = 'uq_event_registration';
     
-    public static function rules($id) 
+    public static function rules($id)
     {
-		return array(
-            'member_id' => 'required|unique_with:uq_event_registration,event_id,entry_id,'.$id.'=id',
+        return [
+            'member_id' => [
+                'required',
+                Rule::unique('uq_event_registration')->where(function ($query) use ($id) {
+                    return $query->where('event_id', request()->input('event_id'))
+                        ->where('entry_id', request()->input('entry_id'))
+                        ->where('id', '!=', $id);
+                }),
+            ],
             'event_id' => 'required',
             'entry_id' => 'required',
             'entry_age_id' => 'required',
@@ -25,8 +33,8 @@ class EventRegistration extends Model
             'entry_weight_id' => 'required',
             'academy_id' => 'required',
             //'status' => 'required'
-		);
-	}
+        ];
+    }
 
     public function event()
     {

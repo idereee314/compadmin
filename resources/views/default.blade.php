@@ -10,12 +10,12 @@
 		<meta name="csrf-token" content="{{ csrf_token() }}">
 		<!--begin::Fonts-->
 		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" />
-		<!--end::Fonts-->
-		<!--begin::Global Theme Styles(used by all pages)-->
+
+		<!-- Global Theme Styles (used by all pages) -->
+		<link rel="stylesheet" href="{{ asset('/assets/plugins/global/plugins.bundle.css') }}" media="screen" />
+		<link rel="stylesheet" href="{{ asset('/assets/plugins/custom/prismjs/prismjs.bundle.css') }}" media="screen" />
+		<link rel="stylesheet" href="{{ asset('/assets/css/style.bundle.css') }}" media="screen" />
 		
-		{!! HTML::style('/assets/plugins/global/plugins.bundle.css', array('media'=>'screen')) !!}
-		{!! HTML::style('/assets/plugins/custom/prismjs/prismjs.bundle.css', array('media'=>'screen')) !!}
-		{!! HTML::style('/assets/css/style.bundle.css', array('media'=>'screen')) !!}
 		<!--end::Global Theme Styles-->
 		
 		<!--begin::Layout Themes(used by all pages)-->

@@ -3,6 +3,7 @@
 namespace reference;
 
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Validation\Rule;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Model;
 use reference\EntryConfigWeight;
@@ -16,15 +17,22 @@ class EntryConfigAge extends Model
     protected $primaryKey = 'id';
 
     protected $appends = array('name');
-    
-    public static function rules($id) 
+
+    public static function rules($id)
     {
-		return array(
+        return [
             'entry_id' => 'required',
-            'start_age' => 'required|numeric|unique_with:uq_entry_config_age,start_age,entry_id,'.$id.'=id',
-            'end_age' => 'nullable|numeric'
-		);
-	}
+            'start_age' => [
+                'required',
+                'numeric',
+                Rule::unique('uq_entry_config_age')->where(function ($query) use ($id) {
+                    return $query->where('entry_id', request()->input('entry_id'))
+                        ->where('id', '!=', $id);
+                }),
+            ],
+            'end_age' => 'nullable|numeric',
+        ];
+    }
 
     public function getNameAttribute()
     {

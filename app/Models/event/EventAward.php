@@ -2,6 +2,7 @@
 
 namespace event;
 
+use Illuminate\Validation\Rule;
 use Illuminate\Database\Eloquent\Model;
 use Auth;
 use Carbon;
@@ -13,13 +14,19 @@ class EventAward extends Model
     protected $primaryKey = 'id';
     protected $fillable = ['event_registration_id', 'member_id', 'place_number', 'created_at', 'updated_at'];
 
-    public static function rules($id) 
+    public static function rules($id)
     {
-		return array(
-            'place_number' => 'required|unique_with:uq_event_award,event_registration_id,'.$id.'=id',
-            'event_registration_id' => 'required'
-		);
-	}
+        return [
+            'place_number' => [
+                'required',
+                Rule::unique('uq_event_award')->where(function ($query) use ($id) {
+                    return $query->where('event_registration_id', request()->input('event_registration_id'))
+                        ->where('id', '!=', $id);
+                }),
+            ],
+            'event_registration_id' => 'required',
+        ];
+    }
 
     public function eventRegistration()
     {

@@ -1100,7 +1100,7 @@ class EventRegistrationController extends Controller
         $registredWeightForOrgAll = $this->eventRegistration->getRegistredWeightForOrgAll(@$eventId);
         $registredCountedWeightForOrgApproved = $this->eventRegistration->getRegistredCountedWeightForOrgApproved(@$eventId);
         $registredCountedWeightForOrgAll = $this->eventRegistration->getRegistredCountedWeightForOrgAll(@$eventId);
-
+        
         $data['registredCountedWeightForOrgApproved'] = $registredCountedWeightForOrgApproved;
         $data['registredCountedWeightForOrgAll'] = $registredCountedWeightForOrgAll;
         $data['registredWeightForOrgApproved'] = $registredWeightForOrgApproved;
