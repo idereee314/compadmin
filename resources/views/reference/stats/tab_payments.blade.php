@@ -13,22 +13,26 @@
             </tr>
         </thead>
         <tbody>
-            @foreach($finance as $payment)
+            @forelse($finance as $index => $payment)
                 <tr>
-                    <td class="text-center border-right">{{ ++$loop->index }}</td>
-                    <td class="text-center border-right"><strong>{{ $payment->paymentid }}</strong></td>
-                    <td class="text-center border-right"><strong>{{ $payment->date }}</strong></td>
-                    <td class="min-w-200px text-center border-right"><strong>{{ $payment->lastname }} {{ $payment->firstname }} </strong></td>
-                    <td class="text-center border-right"><strong>{{ $payment->academyname }}</strong></td>
-                    <td class="text-center border-right"><strong>{{ $payment->amount }}</strong></td>
-                    <td class="text-center border-right"><strong>{{ Config::get("enums.payment_from_type")[$payment->from_type] }}</strong></td>
+                    <td class="text-center border-right">{{ $index + 1 }}</td>
+                    <td class="text-center border-right"><strong>{{ $payment->paymentid ?? 'N/A' }}</strong></td>
+                    <td class="text-center border-right"><strong>{{ $payment->date ?? 'N/A' }}</strong></td>
+                    <td class="min-w-200px text-center border-right"><strong>{{ $payment->lastname ?? 'N/A' }} {{ $payment->firstname ?? 'N/A' }} </strong></td>
+                    <td class="text-center border-right"><strong>{{ $payment->academyname ?? 'N/A' }}</strong></td>
+                    <td class="text-center border-right"><strong>{{ $payment->amount ?? 'N/A' }}</strong></td>
+                    <td class="text-center border-right"><strong>{{ isset(Config::get("enums.payment_from_type")[$payment->from_type]) ? Config::get("enums.payment_from_type")[$payment->from_type] : 'N/A' }}</strong></td>
                     <td class="text-center border-right">
-                        <span class="label label-{{ $payment->status == 1 ? 'success' : 'warning' }} label-inline font-weight-lighter mr-2">
-                            {{ Config::get("enums.payment_status")[$payment->status] }}
+                        <span class="label label-{{ @$payment->status == 1 ? 'success' : 'warning' }} label-inline font-weight-lighter mr-2">
+                            {{ isset(Config::get("enums.payment_status")[$payment->status]) ? Config::get("enums.payment_status")[$payment->status] : 'N/A' }}
                         </span>
                     </td>
                 </tr>
-            @endforeach
+            @empty
+                <tr>
+                    <td colspan="8" class="text-center">No finance records available.</td>
+                </tr>
+            @endforelse
         </tbody>  
     </table>                                                                              
 </div>
