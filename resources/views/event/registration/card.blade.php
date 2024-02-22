@@ -23,7 +23,7 @@
                     <!--begin::Details-->
                     <div class="d-flex align-items-center flex-wrap mr-2">
                         <!--begin::Title-->
-                        <h3 class="text-dark font-weight-bold mt-2 mb-2 mr-5">Тэмцээнүүд</h3>
+                        <h3 class="text-dark font-weight-bold mt-2 mb-2 mr-5">{{ trans('display.general_events') }}</h3>
                         <!--end::Title-->
                         <!--begin::Separator-->
                         <div class="subheader-separator subheader-separator-ver mt-2 mb-2 mr-5 bg-gray-200"></div>
@@ -93,7 +93,7 @@
                                         <!--end::Info-->
                                         <!--begin::Toolbar-->
                                         <div class="card-toolbar mb-auto">
-                                            <div class="dropdown dropdown-inline" data-toggle="tooltip" title="" data-placement="left" data-original-title="Хурдан үйлдэл">
+                                            <div class="dropdown dropdown-inline" data-toggle="tooltip" title="" data-placement="left" data-original-title="{{ trans('display.general_fast_operation') }}">
                                                 <a href="#" class="btn btn-clean btn-hover-light-primary btn-sm btn-icon" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                     <i class="ki ki-bold-sort"></i>
                                                 </a>
@@ -101,7 +101,7 @@
                                                     <!--begin::Navigation-->
                                                     <ul class="navi navi-hover">
                                                         <li class="navi-header pb-1">
-                                                            <span class="text-primary text-uppercase font-weight-bold font-size-sm">Үйлдэл:</span>
+                                                            <span class="text-primary text-uppercase font-weight-bold font-size-sm">{{ trans('display.general_operation') }}:</span>
                                                         </li>                                               
                                                         @if(Auth::user()->roles->first() == null)
                                                         @elseif(Auth::user()->roles->first()->code == 'admin' || Auth::user()->roles->first()->code == 'event')
@@ -174,11 +174,11 @@
                                     <!--begin::Content-->
                                     <div class="d-flex flex-wrap">
                                         <div class="mr-12 d-flex flex-column mb-7">
-                                            <span class="d-block font-weight-bold mb-4">Эхлэх</span>
+                                            <span class="d-block font-weight-bold mb-4">{{ trans('display.search_start_date') }}</span>
                                             <span class="btn btn-light-primary btn-sm font-weight-bold btn-upper btn-text">{{ Carbon\Carbon::parse(@$event['reg_start_date'])->format('y M, d') }}</span>
                                         </div>
                                         <div class="mr-12 d-flex flex-column mb-7">
-                                            <span class="d-block font-weight-bold mb-4">Дуусах</span>
+                                            <span class="d-block font-weight-bold mb-4">{{ trans('display.search_end_date') }}</span>
                                             <span class="btn btn-light-danger btn-sm font-weight-bold btn-upper btn-text">{{ Carbon\Carbon::parse(@$event['reg_end_date'])->format('y M, d') }}</span>
                                         </div>
                                         <!--begin::Progress for "Бүртгэлийн явц"-->

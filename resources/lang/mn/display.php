@@ -17,6 +17,7 @@ return [
     "general_share" => "Хуваалцах",
     "general_operation" => "Үйлдэл",
     "general_see" => 'Харах',
+    "general_fast_operation" => 'Хурдан үйлдэл',
 
     // Button
     "general_new" => "Шинээр нэмэх",
@@ -182,6 +183,8 @@ return [
     'general_check_weight' => 'Жин шалгах',
     'general_checked_weight' => 'Шалгагдсан жин',
     'general_event_date' => 'Тэмцээний өдөр',
+    'general_events' => 'Тэмцээнүүд',
+    
 
     // Search
     "general_search_list" => "Хайлт",
