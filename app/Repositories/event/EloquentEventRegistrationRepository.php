@@ -585,7 +585,7 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 	            GROUP BY uer.academy_id, ua.name, ua.type
 	        ) AS academy_too
 	        GROUP BY academy_too.type
-	    ");
+	    "); 
 	}
 
 	public function getStatsOrgTypeAllFromEvent($eventId)
