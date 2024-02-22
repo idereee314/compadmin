@@ -55,19 +55,19 @@
                         <div class="col-xl-6">
                             <!--begin::Card-->
                             <div class="card card-custom gutter-b card-stretch">
-                                <div class="card-header ribbon ribbon-top ribbon-ver p-7">
+                                <div class="card-header ribbon ribbon-clip ribbon-left p-7">
                                     @if(Carbon\Carbon::now() <= @$event['reg_end_date'])
-                                    <div class="ribbon-target bg-success" style="top: -2px; right: 20px;">
+                                    <div class="ribbon-target bg-success">
                                         <i class="fa fa-star text-white"></i>
                                     </div>
                                     @else
                                         @if(Carbon\Carbon::now() <= @$event['event_date'] )
-                                        <div class="ribbon-target bg-info" style="top: -2px; right: 20px;">
+                                        <div class="ribbon-target bg-info">
                                             Одоо болж буй
                                         </div>
                                         @else 
                                             @if(Carbon\Carbon::now() >= @$event['due_date'] )
-                                            <div class="ribbon-target bg-warning" style="top: -2px; right: 20px;">
+                                            <div class="ribbon-target bg-warning">
                                                 Дууссан
                                             </div>
                                             @endif    
