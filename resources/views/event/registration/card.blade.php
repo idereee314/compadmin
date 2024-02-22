@@ -95,7 +95,7 @@
                                         <div class="card-toolbar mb-auto">
                                             <div class="dropdown dropdown-inline" data-toggle="tooltip" title="" data-placement="left" data-original-title="Хурдан үйлдэл">
                                                 <a href="#" class="btn btn-clean btn-hover-light-primary btn-sm btn-icon" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                    <i class="ki ki-bold-more-hor"></i>
+                                                    <i class="ki ki-bold-sort"></i>
                                                 </a>
                                                 <div class="dropdown-menu dropdown-menu-sm dropdown-menu-right" style="">
                                                     <!--begin::Navigation-->
