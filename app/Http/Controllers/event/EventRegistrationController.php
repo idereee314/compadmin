@@ -1009,7 +1009,7 @@ class EventRegistrationController extends Controller
             $response = array(
                 'status' => 'error',
                 'msg' => "Алдаа гарлаа",
-                'errors' => $e->getMessage()
+                'errors' => $ex->getMessage()
             );
         }
 
