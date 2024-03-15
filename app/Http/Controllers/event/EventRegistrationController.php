@@ -1054,7 +1054,7 @@ class EventRegistrationController extends Controller
         $weight = $this->configWeight->find($entryWeightId);
 
         $total = count($members);
-
+        
         $data['total'] = $total;
         $data['members'] = $members;
         $data['eventConfig'] = $eventConfig;
@@ -1068,7 +1068,14 @@ class EventRegistrationController extends Controller
             $data['round'] = intval(log($total, 2)) + 1;
         }
         
-        return view('event.bracket.print', $data);        
+        if(@$eventConfig->sport_id == 6)
+        {
+            return view('event.bracket.print_sambo', $data);
+        }
+        else
+        {
+            return view('event.bracket.print', $data);
+        }
     }
 
     // jiu jitsu stats START
