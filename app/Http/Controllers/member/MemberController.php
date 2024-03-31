@@ -14,6 +14,7 @@ use user\UserRepository as User;
 use event\EventRegistrationRepository as EventRegistration;
 use country\CountryRepository as Country;
 use academy\AcademyRepository as Academy;
+use event\EventAwardRepository as EventAward;
 
 //Models
 use member\Member as MemberModel;
@@ -30,7 +31,7 @@ class MemberController extends Controller
 {
     public $restful = true;
 
-    public function __construct(Member $member, User $user, EventRegistration $eventRegistration, Country $country, Academy $academy)
+    public function __construct(Member $member, User $user, EventRegistration $eventRegistration, Country $country, Academy $academy, EventAward $eventAward)
     {
         $this->view_path = 'member';
         $this->member = $member;
@@ -38,6 +39,7 @@ class MemberController extends Controller
         $this->eventRegistration = $eventRegistration;
         $this->country = $country;
         $this->academy = $academy;
+        $this->award = $eventAward;
     }
 
     /**

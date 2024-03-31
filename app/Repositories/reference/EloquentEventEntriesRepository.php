@@ -42,6 +42,7 @@ class EloquentEventEntriesRepository implements EventEntriesRepository {
 		$eventEntries->name_en = $input['name_en'];
 		$eventEntries->gender_code = $input['gender_code'];
 		$eventEntries->entrance_fee = $input['entrance_fee'];
+		$eventEntries->rank_code = $input['rank_code'];
 
 		$eventEntries->save();
 		return $eventEntries;
@@ -55,7 +56,8 @@ class EloquentEventEntriesRepository implements EventEntriesRepository {
 		$eventEntries->name_en = $input['name_en'];
 		$eventEntries->gender_code = $input['gender_code'];
 		$eventEntries->entrance_fee = $input['entrance_fee'];
-
+		$eventEntries->rank_code = $input['rank_code'];
+		
 		$eventEntries->save();
 		return $eventEntries;
 	}

@@ -150,8 +150,13 @@ return array(
 		'academy' => 'academy',
 		'highschool' => 'highschool',
 		'university' => 'university'
-	]
- 
+	],
+
+	'rank_category' => [
+		'kids' => 'kids',
+		'adult' => 'adult',
+		'masters' => 'masters',
+	],
 )
 
 ?>

@@ -68,8 +68,15 @@
                                 <span class="text-center mr-5" style="font-size: 20px;color: #0f4b63;"><strong>{{trans('display.age_title')}} : {{$member->age}}</strong></span>
                                 <span class="text-center ml-5" style="font-size: 20px;color: #0f4b63;"><strong>{{trans('display.human_gender_code')}} : {{ Config::get("enums.gender_code")[@$member->gender_code] }}</strong></span>
                                 <span class="text-center ml-5" style="font-size: 20px;color: #0f4b63;"><strong>{{trans('display.comp_country')}} : {{$countries->name }}</strong></span>
-			                </div>                                                                                                   
-                        </div>                    
+			                </div>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-center mt-5 pt-5">
+                        <div class="col-lg-8">
+                            <div class="card">
+                                
+                            </div>
+                        </div>
                     </div>
                     <div class="d-flex justify-content-center mt-5 pt-5">
                         <div class="col-lg-8">
@@ -116,53 +123,6 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- @if($member->age > 18)
-                        <div class="col-lg-4">
-                            <div class="card">
-                                <div class="card-header" style="color: #0f4b63; ">
-                                    <strong>{{trans('display.comp_university')}}</strong>
-                                </div>
-                                <div class="card-body" style="color: #0f4b63;">
-                                    <ul>
-                                        @foreach($athleteUniversityInfo as $universityInfo)
-                                            <li>
-                                                <a href="#" style="color: #0f4b63; font-size: 16px">                                                  
-                                                    @if($universityInfo->name == 'Бусад')   
-                                                        <strong>{{ $universityInfo->name }} </strong> - {{ $universityInfo->academy_name }}                                                        
-                                                    @else 
-                                                        {{ $universityInfo->name }}                                                                                        
-                                                    @endif
-                                                </a>
-                                            </li>
-                                        @endforeach
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        @else
-                        <div class="col-lg-4">
-                            <div class="card">
-                                <div class="card-header" style="color: #0f4b63; ">
-                                    <strong>{{trans('display.comp_school')}}</strong>
-                                </div>
-                                <div class="card-body" style="color: #0f4b63;">
-                                    <ul>
-                                        @foreach($athleteSchoolInfo as $schoolInfo)
-                                            <li>
-                                                <a href="#" style="color: #0f4b63; font-size: 16px">
-                                                    @if($schoolInfo->name == 'Бусад')   
-                                                        <strong>{{ $schoolInfo->name }} </strong> - {{ $schoolInfo->academy_name }}                                                        
-                                                    @else 
-                                                        {{ $schoolInfo->name }}                                                                                        
-                                                    @endif
-                                                </a>
-                                            </li>
-                                        @endforeach
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        @endif -->
                     </div>
                     <div class="d-flex justify-content-center mt-5 pt-5">
                         <div class="col-lg-4">

@@ -35,7 +35,7 @@
                 <div class="error-here"></div>
             </div>
         </div>
-        <div class="form-group row">
+        <!-- <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.general_rank_season')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9 col-lg-6">
                 <select class="form-control selectpicker" id="eventRankSeason" name="eventRankSeason" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}">
@@ -46,7 +46,7 @@
                 </select>
                 <div class="error-here"></div>
             </div>
-        </div> 
+        </div>  -->
 
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.general_event_category')}}: <span class="text-danger">*</span></label>
@@ -59,8 +59,7 @@
                 </select>
                 <div class="error-here"></div>
             </div>
-        </div> 
-
+        </div>
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.reg_date')}}<span class="text-danger"> *</span></label>
             <div class="col-md-9 col-lg-6">
@@ -131,7 +130,7 @@
             </div>
         </div> 
 
-        <div class="form-group row">
+        <!-- <div class="form-group row">
             <label class="col-md-3 col-form-label text-right"></label>
             <div class="col-md-9 col-lg-6">
                 <label class="checkbox">
@@ -147,8 +146,8 @@
             <div class="col-md-9 col-lg-6">
                 <input type="number" class="form-control" autocomplete="off" name="athlete_limit" id="athlete_limit"/>
             </div>
-        </div>
-        @if(@$eventConfig->sport_id == 1)
+        </div> -->
+        <!-- @if(@$eventConfig->sport_id == 1)
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right"></label>
             <div class="col-md-9 col-lg-6">
@@ -159,7 +158,7 @@
                 </label>
             </div>
         </div>
-        @endif
+        @endif -->
 
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right"></label>
@@ -171,7 +170,7 @@
                 </label>
             </div>
         </div>
-        <div class="form-group row">
+        <!-- <div class="form-group row">
             <label class="col-md-3 col-form-label text-right"></label>
             <div class="col-md-9 col-lg-6">
                 <label class="checkbox">
@@ -180,7 +179,7 @@
                     {{ trans('display.general_is_team') }}
                 </label>
             </div>
-        </div>
+        </div> -->
         <div class="form-group row d-none" id="is_athlete_must_pay">
             <label class="col-md-3 col-form-label text-right"></label>
             <div class="col-md-9 col-lg-6">

@@ -1074,7 +1074,7 @@ class EventRegistrationController extends Controller
         }
         else
         {
-            return view('event.bracket.print', $data);
+            return view('event.bracket.print_double', $data);
         }
     }
 

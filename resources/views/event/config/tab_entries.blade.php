@@ -93,6 +93,7 @@ $("#entry-add").on('click', function(){
 		$('#eventEntryModal').modal();
 		$('#eventEntryModal').on('shown.bs.modal', function(){
 			$('#eventEntryModal .modal-content').html(data);
+            $('.selectpicker').selectpicker();
 
 			$('#create-event-config-entries-form').validate({
 				ignore: [],
@@ -152,7 +153,8 @@ $(".edit-entry").on('click', function(){
         $('#eventEntryModal').modal();
         $('#eventEntryModal').on('shown.bs.modal', function(){
             $('#eventEntryModal .modal-content').html(data);
-
+            $('.selectpicker').selectpicker();
+            
             $('#update-event-config-entries-form').validate({
                 ignore: [],
                 highlight:function(element) {

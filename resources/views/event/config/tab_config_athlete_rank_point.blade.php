@@ -2,7 +2,7 @@
     <div class="card card-custom">
         <div class="card-header flex-wrap border-0 pt-6 pb-0">
             <div class="card-title">
-                <h3 class="card-label">Тэмцээнд оролцох үр дүнгийн оноо
+                <h3 class="card-label">Тэмцээны Rank-ны оноо
                 <span class="text-muted pt-2 font-size-sm d-block"></span></h3>
             </div>
             <div class="card-toolbar">

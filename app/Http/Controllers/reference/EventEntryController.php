@@ -51,7 +51,7 @@ class EventEntryController extends Controller
     public function create()
     {
         $input = Input::all();
-
+        
         $data['eventId'] = $input['eventId'];
         $data['view_path'] = $this->view_path;
 
@@ -124,7 +124,7 @@ class EventEntryController extends Controller
     {
         $eventEntry = $this->eventEntry->find($id);
         $data['eventEntry'] = $eventEntry;
-
+        
         return view($this->view_path.'.edit', $data);
     }
 

@@ -15,7 +15,8 @@
 		<link rel="stylesheet" href="{{ asset('/assets/plugins/global/plugins.bundle.css') }}" media="screen" />
 		<link rel="stylesheet" href="{{ asset('/assets/plugins/custom/prismjs/prismjs.bundle.css') }}" media="screen" />
 		<link rel="stylesheet" href="{{ asset('/assets/css/style.bundle.css') }}" media="screen" />
-		
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+
 		<!--end::Global Theme Styles-->
 		
 		<!--begin::Layout Themes(used by all pages)-->
@@ -40,6 +41,7 @@
         <script src="{{asset('assets/js/plugins/custom/blockui/jquery.blockUI.js')}}"> </script>
         <script src="{{asset('assets/js/plugins/custom/jquery-confirm/jquery-confirm.min.js') }}"></script>
         <script src="{{asset('assets/js/plugins/custom/jquery-validation/dist/jquery.validate.js') }}"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 
 		<!--end::Global Theme Bundle-->
 		@yield('javascript')

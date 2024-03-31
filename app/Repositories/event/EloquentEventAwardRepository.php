@@ -196,4 +196,16 @@ class EloquentEventAwardRepository implements EventAwardRepository {
 
 		return $count;
 	}
+
+	public function getEventAwards($memberId)
+	{
+		$results = DB::table('uq_comp.uq_event_award as uea')
+    		->select('rt_listing.rti_event.id', 'rt_listing.rti_event.name', 'uea.place_number', 'rt_listing.rti_event.event_date')
+    		->join('uq_comp.uq_event_registration as uer', 'uer.id', '=', 'uea.event_registration_id')
+    		->join('rt_listing.rti_event', 'rt_listing.rti_event.id', '=', 'uer.event_id')
+    		->where('uea.member_id', $memberId)
+    		->get();
+			
+		return $results;
+	}
 }

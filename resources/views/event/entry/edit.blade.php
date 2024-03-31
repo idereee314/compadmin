@@ -45,6 +45,17 @@
                 <div class="error-here"></div>
             </div>
         </div>
+        <div class="form-group row">
+            <label class="col-md-3 col-form-label text-right">Хамаарах ранк: </label>
+            <div class="col-md-9 col-lg-6">
+                <select class="form-control selectpicker" data-live-search="true" name="rank_code" id="rank_code">
+                    <option value="">-- {{ trans('display.general_select') }} --</option>
+                    @foreach (@Config::get('smart.rank_category') as $key => $rank)
+                    <option value="{{$key}}" {{ @$eventEntry->rank_code == $key ? 'selected="selected"' : '' }}>{{$rank}}</option>
+                    @endforeach
+                </select>
+            </div>
+        </div>
     </div>
 
     <div class="modal-footer text-right bg-gray-100 border-top-0">

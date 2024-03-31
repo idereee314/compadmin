@@ -121,7 +121,7 @@
                 </div>
             </td>
             <td>
-                <div class="connector">                    
+                <div class="connector">
                     <div class="linebox_two"></div>
                     <table width="100%" style="width:100%;" id="table1" border="1">
                         <tr>                        
@@ -135,7 +135,7 @@
             </td>
             @if(count($members) >= 8)
                 <td>
-                    <div class="connector">                        
+                    <div class="connector">
                         <div class="linebox_two"></div>
                         <table width="100%" style="width:100%;" id="table1" border="1">
                             <tr>                        
@@ -151,7 +151,7 @@
             @endif
             @if(count($members) >= 16)
                 <td>
-                    <div class="connector">                        
+                    <div class="connector">
                         <div class="linebox_two"></div>
                         <table width="100%" style="width:100%;" id="table1" border="1">
                             <tr>                        
@@ -191,7 +191,7 @@
                 </div>
             </td>
             <td>
-                <div class="connector">                    
+                <div class="connector">
                     <div class="linebox_two"></div>
                     <table width="100%" style="width:100%;" id="table1" border="1">
                         <tr>                        
@@ -206,7 +206,7 @@
             
             @if(count($members) >= 8)
                 <td>
-                    <div class="connector">                        
+                    <div class="connector">
                         <div class="linebox_two"></div>
                         <table width="100%" style="width:100%;" id="table1" border="1">
                             <tr>                        
@@ -222,7 +222,7 @@
             @endif
             @if(count($members) >= 16)
                 <td>
-                    <div class="connector">                        
+                    <div class="connector">
                         <div class="linebox_two"></div>
                         <table width="100%" style="width:100%;" id="table1" border="1">
                             <tr>                        

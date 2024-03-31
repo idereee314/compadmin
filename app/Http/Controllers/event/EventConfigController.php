@@ -365,6 +365,7 @@ class EventConfigController extends Controller
     {
 		$input = Input::all();
         $eventConfig = $this->eventConfig->find($input['event_config_id']);
+        
         $configBelsts = $this->entryConfigBelt->getConfigBeltByEventId($eventConfig->event_id);
         $configAges = $this->entryConfigAge->getConfigAgeByEventId($eventConfig->event_id);
         $configWeights = $this->entryConfigWeight->getConfigWeightByEventId($eventConfig->event_id);
@@ -423,6 +424,10 @@ class EventConfigController extends Controller
         {   
             
         }
+        else if($input['code'] == 'athlete_rank_point') 
+        {   
+            
+        }
         else if($input['code'] == 'mat_settings') 
         {   
             
@@ -433,17 +438,6 @@ class EventConfigController extends Controller
 
         return view($this->view_path.'.'.$input['name'], $data);
     }
-
-    // public function ranking(){
-    //     $eventConfig = $this->eventConfig->find($id);
-        
-    //     $data['event_config_id'] = $id;
-
-    //     $data['eventConfig'] = $eventConfig;
-    //     $data['view_path'] = $this->view_path;
-
-    //     return view($this->view_path.'.ranking', $data);
-    // }
 
     public function ranking($sport_id){
          
@@ -464,6 +458,92 @@ class EventConfigController extends Controller
         
         return view('.reference/ranking/rank', $data);
     }
+
+    public function athleteRanking($sport_id){
+         
+        $sport = $this->sport->find($sport_id);
+        $eventCategory = $this->eventCategory->all();
+        $eventRankSeason = $this->eventRankSeason->all();
+        $beltGroup = $this->beltGroup->all();
+        $adultMaleList = $this->eventConfig->getAthleteRanking('adult', '1');
+        $adultFemaleList = $this->eventConfig->getAthleteRanking('adult', '2');
+        $mastersList = $this->eventConfig->getAthleteRanking('masters', '1');
+        $kidsList = $this->eventConfig->getAthleteRanking('kids', '1');
+
+        $data['kidsList'] = $kidsList;
+        $data['mastersList'] = $mastersList;
+        $data['adultMaleList'] = $adultMaleList;
+        $data['adultFemaleList'] = $adultFemaleList;
+        $data['beltGroup'] = $beltGroup;
+        $data['eventRankSeason'] = $eventRankSeason;
+        $data['eventCategory'] = $eventCategory;
+        $data['sport_id'] = $sport_id;
+        $data['sport'] = $sport;
+
+        $data['tabs'] = collect(Config::get("enums.ranking_tabs"))->sortBy('order')->toArray();
+        $data['tab_id'] = @$input['tab_id'] ? @$input['tab_id'] : 'tab1-1';
+        $data['view_path'] = $this->view_path;
+        
+        return view('.reference/ranking/athleteRank', $data);
+    }
+
+    public function maleRanking($sport_id){
+         
+        $sport = $this->sport->find($sport_id);
+        $adultMaleList = $this->eventConfig->getAthleteRanking('adult', '1');
+
+        $data['adultMaleList'] = $adultMaleList;
+        $data['sport_id'] = $sport_id;
+        $data['sport'] = $sport;
+        
+        $data['view_path'] = $this->view_path;
+        
+        return view('.reference/ranking/maleRankList', $data);
+    }
+
+    public function femaleRanking($sport_id){
+         
+        $sport = $this->sport->find($sport_id);
+        $adultFemaleList = $this->eventConfig->getAthleteRanking('adult', '2');
+        
+        $data['adultFemaleList'] = $adultFemaleList;
+        $data['sport_id'] = $sport_id;
+        $data['sport'] = $sport;
+        
+        $data['view_path'] = $this->view_path;
+        
+        return view('.reference/ranking/femaleRankList', $data);
+    }
+
+    public function mastersRanking($sport_id){
+         
+        $sport = $this->sport->find($sport_id);
+        $mastersList = $this->eventConfig->getAthleteRanking('masters', '1');
+        
+        $data['mastersList'] = $mastersList;
+        $data['sport_id'] = $sport_id;
+        $data['sport'] = $sport;
+        
+        $data['view_path'] = $this->view_path;
+        
+        return view('.reference/ranking/mastersRankList', $data);
+    }
+
+    public function kidsRanking($sport_id){
+         
+        $sport = $this->sport->find($sport_id);
+        $kidsList = $this->eventConfig->getAthleteRanking('kids', '1');
+        
+        $data['kidsList'] = $kidsList;
+        $data['sport_id'] = $sport_id;
+        $data['sport'] = $sport;
+        
+        $data['view_path'] = $this->view_path;
+        
+        return view('.reference/ranking/kidsRankList', $data);
+    }
+
+    
 
     public function reference($sport_id){
          

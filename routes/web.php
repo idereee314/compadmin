@@ -203,6 +203,11 @@ Route::get('memberCard/{member}/membership-card', [MemberController::class, 'gen
 
 //Ranking
 Route::get('/{sport_id}/ranking','event\EventConfigController@ranking')->name('ranking');
+Route::get('/{sport_id}/ranking/athlete','event\EventConfigController@athleteRanking')->name('athleteRanking');
+Route::get('/{sport_id}/ranking/athlete/male','event\EventConfigController@maleRanking')->name('maleRanking');
+Route::get('/{sport_id}/ranking/athlete/female','event\EventConfigController@femaleRanking')->name('femaleRanking');
+Route::get('/{sport_id}/ranking/athlete/masters','event\EventConfigController@mastersRanking')->name('mastersRanking');
+Route::get('/{sport_id}/ranking/athlete/kids','event\EventConfigController@kidsRanking')->name('kidsRanking');
 
 //info
 Route::get('/{sport_id}/reference','event\EventConfigController@reference')->name('reference.information');
