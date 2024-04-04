@@ -77,6 +77,7 @@
                                                 </div>
                                                 <div class="col-md-10" style="font-size: 1.5em; color: #0f4b63;">
                                                     {{ $index + 1 }}. {{ $male->lastname }} {{ $male->firstname }} <span class="badge badge-success">{{ $male->point }} оноо</span>
+                                                    <br><span class="badge" style="background-color: #FFD700">{{$male->place_1}}</span><span class="badge" style="background-color: #C0C0C0">{{$male->place_2}}</span><span class="badge" style="background-color: #CD7F32">{{$male->place_3}}</span>
                                                 </div>
                                             </li>
                                             @php $count++; @endphp
@@ -105,6 +106,7 @@
                                                 </div>
                                                 <div class="col-md-10" style="font-size: 1.5em; color: #0f4b63;">
                                                     {{ $index + 1 }}. {{ $female->lastname }} {{ $female->firstname }} <span class="badge badge-success">{{ $female->point }} оноо</span>
+                                                    <br><span class="badge" style="background-color: #FFD700">{{$female->place_1}}</span><span class="badge" style="background-color: #C0C0C0">{{$female->place_2}}</span><span class="badge" style="background-color: #CD7F32">{{$female->place_3}}</span>
                                                 </div>
                                             </li>
                                             @php $count++; @endphp
@@ -135,6 +137,7 @@
                                                 </div>
                                                 <div class="col-md-10" style="font-size: 1.5em; color: #0f4b63;">
                                                     {{ $index + 1 }}. {{ $masters->lastname }} {{ $masters->firstname }} <span class="badge badge-success">{{ $masters->point }} оноо</span>
+                                                    <br><span class="badge" style="background-color: #FFD700">{{$masters->place_1}}</span><span class="badge" style="background-color: #C0C0C0">{{$masters->place_2}}</span><span class="badge" style="background-color: #CD7F32">{{$masters->place_3}}</span>
                                                 </div>
                                             </li>
                                             @php $count++; @endphp
@@ -163,6 +166,7 @@
                                                 </div>
                                                 <div class="col-md-10" style="font-size: 1.5em; color: #0f4b63;">
                                                     {{ $index + 1 }}. {{ $kids->lastname }} {{ $kids->firstname }} <span class="badge badge-success">{{ $kids->point }} оноо</span>
+                                                    <br><span class="badge" style="background-color: #FFD700">{{$kids->place_1}}</span><span class="badge" style="background-color: #C0C0C0">{{$kids->place_2}}</span><span class="badge" style="background-color: #CD7F32">{{$kids->place_3}}</span>
                                                 </div>
                                             </li>
                                             @php $count++; @endphp

@@ -469,7 +469,7 @@ class EventConfigController extends Controller
         $adultFemaleList = $this->eventConfig->getAthleteRanking('adult', '2');
         $mastersList = $this->eventConfig->getAthleteRanking('masters', '1');
         $kidsList = $this->eventConfig->getAthleteRanking('kids', '1');
-
+        
         $data['kidsList'] = $kidsList;
         $data['mastersList'] = $mastersList;
         $data['adultMaleList'] = $adultMaleList;
@@ -491,7 +491,7 @@ class EventConfigController extends Controller
          
         $sport = $this->sport->find($sport_id);
         $adultMaleList = $this->eventConfig->getAthleteRanking('adult', '1');
-
+        
         $data['adultMaleList'] = $adultMaleList;
         $data['sport_id'] = $sport_id;
         $data['sport'] = $sport;

@@ -76,6 +76,7 @@
                                             </div>
                                             <div class="col-md-10" style="font-size: 1.5em; color: #0f4b63;">
                                                 {{ $index + 1 }}. {{ $masters->lastname }} {{ $masters->firstname }} <span class="badge badge-success">{{ $masters->point }} оноо</span>
+                                                &ensp;<span class="badge" style="background-color: #FFD700">{{$masters->place_1}}</span><span class="badge" style="background-color: #C0C0C0">{{$masters->place_2}}</span><span class="badge" style="background-color: #CD7F32">{{$masters->place_3}}</span>
                                             </div>
                                         </li>
                                     @endforeach

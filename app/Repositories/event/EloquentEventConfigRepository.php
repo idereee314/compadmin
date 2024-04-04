@@ -279,24 +279,29 @@ class EloquentEventConfigRepository implements EventConfigRepository {
 
 	public function getAthleteRanking($category, $gender)
 	{
-		$results = DB::table('uq_comp.uq_event_registration as r')
-    			->selectRaw("extract(year from re.event_date) as year, r.member_id, um.firstname, um.lastname, co.sport_id, um.gender_code, um.id, um.profile_url, uc.name,
-    			    sum(coalesce((select point from uq_comp.uq_event_rank_point p where p.sport_id = co.sport_id and p.category_id = co.point_type_id and aw.place_number between p.start_pos and p.end_pos limit 1), 0)) as point")
-    			->join('rt_listing.rti_event as re', 'r.event_id', '=', 're.id')
-    			->join('uq_comp.uq_member as um', 'r.member_id', '=', 'um.id')
-    			->join('uq_comp.uq_event_config as co', 'co.event_id', '=', 'r.event_id')
-    			->join('uq_comp.uq_event_award as aw', 'aw.event_registration_id', '=', 'r.id')
-    			->join('uq_comp.uq_event_entries as uee', 'r.entry_id', '=', 'uee.id')
-    			->leftJoin('uniqdb.uq_comp.uq_country as uc', 'uc.id', '=', 'um.country_id')
-    			->whereRaw("extract(year from re.event_date) = '2024'")
-    			->where('um.gender_code', '=', $gender)
-    			->where('uee.rank_code', '=', $category)
-    			->groupBy('year', 'r.member_id', 'um.firstname', 'um.lastname', 'co.sport_id', 'um.gender_code', 'um.id', 'um.profile_url', 'uc.name')
-    			->orderBy('year', 'asc')
-    			->orderBy('point', 'desc')
-    			->orderBy('um.firstname', 'asc')
-    			->get();
-		
-		return $results;
+	    $results = DB::table('uq_comp.uq_event_registration as r')
+	        ->selectRaw("extract(year from re.event_date) as year, r.member_id, um.firstname, um.lastname, co.sport_id, um.gender_code, um.id, um.profile_url, uc.name,
+	            sum(coalesce((select point from uq_comp.uq_event_rank_point p where p.sport_id = co.sport_id and p.category_id = co.point_type_id and aw.place_number between p.start_pos and p.end_pos limit 1), 0)) as point,
+	            COUNT(CASE WHEN aw.place_number = 1 THEN 1 END) AS place_1,
+	            COUNT(CASE WHEN aw.place_number = 2 THEN 1 END) AS place_2,
+	            COUNT(CASE WHEN aw.place_number = 3 THEN 1 END) AS place_3")
+	        ->join('rt_listing.rti_event as re', 'r.event_id', '=', 're.id')
+	        ->join('uq_comp.uq_member as um', 'r.member_id', '=', 'um.id')
+	        ->join('uq_comp.uq_event_config as co', 'co.event_id', '=', 'r.event_id')
+	        ->join('uq_comp.uq_event_award as aw', 'aw.event_registration_id', '=', 'r.id')
+	        ->join('uq_comp.uq_event_entries as uee', 'r.entry_id', '=', 'uee.id')
+	        ->leftJoin('uniqdb.uq_comp.uq_country as uc', 'uc.id', '=', 'um.country_id')
+	        ->whereRaw("extract(year from re.event_date) = '2024'")
+	        ->where('um.gender_code', '=', $gender)
+	        ->where('uee.rank_code', '=', $category)
+			->where('co.sport_id', '=', '1')
+	        ->groupBy('year', 'r.member_id', 'um.firstname', 'um.lastname', 'co.sport_id', 'um.gender_code', 'um.id', 'um.profile_url', 'uc.name')
+	        ->orderBy('year', 'asc')
+	        ->orderBy('point', 'desc')
+	        ->orderBy('um.firstname', 'asc')
+	        ->get();
+	
+	    return $results;
 	}
+
 }
