@@ -1158,6 +1158,11 @@ class EventRegistrationController extends Controller
         if (!empty($configArray) && isset($configArray[0]->event_result_type_id)) {
             $resultType = $configArray[0]->event_result_type_id;
         }
+        $GenderResultFemale = $this->eventRegistration->getToplistByGoldMedalAndGenderFemaleFromEvent($eventId);
+        $GenderResultMale = $this->eventRegistration->getToplistByGoldMedalAndGenderMaleFromEvent($eventId);
+
+        $data['GenderResultFemale'] = $GenderResultFemale;
+        $data['GenderResultMale'] = $GenderResultMale;
         $data['resultType'] = $resultType;
         $data['statsWeightForOrg'] = $statsWeightForOrg;
         $data['getToplistByGoldMedalFromEvent'] = $getToplistByGoldMedalFromEvent;
