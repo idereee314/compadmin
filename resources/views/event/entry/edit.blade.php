@@ -41,7 +41,7 @@
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.entrance_fee')}}: </label>
             <div class="col-md-9 col-lg-6">
-                <input type="number" class="form-control" value="{{$eventEntry->entrance_fee}}" min="5000" step="5000" name="entrance_fee"  data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}"/>
+                <input type="number" class="form-control" value="{{$eventEntry->entrance_fee}}" min="0" step="5000" name="entrance_fee"  data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}"/>
                 <div class="error-here"></div>
             </div>
         </div>
