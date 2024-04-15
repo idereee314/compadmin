@@ -741,6 +741,36 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 					order by total_point desc");
 	}
 	
+	public function getToplistByGoldMedalAndGenderMaleFromEvent($eventId)
+	{
+		return DB::select("select uer.academy_id, ua.name,
+			SUM(CASE WHEN uea.place_number = 1 THEN 1 ELSE 0 END) as gold,
+			SUM(CASE WHEN uea.place_number = 2 THEN 1 ELSE 0 END) AS silver,
+			   SUM(CASE WHEN uea.place_number = 3 THEN 1 ELSE 0 END) AS bronze
+			FROM uq_comp.uq_event_award uea
+			LEFT JOIN uq_comp.uq_event_registration uer ON uer.id = uea.event_registration_id
+			LEFT JOIN uq_comp.uq_academy ua ON ua.id = uer.academy_id
+			LEFT JOIN uq_comp.uq_member um ON um.id = uea.member_id 
+			WHERE uer.event_id = $eventId and um.gender_code = '1'
+			GROUP BY ua.name,uer.academy_id
+			ORDER BY gold desc, silver desc, bronze desc");
+	}
+
+	public function getToplistByGoldMedalAndGenderFemaleFromEvent($eventId)
+	{
+		return DB::select("select uer.academy_id, ua.name,
+			SUM(CASE WHEN uea.place_number = 1 THEN 1 ELSE 0 END) as gold,
+			SUM(CASE WHEN uea.place_number = 2 THEN 1 ELSE 0 END) AS silver,
+			   SUM(CASE WHEN uea.place_number = 3 THEN 1 ELSE 0 END) AS bronze
+			FROM uq_comp.uq_event_award uea
+			LEFT JOIN uq_comp.uq_event_registration uer ON uer.id = uea.event_registration_id
+			LEFT JOIN uq_comp.uq_academy ua ON ua.id = uer.academy_id
+			LEFT JOIN uq_comp.uq_member um ON um.id = uea.member_id 
+			WHERE uer.event_id = $eventId and um.gender_code = '2'
+			GROUP BY ua.name,uer.academy_id
+			ORDER BY gold desc, silver desc, bronze desc");
+	}
+	
 	//RESULTS queries .end
 
 	public function getAllEntriesFromEventById($eventId, $entryId, $entryAgeId, $entryBeltId, $entryWeightId)
