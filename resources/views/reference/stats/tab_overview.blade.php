@@ -12,7 +12,7 @@
                 <div class="table-responsive">
                     <table class="table table-hover table-bordered table-head-custom">
                         <thead>
-                            <tr>                                                                
+                            <tr>
                                 <th class="text-center">{{trans('display.general_status')}}</th>
                                 <th class="text-center">{{trans('display.general_athlete_count')}}</th>
                             </tr>
@@ -47,14 +47,14 @@
                 <div class="table-responsive">
                     <table class="table table-hover table-bordered table-head-custom">
                         <thead>
-                            <tr>                                
+                            <tr>
                                 <th class="text-center"> {{ trans('display.comp_country_name') }} </th> 
                                 <th class="text-center">{{trans('display.general_athlete_count')}}</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach($eventRegistrationCountryStats as $stats)
-                                <tr>                                                                                                         
+                                <tr>
                                     <td class="min-w-200px text-center border-right"><strong>{{ $stats->name }} - {{ strtoupper($stats->abbreviation) }}</strong></td>
                                     <td class="text-center border-right"><strong>{{ $stats->count_country }}</strong></td>
                                 </tr>
@@ -82,14 +82,14 @@
                 <div class="table-responsive">
                     <table class="table table-hover table-bordered table-head-custom">
                         <thead>
-                            <tr>                                
+                            <tr>
                                 <th class="text-center"> {{ trans('display.comp_country_name') }} </th>
                                 <th class="text-center">{{trans('display.general_athlete_count')}}</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach($eventRegistrationCountryAllStats as $stats)
-                                <tr>                                                                                                         
+                                <tr>
                                     <td class="min-w-200px text-center border-right"><strong>{{ $stats->name }} - {{ strtoupper($stats->abbreviation) }}</strong></td>
                                     <td class="text-center border-right"><strong>{{ $stats->count_country }}</strong></td>
                                 </tr>
@@ -128,7 +128,7 @@
                                     <td class="min-w-200px text-center border-right"><strong>{{ Config::get("enums.org_type")[@$stats->org_type] }}</strong></td>
                                     <td class="text-center border-right"><strong>{{ $stats->org_count }}</strong></td>
                                 </tr>
-                            @endforeach 
+                            @endforeach
                         </tbody>
                     </table>
                 </div>
@@ -159,7 +159,7 @@
                         </thead>
                         <tbody>
                             @foreach($eventRegistrationOrgTypeStats as $stats)
-                                <tr>                                                                                                         
+                                <tr>
                                     <td class="min-w-200px text-center border-right"><strong>{{ Config::get("enums.org_type")[@$stats->org_type] }}</strong></td>
                                     <td class="text-center border-right"><strong>{{ $stats->org_count }}</strong></td>
                                 </tr>
@@ -187,7 +187,7 @@
                 <div class="table-responsive">
                     <table class="table table-hover table-bordered table-head-custom">
                         <thead>
-                            <tr>                                
+                            <tr>
                                 <th class="text-center"> Хүйс </th>
                                 <th class="text-center">{{trans('display.general_athlete_count')}}</th>
                             </tr>
@@ -222,14 +222,14 @@
                 <div class="table-responsive">
                     <table class="table table-hover table-bordered table-head-custom">
                         <thead>
-                            <tr>                                
+                            <tr>
                                 <th class="text-center"> Хүйс </th>
                                 <th class="text-center">{{trans('display.general_athlete_count')}}</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach($eventRegistrationGenderAllStats as $stats)
-                                <tr>                                                                                                         
+                                <tr>
                                     <td class="min-w-200px text-center border-right"><strong>{{ Config::get("enums.gender_code")[@$stats->gender_code] }}</strong></td>
                                     <td class="text-center border-right"><strong>{{ $stats->gender_count }}</strong></td>
                                 </tr>
@@ -276,7 +276,7 @@
                                 </tr>
                             @endforeach 
                         </tbody>
-                    </table>                                                                                
+                    </table>
                 </div>
             @else
                 <tr>
@@ -315,7 +315,7 @@
                                 </tr>
                             @endforeach
                         </tbody>
-                    </table>                                        
+                    </table>
                 </div>
             @else
                 <tr>
