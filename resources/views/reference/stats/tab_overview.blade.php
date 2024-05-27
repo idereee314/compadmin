@@ -117,14 +117,14 @@
                 <div class="table-responsive">
                     <table class="table table-hover table-bordered table-head-custom">
                         <thead>
-                            <tr>                                
+                            <tr>
                                 <th class="text-center"> Байгууллага </th>
                                 <th class="text-center">{{trans('display.general_org_count')}}</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach($eventRegistrationOrgTypeStats as $stats)
-                                <tr>                                                                                                         
+                                <tr>
                                     <td class="min-w-200px text-center border-right"><strong>{{ Config::get("enums.org_type")[@$stats->org_type] }}</strong></td>
                                     <td class="text-center border-right"><strong>{{ $stats->org_count }}</strong></td>
                                 </tr>
