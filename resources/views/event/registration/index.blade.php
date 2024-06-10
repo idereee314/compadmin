@@ -430,7 +430,7 @@ $(document).ready(function() {
         processing:     true,
         serverSide:     true,
         //deferRender:    true,
-        //autoWidth:      true,
+        autoWidth:      true,
         //filter:         false,
         select: true,
         responsive:     true,
