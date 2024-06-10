@@ -146,7 +146,7 @@
                         <table class="table table-separate table-head-custom" id="event-config-datatable">
                             <thead>
                             <tr>
-                                <th width="5%">No.</th>
+                                <th width="5%">№</th>
                                 <th width="25%">{{trans('display.general_name')}}</th>
                                 <th width="10%">{{trans('display.reg_start_date')}}</th>
                                 <th width="10%">{{trans('display.reg_end_date')}}</th>
@@ -230,7 +230,7 @@ $(document).ready(function() {
             targets: [0,9]
         },{
             class: "text-center",
-            targets: [0,2,3,4,5,6,7,8,9]
+            targets: [0,2,3]
         }],
         order: [[ 3, "desc" ]],
         dom: "<'row'<'col-sm-6 text-left'B><'col-sm-6 text-right'<'#colvis'>>><'row'<'col-sm-12'tr>><'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7 dataTables_pager'lp>>",

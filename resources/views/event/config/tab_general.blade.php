@@ -2,7 +2,7 @@
     <input type="hidden" name="_method" value="put"/>
     <div class="card-body">
         <div class="form-group row">
-            <label class="col-md-3 col-form-label text-right">{{trans('display.event_title')}}: <span class="text-danger">*</span></label>
+            <label class="col-md-3 col-form-label text-left">{{trans('display.event_title')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9 col-lg-6">
                 <input type="hidden" name="event_id" value="{{$eventConfig->event_id}}">
                 <input class="form-control form-control-lg" disabled value="{{ $eventConfig->event->name }}"/>
@@ -10,7 +10,7 @@
         </div> 
 
         <div class="form-group row">
-            <label class="col-md-3 col-form-label text-right">{{trans('display.general_event_date')}}<span class="text-danger"> *</span></label>
+            <label class="col-md-3 col-form-label text-left">{{trans('display.general_event_date')}}<span class="text-danger"> *</span></label>
             <div class="col-md-9 col-lg-6">
                 <div class="input-group">
                     <input type="text" name="event_date" id="event_date" disabled data-toggle="datetimepicker" class="form-control datetimepicker-input" readonly="readonly" value="{{ Carbon\Carbon::parse(@$eventConfig->event->event_date)->format('Y-m-d')}}">
@@ -24,7 +24,7 @@
         </div>
 
         <div class="form-group row">
-            <label class="col-md-3 col-form-label text-right">{{trans('display.general_sport_type')}}: <span class="text-danger">*</span></label>
+            <label class="col-md-3 col-form-label text-left">{{trans('display.general_sport_type')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9 col-lg-6">
                 <select class="form-control selectpicker" id="sport_id" name="sport_id" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}">
                     <option value="0">-- {{ trans('display.general_select') }} --</option>
@@ -36,7 +36,7 @@
             </div>
         </div>
         <!-- <div class="form-group row">
-            <label class="col-md-3 col-form-label text-right">{{trans('display.general_rank_season')}}: <span class="text-danger">*</span></label>
+            <label class="col-md-3 col-form-label text-left">{{trans('display.general_rank_season')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9 col-lg-6">
                 <select class="form-control selectpicker" id="eventRankSeason" name="eventRankSeason" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}">
                     <option value="0">-- {{ trans('display.general_select') }} --</option>
@@ -49,7 +49,7 @@
         </div>  -->
 
         <div class="form-group row">
-            <label class="col-md-3 col-form-label text-right">{{trans('display.general_event_category')}}: <span class="text-danger">*</span></label>
+            <label class="col-md-3 col-form-label text-left">{{trans('display.general_event_category')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9 col-lg-6">
                 <select class="form-control selectpicker" id="eventCategory" name="eventCategory" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}">
                     <option value="0">-- {{ trans('display.general_select') }} --</option>
@@ -61,7 +61,7 @@
             </div>
         </div>
         <div class="form-group row">
-            <label class="col-md-3 col-form-label text-right">{{trans('display.reg_date')}}<span class="text-danger"> *</span></label>
+            <label class="col-md-3 col-form-label text-left">{{trans('display.reg_date')}}<span class="text-danger"> *</span></label>
             <div class="col-md-9 col-lg-6">
                 <div class="input-group" id="kt_reg_date">
                     <input type="text" name="reg_date" id="reg_date" class="form-control" readonly="readonly" value="{{ Carbon\Carbon::parse(@$eventConfig->reg_start_date)->format('Y-m-d H:i:s') }} / {{ Carbon\Carbon::parse(@$eventConfig->reg_end_date)->format('Y-m-d H:i:s') }}" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}">
@@ -75,7 +75,7 @@
             </div>
         </div>
         <div class="form-group row">
-            <label class="col-md-3 col-form-label text-right">{{trans('display.reg_payment_date')}}<span class="text-danger"> *</span></label>
+            <label class="col-md-3 col-form-label text-left">{{trans('display.reg_payment_date')}}<span class="text-danger"> *</span></label>
             <div class="col-md-9 col-lg-6">
                 <div class="input-group" id="kt_reg_payment_date">
                     <input type="text" name="reg_payment_date" id="reg_payment_date" data-toggle="datetimepicker" data-target="#reg_payment_date" class="form-control datetimepicker-input" readonly="readonly" value="{{ Carbon\Carbon::parse(@$eventConfig->payment_final_date)->format('Y-m-d H:i:s') }}" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}">
@@ -89,7 +89,7 @@
             </div>
         </div>
         <div class="form-group row">
-            <label class="col-md-3 col-form-label text-right">{{trans('display.reg_update_date')}}<span class="text-danger"> *</span></label>
+            <label class="col-md-3 col-form-label text-left">{{trans('display.reg_update_date')}}<span class="text-danger"> *</span></label>
             <div class="col-md-9 col-lg-6">
                 <div class="input-group" id="kt_reg_update_date">
                     <input type="" name="reg_update_date" id="reg_update_date" data-toggle="datetimepicker" data-target="#reg_update_date" class="form-control datetimepicker-input" readonly="readonly" value="{{ Carbon\Carbon::parse(@$eventConfig->update_final_date)->format('Y-m-d H:i:s') }}" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}">
@@ -104,7 +104,7 @@
         </div>
 
         <div class="form-group row">
-            <label class="col-md-3 col-form-label text-right">{{trans('display.general_result_type')}}: <span class="text-danger">*</span></label>
+            <label class="col-md-3 col-form-label text-left">{{trans('display.general_result_type')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9 col-lg-6">
                 <select class="form-control selectpicker" id="eventResultType" name="eventResultType" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}">
                     <option value="0">-- {{ trans('display.general_select') }} --</option>
@@ -117,7 +117,7 @@
         </div> 
 
         <div class="form-group row">
-            <label class="col-md-3 col-form-label text-right">{{trans('display.comp_org_type')}}: <span class="text-danger">*</span></label>
+            <label class="col-md-3 col-form-label text-left">{{trans('display.comp_org_type')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9 col-lg-6">
                 <select class="form-control select2" id="org_types" name="org_types[]" multiple="multiple" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}">
                     <option value="0">-- {{ trans('display.general_select') }} --</option>
@@ -131,7 +131,7 @@
         </div> 
 
         <!-- <div class="form-group row">
-            <label class="col-md-3 col-form-label text-right"></label>
+            <label class="col-md-3 col-form-label text-left"></label>
             <div class="col-md-9 col-lg-6">
                 <label class="checkbox">
                     <input type="checkbox" name="is_athlete_limit" id="is_athlete_limit">
@@ -142,14 +142,14 @@
         </div>
 
         <div class="form-group row d-none" id="athletes_limit">
-            <label class="col-md-3 col-form-label text-right">Тамирчдын тоо: </label>
+            <label class="col-md-3 col-form-label text-left">Тамирчдын тоо: </label>
             <div class="col-md-9 col-lg-6">
                 <input type="number" class="form-control" autocomplete="off" name="athlete_limit" id="athlete_limit"/>
             </div>
         </div> -->
         <!-- @if(@$eventConfig->sport_id == 1)
         <div class="form-group row">
-            <label class="col-md-3 col-form-label text-right"></label>
+            <label class="col-md-3 col-form-label text-left"></label>
             <div class="col-md-9 col-lg-6">
                 <label class="checkbox">
                     <input type="checkbox" name="is_disqualify">
@@ -161,7 +161,7 @@
         @endif -->
 
         <div class="form-group row">
-            <label class="col-md-3 col-form-label text-right"></label>
+            <label class="col-md-3 col-form-label text-left"></label>
             <div class="col-md-9 col-lg-6">
                 <label class="checkbox">
                     <input type="checkbox" name="is_active" {{ @$eventConfig->is_active ? 'checked="checked"' : '' }}>
@@ -171,7 +171,7 @@
             </div>
         </div>
         <!-- <div class="form-group row">
-            <label class="col-md-3 col-form-label text-right"></label>
+            <label class="col-md-3 col-form-label text-left"></label>
             <div class="col-md-9 col-lg-6">
                 <label class="checkbox">
                     <input type="checkbox" name="is_team" id="is_team" {{ @$eventConfig->is_team ? 'checked="checked"' : '' }}>
@@ -181,7 +181,7 @@
             </div>
         </div> -->
         <div class="form-group row d-none" id="is_athlete_must_pay">
-            <label class="col-md-3 col-form-label text-right"></label>
+            <label class="col-md-3 col-form-label text-left"></label>
             <div class="col-md-9 col-lg-6">
                 <label class="checkbox">
                     <input type="checkbox" name="is_athlete_pay" >
@@ -193,7 +193,7 @@
         
     </div>
 
-    <div class="modal-footer text-right">
+    <div class="modal-footer text-left">
         <a href="{{ route('event.config.index') }}" class="btn btn-light-primary font-weight-bold">{{trans('display.general_back')}}</a>
         <button type="submit" class="btn btn-primary font-weight-bold">{{trans('display.general_save')}}</button>
     </div>

@@ -178,7 +178,7 @@
                         <table class="table table-separate table-head-custom" id="member-datatable" style="margin-top: 13px !important">
                             <thead>
                             <tr>
-                                <th width="5%">No.</th>
+                                <th width="5%">№</th>
                                 <th width="8%">{{trans('display.profile_photo')}}</th>
                                 <th width="10%">{{trans('display.human_register_number')}}</th>
                                 <th width="10%">{{trans('display.human_lastname')}}</th>
@@ -223,7 +223,7 @@ $(document).ready(function() {
         //deferRender:    true,
         //autoWidth:      true,
         //filter:         false,
-        responsive:     false,
+        responsive:     true,
         dataType: 'json',
         paginationType: "full_numbers",
         ajax: {
@@ -270,7 +270,7 @@ $(document).ready(function() {
             targets: [0,1,7,8,11]
         },{
             class: "text-center",
-            targets: [0, 6, 7, 8, 9, 10]
+            targets: [0]
         }],
         order: [[ 10, "desc" ]],
         dom: "<'top'B><'row'<'col-sm-12'tr>><'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7 dataTables_pager'lp>>",

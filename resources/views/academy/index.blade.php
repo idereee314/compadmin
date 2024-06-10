@@ -141,7 +141,7 @@ $(document).ready(function() {
         deferRender:    true,
         autoWidth:      true,
         filter:         false,
-        responsive:     false,
+        responsive:     true,
         dataType: 'json',
         paginationType: "full_numbers",
         ajax: {
