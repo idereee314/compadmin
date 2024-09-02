@@ -694,6 +694,21 @@ class EventRegistrationController extends Controller
         return view($this->view_path.'.card', $data)->with('pagination', @$pagination);
     }
 
+    public function showPerCard($id)
+    {
+        $eventPage = $this->event->getEventBySportPage(12, $id);
+        $event = json_decode($eventPage, true);
+        
+        $data['view_path'] = $this->view_path;
+        $data['events'] = $event['data'];
+        
+        $pagination = new LengthAwarePaginator($event['data'], @$event['total'], @$event['per_page'], @$event['current_page'], [
+            'path'  => URL::current()
+        ]);
+
+        return view($this->view_path.'.card', $data)->with('pagination', @$pagination);
+    }
+
     public function showSportCard()
     {
         $sport = $this->sport->all()->toArray(); // Convert the object to an array

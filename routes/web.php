@@ -116,6 +116,7 @@ Route::group([
     Route::get('/event/registration/create/award', 'event\EventRegistrationController@createPlace')->name('event.registration.create.award');
     Route::post('/event/registration/take/award', 'event\EventRegistrationController@takePlace')->name('event.registration.take.award');
     Route::get('/event/competition', 'event\EventRegistrationController@showCard')->name('event.competition.card');
+    Route::get('/event/competition/{id}', 'event\EventRegistrationController@showPerCard')->name('event.competition.per.card');
     Route::get('/event/sports', 'event\EventRegistrationController@showSportCard')->name('event.sport.card');
     Route::get('/event/competition/{sportId}', 'event\EventRegistrationController@showCardJiuJitsu')->name('event.jiujitsu.competition.card');
     
