@@ -325,6 +325,40 @@ class EventRegistrationController extends Controller
         }
     }
 
+    public function weight($id)
+    {
+        $eventRegistration = $this->eventRegistration->find($id);
+
+        $academies = $this->academy->all();
+        $eventEntries = $this->eventEntries->getEntryByEventId($eventRegistration->event_id);
+        $configBelts = $this->configBelt->getEntryBeltByEntryId($eventRegistration->entry_id);
+        $configAges = $this->configAge->getEntryAgeByEntryId($eventRegistration->entry_id);
+        $configWeights = $this->configWeight->getEntryWeightByAgeId($eventRegistration->entry_age_id);
+        $weight = abs($this->configWeight->find($eventRegistration->entry_weight_id)->weight);
+        $academyInfo = $this->academy->find($eventRegistration->academy_id);
+        $checkWeight = $this->configWeight->find($eventRegistration->entry_weight_id)->weight;
+        $checkAge = $this->configAge->find($eventRegistration->entry_age_id);
+        $checkBelt = $this->configBelt->find($eventRegistration->entry_belt_id)->name;
+        $checkEntry = $this->eventEntries->find($eventRegistration->entry_id)->name;
+        $countries = $this->country->find($eventRegistration->member->country_id);
+        
+        $data['checkWeight'] = $checkWeight;
+        $data['checkAge'] = $checkAge;
+        $data['checkBelt'] = $checkBelt;
+        $data['checkEntry'] = $checkEntry;
+        $data['countries'] = $countries;
+        $data['weight'] = $weight;
+        $data['eventRegistration'] = $eventRegistration;
+        $data['eventEntries'] = $eventEntries;
+        $data['configBelts'] = $configBelts;
+        $data['configAges'] = $configAges;
+        $data['configWeights'] = $configWeights;
+        $data['academies'] = $academies;
+        $data['academyInfo'] = $academyInfo;
+
+        return view($this->view_path.'.weight', $data);
+    }
+
     /**
      * Update the specified resource in storage.
      *
@@ -1092,6 +1126,58 @@ class EventRegistrationController extends Controller
             return view('event.bracket.print', $data);
         }
     }
+
+    public function bracketEdit($eventId, $entryId, $entryAgeId, $entryBeltId, $entryWeightId)
+    {
+        $input = Input::all();
+        
+        $members = $this->eventRegistration->getBracketGenerationFromEvent($eventId, $entryId, $entryAgeId, $entryBeltId, $entryWeightId);
+        
+        $eventConfig =  $this->eventConfig->findByEventId($eventId);
+        $entry = $this->eventEntries->find($entryId);
+        $age = $this->configAge->find($entryAgeId);
+        $belt = $this->configBelt->find($entryBeltId);
+        $weight = $this->configWeight->find($entryWeightId);
+
+        $total = count($members);
+        
+        $data['total'] = $total;
+        $data['members'] = $members;
+        $data['eventConfig'] = $eventConfig;
+        $data['entry'] = $entry;
+        $data['age'] = $age;
+        $data['belt'] = $belt;
+        $data['weight'] = $weight;
+        $data['eventId'] = $eventId;
+        $data['entryId'] = $entryId;
+        $data['entryAgeId'] = $entryAgeId;
+        $data['entryBeltId'] = $entryBeltId;
+        $data['entryWeightId'] = $entryWeightId;
+
+        if($total > 0)
+        {
+            $data['round'] = intval(log($total, 2)) + 1;
+        }
+
+        return view('event.bracket.edit', $data);
+        
+    }
+
+    public function bracketUpdate($eventId, $entryId, $entryAgeId, $entryBeltId, $entryWeightId)
+    {
+        $input = request()->all();
+        $bracketOrder = json_decode($input['order'], true);  // Decode the new bracket order from JSON
+    
+        // Update the bracket order in the database
+        foreach ($bracketOrder as $position => $memberId) {
+            EventBrackets::where('id', $memberId)
+                ->update(['position' => $position + 1]);
+        }
+    
+        return response()->json(['success' => true, 'message' => 'Bracket updated successfully!']);
+    }
+
+
 
     // jiu jitsu stats START
 

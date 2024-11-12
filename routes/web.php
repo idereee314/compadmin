@@ -42,8 +42,11 @@ Route::get('logout', [LoginController::class, 'doLogout'])->name('system.logout'
 //     return view('welcome');
 // });
 
+//Bracket
 Route::get('/bracket/{eventId}/{entryId}/{entryAgeId}/{entryBeltId}/{entryWeightId}', 'event\EventRegistrationController@bracketShow')->name('event.registration.bracket.show');
 Route::get('/bracket/print/{eventId}/{entryId}/{entryAgeId}/{entryBeltId}/{entryWeightId}', 'event\EventRegistrationController@bracketPrint')->name('event.registration.bracket.print');
+Route::get('/bracket/edit/{eventId}/{entryId}/{entryAgeId}/{entryBeltId}/{entryWeightId}', 'event\EventRegistrationController@bracketEdit')->name('event.registration.bracket.edit');
+Route::post('/bracket/update/{eventId}/{entryId}/{entryAgeId}/{entryBeltId}/{entryWeightId}', 'event\EventRegistrationController@bracketUpdate')->name('event.registration.bracket.update');
 
 Route::group([
     'prefix' => '',
@@ -118,7 +121,9 @@ Route::group([
     Route::get('/event/competition', 'event\EventRegistrationController@showCard')->name('event.competition.card');
     Route::get('/event/competition/{id}', 'event\EventRegistrationController@showPerCard')->name('event.competition.per.card');
     Route::get('/event/sports', 'event\EventRegistrationController@showSportCard')->name('event.sport.card');
-    Route::get('/event/competition/{sportId}', 'event\EventRegistrationController@showCardJiuJitsu')->name('event.jiujitsu.competition.card');
+    Route::get('/event/registration/{id}/weight', 'event\EventRegistrationController@weight')->name('event.registration.weight');
+    
+    // Route::get('/event/competition/{sportId}', 'event\EventRegistrationController@showCardJiuJitsu')->name('event.jiujitsu.competition.card');
     
     Route::get('/event/registration/change/status', 'event\EventRegistrationStatusController@change')->name('event.registration.change.status');
     Route::post('/event/registration/changed/status', 'event\EventRegistrationStatusController@changed')->name('event.registration.changed.status');

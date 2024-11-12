@@ -12,6 +12,7 @@ return [
     /** VERB **/
     "general_create" => "Үүсгэх",
     "general_edit" => "Засварлах",
+    "general_weight_in" => "Жин шалгах",
     "general_manage" => "Удирдах",
     "general_see_all" => "Бүгдийг харах",
     "general_share" => "Хуваалцах",

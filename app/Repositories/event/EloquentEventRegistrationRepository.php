@@ -282,10 +282,13 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 						}
 					}
 					//if($qry->event->due_date > Carbon\Carbon::now()){
+						// $actionHtml .= 	'<a class="btn btn-icon btn-light btn-hover-primary btn-sm mr-3 weight" href="javascript:;" data-registrationid="'.$qry->id.'" title="'.trans('display.general_weight_in').'"><i class="fab fa-cloudscale"></i></a>';
+
 						if((empty($qry->status) || $qry->status == @Config::get('smart.event_registration_status')['created'] || $qry->status == @Config::get('smart.event_registration_status')['canceled']))
 						{
 							$actionHtml .= 	'<a class="btn btn-icon btn-light btn-hover-primary btn-sm mr-3 edit" href="javascript:;" data-registrationid="'.$qry->id.'" title="'.trans('display.general_edit').'"><i class="la la-edit"></i></a>';
 						}
+
 						elseif($qry->is_weight_checked == TRUE)
 						{
 							$actionHtml .= 	'<a class="btn btn-icon btn-light btn-hover-primary btn-sm mr-3 edit" href="javascript:;" data-registrationid="'.$qry->id.'" title="'.trans('display.general_checked_weight').'" style="font-weight: bold;">'.$qry->current_weight.'</a>';
