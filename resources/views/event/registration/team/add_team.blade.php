@@ -32,13 +32,14 @@
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.general_team')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9">
-                <select class="form-control selectpicker" data-live-search="true" name="team_id" id="team_id" data-col-index="5">
+                <!-- <select class="form-control selectpicker" data-live-search="true" name="team_id" id="team_id" data-col-index="5">
                     <option value="">-- {{ trans('display.general_all') }} --</option>
                     @forelse(@$team_list as $teams)
                     <option value="{{ $teams->id }}">{{ $teams->name }}</option>
                     @empty
                     @endforelse
-                </select>
+                </select> -->
+                <input class="form-control" id="team_name" name="team_name" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required')}}"/>
             </div>
         </div>
 

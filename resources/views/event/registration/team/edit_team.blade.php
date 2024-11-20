@@ -19,27 +19,12 @@
                 </select>
             </div>
         </div>
-
-        <!-- <div class="form-group row">
-            <label class="col-md-3 col-form-label text-right">{{trans('display.general_team')}}: <span class="text-danger">*</span></label>
-            <div class="col-md-9 col-lg-8">
-                <select class="form-control selectpicker" data-live-search="true" name="team_id" id="team_id" data-col-index="5">
-                    <option value="">-- {{ trans('display.general_all') }} --</option>
-                    @forelse(@$team_list as $teams)
-                    <option value="{{ $teams->id }}" {{ $eventTeamRegistration->team->id == $teams->id ? 'selected' : ''}} >{{ $teams->name }}</option>
-                    @empty
-                    @endforelse
-                </select>
-            </div>
-        </div> -->
-
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.general_team')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9 col-lg-8">
-                <input class="form-control" id="team_id" name="team_id" value="{{$eventTeamRegistration->team->name}}"/>
+                <input class="form-control" id="team_name" name="team_name" value="{{$eventTeamRegistration->team_name}}"/>
             </div>
         </div>
-
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-right">{{trans('display.comp_entry')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9 col-lg-8">

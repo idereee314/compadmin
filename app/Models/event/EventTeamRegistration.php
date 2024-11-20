@@ -18,7 +18,7 @@ class EventTeamRegistration extends Model
     {
 		return array(
             'event_id' => 'required',
-            'team_id' => 'required',
+            // 'team_id' => 'required',
             'entry_id' => 'required',
             'academy_id' => 'required',
            

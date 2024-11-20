@@ -200,28 +200,23 @@
 </form>
 
 <script>
-$(document).ready(function() {
-    $('#sport_id').selectpicker();
-    $('#eventCategory').selectpicker();
-    $('#eventRankSeason').selectpicker();
-    $('#eventResultType').selectpicker();
+$(document).ready(function () {
+    $('#sport_id, #eventCategory, #eventRankSeason, #eventResultType').selectpicker();
+
     $('#kt_reg_date').daterangepicker({
-        buttonClasses: ' btn',
+        buttonClasses: 'btn',
         applyClass: 'btn-primary',
         cancelClass: 'btn-secondary',
         startDate: '{{ @$eventConfig->reg_start_date ? Carbon\Carbon::parse($eventConfig->reg_start_date)->format('Y-m-d g:i A') : '' }}',
-        endDate: '{{ @$eventConfig->reg_end_date ? Carbon\Carbon::parse(@$eventConfig->reg_end_date)->format('Y-m-d g:i A') : '' }}',
+        endDate: '{{ @$eventConfig->reg_end_date ? Carbon\Carbon::parse($eventConfig->reg_end_date)->format('Y-m-d g:i A') : '' }}',
         timePicker: true,
         timePickerIncrement: 30,
-        locale: {
-            format: 'YYYY-MM-DD hh:mm A'
-        },
-        
-    }, function(start, end, label) {
-        $('#kt_reg_date .form-control').val( start.format('YYYY-MM-DD hh:mm A') + ' / ' + end.format('YYYY-MM-DD hh:mm A'));
+        locale: { format: 'YYYY-MM-DD hh:mm A' },
+    }, function (start, end) {
+        $('#kt_reg_date .form-control').val(`${start.format('YYYY-MM-DD hh:mm A')} / ${end.format('YYYY-MM-DD hh:mm A')}`);
     });
 
-    $('#reg_payment_date').datetimepicker({
+    const dateTimePickerOptions = {
         rtl: KTUtil.isRTL(),
         todayHighlight: true,
         orientation: "bottom left",
@@ -231,88 +226,61 @@ $(document).ready(function() {
             rightArrow: '<i class="la la-angle-left"></i>',
         },
         locale: 'mn',
-    });
+    };
 
-    $('#reg_update_date').datetimepicker({
-        rtl: KTUtil.isRTL(),
-        todayHighlight: true,
-        orientation: "bottom left",
-        format: 'yyyy-MM-D HH:mm',
-        templates: {
-            leftArrow: '<i class="la la-angle-right"></i>',
-            rightArrow: '<i class="la la-angle-left"></i>'
-        },
-        locale: 'mn',
-    });
+    $('#reg_payment_date, #reg_update_date').datetimepicker(dateTimePickerOptions);
 
-    $('#update-event-config-form select[id=org_types]').select2({});
+    $('#update-event-config-form select[id=org_types]').select2();
 
-    $('#is_athlete_limit').on('change', function() {    
-        if(this.checked) {
-            $("#athletes_limit").removeClass('d-none');
-        }
-        else {
-            $("#athletes_limit").addClass('d-none');
-        }
-    });
-    $('#is_athlete_limit').trigger('change');
+    $('#is_athlete_limit').on('change', function () {
+        $("#athletes_limit").toggleClass('d-none', !this.checked);
+    }).trigger('change');
 
-    $('#is_team').on('change', function() {    
-        if(this.checked) {
-            $("#is_athlete_must_pay").removeClass('d-none');
-        }
-        else {
-            $("#is_athlete_must_pay").addClass('d-none');
-        }
-    });
-    $('#is_team').trigger('change');
+    $('#is_team').on('change', function () {
+        $("#is_athlete_must_pay").toggleClass('d-none', !this.checked);
+    }).trigger('change');
 
     $('#update-event-config-form').validate({
         ignore: [],
-        highlight:function(element) {
-            $(element).parents('.form-group').addClass('has-error has-feedback');
+        highlight: function (element) {
+            $(element).closest('.form-group').addClass('has-error');
         },
-        unhighlight: function(element) {
-            $(element).parents('.form-group').removeClass('has-error');
+        unhighlight: function (element) {
+            $(element).closest('.form-group').removeClass('has-error');
         },
-        submitHandler: function(form) {
+        submitHandler: function (form) {
             $.ajax({
                 url: form.action,
                 type: form.method,
                 data: new FormData(form),
-                success: function(response) {
-                    if(response.status == 'success')
-                    {
-                        $(".tab-content").find("div.active").empty();
-                        $("#config_tabs").find("li.active a").trigger('click');
-                        toastr.success(response.msg);
-                    }
-                    else {
-                        toastr.error(response.errors, response.msg, {
-                            "closeButton": true,
-                            "timeOut": "0",
-                            "extendedTimeOut": "0",
-                        });
-                    }
-                    
-                },
-                error: function (xhr, textStatus, error) {
-                    console.log(xhr.statusText);
-                    console.log(textStatus);
-                    console.log(error);
-                },
                 async: false,
                 processData: false,
-                contentType: false
+                contentType: false,
+                success: function (response) {
+                    if (response.status === 'success') {
+                        $(".tab-content .active").empty();
+                        $("#config_tabs .active a").trigger('click');
+                        toastr.success(response.msg);
+                    } else {
+                        toastr.error(response.errors, response.msg, {
+                            closeButton: true,
+                            timeOut: 0,
+                            extendedTimeOut: 0,
+                        });
+                    }
+                },
+                error: function (xhr, textStatus, error) {
+                    console.error(xhr.statusText, textStatus, error);
+                },
             });
         },
-        errorPlacement: function(error, element) {
-            if($(element).parents('.form-group').find(".error-here")){
-                error.appendTo($(element).parents('.form-group').find(".error-here"));
+        errorPlacement: function (error, element) {
+            const errorContainer = $(element).closest('.form-group').find(".error-here");
+            if (errorContainer.length) {
+                error.appendTo(errorContainer);
             } else {
                 error.insertAfter(element);
             }
-        }
+        },
     });
 });
-</script>

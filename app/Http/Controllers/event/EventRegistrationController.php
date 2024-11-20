@@ -88,6 +88,7 @@ class EventRegistrationController extends Controller
             
                 $eventEntries = $event->entries;
                 $eventRegStatusCount = $this->eventRegistration->getEventRegStatusCount($event->id)->pluck('total', 'status')->toArray();
+                
                 $academies = $this->academy->all();
                 $countries = $this->country->all();
                 $eventFees = $this->eventRegistration->getPaymentByEventId(@$input['event_id'])->groupBy('amount');
@@ -323,40 +324,6 @@ class EventRegistrationController extends Controller
                 return view($this->view_path.'.team/edit_team', $data);
             }
         }
-    }
-
-    public function weight($id)
-    {
-        $eventRegistration = $this->eventRegistration->find($id);
-
-        $academies = $this->academy->all();
-        $eventEntries = $this->eventEntries->getEntryByEventId($eventRegistration->event_id);
-        $configBelts = $this->configBelt->getEntryBeltByEntryId($eventRegistration->entry_id);
-        $configAges = $this->configAge->getEntryAgeByEntryId($eventRegistration->entry_id);
-        $configWeights = $this->configWeight->getEntryWeightByAgeId($eventRegistration->entry_age_id);
-        $weight = abs($this->configWeight->find($eventRegistration->entry_weight_id)->weight);
-        $academyInfo = $this->academy->find($eventRegistration->academy_id);
-        $checkWeight = $this->configWeight->find($eventRegistration->entry_weight_id)->weight;
-        $checkAge = $this->configAge->find($eventRegistration->entry_age_id);
-        $checkBelt = $this->configBelt->find($eventRegistration->entry_belt_id)->name;
-        $checkEntry = $this->eventEntries->find($eventRegistration->entry_id)->name;
-        $countries = $this->country->find($eventRegistration->member->country_id);
-        
-        $data['checkWeight'] = $checkWeight;
-        $data['checkAge'] = $checkAge;
-        $data['checkBelt'] = $checkBelt;
-        $data['checkEntry'] = $checkEntry;
-        $data['countries'] = $countries;
-        $data['weight'] = $weight;
-        $data['eventRegistration'] = $eventRegistration;
-        $data['eventEntries'] = $eventEntries;
-        $data['configBelts'] = $configBelts;
-        $data['configAges'] = $configAges;
-        $data['configWeights'] = $configWeights;
-        $data['academies'] = $academies;
-        $data['academyInfo'] = $academyInfo;
-
-        return view($this->view_path.'.weight', $data);
     }
 
     /**
@@ -1504,4 +1471,37 @@ class EventRegistrationController extends Controller
 
     }
 
+    public function weight($id)
+    {
+        $eventRegistration = $this->eventRegistration->find($id);
+
+        $academies = $this->academy->all();
+        $eventEntries = $this->eventEntries->getEntryByEventId($eventRegistration->event_id);
+        $configBelts = $this->configBelt->getEntryBeltByEntryId($eventRegistration->entry_id);
+        $configAges = $this->configAge->getEntryAgeByEntryId($eventRegistration->entry_id);
+        $configWeights = $this->configWeight->getEntryWeightByAgeId($eventRegistration->entry_age_id);
+        $weight = abs($this->configWeight->find($eventRegistration->entry_weight_id)->weight);
+        $academyInfo = $this->academy->find($eventRegistration->academy_id);
+        $checkWeight = $this->configWeight->find($eventRegistration->entry_weight_id)->weight;
+        $checkAge = $this->configAge->find($eventRegistration->entry_age_id);
+        $checkBelt = $this->configBelt->find($eventRegistration->entry_belt_id)->name;
+        $checkEntry = $this->eventEntries->find($eventRegistration->entry_id)->name;
+        $countries = $this->country->find($eventRegistration->member->country_id);
+        
+        $data['checkWeight'] = $checkWeight;
+        $data['checkAge'] = $checkAge;
+        $data['checkBelt'] = $checkBelt;
+        $data['checkEntry'] = $checkEntry;
+        $data['countries'] = $countries;
+        $data['weight'] = $weight;
+        $data['eventRegistration'] = $eventRegistration;
+        $data['eventEntries'] = $eventEntries;
+        $data['configBelts'] = $configBelts;
+        $data['configAges'] = $configAges;
+        $data['configWeights'] = $configWeights;
+        $data['academies'] = $academies;
+        $data['academyInfo'] = $academyInfo;
+
+        return view($this->view_path.'.weight', $data);
+    }
 }

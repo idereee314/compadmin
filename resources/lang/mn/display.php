@@ -382,4 +382,9 @@ return [
 
     //refund
     'general_refund' => 'Буцаалт',
+
+    //Card 
+    'upcoming_event_list' => 'Удахгүй болох тэмцээнүүд',
+    'past_event_list' => 'Болж өнгөрсөн тэмцээнүүд',
+
 ];

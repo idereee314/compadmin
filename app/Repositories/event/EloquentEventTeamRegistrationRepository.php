@@ -41,15 +41,10 @@ class EloquentEventTeamRegistrationRepository implements EventTeamRegistrationRe
 
 		$eventTeamRegistration->event_id = $input['event_id'];
 		$eventTeamRegistration->entry_id = $input['entry_id'];
-		$eventTeamRegistration->team_id = $input['team_id'];
-
-		// $team = $eventTeamRegistration->team;
-		// $team->name = $input['team_id'];
-		// $team->save();
-
+		$eventTeamRegistration->team_id = @$input['team_id'];
+		$eventTeamRegistration->team_name = $input['team_name'];
 		$eventTeamRegistration->academy_id = @$input['academy_id'];
 		$eventTeamRegistration->academy_name = @$input['academy_name'];
-		//$eventTeamRegistration->status = @$input['status'];
 		
 		$eventTeamRegistration->save();
 		return $eventTeamRegistration;
@@ -59,9 +54,9 @@ class EloquentEventTeamRegistrationRepository implements EventTeamRegistrationRe
 	{
 		$eventTeamRegistration = $this->find($id);
 		$eventTeamRegistration->entry_id = $input['entry_id'];
-
 		$team = $eventTeamRegistration->team;
 		$team->name = $input['team_id'];
+		$eventTeamRegistration->team_name = $input['team_name'];
 		$team->save();
 
 		$eventTeamRegistration->academy_id = @$input['academy_id'];
@@ -146,10 +141,10 @@ class EloquentEventTeamRegistrationRepository implements EventTeamRegistrationRe
 					return @$qry->is_weight_checked ? 'table-success' : '';
 				}
 			])
-			->editColumn('team_name', function($qry)
-			{
-				return $qry->team->name;
-			})
+			// ->editColumn('team_name', function($qry)
+			// {
+			// 	return $qry->team->name;
+			// })
 			->editColumn('entry_name', function($qry)
 			{
 				return $qry->entry->name;

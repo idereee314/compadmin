@@ -181,7 +181,7 @@
     </div>
     <!--end::Container-->
 </div>
-<!-- Add this script tag at the end of your HTML body -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
 $(document).ready(function() {
     $("#kt_quick_search_toggle").click(function() {
