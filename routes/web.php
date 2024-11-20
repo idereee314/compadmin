@@ -46,7 +46,7 @@ Route::get('logout', [LoginController::class, 'doLogout'])->name('system.logout'
 Route::get('/bracket/{eventId}/{entryId}/{entryAgeId}/{entryBeltId}/{entryWeightId}', 'event\EventRegistrationController@bracketShow')->name('event.registration.bracket.show');
 Route::get('/bracket/print/{eventId}/{entryId}/{entryAgeId}/{entryBeltId}/{entryWeightId}', 'event\EventRegistrationController@bracketPrint')->name('event.registration.bracket.print');
 Route::get('/bracket/edit/{eventId}/{entryId}/{entryAgeId}/{entryBeltId}/{entryWeightId}', 'event\EventRegistrationController@bracketEdit')->name('event.registration.bracket.edit');
-Route::post('/bracket/update/{eventId}/{entryId}/{entryAgeId}/{entryBeltId}/{entryWeightId}', 'event\EventRegistrationController@bracketUpdate')->name('event.registration.bracket.update');
+Route::post('/bracket/update/{eventId}/{entryId}/{entryAgeId}/{entryBeltId}/{entryWeightId}', 'event\EventRegistrationController@updateBracket')->name('event.registration.bracket.update');
 
 Route::group([
     'prefix' => '',

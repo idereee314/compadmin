@@ -1096,55 +1096,51 @@ class EventRegistrationController extends Controller
 
     public function bracketEdit($eventId, $entryId, $entryAgeId, $entryBeltId, $entryWeightId)
     {
-        $input = Input::all();
-        
         $members = $this->eventRegistration->getBracketGenerationFromEvent($eventId, $entryId, $entryAgeId, $entryBeltId, $entryWeightId);
-        
-        $eventConfig =  $this->eventConfig->findByEventId($eventId);
-        $entry = $this->eventEntries->find($entryId);
-        $age = $this->configAge->find($entryAgeId);
-        $belt = $this->configBelt->find($entryBeltId);
-        $weight = $this->configWeight->find($entryWeightId);
 
-        $total = count($members);
-        
-        $data['total'] = $total;
-        $data['members'] = $members;
-        $data['eventConfig'] = $eventConfig;
-        $data['entry'] = $entry;
-        $data['age'] = $age;
-        $data['belt'] = $belt;
-        $data['weight'] = $weight;
+        $unplacedMembers = collect($members)->filter(function ($member) {
+            return is_null($member->rt) || is_null($member->ro);
+        });
+
+        $mainBracketMembers = collect($members)->filter(function ($member) {
+            return !is_null($member->rt) && !is_null($member->ro);
+        });
+
         $data['eventId'] = $eventId;
         $data['entryId'] = $entryId;
         $data['entryAgeId'] = $entryAgeId;
         $data['entryBeltId'] = $entryBeltId;
         $data['entryWeightId'] = $entryWeightId;
-
-        if($total > 0)
-        {
-            $data['round'] = intval(log($total, 2)) + 1;
-        }
+        $data['unplacedMembers'] = $unplacedMembers;
+        $data['mainBracketMembers'] = $mainBracketMembers;
 
         return view('event.bracket.edit', $data);
-        
     }
 
-    public function bracketUpdate($eventId, $entryId, $entryAgeId, $entryBeltId, $entryWeightId)
+    public function updateBracket(Request $request, $eventId, $entryId, $entryAgeId, $entryBeltId, $entryWeightId)
     {
-        $input = request()->all();
-        $bracketOrder = json_decode($input['order'], true);  // Decode the new bracket order from JSON
+        $validated = $request->validate([
+            'bracket_order' => 'required|json',
+        ]);
     
-        // Update the bracket order in the database
-        foreach ($bracketOrder as $position => $memberId) {
-            EventBrackets::where('id', $memberId)
-                ->update(['position' => $position + 1]);
+        $bracketOrder = json_decode($validated['bracket_order'], true);
+    
+        foreach ($bracketOrder['unplaced'] as $order => $memberId) {
+            DB::table('uq_event_brackets')
+                ->where('event_id', $eventId)
+                ->where('reg_one_id', $memberId)
+                ->update(['entry_id' => null]);
         }
     
-        return response()->json(['success' => true, 'message' => 'Bracket updated successfully!']);
+        foreach ($bracketOrder['mainBracket'] as $order => $memberId) {
+            DB::table('uq_event_brackets')
+                ->where('event_id', $eventId)
+                ->where('reg_one_id', $memberId)
+                ->update(['entry_id' => $order + 1]);
+        }
+    
+        return response()->json(['success' => true]);
     }
-
-
 
     // jiu jitsu stats START
 

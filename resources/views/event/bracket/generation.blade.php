@@ -121,7 +121,7 @@
 	</div>
   	<div style="padding-top:50px">	  
 		<a id="print" class="btn btn-primary font-weight-bold" href="/bracket/print/{{ $eventId }}/{{ $entryId }}/{{ $entryAgeId }}/{{ $entryBeltId }}/{{ $entryWeightId }}" target="_blank">{{trans('display.general_print')}}</a>
-	  	<!-- <a id="edit" class="btn btn-warning font-weight-bold" href="/bracket/edit/{{ $eventId }}/{{ $entryId }}/{{ $entryAgeId }}/{{ $entryBeltId }}/{{ $entryWeightId }}" target="_blank">{{trans('display.general_edit')}}</a> -->
+	  	<a id="edit" class="btn btn-warning font-weight-bold" href="/bracket/edit/{{ $eventId }}/{{ $entryId }}/{{ $entryAgeId }}/{{ $entryBeltId }}/{{ $entryWeightId }}" target="_blank">{{trans('display.general_edit')}}</a>
 	</div>
 </div>
 @stop
