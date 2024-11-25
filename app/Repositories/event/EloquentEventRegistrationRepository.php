@@ -291,7 +291,14 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 
 						elseif($qry->is_weight_checked == TRUE)
 						{
-							$actionHtml .= 	'<a class="btn btn-icon btn-light btn-hover-primary btn-sm mr-3 edit" href="javascript:;" data-registrationid="'.$qry->id.'" title="'.trans('display.general_checked_weight').'" style="font-weight: bold;">'.$qry->current_weight.'</a>';
+							if($qry->current_weight == null)
+							{
+								$actionHtml .= 	'<a class="btn btn-icon btn-light btn-hover-primary btn-sm mr-3 edit" href="javascript:;" data-registrationid="'.$qry->id.'" title="'.trans('display.general_checked_weight').'" style="font-weight: bold;"><i class="fas fa-tachometer-alt"></i></a>';
+							}
+							else
+							{
+								$actionHtml .= 	'<a class="btn btn-icon btn-light btn-hover-primary btn-sm mr-3 edit" href="javascript:;" data-registrationid="'.$qry->id.'" title="'.trans('display.general_checked_weight').'" style="font-weight: bold;">'.$qry->current_weight.'</a>';
+							}
 						}
 						else
 						{
@@ -800,29 +807,77 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 								order by r.academy_id, r.academy_name, r.id");
 	}
  
+	// public function getBracketGenerationFromEvent($eventId, $entryId, $entryAgeId, $entryBeltId, $entryWeightId)
+	// {
+	// 	return DB::select("select ro.id as ro, ro.is_disqualify as is_dq_one, ro.is_weight_checked as is_weight_checked_one, um.firstname as firstname_one, um.lastname as lastname_one, case when ao.is_other = 1 then ro.academy_name else ao.name end as acname_one, 
+	// 							rt.id as rt, rt.is_disqualify as is_dq_two, rt.is_weight_checked as is_weight_checked_two, umt.firstname as firstname_two, umt.lastname as lastname_two, case when aot.is_other = 1 then rt.academy_name else aot.name end as acname_two,
+	// 							rw.id as rw, rw.is_disqualify as is_dq_win, rw.is_weight_checked as is_weight_checked_win, umw.firstname as firstname_win, umw.lastname as lastname_win, case when aow.is_other = 1 then rw.academy_name else aow.name end as acname_win
+	// 							from uq_comp.uq_event_brackets b
+	// 							inner join uq_comp.uq_event_entries e on b.entry_id = e.id 
+	// 							inner join uq_comp.uq_entry_config_age a on b.entry_age_id  = a.id 
+	// 							inner join uq_comp.uq_entry_config_belt be on b.entry_belt_id = be.id 
+	// 							inner join uq_comp.uq_entry_config_weight w on b.entry_weight_id = w.id 
+	// 							left join uq_comp.uq_event_registration ro on b.reg_one_id = ro.id 
+	// 							left join uq_comp.uq_member um on ro.member_id = um.id 
+	// 							left join uq_comp.uq_academy ao on ro.academy_id = ao.id 
+	// 							left join uq_comp.uq_event_registration rt on b.reg_two_id = rt.id 
+	// 							left join uq_comp.uq_member umt on rt.member_id = umt.id 
+	// 							left join uq_comp.uq_academy aot on rt.academy_id = aot.id 
+	// 							left join uq_comp.uq_event_registration rw on b.reg_winner_id = rw.id 
+	// 							left join uq_comp.uq_member umw on rw.member_id = umw.id 
+	// 							left join uq_comp.uq_academy aow on rw.academy_id = aow.id 
+	// 							where b.event_id = ".$eventId."  and b.entry_id = ".$entryId." and b.entry_age_id = ".$entryAgeId."  
+	// 							and b.entry_belt_id = ".$entryBeltId." and b.entry_weight_id = ".$entryWeightId."
+	// 							order by b.id");
+	// }
+
 	public function getBracketGenerationFromEvent($eventId, $entryId, $entryAgeId, $entryBeltId, $entryWeightId)
-	{
-		return DB::select("select ro.id as ro, ro.is_disqualify as is_dq_one, ro.is_weight_checked as is_weight_checked_one, um.firstname as firstname_one, um.lastname as lastname_one, case when ao.is_other = 1 then ro.academy_name else ao.name end as acname_one, 
-								rt.id as rt, rt.is_disqualify as is_dq_two, rt.is_weight_checked as is_weight_checked_two, umt.firstname as firstname_two, umt.lastname as lastname_two, case when aot.is_other = 1 then rt.academy_name else aot.name end as acname_two,
-								rw.id as rw, rw.is_disqualify as is_dq_win, rw.is_weight_checked as is_weight_checked_win, umw.firstname as firstname_win, umw.lastname as lastname_win, case when aow.is_other = 1 then rw.academy_name else aow.name end as acname_win
-								from uq_comp.uq_event_brackets b
-								inner join uq_comp.uq_event_entries e on b.entry_id = e.id 
-								inner join uq_comp.uq_entry_config_age a on b.entry_age_id  = a.id 
-								inner join uq_comp.uq_entry_config_belt be on b.entry_belt_id = be.id 
-								inner join uq_comp.uq_entry_config_weight w on b.entry_weight_id = w.id 
-								left join uq_comp.uq_event_registration ro on b.reg_one_id = ro.id 
-								left join uq_comp.uq_member um on ro.member_id = um.id 
-								left join uq_comp.uq_academy ao on ro.academy_id = ao.id 
-								left join uq_comp.uq_event_registration rt on b.reg_two_id = rt.id 
-								left join uq_comp.uq_member umt on rt.member_id = umt.id 
-								left join uq_comp.uq_academy aot on rt.academy_id = aot.id 
-								left join uq_comp.uq_event_registration rw on b.reg_winner_id = rw.id 
-								left join uq_comp.uq_member umw on rw.member_id = umw.id 
-								left join uq_comp.uq_academy aow on rw.academy_id = aow.id 
-								where b.event_id = ".$eventId."  and b.entry_id = ".$entryId." and b.entry_age_id = ".$entryAgeId."  
-								and b.entry_belt_id = ".$entryBeltId." and b.entry_weight_id = ".$entryWeightId."
-								order by b.id");
-	}
+{
+    $query = "
+        SELECT 
+            ro.id AS ro, ro.is_disqualify AS is_dq_one, ro.is_weight_checked AS is_weight_checked_one,
+            um.firstname AS firstname_one, um.lastname AS lastname_one,
+            CASE WHEN ao.is_other = 1 THEN ro.academy_name ELSE ao.name END AS acname_one,
+            
+            rt.id AS rt, rt.is_disqualify AS is_dq_two, rt.is_weight_checked AS is_weight_checked_two,
+            umt.firstname AS firstname_two, umt.lastname AS lastname_two,
+            CASE WHEN aot.is_other = 1 THEN rt.academy_name ELSE aot.name END AS acname_two,
+            
+            rw.id AS rw, rw.is_disqualify AS is_dq_win, rw.is_weight_checked AS is_weight_checked_win,
+            umw.firstname AS firstname_win, umw.lastname AS lastname_win,
+            CASE WHEN aow.is_other = 1 THEN rw.academy_name ELSE aow.name END AS acname_win
+        FROM uq_comp.uq_event_brackets b
+        INNER JOIN uq_comp.uq_event_entries e ON b.entry_id = e.id
+        INNER JOIN uq_comp.uq_entry_config_age a ON b.entry_age_id = a.id
+        INNER JOIN uq_comp.uq_entry_config_belt be ON b.entry_belt_id = be.id
+        INNER JOIN uq_comp.uq_entry_config_weight w ON b.entry_weight_id = w.id
+        LEFT JOIN uq_comp.uq_event_registration ro ON b.reg_one_id = ro.id
+        LEFT JOIN uq_comp.uq_member um ON ro.member_id = um.id
+        LEFT JOIN uq_comp.uq_academy ao ON ro.academy_id = ao.id
+        LEFT JOIN uq_comp.uq_event_registration rt ON b.reg_two_id = rt.id
+        LEFT JOIN uq_comp.uq_member umt ON rt.member_id = umt.id
+        LEFT JOIN uq_comp.uq_academy aot ON rt.academy_id = aot.id
+        LEFT JOIN uq_comp.uq_event_registration rw ON b.reg_winner_id = rw.id
+        LEFT JOIN uq_comp.uq_member umw ON rw.member_id = umw.id
+        LEFT JOIN uq_comp.uq_academy aow ON rw.academy_id = aow.id
+        WHERE 
+            b.event_id = :eventId AND 
+            b.entry_id = :entryId AND 
+            b.entry_age_id = :entryAgeId AND 
+            b.entry_belt_id = :entryBeltId AND 
+            b.entry_weight_id = :entryWeightId
+        ORDER BY b.id;
+    ";
+
+    return DB::select($query, [
+        'eventId' => $eventId,
+        'entryId' => $entryId,
+        'entryAgeId' => $entryAgeId,
+        'entryBeltId' => $entryBeltId,
+        'entryWeightId' => $entryWeightId
+    ]);
+}
+
 
 	public function getEventConfig($eventId)
 	{

@@ -148,6 +148,7 @@ return array(
 		'highschool' => 'Дунд сургууль',
 		'university' => 'Их, дээд сургууль, коллеж',
 		'mnue' => 'МУБИС',
+		'team' => 'Багийн тэмцээн',
 	],
 
 	'event_award' => [

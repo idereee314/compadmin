@@ -102,11 +102,11 @@
                                             <!--begin: Search Form-->
                                             <form class="mb-10" id="event-config-search-form" method="POST">
                                                 <div class="row mb-6">                                                
-                                                    <div class="col-lg-2 mb-lg-0 mb-6">
+                                                    <div class="col-lg-6 mb-lg-0 mb-6">
                                                         <label>{{ trans('display.comp_title') }}:</label>
                                                         <input type="text" class="form-control datatable-input" name="search_event" id="search_event" data-col-index="8"/>
                                                     </div>
-                                                    <div class="col-lg-3 mb-lg-0 mb-6">
+                                                    <div class="col-lg-6 mb-lg-0 mb-6">
                                                         <label>{{ trans('display.general_date') }}:</label>
                                                         <div class="input-daterange input-group" id="kt_datepicker">
                                                             <input type="text" class="form-control datatable-input" name="search_date[]" id="start" placeholder="From" data-col-index="7" />
@@ -142,24 +142,26 @@
                             </div>
                             <!--end::Accordion-->
                         </div>
-                        <!--begin: Datatable-->
-                        <table class="table table-separate table-head-custom" id="event-config-datatable">
-                            <thead>
-                            <tr>
-                                <th width="5%">№</th>
-                                <th width="25%">{{trans('display.general_name')}}</th>
-                                <th width="10%">{{trans('display.reg_start_date')}}</th>
-                                <th width="10%">{{trans('display.reg_end_date')}}</th>
-                                <th width="5%">{{trans('display.general_type')}}</th>
-                                <th width="5%">{{trans('display.comp_entry_belt')}}</th>
-                                <th width="5%">{{trans('display.comp_entry_age')}}</th>
-                                <th width="5%">{{trans('display.comp_entry_weight')}}</th>                                
-                                <th width="13%">{{trans('display.general_created_at')}}</th>
-                                <th width="12%">{{trans('display.general_manage')}}</th>
-                            </tr>
-                            </thead>
-                        </table>
-                        <!--end: Datatable-->
+                        <div class="table-responsive">
+                            <!--begin: Datatable-->
+                            <table class="table table-separate table-head-custom" id="event-config-datatable">
+                                <thead>
+                                <tr>
+                                    <th width="5%">№</th>
+                                    <th width="25%">{{trans('display.general_name')}}</th>
+                                    <th width="10%">{{trans('display.reg_start_date')}}</th>
+                                    <th width="10%">{{trans('display.reg_end_date')}}</th>
+                                    <th width="5%">{{trans('display.general_type')}}</th>
+                                    <th width="5%">{{trans('display.comp_entry_belt')}}</th>
+                                    <th width="5%">{{trans('display.comp_entry_age')}}</th>
+                                    <th width="5%">{{trans('display.comp_entry_weight')}}</th>                                
+                                    <th width="13%">{{trans('display.general_created_at')}}</th>
+                                    <th width="12%">{{trans('display.general_manage')}}</th>
+                                </tr>
+                                </thead>
+                            </table>
+                            <!--end: Datatable-->
+                        </div>
                     </div>
                 </div>
                 <!--end::Card-->
@@ -524,11 +526,11 @@ function showCopyModal(data){
                     type: form.method,
                     data: new FormData(form),
                     success: function(response) {
-                        var page = eventConfigTable.page.info().page;
                         if(response.status == 'success')
                         {
+                            $('#eventConfigModal').find("#close").trigger('click');
                             toastr.success(response.msg);
-                            eventConfigTable.page(page).draw('page');
+                            eventConfigTable.draw();
                         }
                         else {
                             toastr.error(response.errors, response.msg, {

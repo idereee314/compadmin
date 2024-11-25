@@ -423,7 +423,7 @@
 <script src="{{asset('assets/js/plugins/custom/datatables/datatables.bundle.js')}}"></script>
 <script>
 $(document).ready(function() {
-    var eventTable = $("#event-registration-datatable").DataTable({
+        eventTable = $("#event-registration-datatable").DataTable({
         processing: false,
         serverSide: true,
         autoWidth: true,
@@ -497,7 +497,7 @@ $(document).ready(function() {
             targets: [0,1,9]
         },{
             class: "text-center",
-            targets: [0,9]
+            targets: [0]
         }],
         order: [[ 8, "desc" ]],
         dom: "<'row'<'col-sm-8 text-left'B><'col-sm-6 text-right'<'#colvis'>>><'row'<'col-sm-12'tr>><'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7 dataTables_pager'lp>>",
