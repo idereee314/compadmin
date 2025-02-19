@@ -500,7 +500,7 @@
                                                                         <div class="card card-custom gutter-b">
                                                                             <div class="card-header">
                                                                                 <div class="card-title text-center">
-                                                                                    <h3 class="card-label"><strong>{{ $categoryName }} | {{ $genderCode }} | ({{$startage}}-{{$end_age}}) | {{ $bus }} | {{ $weight }}</strong></h3>
+                                                                                    <h3 class="card-label"><strong>{{ $categoryName }} | {{Config::get("enums.gender_code")[$genderCode]}} | ({{$startage}}-{{$end_age}}) | {{ $bus }} | {{ $weight }}</strong></h3>
                                                                                 </div>
                                                                             </div>
                                                                             <div class="card-body">
