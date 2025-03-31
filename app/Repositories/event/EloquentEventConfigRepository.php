@@ -290,7 +290,7 @@ class EloquentEventConfigRepository implements EventConfigRepository {
 	        ->join('uq_comp.uq_event_config as co', 'co.event_id', '=', 'r.event_id')
 	        ->join('uq_comp.uq_event_award as aw', 'aw.event_registration_id', '=', 'r.id')
 	        ->join('uq_comp.uq_event_entries as uee', 'r.entry_id', '=', 'uee.id')
-	        ->leftJoin('uniqdb.uq_comp.uq_country as uc', 'uc.id', '=', 'um.country_id')
+	        ->leftJoin('uq_comp.uq_country as uc', 'uc.id', '=', 'um.country_id')
 	        ->whereRaw("extract(year from re.event_date) = '2024'")
 	        ->where('um.gender_code', '=', $gender)
 	        ->where('uee.rank_code', '=', $category)

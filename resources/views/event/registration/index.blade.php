@@ -307,6 +307,17 @@
                                                 </div>
 
                                                 <div class="col-lg-2 mb-lg-0 mb-6">
+                                                    <label>Шагнал авсан эсэх:</label>
+                                                    <select class="form-control selectpicker datatable-input" name="is_award" id="is_award" data-col-index="9">
+                                                        <option value="">-- {{ trans('display.general_all') }} --</option>
+                                                        @forelse(@Config::get('enums.boolean_type') as $key => $type)
+                                                        <option value="{{ $key }}">{{ $type }}</option>
+                                                        @empty
+                                                        @endforelse
+                                                    </select>
+                                                </div>
+
+                                                <div class="col-lg-2 mb-lg-0 mb-6">
                                                     <label>{{ trans('display.general_status') }}:</label>
                                                     <select class="form-control selectpicker datatable-input" name="search_status" id="search_status" data-col-index="10">
                                                         <option value="">-- {{ trans('display.general_all') }} --</option>
@@ -388,15 +399,17 @@
                             <thead>
                                 <tr>
                                     <th width="5%">No.</th>
-                                    <th width="30%">{{trans('display.comp_member')}}</th>
+                                    <th width="20%">{{trans('display.comp_member')}}</th>
                                     <th width="10%">{{trans('display.comp_entry')}}</th>
                                     <th width="5%">{{trans('display.comp_entry_age')}}</th>
+                                    <th width="8%">{{trans('display.human_gender_code')}}</th>
                                     <th width="8%">{{trans('display.comp_entry_belt')}}</th>
                                     <th width="5%">{{trans('display.comp_entry_weight')}}</th>
-                                    <th width="15%">{{trans('display.comp_academy')}}</th>
+                                    <th width="10%">{{trans('display.comp_academy')}}</th>
                                     <th width="1%">{{trans('display.general_status')}}</th>
+                                    <th width="1%">{{trans('display.comp_place_number')}}</th>
                                     <th width="8%">{{trans('display.general_created_at')}}</th>
-                                    <th width="25%">{{trans('display.general_manage')}}</th>
+                                    <th width="15%">{{trans('display.general_manage')}}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -455,6 +468,7 @@ $(document).ready(function() {
                 d.countEntryWeight = $('#event-registration-search-form input[id="search_memberCount"]').val();   
                 d.country = $('#event-registration-search-form select[id="search_country"]').val();
                 d.date = dateArr;
+                d.is_award = $('#event-registration-search-form select[id="is_award"]').val();
             },
         },
         columns: [
@@ -467,6 +481,7 @@ $(document).ready(function() {
             },
             {data: 'member', "defaultContent": ""},
             {data: 'entry.name', "defaultContent": ""},
+            {data: 'gender', "defaultContent": ""},
             {
                 data: 'age',
                 render: function (data, type, row, meta) {
@@ -487,6 +502,7 @@ $(document).ready(function() {
             {data: 'weight.weight', "defaultContent": ""},
             {data: 'academy_name'},
             {data: 'status', "defaultContent": ""},
+            {data: 'award', "defaultContent": ""},
             {data: 'created_at'},
             {data: 'action'},
         ],
@@ -499,7 +515,7 @@ $(document).ready(function() {
             class: "text-center",
             targets: [0]
         }],
-        order: [[ 8, "desc" ]],
+        order: [[ 10, "desc" ]],
         dom: "<'row'<'col-sm-8 text-left'B><'col-sm-6 text-right'<'#colvis'>>><'row'<'col-sm-12'tr>><'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7 dataTables_pager'lp>>",
         buttons: [
             {
@@ -526,7 +542,7 @@ $(document).ready(function() {
                     $('c[r=A1] t', sheet).text( 'Тэмцээнд оролцогчид' );
                 },
                 exportOptions: {
-                    columns: [ 0,1,2,3,4,5,6,7,8],
+                    columns: [ 0,1,2,3,4,5,6,7,8,9,10],
                     modifier: {
                         order: 'current',
                         page: 'all',
@@ -534,7 +550,7 @@ $(document).ready(function() {
                         selected: undefined
                     }
                 }
-            },            
+            },
         ]
 	});
 

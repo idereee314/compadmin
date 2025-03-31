@@ -126,6 +126,13 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 					});				
 				}
 
+				if($searchData->has('award') && $searchData->get('award') !== null)
+				{
+					$qry->whereHas('award', function($q) use($searchData){
+						$q->where('place_number', $searchData->get('award'));
+					});				
+				}
+
 				if($searchData->has('is_weight') && $searchData->get('is_weight') !== null)
                 {
 					$qry->where('is_weight_checked', $searchData->get('is_weight'));			
@@ -260,6 +267,15 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 			{
 				return $qry->created_at;
 			})
+			->addColumn('award', function($qry){
+				if(@$qry->award)
+				{
+					return '<span class="label label-primary mr-2">'.@$qry->award->place_number.'</span>';
+				}
+			})
+			->addColumn('gender', function($qry){
+				return Config::get('enums.gender_code')[$qry->member->gender_code];
+			})
             ->addColumn('action', function ($qry) {
 				$permissionEdit = SecurityHelper::checkPermission(@Config::get('permission.event_registration'), Config::get('permission.editable'));
 				$actionHtml = "";
@@ -313,7 +329,7 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 					return $actionHtml;
 				}
 
-            })->rawColumns(['action', 'status', 'member', 'id_photo', 'event', 'academy_name'])
+            })->rawColumns(['action', 'status', 'member', 'id_photo', 'event', 'academy_name', 'award', 'gender'])
             ->make(true);
 
 			$jsonData = json_decode($data->content());
@@ -569,7 +585,7 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 	{
 		return DB::select("select um.gender_code , count(um.gender_code) as gender_count
         						from uq_comp.uq_event_registration uer	
-								left join uniqdb.uq_comp.uq_member um on um.id = uer.member_id 	
+								left join uq_comp.uq_member um on um.id = uer.member_id 	
         						where uer.event_id = $eventId and uer.status = 'approved'
         						group by uer.event_id, um.gender_code");
 	}
@@ -578,7 +594,7 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 	{
 		return DB::select("select um.gender_code , count(um.gender_code) as gender_count
         						from uq_comp.uq_event_registration uer	
-								left join uniqdb.uq_comp.uq_member um on um.id = uer.member_id 	
+								left join uq_comp.uq_member um on um.id = uer.member_id 	
         						where uer.event_id = $eventId
         						group by uer.event_id, um.gender_code");
 	}
@@ -699,13 +715,13 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 		return DB::select("select CONCAT(um.lastname, ' ',um.firstname) AS fullname, uea.place_number, uee.name as category_name, uecw.weight, 
 		ua.name as academy_name , uecb.name as bus, uer.academy_name as busad, ueca.start_age , ueca.end_age, ueca.id as ageId, um.profile_url, um.id AS memberid , uee.gender_code , um.gender_code
 			FROM uq_comp.uq_event_award uea
-			LEFT JOIN uniqdb.uq_comp.uq_event_registration uer ON uer.id = uea.event_registration_id 
-			LEFT JOIN uniqdb.uq_comp.uq_academy ua ON ua.id = uer.academy_id 
-			LEFT JOIN uniqdb.uq_comp.uq_member um ON um.id = uer.member_id  
-			LEFT JOIN uniqdb.uq_comp.uq_event_entries uee ON uee.id = uer.entry_id  
-			LEFT JOIN uniqdb.uq_comp.uq_entry_config_weight uecw ON uecw.id = uer.entry_weight_id 
-			LEFT JOIN uniqdb.uq_comp.uq_entry_config_belt uecb  ON uecb.id = uer.entry_belt_id 
-			LEFT JOIN uniqdb.uq_comp.uq_entry_config_age ueca ON ueca.id = uer.entry_age_id 
+			LEFT JOIN uq_comp.uq_event_registration uer ON uer.id = uea.event_registration_id 
+			LEFT JOIN uq_comp.uq_academy ua ON ua.id = uer.academy_id 
+			LEFT JOIN uq_comp.uq_member um ON um.id = uer.member_id  
+			LEFT JOIN uq_comp.uq_event_entries uee ON uee.id = uer.entry_id  
+			LEFT JOIN uq_comp.uq_entry_config_weight uecw ON uecw.id = uer.entry_weight_id 
+			LEFT JOIN uq_comp.uq_entry_config_belt uecb  ON uecb.id = uer.entry_belt_id 
+			LEFT JOIN uq_comp.uq_entry_config_age ueca ON ueca.id = uer.entry_age_id 
 			WHERE uer.event_id = $eventId and uee.gender_code = um.gender_code
 			GROUP BY uee.name, ua.name, fullname, uea.place_number, uecw.weight, uee.id, ua.name, bus, uer.academy_name, ueca.id, um.profile_url, memberid , uee.gender_code,um.gender_code
 			ORDER BY uee.id desc, ueca.id desc, bus , uecw.weight desc, uea.place_number asc");
@@ -727,7 +743,7 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
        		SUM(CASE WHEN uea.place_number = 2 THEN 1 ELSE 0 END) AS silver,
        		SUM(CASE WHEN uea.place_number = 3 THEN 1 ELSE 0 END) AS bronze
 			FROM uq_comp.uq_event_award uea
-			LEFT JOIN uniqdb.uq_comp.uq_event_registration uer ON uer.id = uea.event_registration_id 			
+			LEFT JOIN uq_comp.uq_event_registration uer ON uer.id = uea.event_registration_id 			
 			WHERE uer.event_id = $eventId");
 	}
 

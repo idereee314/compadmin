@@ -151,7 +151,7 @@ class EloquentMemberRepository implements MemberRepository {
 				return "";
 			})
 			->editColumn('connect_user', function ($qry) {
-				$permissionEdit = SecurityHelper::checkPermission(@Config::get('permission.member'), Config::get('permission.editable'));
+				$permissionEdit = SecurityHelper::checkPermission(@Config::get('permission.member'), Config::get('permission.visit'));
 				if($permissionEdit)
 				{
 					return '<button type="button" onclick="connectUser('.$qry->id.')" class="btn btn-outline-secondary">Холбох</button>';
@@ -233,17 +233,17 @@ class EloquentMemberRepository implements MemberRepository {
 	public function getMemberToProfileApprovedData($memberId)
 	{
 		return DB::select("select um.country_id, uc.name as countryname, uer.event_id, re.name as event_name, uer.member_id, ua.name as academy_name, um.lastname, um.firstname, uecb.name as belt, 
-		uee.name as entries, uer.status, re.event_date, ueca.start_age , ueca.end_age, uea.place_number, uec.sport_id from uniqdb.uq_comp.uq_event_registration uer 
-			left join uniqdb.rt_listing.rti_event re on re.id = uer.event_id
-			left join uniqdb.uq_comp.uq_member um on um.id = uer.member_id 
-			left join uniqdb.uq_comp.uq_country uc on uc.id = um.country_id
-			left join uniqdb.uq_comp.uq_entry_config_belt uecb on uecb.id = uer.entry_belt_id 
-			left join uniqdb.uq_comp.uq_entry_config_age ueca on ueca.id = uer.entry_age_id 
-			left join uniqdb.uq_comp.uq_event_entries uee on uee.id = uer.entry_id
-			left join uniqdb.uq_comp.uq_entry_config_weight uecw on uecw.id = uer.entry_weight_id 
-			left join uniqdb.uq_comp.uq_event_award uea on uea.event_registration_id = uer.id
-			left join uniqdb.uq_comp.uq_academy ua on  ua.id = uer.academy_id 
-			left join uniqdb.uq_comp.uq_event_config uec on uec.event_id = uer.event_id 
+		uee.name as entries, uer.status, re.event_date, ueca.start_age , ueca.end_age, uea.place_number, uec.sport_id from uq_comp.uq_event_registration uer 
+			left join rt_listing.rti_event re on re.id = uer.event_id
+			left join uq_comp.uq_member um on um.id = uer.member_id 
+			left join uq_comp.uq_country uc on uc.id = um.country_id
+			left join uq_comp.uq_entry_config_belt uecb on uecb.id = uer.entry_belt_id 
+			left join uq_comp.uq_entry_config_age ueca on ueca.id = uer.entry_age_id 
+			left join uq_comp.uq_event_entries uee on uee.id = uer.entry_id
+			left join uq_comp.uq_entry_config_weight uecw on uecw.id = uer.entry_weight_id 
+			left join uq_comp.uq_event_award uea on uea.event_registration_id = uer.id
+			left join uq_comp.uq_academy ua on  ua.id = uer.academy_id 
+			left join uq_comp.uq_event_config uec on uec.event_id = uer.event_id 
 			where um.id = $memberId and uer.status = 'approved' and uer.is_weight_checked = TRUE and uec.is_active = TRUE
 			group by uer.event_id, re.name, um.firstname, uer.member_id, um.lastname, uecb.name, uee.name, uer.status, 
 			ua.name, re.event_date, ueca.start_age , ueca.end_age, uea.place_number, uec.sport_id, um.country_id, uc.name
@@ -254,17 +254,17 @@ class EloquentMemberRepository implements MemberRepository {
 	public function getMemberToProfileAllData($memberId)
 	{
 		return DB::select("select um.country_id, uc.name as countryname, uer.event_id, re.name as event_name, uer.member_id, ua.name as academy_name, um.lastname, um.firstname, uecb.name as belt, 
-		uee.name as entries, uer.status, re.event_date, ueca.start_age , ueca.end_age, uea.place_number, uec.sport_id from uniqdb.uq_comp.uq_event_registration uer 
-			left join uniqdb.rt_listing.rti_event re on re.id = uer.event_id
-			left join uniqdb.uq_comp.uq_member um on um.id = uer.member_id 
-			left join uniqdb.uq_comp.uq_country uc on uc.id = um.country_id
-			left join uniqdb.uq_comp.uq_entry_config_belt uecb on uecb.id = uer.entry_belt_id 
-			left join uniqdb.uq_comp.uq_entry_config_age ueca on ueca.id = uer.entry_age_id 
-			left join uniqdb.uq_comp.uq_event_entries uee on uee.id = uer.entry_id
-			left join uniqdb.uq_comp.uq_entry_config_weight uecw on uecw.id = uer.entry_weight_id 
-			left join uniqdb.uq_comp.uq_event_award uea on uea.event_registration_id = uer.id
-			left join uniqdb.uq_comp.uq_academy ua on  ua.id = uer.academy_id 
-			left join uniqdb.uq_comp.uq_event_config uec on uec.event_id = uer.event_id 
+		uee.name as entries, uer.status, re.event_date, ueca.start_age , ueca.end_age, uea.place_number, uec.sport_id from uq_comp.uq_event_registration uer 
+			left join rt_listing.rti_event re on re.id = uer.event_id
+			left join uq_comp.uq_member um on um.id = uer.member_id 
+			left join uq_comp.uq_country uc on uc.id = um.country_id
+			left join uq_comp.uq_entry_config_belt uecb on uecb.id = uer.entry_belt_id 
+			left join uq_comp.uq_entry_config_age ueca on ueca.id = uer.entry_age_id 
+			left join uq_comp.uq_event_entries uee on uee.id = uer.entry_id
+			left join uq_comp.uq_entry_config_weight uecw on uecw.id = uer.entry_weight_id 
+			left join uq_comp.uq_event_award uea on uea.event_registration_id = uer.id
+			left join uq_comp.uq_academy ua on  ua.id = uer.academy_id 
+			left join uq_comp.uq_event_config uec on uec.event_id = uer.event_id 
 			where um.id = $memberId and uec.is_active = TRUE
 			group by uer.event_id, re.name, um.firstname, uer.member_id, um.lastname, uecb.name, uee.name, uer.status, ua.name, re.event_date, 
 			ueca.start_age , ueca.end_age, uea.place_number, uec.sport_id, um.country_id, uc.name
@@ -276,13 +276,13 @@ class EloquentMemberRepository implements MemberRepository {
 	{
 		return DB::select("select uec.event_id, uec.is_active , uec.sport_id , uec.is_team , uec.reg_start_date , uec.reg_end_date , re.name as event_name , 
 		re.event_date , re.description as event_description , rel.object_location_id ,rol.object_name, rep.picture_type_id, rep.url, rel.object_location_id, 
-		ro.name as org_name from uniqdb.uq_comp.uq_event_config uec 
-			left join uniqdb.rt_listing.rti_event re on re.id = uec.event_id 
-			left join uniqdb.rt_listing.rti_event_location rel on rel.event_id = uec.event_id 
-			left join uniqdb.rt_listing.rti_object_location rol on rol.id = rel.object_location_id 
-			left join uniqdb.rt_listing.rti_event_picture rep on rep.event_id = re.id 
-			left join uniqdb.rt_listing.rti_organization_event roe on roe.event_id = uec.event_id 
-			left join uniqdb.rt_listing.rti_organization ro on ro.id = roe.organization_id 
+		ro.name as org_name from uq_comp.uq_event_config uec 
+			left join rt_listing.rti_event re on re.id = uec.event_id 
+			left join rt_listing.rti_event_location rel on rel.event_id = uec.event_id 
+			left join rt_listing.rti_object_location rol on rol.id = rel.object_location_id 
+			left join rt_listing.rti_event_picture rep on rep.event_id = re.id 
+			left join rt_listing.rti_organization_event roe on roe.event_id = uec.event_id 
+			left join rt_listing.rti_organization ro on ro.id = roe.organization_id 
 			where uec.sport_id = 1 and re.event_date > now() and rep.picture_type_id = 15 and uec.is_active = TRUE
 			group by uec.event_id, uec.is_active , uec.sport_id , uec.is_team , uec.reg_start_date , uec.reg_end_date , re.name , 
 			re.event_date , re.description , rel.object_location_id ,rol.object_name,rep.picture_type_id, rep.url, rel.object_location_id, ro.name
@@ -292,12 +292,12 @@ class EloquentMemberRepository implements MemberRepository {
 	public function getPastJiuJitsuEvent()
 	{
 		return DB::select("select uec.event_id, uec.is_active , uec.sport_id , uec.is_team , uec.reg_start_date , uec.reg_end_date , re.name as event_name , 
-		re.event_date , re.description as event_description , rel.object_location_id ,rol.object_name, ro.name as org_name from uniqdb.uq_comp.uq_event_config uec 
-			left join uniqdb.rt_listing.rti_event re on re.id = uec.event_id 
-			left join uniqdb.rt_listing.rti_event_location rel on rel.event_id = uec.event_id 
-			left join uniqdb.rt_listing.rti_object_location rol on rol.id = rel.object_location_id 
-			left join uniqdb.rt_listing.rti_organization_event roe on roe.event_id = uec.event_id 
-			left join uniqdb.rt_listing.rti_organization ro on ro.id = roe.organization_id 
+		re.event_date , re.description as event_description , rel.object_location_id ,rol.object_name, ro.name as org_name from uq_comp.uq_event_config uec 
+			left join rt_listing.rti_event re on re.id = uec.event_id 
+			left join rt_listing.rti_event_location rel on rel.event_id = uec.event_id 
+			left join rt_listing.rti_object_location rol on rol.id = rel.object_location_id 
+			left join rt_listing.rti_organization_event roe on roe.event_id = uec.event_id 
+			left join rt_listing.rti_organization ro on ro.id = roe.organization_id 
 			where uec.sport_id = 1 and re.event_date < now() and uec.is_active = TRUE
 			group by uec.event_id, uec.is_active , uec.sport_id , uec.is_team , uec.reg_start_date , uec.reg_end_date , re.name , re.event_date , re.description , rel.object_location_id ,rol.object_name, ro.name
 			order by re.event_date desc
@@ -306,27 +306,27 @@ class EloquentMemberRepository implements MemberRepository {
 	
 	public function getAthleteAcademyInfo($memberId)
 	{
-		return DB::select("select ua.name, uer.academy_name from uniqdb.uq_comp.uq_event_registration uer 
-				join uniqdb.uq_comp.uq_member um on um.id = uer.member_id 
-				join uniqdb.uq_comp.uq_academy ua on ua.id = uer.academy_id 
+		return DB::select("select ua.name, uer.academy_name from uq_comp.uq_event_registration uer 
+				join uq_comp.uq_member um on um.id = uer.member_id 
+				join uq_comp.uq_academy ua on ua.id = uer.academy_id 
 				where um.id = $memberId and ua.type = 'academy' and uer.status = 'approved'
 				group by ua.name, uer.academy_name");
 	}
 
 	public function getAthleteSchoolInfo($memberId)
 	{
-		return DB::select("select ua.name , uer.academy_name from uniqdb.uq_comp.uq_event_registration uer 
-				join uniqdb.uq_comp.uq_member um on um.id = uer.member_id 
-				join uniqdb.uq_comp.uq_academy ua on ua.id = uer.academy_id 
+		return DB::select("select ua.name , uer.academy_name from uq_comp.uq_event_registration uer 
+				join uq_comp.uq_member um on um.id = uer.member_id 
+				join uq_comp.uq_academy ua on ua.id = uer.academy_id 
 				where um.id = $memberId and ua.type = 'highschool' and uer.status = 'approved'
 				group by ua.name, uer.academy_name");
 	}
 	
 	public function getAthleteUniversityInfo($memberId)
 	{
-		return DB::select("select ua.name, uer.academy_name from uniqdb.uq_comp.uq_event_registration uer 
-				join uniqdb.uq_comp.uq_member um on um.id = uer.member_id 
-				join uniqdb.uq_comp.uq_academy ua on ua.id = uer.academy_id 
+		return DB::select("select ua.name, uer.academy_name from uq_comp.uq_event_registration uer 
+				join uq_comp.uq_member um on um.id = uer.member_id 
+				join uq_comp.uq_academy ua on ua.id = uer.academy_id 
 				where um.id = $memberId and ua.type = 'university'
 				group by ua.name, uer.academy_name");
 	}
