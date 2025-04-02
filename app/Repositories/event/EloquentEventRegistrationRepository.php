@@ -125,12 +125,13 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 						$q->where('gender_code', $searchData->get('gender'));
 					});				
 				}
-
-				if($searchData->has('award') && $searchData->get('award') !== null)
-				{
-					$qry->whereHas('award', function($q) use($searchData){
-						$q->where('place_number', $searchData->get('award'));
-					});				
+ 
+				if ($searchData->has('is_award') && $searchData->get('is_award') !== null) {
+					if ($searchData->get('is_award')) {
+						$qry->whereHas('award');
+					} else {
+						$qry->whereDoesntHave('award');
+					}
 				}
 
 				if($searchData->has('is_weight') && $searchData->get('is_weight') !== null)
