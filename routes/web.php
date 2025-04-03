@@ -189,6 +189,11 @@ Route::get('/event/{eventId}/bracket/show', 'event\EventRegistrationController@s
 //result
 Route::get('/event/{eventId}/results', 'event\EventRegistrationController@results')->name('event.results');
 Route::get('/event/{eventId}/toplist', 'event\EventRegistrationController@toplist')->name('event.toplist');
+Route::get('/event/{eventId}/toplist/print', 'event\EventRegistrationController@toplistPrint')->name('event.toplist.print');
+Route::get('/event/{eventId}/results/print', 'event\EventRegistrationController@resultsPrint')->name('event.results.print');
+
+Route::get('/event/{eventId}/results/medal/given', 'reference\EventEntryWeightController@resultsMedalGiven')->name('event.results.medal.given');
+Route::post('/event/{eventId}/results/medal/given', 'reference\EventEntryWeightController@resultsMedalGivenStore')->name('event.results.medal.given.store');
 
 //profile
 Route::get('/profile/{member}','member\MemberController@profile')->name('member.profile');

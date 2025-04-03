@@ -646,14 +646,26 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 
 	public function getRegistredWeightForOrgApproved($eventId)
 	{
-		return DB::select("select uee.id as entry_id ,uee.name as category_name, uecw.weight ,uecb.name as belt_name, count(uer.member_id) as athlete_count,
-		uee.gender_code from uq_comp.uq_event_registration uer
-		join uq_comp.uq_event_entries uee ON uee.id = uer.entry_id
-		join uq_comp.uq_entry_config_weight uecw on uecw.id = uer.entry_weight_id 
-		join uq_comp.uq_entry_config_belt uecb on uecb.id = uer.entry_belt_id 
-		where uer.event_id = $eventId and uer.status = 'approved'
-		GROUP by uee.id ,uee.name , uecw.weight ,uecb.name,uee.gender_code ");
+	    return DB::select("
+		    SELECT
+		        uee.id as entry_id,
+		        uee.name as category_name,
+		        uecw.id as weight_id,
+		        uecw.weight,
+		        uecb.id as belt_id,
+		        uecb.name as belt_name,
+		        COUNT(uer.member_id) as athlete_count,
+		        uee.gender_code , ueca.start_age , ueca.end_age, ueca.id as ageId
+		    FROM uq_comp.uq_event_registration uer
+		    JOIN uq_comp.uq_event_entries uee ON uee.id = uer.entry_id
+		    JOIN uq_comp.uq_entry_config_weight uecw ON uecw.id = uer.entry_weight_id
+		    JOIN uq_comp.uq_entry_config_belt uecb ON uecb.id = uer.entry_belt_id
+			LEFT JOIN uq_comp.uq_entry_config_age ueca ON ueca.id = uer.entry_age_id 
+		    WHERE uer.event_id = $eventId AND uer.status = 'approved'
+		    GROUP BY uee.id, uee.name, uecw.id, uecw.weight, uecb.id, uecb.name, uee.gender_code, ueca.start_age , ueca.end_age, ueca.id
+		");
 	}
+
 
 	public function getRegistredCountedWeightForOrgApproved($eventId)
 	{
@@ -713,8 +725,8 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 
 	public function getResultFromEvent($eventId)
 	{
-		return DB::select("select CONCAT(um.lastname, ' ',um.firstname) AS fullname, uea.place_number, uee.name as category_name, uecw.weight, 
-		ua.name as academy_name , uecb.name as bus, uer.academy_name as busad, ueca.start_age , ueca.end_age, ueca.id as ageId, um.profile_url, um.id AS memberid , uee.gender_code , um.gender_code
+		return DB::select("select CONCAT(um.lastname, ' ',um.firstname) AS fullname, uea.place_number, uee.name as category_name, uee.id as category_id, uecw.weight, uecw.id as weight_id,
+		ua.name as academy_name , ua.id as academy_id , uecb.name as bus, uecb.id as belt_id, uer.academy_name as busad, ueca.start_age , ueca.end_age, ueca.id as ageId, um.profile_url, um.id AS memberid , uee.gender_code , um.gender_code, uecw.medal_given
 			FROM uq_comp.uq_event_award uea
 			LEFT JOIN uq_comp.uq_event_registration uer ON uer.id = uea.event_registration_id 
 			LEFT JOIN uq_comp.uq_academy ua ON ua.id = uer.academy_id 
@@ -724,7 +736,7 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 			LEFT JOIN uq_comp.uq_entry_config_belt uecb  ON uecb.id = uer.entry_belt_id 
 			LEFT JOIN uq_comp.uq_entry_config_age ueca ON ueca.id = uer.entry_age_id 
 			WHERE uer.event_id = $eventId and uee.gender_code = um.gender_code
-			GROUP BY uee.name, ua.name, fullname, uea.place_number, uecw.weight, uee.id, ua.name, bus, uer.academy_name, ueca.id, um.profile_url, memberid , uee.gender_code,um.gender_code
+			GROUP BY uee.name, ua.name, fullname, uea.place_number, uecw.weight, ua.id, uee.id, uecb.id, ua.name, bus, uer.academy_name, ueca.id, um.profile_url, memberid , uee.gender_code,um.gender_code , uecw.medal_given, uecw.id
 			ORDER BY uee.id desc, ueca.id desc, bus , uecw.weight desc, uea.place_number asc");
 	}
 
