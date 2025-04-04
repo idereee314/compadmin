@@ -72,7 +72,7 @@
                         <h3 class="card-label"><strong>{{ $toplist['title'] }}</strong></h3>
                     </div>
                     <div class="card-toolbar">
-                        <button class="btn btn-sm btn-light-primary" onclick="printToplist('{{ $toplist['id'] }}', '{{ $toplist['title'] }}')">
+                        <button class="btn btn-sm btn-light-primary" onclick="printToplist('{{ $toplist['id'] }}', '{{ $toplist['title'] }}', '{{ $event->name }}')">
                             <i class="la la-print"></i> {{ trans('display.general_print') }}
                         </button>
                     </div>
@@ -117,7 +117,7 @@
                                                         data-toggle="popover"
                                                         data-html="true"
                                                         data-placement="top"
-                                                        title="Онооны тайлбар"
+                                                        title="{{trans('display.general_desc_score')}}"
                                                         data-content=""
                                                         onclick="generatePopover(this, {
                                                             name: '{{ $result->name }}',
@@ -145,7 +145,7 @@
     </div>
 @endforeach
 <script>
-    function printToplist(id, title) {
+    function printToplist(id, title, eventName) {
     const card = document.getElementById(id);
     const originalTable = card.querySelector('table');
     const table = originalTable.cloneNode(true);
@@ -169,7 +169,7 @@
         printWindow.document.write(`
             <html>
                 <head>
-                    <title>${title}</title>
+                    <title>${eventName}</title>
                     <style>
                         body {
                             font-family: DejaVu Sans, sans-serif;
@@ -228,13 +228,13 @@
                     <div class="logo">
                         <img src="${logoUrl}" alt="Logo" width="80">
                     </div>
-    
-                    <h2>Шилдэг Академийн Жагсаалт</h2>
+
+                    <h2>${eventName}</h2>
                     <div class="subtitle">${title}</div>
                     <div class="date"><strong>Огноо:</strong> ${today}</div>
-    
+
                     ${table.outerHTML}
-    
+
                     <div class="signature-block">
                         <div class="signature">Шүүгчийн гарын үсэг</div>
                         <div class="signature">Зохион байгуулагчийн гарын үсэг</div>
@@ -242,7 +242,7 @@
                 </body>
             </html>
         `);
-    
+
         printWindow.document.close();
         printWindow.focus();
         printWindow.print();
@@ -262,6 +262,8 @@
         const pSilver = data.silver * data.point_config.silver;
         const pBronze = data.bronze * data.point_config.bronze;
 
+        const LABEL_TOTAL_SCORE = "{{ trans('display.general_total_score') }}";
+
         let pOthers = 0;
         let html = `
             🥇: ${data.gold} × ${data.point_config.gold} = <strong>${pGold}</strong><br>
@@ -275,7 +277,7 @@
         }
 
         const total = pGold + pSilver + pBronze + pOthers;
-        html += `<hr class="my-1"><strong>💯 Нийт оноо:</strong> ${total}`;
+        html += `<hr class="my-1"><strong>💯 ${LABEL_TOTAL_SCORE}:</strong> ${total}`;
 
         $(btn).popover('dispose');
         $(btn).attr('data-content', html).popover('show');

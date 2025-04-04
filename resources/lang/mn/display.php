@@ -67,6 +67,7 @@ return [
     'general_rank_season' => 'Улирал',
     'general_result_type' => 'Үр дүн гаргах төрөл',
     'general_total_score' => 'Нийт оноо',
+    'general_desc_score' => 'Онооны тайлбар',
     'general_you_are_here' => 'Таны байгаа газар',
     'general_group' => 'Бүлэглэх',
     'general_welcome' => 'Тавтай морилно уу',
