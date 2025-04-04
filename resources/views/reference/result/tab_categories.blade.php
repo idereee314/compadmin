@@ -4,7 +4,7 @@
     </div>
     <div class="card-body">
         <div class="table-responsive">
-            <table class="table table-hover table-bordered text-center">
+            <table class="table table-hover table-bordered text-center table-responsive-md">
                 <thead class="thead-light">
                     <tr>
                         <th>#</th>
@@ -34,28 +34,29 @@
                                        $item->start_age == $regWeight->start_age &&
                                        $item->end_age == $regWeight->end_age;
                             });
-                        
+
                             $hasAward = $weightGroup->isNotEmpty();
                             $medalGiven = $weightGroup->first()->medal_given ?? false;
                             $isFinished = $weightGroup->contains(fn($r) => !is_null($r->place_number));
-                        
+
                             $awardedAthletes = $weightGroup->filter(fn($athlete) =>
                                 in_array($athlete->place_number, [1, 2, 3])
                             )->sortBy('place_number')->values();
                         @endphp
-                        
+
                         <tr>
                             <td>{{ $rowIndex++ }}</td>
-                            <td>
-                                <strong>
-                                    {{ $categoryName }} |
-                                    {{ $gender }} |
-                                    {{ $age }} |
-                                    {{ $beltName }} |
-                                    {{ $weight }}
-                                </strong>
+
+                            {{-- Жингийн мэдээлэл --}}
+                            <td class="text-left">
+                                <div class="p-2 border rounded bg-light">
+                                    <div style="font-weight: bold;">{{ $categoryName }} | {{ $gender }}</div>
+                                    <div style="font-size: 13px; color: #555;">Нас: {{ $age }}</div>
+                                    <div style="font-size: 13px; color: #555;">Бүс: {{ $beltName }}</div>
+                                    <div style="font-size: 13px; color: #555;">Жин: {{ $weight }}</div>
+                                </div>
                             </td>
-                        
+
                             {{-- Медаль авсан тамирчид --}}
                             <td class="text-left">
                                 @if($awardedAthletes->isNotEmpty())
@@ -73,17 +74,17 @@
                                     <span class="text-muted">Медаль авсан тамирчин байхгүй</span>
                                 @endif
                             </td>
-                        
+
                             {{-- Медаль гардуулсан --}}
                             <td>
-                                <span class="badge {{ $medalGiven ? 'badge-success' : 'badge-danger' }}">
+                                <span class="badge {{ $medalGiven ? 'badge-success' : 'badge-danger' }} px-3 py-1 rounded-pill">
                                     {{ $medalGiven ? '✓ Өгсөн' : '✗ Өгөөгүй' }}
                                 </span>
                             </td>
-                        
+
                             {{-- Тэмцээн дууссан --}}
                             <td>
-                                <span class="badge {{ $isFinished ? 'badge-primary' : 'badge-secondary' }}">
+                                <span class="badge {{ $isFinished ? 'badge-primary' : 'badge-secondary' }} px-3 py-1 rounded-pill">
                                     {{ $isFinished ? '✓ Дууссан' : '✗ Дуусаагүй' }}
                                 </span>
                             </td>
