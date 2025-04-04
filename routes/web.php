@@ -28,6 +28,12 @@ Route::get('/clearcache', function()
     return "Cache cleared".date("D M d, Y G:i a");
 });
 
+Route::get('/optimize', function()
+{
+    Artisan::call('optimize');
+    return "php artisan optimize".date("D M d, Y G:i a");
+});
+
 Route::get('/phpinfo', function()
 {
     phpinfo();
