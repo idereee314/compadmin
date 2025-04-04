@@ -8,14 +8,16 @@
             'withPoint' => false,
             'id' => 'toplist'
         ];
-    } elseif ($resultType == 2) {
+    }   
+    elseif ($resultType == 2) {
         $toplists[] = [
             'title' => trans('display.best_academy'),
             'list' => $eventToplistPoint,
             'withPoint' => true,
             'id' => 'toplist_point'
         ];
-    } elseif ($resultType == 3) {
+    }   
+    elseif ($resultType == 3) {
         $toplists[] = [
             'title' => trans('display.best_academy'),
             'list' => $eventToplist,
@@ -34,7 +36,28 @@
             'withPoint' => false,
             'id' => 'toplist_female'
         ];
+    }   
+    elseif ($resultType == 4) {
+        $toplists[] = [
+            'title' => trans('display.best_academy'),
+            'list' => $eventToplistPoint,
+            'withPoint' => true,
+            'id' => 'toplist_general'
+        ];
+        $toplists[] = [
+            'title' => trans('display.best_academy') . ' - Эрэгтэй',
+            'list' => $GenderResultPointMale,
+            'withPoint' => true,
+            'id' => 'toplist_male'
+        ];
+        $toplists[] = [
+            'title' => trans('display.best_academy') . ' - Эмэгтэй',
+            'list' => $GenderResultPointFemale,
+            'withPoint' => true,
+            'id' => 'toplist_female'
+        ];
     }
+    
 @endphp
 
 @foreach($toplists as $toplist)
