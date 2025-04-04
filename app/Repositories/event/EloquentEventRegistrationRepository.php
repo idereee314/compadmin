@@ -779,6 +779,36 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 					GROUP BY ua.id, ua.name
 					order by total_point desc");
 	}
+
+	public function getToplistWithAthleteCountFromEvent($eventId)
+	{
+		return DB::select("
+			SELECT 
+				ua.id AS academy_id,
+				ua.name,
+				SUM(CASE WHEN uea.place_number = 1 THEN 1 ELSE 0 END) AS gold,
+				SUM(CASE WHEN uea.place_number = 2 THEN 1 ELSE 0 END) AS silver,
+				SUM(CASE WHEN uea.place_number = 3 THEN 1 ELSE 0 END) AS bronze,
+				COUNT(DISTINCT uer.id) AS total_athletes,
+				COALESCE(SUM(point.point), 0) AS total_point
+			FROM uq_comp.uq_event_registration uer
+			LEFT JOIN uq_comp.uq_event_award uea ON uea.event_registration_id = uer.id
+			JOIN uq_comp.uq_academy ua ON ua.id = uer.academy_id
+			LEFT JOIN LATERAL (
+				SELECT uetp.point
+				FROM uq_comp.uq_event_toplist_point uetp
+				WHERE uetp.event_id = uer.event_id
+				  AND (
+					  (uea.place_number BETWEEN uetp.start_pos AND uetp.end_pos)
+					  OR (uetp.start_pos IS NULL AND uetp.end_pos IS NULL AND uea.place_number IS NULL)
+				  )
+				LIMIT 1
+			) AS point ON true
+			WHERE uer.event_id = ?
+			GROUP BY ua.id, ua.name
+			ORDER BY total_point DESC
+		", [$eventId]);
+	}
 	
 	public function getToplistByGoldMedalAndGenderMaleFromEvent($eventId)
 	{
@@ -831,7 +861,6 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 					GROUP BY ua.id, ua.name
 					ORDER BY total_point DESC");
 	}
-	
 	public function getToplistByPointAndGenderFemaleFromEvent($eventId)
 	{
 		return DB::select("SELECT ua.id AS academy_id, ua.name,

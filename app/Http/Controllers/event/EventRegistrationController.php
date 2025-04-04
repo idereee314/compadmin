@@ -1222,11 +1222,12 @@ class EventRegistrationController extends Controller
         if (!empty($configArray) && isset($configArray[0]->event_result_type_id)) {
             $resultType = $configArray[0]->event_result_type_id;
         }
-        $GenderResultFemale = $this->eventRegistration->getToplistByGoldMedalAndGenderFemaleFromEvent($eventId);
-        $GenderResultMale = $this->eventRegistration->getToplistByGoldMedalAndGenderMaleFromEvent($eventId);
-        $GenderResultPointMale = $this->eventRegistration->getToplistByPointAndGenderMaleFromEvent($eventId);
-        $GenderResultPointFemale = $this->eventRegistration->getToplistByPointAndGenderFemaleFromEvent($eventId);
-         // 🟩 Шинэ нэмэлтүүд
+        $genderResultFemale = $this->eventRegistration->getToplistByGoldMedalAndGenderFemaleFromEvent($eventId);
+        $genderResultMale = $this->eventRegistration->getToplistByGoldMedalAndGenderMaleFromEvent($eventId);
+        $genderResultPointMale = $this->eventRegistration->getToplistByPointAndGenderMaleFromEvent($eventId);
+        $genderResultPointFemale = $this->eventRegistration->getToplistByPointAndGenderFemaleFromEvent($eventId);
+        $eventToplistWithAthleteCount = $this->eventRegistration->getToplistWithAthleteCountFromEvent($eventId);
+        
         $countedWeights = $this->eventRegistration->getCountedWeightForOrg($eventId);
         $allWeightIds = collect($countedWeights)->pluck('weight_id')->unique();
         $medaledWeightIds = collect($eventResult)->where('medal_given', true)->pluck('weight_id')->unique();
@@ -1235,8 +1236,9 @@ class EventRegistrationController extends Controller
         $awardedResults = collect($eventResult)->groupBy('weight_id');
         $registeredWeights = $this->eventRegistration->getRegistredWeightForOrgApproved($eventId);
 
-        $data['GenderResultPointMale'] = $GenderResultPointMale;
-        $data['GenderResultPointFemale'] = $GenderResultPointFemale;
+        $data['eventToplistWithAthleteCount'] = $eventToplistWithAthleteCount;
+        $data['genderResultPointMale'] = $genderResultPointMale;
+        $data['genderResultPointFemale'] = $genderResultPointFemale;
         $data['registeredWeights'] = $registeredWeights;
         $data['awardedResults'] = $awardedResults;
         $data['countedWeights'] = $countedWeights;
@@ -1244,8 +1246,8 @@ class EventRegistrationController extends Controller
         $data['medaledWeightIds'] = $medaledWeightIds;
         $data['unawardedWeightIds'] = $unawardedWeightIds;
         $data['medalGivenMap'] = $medalGivenMap;
-        $data['GenderResultFemale'] = $GenderResultFemale;
-        $data['GenderResultMale'] = $GenderResultMale;
+        $data['genderResultFemale'] = $genderResultFemale;
+        $data['genderResultMale'] = $genderResultMale;
         $data['resultType'] = $resultType;
         $data['statsWeightForOrg'] = $statsWeightForOrg;
         $data['getToplistByGoldMedalFromEvent'] = $getToplistByGoldMedalFromEvent;

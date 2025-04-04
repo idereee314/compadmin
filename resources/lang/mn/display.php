@@ -185,7 +185,7 @@ return [
     'general_checked_weight' => 'Шалгагдсан жин',
     'general_event_date' => 'Тэмцээний өдөр',
     'general_events' => 'Тэмцээнүүд',
-    
+    'general_total_athlete' => 'Нийт тамирчдыг тоо',
 
     // Search
     "general_search_list" => "Хайлт",

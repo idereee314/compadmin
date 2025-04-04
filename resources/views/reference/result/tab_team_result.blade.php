@@ -24,14 +24,13 @@
         ];
         $toplists[] = [
             'title' => trans('display.best_academy') . ' - ' . config('enums.gender_code')['1'],
-
-            'list' => $GenderResultMale,
+            'list' => $genderResultMale,
             'withPoint' => false,
             'id' => 'toplist_male'
         ];
         $toplists[] = [
             'title' => trans('display.best_academy') . ' - ' . config('enums.gender_code')['2'],
-            'list' => $GenderResultFemale,
+            'list' => $genderResultFemale,
             'withPoint' => false,
             'id' => 'toplist_female'
         ];
@@ -44,15 +43,23 @@
         ];
         $toplists[] = [
             'title' => trans('display.best_academy') . ' - ' . config('enums.gender_code')['1'],
-            'list' => $GenderResultPointMale,
+            'list' => $genderResultPointMale,
             'withPoint' => true,
             'id' => 'toplist_male'
         ];
         $toplists[] = [
             'title' => trans('display.best_academy') . ' - ' . config('enums.gender_code')['2'],
-            'list' => $GenderResultPointFemale,
+            'list' => $genderResultPointFemale,
             'withPoint' => true,
             'id' => 'toplist_female'
+        ];
+    } elseif ($resultType == 5) {
+        $toplists[] = [
+            'title' => trans('display.best_academy') . ' (Медаль + Оноо + Оролцогч)',
+            'list' => $eventToplistWithAthleteCount,
+            'withPoint' => true,
+            'withAthleteCount' => true,
+            'id' => 'toplist_point_athlete'
         ];
     }
 @endphp
@@ -78,24 +85,51 @@
                                     <tr>
                                         <th class="text-center">#</th>
                                         <th class="text-center">{{ trans('display.comp_academy_name') }}</th>
-                                        <th class="text-center"><i class="la la-medal icon-2x gold-medal-icon"></i></th>
-                                        <th class="text-center"><i class="la la-medal icon-2x silver-medal-icon"></i></th>
-                                        <th class="text-center"><i class="la la-medal icon-2x bronze-medal-icon"></i></th>
+                                        <th class="text-center">🥇</th>
+                                        <th class="text-center">🥈</th>
+                                        <th class="text-center">🥉</th>
+                                        @if($toplist['withAthleteCount'] ?? false)
+                                            <th class="text-center">👥 {{ trans('display.general_total_athlete') }}</th>
+                                        @endif
                                         @if($toplist['withPoint'])
-                                            <th class="text-center">{{trans('display.general_total_score') }}</th>
+                                            <th class="text-center">{{ trans('display.general_total_score') }}</th>
+                                            <th class="text-center">📌</th> {{-- Popover тайлбар товч --}}
                                         @endif
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach($toplist['list'] as $result)
                                         <tr>
-                                            <td class="text-center border-right">{{ $loop->iteration }}</td>
-                                            <td class="min-w-200px text-center border-right"><strong>{{ $result->name }}</strong></td>
-                                            <td class="text-center border-right"><strong>{{ $result->gold }}</strong></td>
-                                            <td class="text-center border-right"><strong>{{ $result->silver }}</strong></td>
-                                            <td class="text-center border-right"><strong>{{ $result->bronze }}</strong></td>
+                                            <td class="text-center">{{ $loop->iteration }}</td>
+                                            <td class="text-center">{{ $result->name }}</td>
+                                            <td class="text-center">{{ $result->gold }}</td>
+                                            <td class="text-center">{{ $result->silver }}</td>
+                                            <td class="text-center">{{ $result->bronze }}</td>
+                                            @if($toplist['withAthleteCount'] ?? false)
+                                                <td class="text-center">{{ $result->total_athletes }}</td>
+                                            @endif
                                             @if($toplist['withPoint'])
-                                                <td class="text-center border-right"><strong>{{ $result->total_point }}</strong></td>
+                                                <td class="text-center">{{ $result->total_point }}</td>
+                                                <td class="text-center">
+                                                    <button
+                                                        type="button"
+                                                        class="btn btn-sm btn-light-info"
+                                                        data-toggle="popover"
+                                                        data-html="true"
+                                                        data-placement="top"
+                                                        title="Онооны тайлбар"
+                                                        data-content=""
+                                                        onclick="generatePopover(this, {
+                                                            name: '{{ $result->name }}',
+                                                            gold: {{ $result->gold }},
+                                                            silver: {{ $result->silver }},
+                                                            bronze: {{ $result->bronze }},
+                                                            total_athletes: {{ $result->total_athletes ?? 0 }},
+                                                            point_config: { gold: 7, silver: 5, bronze: 3, other: 2 }
+                                                        })">
+                                                        {{trans('display.general_detail')}}
+                                                    </button>
+                                                </td>
                                             @endif
                                         </tr>
                                     @endforeach
@@ -112,12 +146,26 @@
 @endforeach
 <script>
     function printToplist(id, title) {
-        const card = document.getElementById(id);
-        const table = card.querySelector('table').outerHTML;
-        const logoUrl = '{{ url("assets/images/logo/uniq_logo_with_spaceX.png") }}';
-        const today = new Date().toLocaleDateString('mn-MN');
+    const card = document.getElementById(id);
+    const originalTable = card.querySelector('table');
+    const table = originalTable.cloneNode(true);
 
-        const printWindow = window.open('', '_blank');
+    // 📌 баганын индексийг олно
+    const headerRow = table.querySelector('thead tr');
+    const detailColIndex = Array.from(headerRow.children).findIndex(th => th.textContent.includes("📌"));
+
+    // Хэрвээ 📌 багана байвал түүнийг header болон body-с устгана
+    if (detailColIndex !== -1) {
+        headerRow.deleteCell(detailColIndex);
+        table.querySelectorAll('tbody tr').forEach(row => {
+            row.deleteCell(detailColIndex);
+        });
+    }
+
+    const logoUrl = '{{ url("assets/images/logo/uniq_logo_with_spaceX.png") }}';
+    const today = new Date().toLocaleDateString('mn-MN');
+
+    const printWindow = window.open('', '_blank');
         printWindow.document.write(`
             <html>
                 <head>
@@ -180,13 +228,13 @@
                     <div class="logo">
                         <img src="${logoUrl}" alt="Logo" width="80">
                     </div>
-
+    
                     <h2>Шилдэг Академийн Жагсаалт</h2>
                     <div class="subtitle">${title}</div>
                     <div class="date"><strong>Огноо:</strong> ${today}</div>
-
-                    ${table}
-
+    
+                    ${table.outerHTML}
+    
                     <div class="signature-block">
                         <div class="signature">Шүүгчийн гарын үсэг</div>
                         <div class="signature">Зохион байгуулагчийн гарын үсэг</div>
@@ -194,10 +242,51 @@
                 </body>
             </html>
         `);
-
+    
         printWindow.document.close();
         printWindow.focus();
         printWindow.print();
         printWindow.close();
     }
+
+
+    const withAthleteCountMap = {};
+    withAthleteCountMap["{{ $toplist['id'] }}"] = {{ $toplist['withAthleteCount'] ?? 'false' }};
+
+    function generatePopover(btn, data) {
+        const tableId = btn.closest('.card').id;
+        const withAthleteCount = withAthleteCountMap[tableId] ?? false;
+
+        const noMedal = data.total_athletes - (data.gold + data.silver + data.bronze);
+        const pGold = data.gold * data.point_config.gold;
+        const pSilver = data.silver * data.point_config.silver;
+        const pBronze = data.bronze * data.point_config.bronze;
+
+        let pOthers = 0;
+        let html = `
+            🥇: ${data.gold} × ${data.point_config.gold} = <strong>${pGold}</strong><br>
+            🥈: ${data.silver} × ${data.point_config.silver} = <strong>${pSilver}</strong><br>
+            🥉: ${data.bronze} × ${data.point_config.bronze} = <strong>${pBronze}</strong><br>
+        `;
+
+        if (withAthleteCount && data.total_athletes) {
+            pOthers = noMedal * data.point_config.other;
+            html += `👥: ${noMedal} × ${data.point_config.other} = <strong>${pOthers}</strong><br>`;
+        }
+
+        const total = pGold + pSilver + pBronze + pOthers;
+        html += `<hr class="my-1"><strong>💯 Нийт оноо:</strong> ${total}`;
+
+        $(btn).popover('dispose');
+        $(btn).attr('data-content', html).popover('show');
+    }
+
+
+    $(document).on('click', function (e) {
+        $('[data-toggle="popover"]').each(function () {
+            if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {
+                $(this).popover('hide');
+            }
+        });
+    });
 </script>
