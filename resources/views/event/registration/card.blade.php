@@ -77,10 +77,10 @@
                                     <div class="d-flex align-items-center">
                                         <!--begin::Pic-->
                                         <div class="flex-shrink-0 mr-4 symbol symbol-65 symbol-circle">
-                                            @php
+                                            {{-- @php
                                                 $imgSrc = @$event['pictures_mobile_cover'][0] ? \Storage::disk('s3')->url(@$event['pictures_mobile_cover'][0]['dir_url'].'/thumbnail/'.@$event['pictures_mobile_cover'][0]['url']) : '/assets/images/no_image_cover.jpg';
                                             @endphp
-                                            <img src="{{ $imgSrc }}" alt="image" />
+                                            <img src="{{ $imgSrc }}" alt="image" /> --}}
                                         </div>
                                         <!--end::Pic-->
                                         <!--begin::Info-->
@@ -247,7 +247,7 @@
                                         <div class="d-flex flex-column flex-lg-fill float-left">
                                             <span class="font-weight-bolder mb-4">Оролцогч</span>
                                             <div class="symbol-group symbol-hover">
-                                                @php $count = 0; @endphp
+                                                {{-- @php $count = 0; @endphp
                                                 @forelse(@$event['members'] as $member)
                                                 @if($count < 10 && !empty($member['profile_url']))
                                                     <div class="symbol symbol-30 symbol-circle" data-toggle="tooltip" title="{{ $member['firstname'] }} {{ $member['lastname'] }}">
@@ -261,7 +261,7 @@
                                                 <div class="symbol symbol-30 symbol-circle symbol-light">
                                                     <span class="symbol-label font-weight-bold">+</span>
                                                 </div>
-                                                @endif
+                                                @endif --}}
                                             </div>
                                         </div>
                                         <!--end::Item-->
