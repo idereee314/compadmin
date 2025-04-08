@@ -95,7 +95,8 @@ return array(
 		
 		
 		// '7' => array('title' => "Хуваарь",'code' => 'event_schedule','name' => "tab_event_schedule", 'icon' => "flaticon2-analytics",'number' => 'tab1-8'),
-		'9' => array('title' => "1",'code' => 'toplist_point','name' => "tab_config_matches", 'icon' => "flaticon2-analytics",'number' => 'tab1-8'),
+		'9' => array('title' => "1",'code' => 'toplist_point','name' => "tab_config_matches", 'icon' => "flaticon2-analytics",'number' => 'tab1-9'),
+		'10' => array('title' => "2",'code' => 'toplist_point','name' => "tab_match", 'icon' => "flaticon2-analytics",'number' => 'tab1-10'),
 
     ],
 	'event_config_index' => [
