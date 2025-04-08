@@ -1026,4 +1026,10 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 		return $eventBrackets->save();
 	}
 	
+	public function getEventToplistPointConfig($eventId)
+	{
+		return DB::table('uq_comp.uq_event_toplist_point')
+			->where('event_id', $eventId)
+			->get();
+	}
 }

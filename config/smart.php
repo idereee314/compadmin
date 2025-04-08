@@ -20,18 +20,21 @@ return array(
 		'created' => 'created',
 		'approved' => 'approved',
 		'canceled' => 'canceled',
+		'refunded' => 'refunded',
 	],
 
 	'event_registration_status_class' => [
 		'created' => 'warning',
 		'approved' => 'success',
 		'canceled' => 'danger ',
+		'refunded' => 'info',
 	],
 
 	'event_registration_status_flow' => [
 		'' => ['created'],
 		'created' => ['approved', 'canceled'],
-		'approved' => ['canceled'],
+		'approved' => ['canceled', 'refunded'],
+		'refunded' => ['approved', 'canceled'],
 		'canceled' => ['approved'],
 	],
 

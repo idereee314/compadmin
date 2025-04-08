@@ -49,6 +49,7 @@ return array(
 		//'registered' => 'Бүртгэсэн',
 		'approved' => 'Баталгаажсан',
 		'canceled' => 'Цуцалсан',
+		'refunded' => 'Буцаасан',
 	],
 
 	'event_registration_status_for_stats' => [

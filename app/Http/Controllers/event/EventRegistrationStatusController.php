@@ -59,12 +59,12 @@ class EventRegistrationStatusController extends Controller
     public function change()
     {
         $input = Input::all();
-    
+        
         $eventRegistration = $this->eventRegistration->find(@$input['reg_id']);    
         $nextStatuses = @Config::get('smart.event_registration_status_flow')[$eventRegistration->status];
         $eventTeamRegistration = $this->eventTeamRegistration->find(@$input['reg_id']);
         $entryFees = $this->eventEntriesFee->getFeesByEntryId($eventRegistration->entry_id);
-
+        
         $data['eventTeamRegistration'] = $eventTeamRegistration;
         $data['eventRegistration'] = $eventRegistration;
         $data['nextStatuses'] = $nextStatuses;
@@ -82,6 +82,9 @@ class EventRegistrationStatusController extends Controller
     public function changed(Request $request)
     {
         $input = Input::all();
+
+        dd($input);
+
         $validator = Validator::make($input, EventRegistrationStatusModel::$rules);
         $eventRegistration = $this->eventRegistration->find(@$input['event_registration_id']);
 

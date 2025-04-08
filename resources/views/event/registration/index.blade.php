@@ -1461,6 +1461,14 @@ function showStatusModal(data){
                     $('#change-status-form input[name=payment_status]').prop("checked", false)
                 }
             }
+
+            // refunded бол refund section харуулна
+            if (status === '{{ Config::get("smart.event_registration_status")["refunded"] }}') {
+                $(".refund").show();
+            } else {
+                $(".refund").hide();
+                $("#description").val('');
+            }
         }) 
 
         $('#change-status-form').validate({
