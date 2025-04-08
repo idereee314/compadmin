@@ -125,7 +125,7 @@
                                                             silver: {{ $result->silver }},
                                                             bronze: {{ $result->bronze }},
                                                             total_athletes: {{ $result->total_athletes ?? 0 }},
-                                                            point_config: { gold: 7, silver: 5, bronze: 3, other: 2 }
+                                                            point_config: pointConfig
                                                         })">
                                                         {{trans('display.general_detail')}}
                                                     </button>
@@ -145,6 +145,11 @@
     </div>
 @endforeach
 <script>
+    const pointConfig = @json($pointConfig);
+    const withAthleteCountMap = {};
+
+    withAthleteCountMap["{{ $toplist['id'] }}"] = {{ $toplist['withAthleteCount'] ?? 'false' }};
+
     function printToplist(id, title, eventName) {
     const card = document.getElementById(id);
     const originalTable = card.querySelector('table');
@@ -249,10 +254,6 @@
         printWindow.close();
     }
 
-
-    const withAthleteCountMap = {};
-    withAthleteCountMap["{{ $toplist['id'] }}"] = {{ $toplist['withAthleteCount'] ?? 'false' }};
-
     function generatePopover(btn, data) {
         const tableId = btn.closest('.card').id;
         const withAthleteCount = withAthleteCountMap[tableId] ?? false;
@@ -282,7 +283,6 @@
         $(btn).popover('dispose');
         $(btn).attr('data-content', html).popover('show');
     }
-
 
     $(document).on('click', function (e) {
         $('[data-toggle="popover"]').each(function () {

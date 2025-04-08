@@ -1236,6 +1236,17 @@ class EventRegistrationController extends Controller
         $awardedResults = collect($eventResult)->groupBy('weight_id');
         $registeredWeights = $this->eventRegistration->getRegistredWeightForOrgApproved($eventId);
 
+        $toplistPointConfig = $this->eventRegistration->getEventToplistPointConfig($eventId);
+        $pointConfig = [
+            'gold' => $toplistPointConfig->firstWhere('start_pos', 1)?->point ?? 7,
+            'silver' => $toplistPointConfig->firstWhere('start_pos', 2)?->point ?? 5,
+            'bronze' => $toplistPointConfig->firstWhere('start_pos', 3)?->point ?? 3,
+            'other' => $toplistPointConfig->firstWhere(function ($item) {
+                return $item->start_pos === null && $item->end_pos === null;
+            })?->point ?? 2,
+        ];
+
+        $data['pointConfig'] = $pointConfig;
         $data['eventToplistWithAthleteCount'] = $eventToplistWithAthleteCount;
         $data['genderResultPointMale'] = $genderResultPointMale;
         $data['genderResultPointFemale'] = $genderResultPointFemale;
