@@ -94,7 +94,7 @@ class EventRegistrationController extends Controller
                 $eventFees = $this->eventRegistration->getPaymentByEventId(@$input['event_id'])->groupBy('amount');
                 $team_list = $this->team->all();
                 $index = $this->eventType->all();
-            
+                
                 $data['team_list'] = $team_list;
                 $data['event'] = $event;
                 $data['eventEntries'] = $event->entries;

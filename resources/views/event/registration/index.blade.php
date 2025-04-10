@@ -122,30 +122,35 @@
                             <!--end::Info-->
                         </div>
                         <!--end::Top-->
-                        @if(Auth::user()->roles->first() == null || Auth::user()->roles->first()->code == 'staff')
-                        @elseif(Auth::user()->roles->first()->code == 'admin' || 
-                                Auth::user()->roles->first()->code == 'mjjf' ||
-                                (isset(Auth::user()->roles[1]) && Auth::user()->roles[1]->code == 'mjjf') || 
-                                Auth::user()->roles->first()->code == 'event')
-                            
-                            
-                            @if(!@$eventFees->isEmpty())
+                        @php
+                            $user = Auth::user();
+                            $roles = $user->roles->pluck('code')->toArray();
+                            $canSeeFees = collect(['admin', 'event_manager', 'organizer'])->intersect($roles)->isNotEmpty();
+                        @endphp
+                        @if($canSeeFees && !empty($eventFees) && !$eventFees->isEmpty())
                             <!--begin::Separator-->
                             <div class="separator separator-solid my-7"></div>
                             <!--end::Separator-->
+
                             <!--begin::Bottom-->
                             <div class="d-flex align-items-center flex-wrap">
-                                <!--begin: Item-->
+                                <!-- Total Summary -->
                                 <div class="d-flex align-items-center flex-lg-fill mr-10 my-1 btn btn-light-success btn-hover-success btn-filter-amount" data-amount="">
                                     <span class="mr-4">
                                         <i class="flaticon-piggy-bank text-success icon-3x font-weight-bold"></i>
                                     </span>
                                     <div class="d-flex flex-column">
-                                        <span class="font-weight-bolder font-size-sm">{{ trans('display.general_total') }}/{{ $eventFees->flatten(1)->count() }}</span>
+                                        <span class="font-weight-bolder font-size-sm">
+                                            {{ trans('display.general_total') }}/{{ $eventFees->flatten(1)->count() }}
+                                        </span>
                                         <span class="font-weight-bolder font-size-h5">
-                                        <span class="font-weight-bold">{{ trans('display.general_tug') }}</span>{{ number_format($eventFees->flatten(1)->sum('fee_amount'), 0) }}</span>
+                                            <span class="font-weight-bold">{{ trans('display.general_tug') }}</span>
+                                            {{ number_format($eventFees->flatten(1)->sum('fee_amount'), 0) }}
+                                        </span>
                                     </div>
                                 </div>
+
+                                <!-- Organizer's Share -->
                                 <div class="d-flex align-items-center flex-lg-fill mr-10 my-1 btn btn-light-success btn-hover-success btn-filter-amount" data-amount="">
                                     <span class="mr-4">
                                         <i class="flaticon-piggy-bank text-success icon-3x font-weight-bold"></i>
@@ -153,28 +158,29 @@
                                     <div class="d-flex flex-column">
                                         <span class="font-weight-bolder font-size-sm">Зохион байгуулагчруу шилжих</span>
                                         <span class="font-weight-bolder font-size-h5">
-                                        <span class="font-weight-bold">{{ trans('display.general_tug') }}</span>{{ number_format($eventFees->flatten(1)->sum('fee_amount') * 0.9, 0) }}</span>
+                                            <span class="font-weight-bold">{{ trans('display.general_tug') }}</span>
+                                            {{ number_format($eventFees->flatten(1)->sum('fee_amount') * 0.9, 0) }}
+                                        </span>
                                     </div>
                                 </div>
-                                <!--end: Item-->
-                                @forelse($eventFees as $key => $fee)
-                                <!--begin: Item-->
-                                <div class="d-flex align-items-center flex-lg-fill mr-5 my-1 btn btn-hover-light-success btn-filter-amount" data-amount="{{ $key }}">
-                                    <span class="mr-4">
-                                        <i class="flaticon-pie-chart text-success icon-3x font-weight-bold"></i>
-                                    </span>
-                                    <div class="d-flex flex-column">
-                                        <span class="font-weight-bolder font-size-sm">{{ number_format($key, 0) }}/{{ count($fee) }}</span>
-                                        <span class="font-weight-bolder font-size-h5">
-                                        <span class="text-success font-weight-bold">{{ trans('display.general_tug') }}</span>{{ number_format($fee->sum('fee_amount'), 0) }}</span>
+
+                                <!-- Breakdown by Fee -->
+                                @foreach($eventFees as $key => $fee)
+                                    <div class="d-flex align-items-center flex-lg-fill mr-5 my-1 btn btn-hover-light-success btn-filter-amount" data-amount="{{ $key }}">
+                                        <span class="mr-4">
+                                            <i class="flaticon-pie-chart text-success icon-3x font-weight-bold"></i>
+                                        </span>
+                                        <div class="d-flex flex-column">
+                                            <span class="font-weight-bolder font-size-sm">{{ number_format($key, 0) }}/{{ count($fee) }}</span>
+                                            <span class="font-weight-bolder font-size-h5">
+                                                <span class="text-success font-weight-bold">{{ trans('display.general_tug') }}</span>
+                                                {{ number_format($fee->sum('fee_amount'), 0) }}
+                                            </span>
+                                        </div>
                                     </div>
-                                </div>
-                                <!--end: Item-->
-                                @empty
-                                @endforelse
-                            </div>                        
+                                @endforeach
+                            </div>
                             <!--end::Bottom-->
-                            @endif
                         @endif
                         
                     </div>
@@ -401,8 +407,8 @@
                                     <th width="5%">No.</th>
                                     <th width="20%">{{trans('display.comp_member')}}</th>
                                     <th width="10%">{{trans('display.comp_entry')}}</th>
-                                    <th width="5%">{{trans('display.comp_entry_age')}}</th>
                                     <th width="8%">{{trans('display.human_gender_code')}}</th>
+                                    <th width="5%">{{trans('display.comp_entry_age')}}</th>
                                     <th width="8%">{{trans('display.comp_entry_belt')}}</th>
                                     <th width="5%">{{trans('display.comp_entry_weight')}}</th>
                                     <th width="10%">{{trans('display.comp_academy')}}</th>
@@ -1438,7 +1444,7 @@ function showStatusModal(data){
     $('#memberModal').on('shown.bs.modal', function(){
         $('#memberModal .modal-content').html(data);
         $('.selectpicker').selectpicker();
-
+        
         $('#change-status-form select[name=status]').on('change', function(){
             var status = $(this).val(); 
             
@@ -1470,6 +1476,8 @@ function showStatusModal(data){
                 $("#description").val('');
             }
         }) 
+
+        $('#change-status-form select[name=description]').trigger('change');
 
         $('#change-status-form').validate({
             ignore: [],

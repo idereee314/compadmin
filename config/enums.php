@@ -57,6 +57,7 @@ return array(
 		//'registered' => 'Бүртгэсэн',
 		'approved' => 'Баталгаажсан',
 		'canceled' => 'Цуцалсан',
+		'refunded' => 'Буцаасан',
 	],
 
 	'member_status' => [

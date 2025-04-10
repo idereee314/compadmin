@@ -16,6 +16,7 @@ use event\EventRegistrationStatusRepository as EventRegistrationStatus;
 use event\EventRegistrationRepository as EventRegistration;
 use reference\EventEntriesFeeRepository as EventEntriesFee;
 use event\EventTeamRegistrationRepository as EventTeamRegistration;
+use event\EventRefundRequestRepository as EventRefundRequest;
 
 //Models
 use event\EventRegistrationStatus as EventRegistrationStatusModel;
@@ -32,13 +33,14 @@ class EventRegistrationStatusController extends Controller
 {
     public $restful = true;
 
-    public function __construct(EventRegistrationStatus $eventRegistrationStatus, EventRegistration $eventRegistration, EventEntriesFee $eventEntriesFee, EventTeamRegistration $eventTeamRegistration)
+    public function __construct(EventRegistrationStatus $eventRegistrationStatus, EventRegistration $eventRegistration, EventEntriesFee $eventEntriesFee, EventTeamRegistration $eventTeamRegistration, EventRefundRequest $eventRefundRequest)
     {
         $this->view_path = 'event.registration';
         $this->eventRegistrationStatus = $eventRegistrationStatus;
         $this->eventRegistration = $eventRegistration;
         $this->eventEntriesFee = $eventEntriesFee;
         $this->eventTeamRegistration = $eventTeamRegistration;
+        $this->eventRefundRequest = $eventRefundRequest;
     }
 
     /**
@@ -82,12 +84,10 @@ class EventRegistrationStatusController extends Controller
     public function changed(Request $request)
     {
         $input = Input::all();
-
-        dd($input);
-
+        
         $validator = Validator::make($input, EventRegistrationStatusModel::$rules);
         $eventRegistration = $this->eventRegistration->find(@$input['event_registration_id']);
-
+        
         if ($validator->fails())
         {
             $response = array(
@@ -103,10 +103,24 @@ class EventRegistrationStatusController extends Controller
                 $statusArr['status'] = $input['status'];
                 $statusArr['changed_by'] = Auth::id();
                 $statusArr['changed_at'] = Carbon\Carbon::now()->toDateTimeString();
+                
+                if($input['status'] == 'refunded')
+                {
+                    $refundArr['event_registration_id'] = $eventRegistration->id;
+                    $refundArr['description'] = @$input['description'];
+                    $refundArr['amount'] = @$input['amount'];
+                    $refundArr['event_id'] = $eventRegistration->event_id;
+                    $refundArr['member_id'] = $eventRegistration->member_id;
+                }
 
                 try
                 {
                     $eventRegistration->statuses()->create($statusArr);
+                    
+                    if($input['status'] == 'refunded')
+                    {
+                        $this->eventRefundRequest->create($refundArr);
+                    }
 
                     $response = array(
                         'status' => 'success',
@@ -123,34 +137,36 @@ class EventRegistrationStatusController extends Controller
 
                 }
             }
-
-            if(array_key_exists('amount', $input))
+            if($input['status'] === 'approved' || $input['status'] === 'canceled')
             {
-                $paymentUnq['registration_id'] = $eventRegistration->id;
-
-                $paymentArr['registration_id'] = $eventRegistration->id;
-                $paymentArr['member_id'] = $eventRegistration->member_id;
-                $paymentArr['register_number'] = $eventRegistration->member->register_number;
-                $paymentArr['status'] = @$input['payment_status'] ? $input['payment_status'] : false;
-                $paymentArr['amount'] = $input['amount'];
-                
-                try
+                if(array_key_exists('amount', $input))
                 {
-                    $eventRegistration->payment()->updateOrCreate($paymentUnq, $paymentArr);
+                    $paymentUnq['registration_id'] = $eventRegistration->id;
 
-                    $response = array(
-                        'status' => 'success',
-                        'msg' => trans('messages.success_save')
-                    );
-                }
-                    catch(\Illuminate\Database\QueryException $e)
-                {
-                    $response = array(
-                        'status' => 'error',
-                        'msg' => trans('messages.error_save'),
-                        'errors' => $e->getMessage()
-                    );
+                    $paymentArr['registration_id'] = $eventRegistration->id;
+                    $paymentArr['member_id'] = $eventRegistration->member_id;
+                    $paymentArr['register_number'] = $eventRegistration->member->register_number;
+                    $paymentArr['status'] = @$input['payment_status'] ? $input['payment_status'] : false;
+                    $paymentArr['amount'] = $input['amount'];
 
+                    try
+                    {
+                        $eventRegistration->payment()->updateOrCreate($paymentUnq, $paymentArr);
+
+                        $response = array(
+                            'status' => 'success',
+                            'msg' => trans('messages.success_save')
+                        );
+                    }
+                        catch(\Illuminate\Database\QueryException $e)
+                    {
+                        $response = array(
+                            'status' => 'error',
+                            'msg' => trans('messages.error_save'),
+                            'errors' => $e->getMessage()
+                        );
+
+                    }
                 }
             }
         }
