@@ -25,6 +25,8 @@ use reference\BeltGroupRepository as BeltGroup;
 use reference\EntryResultTypeRepository as EventResultType;
 use reference\EventToplistPointRepository as EventToplistPoint;
 use sport\SportRepository as Sport;
+use event\EventConfigDaysRepository as EventDays;
+use event\EventRegistrationRepository as EventRegistration;
 
 //Models
 use event\EventConfig as EventConfigModel;
@@ -38,7 +40,7 @@ class EventConfigController extends Controller
 {
     public $restful = true;
 
-    public function __construct(EventConfig $eventConfig, Event $event, EventCategory $eventCategory, EventEntries $eventEntries, EntryConfigBelt $entryConfigBelt, EntryConfigAge $entryConfigAge, EntryConfigWeight $entryConfigWeight, EventEntriesFee $eventEntriesFee, Sport $sport, EventRankSeason $eventRankSeason, BeltGroup $beltGroup, EventResultType $eventResultType, EventToplistPoint $eventToplistPoint)
+    public function __construct(EventConfig $eventConfig, Event $event, EventCategory $eventCategory, EventEntries $eventEntries, EntryConfigBelt $entryConfigBelt, EntryConfigAge $entryConfigAge, EntryConfigWeight $entryConfigWeight, EventEntriesFee $eventEntriesFee, Sport $sport, EventRankSeason $eventRankSeason, BeltGroup $beltGroup, EventResultType $eventResultType, EventToplistPoint $eventToplistPoint, EventDays $eventDays, EventRegistration $eventRegistration)
     {
         $this->view_path = 'event.config';
         $this->eventConfig = $eventConfig;
@@ -53,7 +55,10 @@ class EventConfigController extends Controller
         $this->eventRankSeason = $eventRankSeason;
         $this->beltGroup = $beltGroup;
         $this->eventResultType = $eventResultType;
-        $this->eventToplistPoint = $eventToplistPoint; 
+        $this->eventToplistPoint = $eventToplistPoint;
+        $this->days = $eventToplistPoint;
+        $this->eventDays = $eventDays;
+        $this->eventRegistration = $eventRegistration;
     }
 
     /**
@@ -376,6 +381,9 @@ class EventConfigController extends Controller
         $eventRankSeason = $this->eventRankSeason->all();
         $beltGroup = $this->beltGroup->all();
         $eventResultType = $this->eventResultType->all();
+        
+        $mate = $this->eventDays->getMatByEventId($eventConfig->event_id);
+        $eventRegistration = $this->eventDays->getEventEntries($eventConfig->event_id);
 
         $data['eventResultType'] = $eventResultType;
         $data['beltGroup'] = $beltGroup;
@@ -391,6 +399,9 @@ class EventConfigController extends Controller
         $data['eventUsers'] = $event->eventUsers;
         $data['eventToplistPoint'] = $event->eventToplistPoint;
         $data['matSettings'] = $event->configMat;
+        $data['mateData'] = $mate;
+		$data['bracketPool'] = $eventRegistration->groupBy(['entry.fullname', 'belt.name', 'age.name']);
+        
         
         if($input['code'] == 'entry_config_belt') 
         {

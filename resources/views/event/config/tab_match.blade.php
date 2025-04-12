@@ -8,9 +8,12 @@
             <!-- Search Box -->
             <div class="mb-4 float-end">
                 <h5>Search</h5>
-                <input type="text" class="form-control mb-2" placeholder="Name" id="search-name">
+                <input type="number" class="form-control mb-2" placeholder="Day" id="search-day">
+                <input type="number" class="form-control mb-2" placeholder="Mat" id="search-mat">
                 <input type="number" class="form-control mb-2" placeholder="Age" id="search-age">
-                <input type="date" class="form-control" id="search-day">
+                <input type="number" class="form-control mb-2" placeholder="Gender" id="search-gender">
+                <input type="number" class="form-control mb-2" placeholder="Weight" id="search-weight">
+                <button id="search-button" class="btn btn-primary w-100">Search</button>
             </div>
         </div>
     </div>
@@ -18,101 +21,59 @@
 
 <script>
     $(document).ready(function() {
-        const data1 = [{
-            Day: '1',
-            mats: [{
-                    id: '1',
-                    name: 'Mat1',
-                    matches: [{
-                            ro: 17969,
-                            firstname_one: 'Тэмүүлэн',
-                            lastname_one: 'Энхбаатар',
-                            acname_one: 'Ральф Грэйси Монгол академи',
-                            rt: 18081,
-                            firstname_two: 'Цэнгэлсүрэн',
-                            lastname_two: 'Баасанбавуу',
-                            acname_two: 'Unique Jiu Jitsu Club',
-                            status: 'Pending',
-                            start_time: '10:00'
-                        },
-                        {
-                            ro: 17970,
-                            firstname_one: 'Мөнхбаяр',
-                            lastname_one: 'Батжаргал',
-                            acname_one: 'Академи A',
-                            rt: 18082,
-                            firstname_two: 'Ганбаяр',
-                            lastname_two: 'Төмөр',
-                            acname_two: 'Академи B',
-                            status: 'Ongoing',
-                            start_time: '11:00'
-                        }
-                    ]
-                },
-                {
-                    id: '2',
-                    name: 'Mat2',
-                    matches: [{
-                        ro: 17971,
-                        firstname_one: 'Доржсүрэн',
-                        lastname_one: 'Төмөр',
-                        acname_one: 'Жиу Житсу',
-                        rt: 18083,
-                        firstname_two: 'Мөнхтөр',
-                        lastname_two: 'Чимэд-Оргил',
-                        acname_two: 'Жиу Житсу 2',
-                        status: 'Completed',
-                        start_time: '12:00'
-                    }]
-                }
-            ]
-        }];
+        const searchInputs = {
+            day: $('#search-day'),
+            mat: $('#search-mat'),
+            age: $('#search-age'),
+            gender: $('#search-gender'),
+            weight: $('#search-weight'),
+        };
 
         // Function to render match tables dynamically
         function renderMatches(data) {
             const container = document.getElementById('dynamic-day-matches');
-            container.innerHTML = ""
+            container.innerHTML = "";
 
             data.forEach(day => {
-                // For each day, add a day section
                 const dayDiv = document.createElement('div');
                 dayDiv.classList.add('col-12', 'mb-4');
                 const dayHeading = document.createElement('h3');
-                dayHeading.innerText = `Day ${day.Day}`;
+                dayHeading.innerText = `Day ${day.item_no}`;
                 dayDiv.appendChild(dayHeading);
 
-                day.mats.forEach(mat => {
-                    // For each mat, create the mat section
+                day.mates.forEach(mat => {
                     const matDiv = document.createElement('div');
                     matDiv.classList.add('mb-5');
                     const matHeading = document.createElement('h4');
-                    matHeading.innerText = mat.name;
+                    matHeading.innerText = `Mat ${mat.mate_no}`;
                     matDiv.appendChild(matHeading);
 
-                    // Create the table for each mat
                     const table = document.createElement('table');
                     table.classList.add('table', 'table-bordered');
                     const thead = document.createElement('thead');
                     const headerRow = document.createElement('tr');
                     headerRow.innerHTML = `
-                    <th>Bracket</th>
-                    <th>Order</th>
-                    <th>Start Time</th>
-                    <th>Status</th>
-                `;
+                        <th>#</th>
+                        <th>Bracket</th>
+                        <th>Status</th>`;
                     thead.appendChild(headerRow);
                     table.appendChild(thead);
 
                     const tbody = document.createElement('tbody');
                     mat.matches.forEach(match => {
-                        const row = document.createElement('tr');
-                        row.innerHTML = `
-                        <td>${match.firstname_one} ${match.lastname_one} - ${match.firstname_two} ${match.lastname_two}</td>
-                        <td>${match.ro}</td>
-                        <td>${match.start_time}</td>
-                        <td><span class="badge bg-${match.status === 'Pending' ? 'warning' : match.status === 'Ongoing' ? 'primary' : 'success'} text-dark">${match.status}</span></td>
-                    `;
-                        tbody.appendChild(row);
+                        match.brackets.map((bracket, index) => {
+                            const row = document.createElement('tr');
+                            row.innerHTML = `
+                                <td>${index + 1}</td>
+                                <td>
+                                    ${bracket?.reg_one?.member?.firstname ?? 'N/A'} ${bracket?.reg_one?.member?.lastname ?? 'N/A'}
+                                    - 
+                                    ${bracket?.reg_two?.member?.firstname ?? 'N/A'} ${bracket?.reg_two?.member?.lastname ?? ''}
+                                </td>
+                                <td><span class="badge bg-${match.status === 'P' ? 'warning' : match.status === 'A' ? 'primary' : 'success'} text-dark">${match.status}</span></td>
+                            `;
+                            tbody.appendChild(row);
+                        });
                     });
                     table.appendChild(tbody);
                     matDiv.appendChild(table);
@@ -123,7 +84,35 @@
             });
         }
 
-        // Call the function to render the data
-        renderMatches(data1);
-    })
+        // Function to fetch matches
+        function fetchMatches() {
+            const params = {
+                event_id: @json($eventConfig['event_id']), // Replace with the actual event ID
+                day: searchInputs.day.val() || null,
+                mat: searchInputs.mat.val() || null,
+                age: searchInputs.age.val() || null,
+                gender: searchInputs.gender.val() || null,
+                weight: searchInputs.weight.val() || null,
+            };
+            console.log(params);
+
+            $.ajax({
+                url: '{{ route('event.config.search.matches', ['event_id' => $eventConfig['event_id']]) }}',
+                method: 'GET',
+                data: params,
+                success: function(response) {
+                    renderMatches(response);
+                },
+                error: function(error) {
+                    console.error('Error fetching matches:', error);
+                },
+            });
+        }
+
+        // Attach event listeners
+        $('#search-button').on('click', fetchMatches);
+
+        // Initial fetch
+        fetchMatches();
+    });
 </script>

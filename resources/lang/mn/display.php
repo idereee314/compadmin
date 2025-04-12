@@ -339,6 +339,10 @@ return [
     'reg_payment_date' => 'Төлбөр төлөх сүүлийн огноо',
     'reg_update_date' => 'Бүртгэл засах сүүлийн огноо',
 
+    //Event-match
+    'match_day' => 'Өдөр',
+    'match_mate' => 'Мат',
+
     //Event-entries
     'entrance_fee' => 'Төлбөр',
 

@@ -181,6 +181,13 @@ Route::group([
 
     //stats
     Route::get('/event/{eventId}/statistics', 'event\EventRegistrationController@statistics')->name('event.statistics');
+
+    //Event match
+    Route::resource('/event/config/match', 'event\EventMatchController', ['names' => 'event.config.match']);
+    Route::post('/event/config/match/{event_id}', 'event\EventMatchController@store')->name('event.config.match.store');
+    Route::get('/event/config/match/{event_id}/search-matches', 'event\EventMatchController@getMatchByGroup')->name('event.config.search.matches');
+
+    Route::post('/event/config/save-mate-bracket/{event_id}', 'event\EventMatchController@saveEventMateBracket')->name('event.config.saveMateBracket');
 });
 
 Route::get('/event/{eventId}/bracket', 'event\EventRegistrationController@treeBracket')->name('event.bracket');

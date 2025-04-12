@@ -1,106 +1,103 @@
 <div class="mt-3">
-    <div class="mb-3 d-none" id="control-action">
+    <div class="mb-3 d-flex justify-content-end">
         <button id="save-btn" class="btn btn-success me-2">Save</button>
-        <button id="cancel-btn" class="btn btn-secondary">Cancel</button>
+        <button id="cancel-btn" class="btn btn-secondary me-2">Cancel</button>
+        <button id="generate-btn" class="btn btn-primary">Generate</button>
     </div>
 
     <div class="row">
-        <div class="col-md-2">
+        <div class="col-md-4">
             <h5>Bracket Pool</h5>
-            <div id="bracket-pool" class="dropzone p-2 border scroll-hidden"></div>
+            <div id="bracket-pool" class="dropzone list-group">
+            </div>
         </div>
-        <div class="col-md-10 mat-area" id="schedule-container"></div>
+        <div class="col-md-8 mat-area" id="schedule-container"></div>
     </div>
 </div>
 
 <script>
     $(document).ready(function() {
         let originalAssignments = null;
+        let shortCute = {};
         let isEditing = false
-        const custom_data = window.custom_data || {
-            bracketPool: Array.from({
-                length: 32
-            }, (_, i) => ({
-                id: `${i + 1}`,
-                name: `Bracket ${i + 1}`
-            })),
-            schedule: [{
-                    day: 1,
-                    mats: [{
-                            mat: 1,
-                            brackets: ['1', '2', '3']
-                        },
-                        {
-                            mat: 2,
-                            brackets: []
-                        },
-                        {
-                            mat: 3,
-                            brackets: []
-                        },
-                        {
-                            mat: 4,
-                            brackets: []
-                        },
-                        {
-                            mat: 5,
-                            brackets: []
-                        },
-                        {
-                            mat: 6,
-                            brackets: []
-                        },
-                        {
-                            mat: 7,
-                            brackets: []
-                        },
-                        {
-                            mat: 8,
-                            brackets: []
-                        }
-                    ]
-                },
-                {
-                    day: 2,
-                    mats: [{
-                            mat: 1,
-                            brackets: ['4', '5', '6']
-                        },
-                        {
-                            mat: 2,
-                            brackets: []
-                        }
-                    ]
-                }
-            ]
+        const custom_data = {
+            bracketPool: [],
+            schedule: []
         };
 
         const matAssignments = {};
         const bracketLocations = {};
 
-        function renderBrackets(container, bracketIds) {
-            bracketIds.forEach(id => {
-                const bracket = custom_data.bracketPool.find(b => b.id == id);
-                if (bracket) {
-                    const div = document.createElement('div');
-                    div.className = 'bracket';
-                    div.draggable = true;
-                    div.dataset.id = bracket.id;
-                    div.textContent = bracket.name;
-                    container.appendChild(div);
+        function renderBrackets(container, bracketData) {
+            bracketData.forEach(bracket => {
+                const bracketId =
+                    `${bracket.entry_id}_${bracket.entry_belt_id}_${bracket.entry_age_id}_${bracket.entry_weight_id}`;
+                const existingBracket = document.querySelector(`[data-id="${bracketId}"]`);
+                if (existingBracket) {
+                    return;
                 }
+                const treeNode = document.createElement('div');
+                treeNode.className = 'tree-node mb-3 p-3 border rounded';
+
+                // Add bracket details
+                const details = document.createElement('p');
+                details.innerHTML = `
+                    ${bracket?.entry?.fullname} /
+                    ${bracket?.age?.name}  /
+                    ${bracket?.belt?.name} /
+                    ${bracket?.weight?.weight}
+                `;
+                treeNode.appendChild(details);
+
+                // Make the tree node draggable
+                treeNode.draggable = true;
+                treeNode.dataset.id = bracketId;
+
+                // Append the tree node to the container
+                container.appendChild(treeNode);
+            });
+        }
+
+        function renderTree(container, treeData, depth = 1) {
+            // Ensure treeData is an array
+            const isArray = Array.isArray(treeData);
+            if (isArray) {
+                renderBrackets(container, treeData);
+                return
+            }
+
+            Object.keys(treeData).forEach(key => {
+                const node = treeData[key];
+                const treeNode = document.createElement('div');
+                treeNode.className = 'list-group-item';
+
+                // Add label for the current node
+                const label = document.createElement('div');
+                label.className = 'fw-bold'; // Bootstrap class for bold text
+                label.textContent = key;
+                treeNode.appendChild(label);
+
+                // If the depth is less than 3, render children as headers
+                if (node && !isArray) {
+                    const childContainer = document.createElement('div');
+                    childContainer.className = 'list-group ms-3'; // Indent child nodes
+                    renderTree(childContainer, node, depth + 1);
+                    treeNode.appendChild(childContainer);
+                }
+                // Append the tree node to the container
+                container.appendChild(treeNode);
             });
         }
 
         function setupDragAndDrop() {
-            document.querySelectorAll('.bracket').forEach(bracket => {
-                bracket.addEventListener('dragstart', e => {
-                    e.dataTransfer.setData('bracketId', bracket.dataset.id);
-                    bracket.classList.add("dragging");
+            document.querySelectorAll('.tree-node').forEach(draggable => {
+                draggable.addEventListener('dragstart', e => {
+                    e.dataTransfer.setData('bracketKey', draggable.dataset.id);
+                    draggable.classList.add("dragging");
                 });
 
-                bracket.addEventListener('dragend', () => {
-                    bracket.classList.remove("dragging");
+                draggable.addEventListener('dragend', () => {
+                    draggable.classList.remove("dragging");
                 });
             });
 
@@ -116,52 +113,44 @@
 
                 zone.addEventListener('drop', e => {
                     e.preventDefault();
-                    this.isEditing = true;
                     zone.classList.remove('bg-light');
 
-                    const bracketId = e.dataTransfer.getData('bracketId');
-                    const bracket = document.querySelector(`.bracket[data-id="${bracketId}"]`);
-                    const control = document.querySelector('#control-action');
-                    control.className = "mb-3"
+                    const bracketKey = e.dataTransfer.getData('bracketKey');
+                    const bracket = document.querySelector(`[data-id="${bracketKey}"]`);
                     if (!bracket) return;
 
+                    zone.appendChild(bracket);
                     const isPool = zone.id === "bracket-pool";
-
-                    if (bracketLocations[bracketId]) {
-                        const oldKey = bracketLocations[bracketId];
-                        const oldZone = document.querySelector(
-                            `.dropzone[data-key="${oldKey}"]`);
-                        if (oldZone) {
-                            oldZone.querySelector(`.bracket[data-id="${bracketId}"]`)?.remove();
-                        }
-                        matAssignments[oldKey] = matAssignments[oldKey].filter(id => id !==
-                            bracketId);
-                        delete bracketLocations[bracketId];
-                    } else {
-                        document.getElementById('bracket-pool')
-                            .querySelector(`.bracket[data-id="${bracketId}"]`)?.remove();
-                    }
-
                     if (isPool) {
-                        document.getElementById('bracket-pool').appendChild(bracket);
-                        return;
+                        // Remove from matAssignments if dropped in the pool
+                        const key = bracketLocations[bracketKey];
+                        if (key) {
+                            const index = matAssignments[key].indexOf(bracketKey);
+                            if (index > -1) {
+                                matAssignments[key].splice(index, 1);
+                            }
+                            if (matAssignments[key].length === 0) {
+                                delete matAssignments[key];
+                            }
+                        }
+                        delete bracketLocations[bracketKey];
+                        const pool = document.getElementById('bracket-pool');
+                        pool.innerHTML = "";
+                        bracket.remove();
+                        renderTree(zone, custom_data.bracketPool);
+                        setupDragAndDrop();
+                        return
                     }
 
-                    const day = zone.dataset.day;
-                    const mat = zone.dataset.mat;
-                    const key = `${day}_${mat}`;
 
-                    // Reordering support
-                    const afterElement = getDragAfterElement(zone, e.clientY);
-                    if (afterElement == null) {
-                        zone.appendChild(bracket);
-                    } else {
-                        zone.insertBefore(bracket, afterElement);
+                    // Update matAssignments
+                    const key = `${zone.dataset.day}_${zone.dataset.mat}`;
+                    if (!matAssignments[key]) {
+                        matAssignments[key] = [];
                     }
+                    matAssignments[key].push(bracketKey);
 
-                    matAssignments[key] = Array.from(zone.querySelectorAll('.bracket'))
-                        .map(el => el.dataset.id);
-                    bracketLocations[bracketId] = key;
+                    showControlAction();
                 });
             });
         }
@@ -184,13 +173,42 @@
             }).element;
         }
 
-        function render() {
+        function hideControlAction() {
+            const controlSave = document.querySelector('#save-btn');
+            if (controlSave) {
+                controlSave.className = "btn btn-success me-2 d-none";
+            }
+            const controlCancel = document.querySelector('#cancel-btn');
+            if (controlCancel) {
+                controlCancel.className = "btn btn-secondary me-2 d-none";
+            }
+        }
 
-            const control = document.querySelector('#control-action');
-            control.className = "mb-3 d-none"
+        function showControlAction() {
+            const controlSave = document.querySelector('#save-btn');
+            if (controlSave) {
+                controlSave.className = "btn btn-success me-2";
+            }
+            const controlCancel = document.querySelector('#cancel-btn');
+            if (controlCancel) {
+                controlCancel.className = "btn btn-secondary me-2";
+            }
+        }
+
+        function render() {
+            custom_data['bracketPool'] = @json($bracketPool) || [];
+            custom_data['schedule'] = @json($mateData) || [];
+            // Extract array data from bracketPool
+            shortCute = extractArrayFromObject(custom_data['bracketPool']);
+
+            console.log(custom_data, shortCute);
+
+            hideControlAction();
+
             const pool = document.getElementById('bracket-pool');
             const scheduleContainer = document.getElementById('schedule-container');
 
+            // Clear existing content
             pool.innerHTML = "";
             scheduleContainer.innerHTML = "";
 
@@ -198,6 +216,7 @@
             Object.keys(matAssignments).forEach(key => delete matAssignments[key]);
             Object.keys(bracketLocations).forEach(key => delete bracketLocations[key]);
 
+            // Render schedule (days and mats)
             custom_data.schedule.forEach(day => {
                 const dayLabel = document.createElement('div');
                 dayLabel.className = "day-label";
@@ -212,24 +231,34 @@
 
                 day.mats.forEach(mat => {
                     const col = document.createElement('div');
-                    col.className = "col-md-3";
+                    col.className = "col-md-5 mat-col mb-4";
 
                     const drop = document.createElement('div');
-                    const key = `${day.day}_${mat.mat}`;
+                    const key = `${day.day_id}_${mat.mat_id}`;
                     drop.className = "dropzone p-2 border rounded mate-poll scroll-hidden";
-                    drop.dataset.day = day.day;
-                    drop.dataset.mat = mat.mat;
+                    drop.dataset.day = day.day_id;
+                    drop.dataset.mat = mat.mat_id;
                     drop.dataset.key = key;
 
                     const title = document.createElement('h6');
                     title.innerText = `Mat ${mat.mat}`;
                     drop.appendChild(title);
 
-                    renderBrackets(drop, mat.brackets);
-                    matAssignments[key] = [...mat.brackets];
+                    matAssignments[key] = mat.brackets.map(b => ({
+                        entry_id: b.entry_id,
+                        entry_belt_id: b.entry_belt_id,
+                        entry_age_id: b.entry_age_id,
+                        entry_weight_id: b.entry_weight_id
+                    }))
+                    const fromShortCut = matAssignments[key].map(b => {
+                        const key =
+                            `${b.entry_id}_${b.entry_belt_id}_${b.entry_age_id}_${b.entry_weight_id}`
+                        return shortCute[key]
+                    });
+                    renderBrackets(drop, fromShortCut);
                     mat.brackets.forEach(bid => {
-                        bracketLocations[bid] = key;
-                        allAssigned.add(bid);
+                        bracketLocations[bid.bracket_id] = key;
+                        allAssigned.add(bid.bracket_id);
                     });
 
                     col.appendChild(drop);
@@ -241,8 +270,8 @@
                 scheduleContainer.appendChild(scrollWrapper);
             });
 
-            const unusedBrackets = custom_data.bracketPool.filter(b => !allAssigned.has(b.id));
-            renderBrackets(pool, unusedBrackets.map(b => b.id));
+            // Render unassigned brackets in the pool
+            renderTree(pool, custom_data.bracketPool);
 
             setupDragAndDrop();
         }
@@ -254,6 +283,7 @@
                 const [dayStr, matStr] = key.split('_');
                 const day = parseInt(dayStr);
                 const mat = parseInt(matStr);
+
                 let dayObj = newSchedule.find(d => d.day === day);
                 if (!dayObj) {
                     dayObj = {
@@ -262,25 +292,82 @@
                     };
                     newSchedule.push(dayObj);
                 }
-                dayObj.mats.push({
+
+                const matObj = {
                     mat,
-                    brackets: [...matAssignments[key]]
-                });
+                    brackets: matAssignments[key].map(bracketKey => {
+                        // Extract entry_id, entry_belt_id, entry_age_id, and entry_weight_id from the bracketKey
+                        const [entry_id, entry_belt_id, entry_age_id, entry_weight_id] = bracketKey
+                            .split('_').map(Number);
+
+                        return {
+                            entry_id,
+                            entry_belt_id,
+                            entry_age_id,
+                            entry_weight_id
+                        };
+                    })
+                };
+
+                dayObj.mats.push(matObj);
             }
 
+            // Sort mats and days for consistency
             newSchedule.forEach(day => {
                 day.mats.sort((a, b) => a.mat - b.mat);
             });
 
             newSchedule.sort((a, b) => a.day - b.day);
+
             return newSchedule;
         }
 
+        function extractArrayFromObject(obj) {
+            let result = {};
+            Object.keys(obj).forEach(key => {
+                if (Array.isArray(obj[key])) {
+                    obj[key].forEach(item => {
+                        const itemKey =
+                            `${item.entry_id}_${item.entry_belt_id}_${item.entry_age_id}_${item.entry_weight_id}`;
+                        if (!result[itemKey]) {
+                            result[itemKey] = item;
+                        }
+                    });
+                } else if (typeof obj[key] === 'object' && obj[key] !== null) {
+                    const nestedResult = extractArrayFromObject(obj[key]);
+                    Object.assign(result, nestedResult);
+                }
+            });
+            return result;
+        }
+
         document.getElementById('save-btn').addEventListener('click', () => {
-            custom_data.schedule = JSON.parse(JSON.stringify(convertMatAssignmentsToSchedule()));
-            originalAssignments = custom_data.schedule
-            render();
-            console.log("✅ Saved assignments:", originalAssignments);
+            const schedule = convertMatAssignmentsToSchedule();
+            const eventId = @json($eventConfig['event_id']);
+
+            $.ajax({
+                url: '{{ route('event.config.saveMateBracket', ['event_id' => ':event_id']) }}'
+                    .replace(':event_id', eventId),
+                type: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    schedule: schedule,
+                },
+                success: function(response) {
+                    if (response.status === 'success') {
+                        $("#config_tabs").find(
+                            "li a.active").trigger(
+                            'click');
+                        toastr.success(response.message);
+                    } else {
+                        toastr.error('Failed to save brackets.');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);
+                    toastr.error('An error occurred while saving.');
+                },
+            });
         });
 
         document.getElementById('cancel-btn').addEventListener('click', () => {
@@ -294,4 +381,81 @@
         render();
         originalAssignments = JSON.parse(JSON.stringify(custom_data.schedule));
     });
+
+    $("#generate-btn").on('click', function() {
+        var eventId = @json($eventConfig['event_id']);
+        console.log(eventId);
+        $.get('{!! route('event.config.match.index') !!}/' + eventId, function(data) {
+            $('#eventEntryModal').modal();
+            $('#eventEntryModal').on('shown.bs.modal', function() {
+                $('#eventEntryModal .modal-content').html(data);
+                $('.selectpicker').selectpicker();
+
+                $('#start_date').datepicker({
+                    rtl: KTUtil.isRTL(),
+                    todayHighlight: true,
+                    orientation: "bottom left",
+                    format: 'yyyy-mm-dd',
+                    templates: {
+                        leftArrow: '<i class="la la-angle-right"></i>',
+                        rightArrow: '<i class="la la-angle-left"></i>'
+                    }
+                })
+
+                $('#end_date').datepicker({
+                    rtl: KTUtil.isRTL(),
+                    todayHighlight: true,
+                    orientation: "bottom left",
+                    format: 'yyyy-mm-dd',
+                    templates: {
+                        leftArrow: '<i class="la la-angle-right"></i>',
+                        rightArrow: '<i class="la la-angle-left"></i>'
+                    }
+                })
+
+                $('#event-config-days-entries-form').validate({
+                    rules: {},
+                    messages: {},
+                    submitHandler: function(form) {
+                        $.ajax({
+                            url: form.action,
+                            type: form.method,
+                            data: new FormData(form),
+                            success: function(response) {
+                                if (response.status == 'success') {
+                                    $('#eventConfigModal').find(
+                                        "#close").trigger('click');
+                                    $("#config_tabs").find(
+                                        "li a.active").trigger(
+                                        'click');
+                                    toastr.success(response.msg);
+                                } else {
+                                    toastr.error(response.errors,
+                                        response.msg, {
+                                            "closeButton": true,
+                                            "timeOut": "0",
+                                            "extendedTimeOut": "0",
+                                        });
+                                }
+                            },
+                            error: function(xhr, textStatus, error) {
+                                console.log(xhr.statusText);
+                                console.log(textStatus);
+                                console.log(error);
+                            },
+                            async: false,
+                            processData: false,
+                            contentType: false
+                        });
+                    },
+                });
+
+                $(this).off('shown.bs.modal');
+            });
+            $('#eventEntryModal').on('hidden.bs.modal', function() {
+                $('#eventEntryModal .modal-content').empty();
+            });
+        });
+
+    })
 </script>

@@ -484,6 +484,20 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 		return null;
 	}
 
+	public  function getEventBracketByGroup($eventId)
+	{
+		$regs = "";
+		if(@$eventId)
+		{
+			$qry = EventBrackets::selectRaw('*')
+				->where('event_id', $eventId)
+				->orderByRaw('entry_id, entry_belt_id, entry_age_id, entry_weight_id');
+			$regs = $qry->get()->load(['entry:id,name,gender_code', 'belt:id,name', 'age:id,start_age,end_age', 'weight:id,weight']);
+		}
+
+		return $regs;
+	}
+
 
 	public  function getEventRegByGroup($eventId)
 	{
