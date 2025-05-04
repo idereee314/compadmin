@@ -45,7 +45,7 @@
                     ${bracket?.entry?.fullname} /
                     ${bracket?.age?.name}  /
                     ${bracket?.belt?.name} /
-                    ${bracket?.weight?.weight}
+                    ${bracket?.weight?.weight} / ${bracket?.total}
                 `;
                 treeNode.appendChild(details);
 
@@ -94,12 +94,26 @@
                 draggable.addEventListener('dragstart', e => {
                     e.dataTransfer.setData('bracketKey', draggable.dataset.id);
                     draggable.classList.add("dragging");
+                    showControlAction();
                 });
 
                 draggable.addEventListener('dragend', () => {
                     draggable.classList.remove("dragging");
                 });
             });
+
+            function removeFromBraket(bracketKey) {
+                const key = bracketLocations[bracketKey];
+                if (key) {
+                    const index = matAssignments[key].indexOf(bracketKey);
+                    if (index > -1) {
+                        const refrence = matAssignments[key].splice(index, 1);
+                        delete refrence;
+                        console.log("Removed from matAssignments", matAssignments[key]);
+                    }
+                }
+                delete bracketLocations[bracketKey];
+            }
 
             document.querySelectorAll('.dropzone').forEach(zone => {
                 zone.addEventListener('dragover', e => {
@@ -118,37 +132,33 @@
                     const bracketKey = e.dataTransfer.getData('bracketKey');
                     const bracket = document.querySelector(`[data-id="${bracketKey}"]`);
                     if (!bracket) return;
+                    const mapKey = `${zone.dataset.day}_${zone.dataset.mat}`;
 
                     zone.appendChild(bracket);
                     const isPool = zone.id === "bracket-pool";
                     if (isPool) {
                         // Remove from matAssignments if dropped in the pool
-                        const key = bracketLocations[bracketKey];
-                        if (key) {
-                            const index = matAssignments[key].indexOf(bracketKey);
-                            if (index > -1) {
-                                matAssignments[key].splice(index, 1);
-                            }
-                            if (matAssignments[key].length === 0) {
-                                delete matAssignments[key];
-                            }
-                        }
-                        delete bracketLocations[bracketKey];
+                        removeFromBraket(bracketKey);
                         const pool = document.getElementById('bracket-pool');
                         pool.innerHTML = "";
                         bracket.remove();
                         renderTree(zone, custom_data.bracketPool);
                         setupDragAndDrop();
                         return
+                    } else if (bracketLocations[bracketKey] != null) {
+                        removeFromBraket(bracketKey);
+                    } else {
+                        bracketLocations[bracketKey] = mapKey;
                     }
 
 
                     // Update matAssignments
-                    const key = `${zone.dataset.day}_${zone.dataset.mat}`;
-                    if (!matAssignments[key]) {
-                        matAssignments[key] = [];
+                    if (!matAssignments[mapKey]) {
+                        matAssignments[mapKey] = [];
                     }
-                    matAssignments[key].push(bracketKey);
+                    const [entry_id, entry_belt_id, entry_age_id, entry_weight_id] = bracketKey
+                        .split('_').map(Number)
+                    matAssignments[mapKey].push(bracketKey);
 
                     showControlAction();
                 });
@@ -244,20 +254,17 @@
                     title.innerText = `Mat ${mat.mat}`;
                     drop.appendChild(title);
 
-                    matAssignments[key] = mat.brackets.map(b => ({
-                        entry_id: b.entry_id,
-                        entry_belt_id: b.entry_belt_id,
-                        entry_age_id: b.entry_age_id,
-                        entry_weight_id: b.entry_weight_id
-                    }))
+                    matAssignments[key] = mat.brackets.map(b =>
+                        `${b.entry_id}_${b.entry_belt_id}_${b.entry_age_id}_${b.entry_weight_id}`
+                    )
                     const fromShortCut = matAssignments[key].map(b => {
-                        const key =
-                            `${b.entry_id}_${b.entry_belt_id}_${b.entry_age_id}_${b.entry_weight_id}`
-                        return shortCute[key]
+                        return shortCute[b]
                     });
                     renderBrackets(drop, fromShortCut);
                     mat.brackets.forEach(bid => {
-                        bracketLocations[bid.bracket_id] = key;
+                        const keys =
+                            `${bid.entry_id}_${bid.entry_belt_id}_${bid.entry_age_id}_${bid.entry_weight_id}`
+                        bracketLocations[keys] = key;
                         allAssigned.add(bid.bracket_id);
                     });
 
@@ -298,7 +305,7 @@
                     brackets: matAssignments[key].map(bracketKey => {
                         // Extract entry_id, entry_belt_id, entry_age_id, and entry_weight_id from the bracketKey
                         const [entry_id, entry_belt_id, entry_age_id, entry_weight_id] = bracketKey
-                            .split('_').map(Number);
+                            .split('_').map(Number)
 
                         return {
                             entry_id,

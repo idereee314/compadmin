@@ -5,7 +5,9 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 
 use event\EventConfigDaysRepository;
+use event\EventMatchesRespository;
 use event\EloquentEventConfigDaysRepository;
+use event\EloquentEventMatchesRespository;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -27,6 +29,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind('event\EventRepository', 'event\EloquentEventRepository');
         $this->app->bind('event\EventCategoryRepository', 'event\EloquentEventCategoryRepository');
         $this->app->bind(EventConfigDaysRepository::class, EloquentEventConfigDaysRepository::class);
+        $this->app->bind(EventMatchesRespository::class, EloquentEventMatchesRespository::class);
         $this->app->bind('event\EventRankSeasonRepository', 'event\EloquentEventRankSeasonRepository');
         $this->app->bind('event\EventUserRepository', 'event\EloquentEventUserRepository'); 
         $this->app->bind('user\CompadRoleRepository', 'user\EloquentCompadRoleRepository'); 

@@ -345,6 +345,7 @@ return [
 
     //Event-entries
     'entrance_fee' => 'Төлбөр',
+    'duration' => 'Хугацаа(минут)',
 
     //Event-config-belt
     'possible_belts' => 'Боломжит бүс',
@@ -391,4 +392,5 @@ return [
     'upcoming_event_list' => 'Удахгүй болох тэмцээнүүд',
     'past_event_list' => 'Болж өнгөрсөн тэмцээнүүд',
 
+    'winning' => 'Ялагч',
 ];

@@ -29,6 +29,13 @@
             weight: $('#search-weight'),
         };
 
+        function formatToHHmm(date) {
+            let hours = date.getHours().toString().padStart(2, '0'); // 2-digit hours
+            let minutes = date.getMinutes().toString().padStart(2, '0'); // 2-digit minutes
+            return `${hours}:${minutes}`;
+        }
+
+
         // Function to render match tables dynamically
         function renderMatches(data) {
             const container = document.getElementById('dynamic-day-matches');
@@ -40,6 +47,7 @@
                 const dayHeading = document.createElement('h3');
                 dayHeading.innerText = `Day ${day.item_no}`;
                 dayDiv.appendChild(dayHeading);
+                const starDate = new Date(day.start_date);
 
                 day.mates.forEach(mat => {
                     const matDiv = document.createElement('div');
@@ -55,26 +63,56 @@
                     headerRow.innerHTML = `
                         <th>#</th>
                         <th>Bracket</th>
+                        <th>Winner</th>
+                        <th>Duration</th>
                         <th>Status</th>`;
                     thead.appendChild(headerRow);
                     table.appendChild(thead);
 
                     const tbody = document.createElement('tbody');
+                    let matDuration = 0;
                     mat.matches.forEach(match => {
                         match.brackets.map((bracket, index) => {
                             const row = document.createElement('tr');
+                            matDuration += (match.entry?.duration ?? 0);
+                            starDate.setMinutes(starDate.getMinutes() +
+                                matDuration); // adds 15 minutes
                             row.innerHTML = `
                                 <td>${index + 1}</td>
                                 <td>
-                                    ${bracket?.reg_one?.member?.firstname ?? 'N/A'} ${bracket?.reg_one?.member?.lastname ?? 'N/A'}
-                                    - 
-                                    ${bracket?.reg_two?.member?.firstname ?? 'N/A'} ${bracket?.reg_two?.member?.lastname ?? ''}
+                                    ${bracket?.reg_one?.member?.firstname ?? 'TBD'} ${bracket?.reg_one?.member?.lastname ?? ''}
+                                    -
+                                     ${bracket?.reg_two?.member?.firstname ?? 'TBD'} ${bracket?.reg_two?.member?.lastname ?? ''}
                                 </td>
-                                <td><span class="badge bg-${match.status === 'P' ? 'warning' : match.status === 'A' ? 'primary' : 'success'} text-dark">${match.status}</span></td>
+                                <td>
+                                    ${bracket?.reg_win?.member?.firstname ?? 'TBD'} ${bracket?.reg_win?.member?.lastname ?? ''}
+                                </td>
+                                <td>
+                                    ${formatToHHmm(starDate)}
+                                </td>
+                                <td><span class="badge bg-${bracket.status == 'P' ? 'warning' : bracket.status == 'A' ? 'primary' : 'success'} text-dark">${bracket.status}</span></td>
+                                <td class="text-center pr-0">
+                                    <a href="javascript:;" class="btn btn-icon btn-light btn-hover-primary btn-sm mx-3 edit-button" data-match-id="${bracket.id}">
+                                        <span class="svg-icon svg-icon-md svg-icon-primary">
+                                            <!--begin::Svg Icon | path:assets/media/svg/icons/Communication/Write.svg-->
+                                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                    <rect x="0" y="0" width="24" height="24" />
+                                                    <path d="M12.2674799,18.2323597 L12.0084872,5.45852451 C12.0004303,5.06114792 12.1504154,4.6768183 12.4255037,4.38993949 L15.0030167,1.70195304 L17.5910752,4.40093695 C17.8599071,4.6812911 18.0095067,5.05499603 18.0083938,5.44341307 L17.9718262,18.2062508 C17.9694575,19.0329966 17.2985816,19.701953 16.4718324,19.701953 L13.7671717,19.701953 C12.9505952,19.701953 12.2840328,19.0487684 12.2674799,18.2323597 Z" fill="#000000" fill-rule="nonzero" transform="translate(14.701953, 10.701953) rotate(-135.000000) translate(-14.701953, -10.701953)" />
+                                                    <path d="M12.9,2 C13.4522847,2 13.9,2.44771525 13.9,3 C13.9,3.55228475 13.4522847,4 12.9,4 L6,4 C4.8954305,4 4,4.8954305 4,6 L4,18 C4,19.1045695 4.8954305,20 6,20 L18,20 C19.1045695,20 20,19.1045695 20,18 L20,13 C20,12.4477153 20.4477153,12 21,12 C21.5522847,12 22,12.4477153 22,13 L22,18 C22,20.209139 20.209139,22 18,22 L6,22 C3.790861,22 2,20.209139 2,18 L2,6 C2,3.790861 3.790861,2 6,2 L12.9,2 Z" fill="#000000" fill-rule="nonzero" opacity="0.3" />
+                                                </g>
+                                            </svg>
+                                        </span>
+                                    </a>
+                                </td>
                             `;
                             tbody.appendChild(row);
                         });
                     });
+                    const row = document.createElement('tr');
+                    row.innerHTML =
+                        `<td></td><td></td><td></td><td>${matDuration ?? '0'}</td><td></td><td class="text-center pr-0"> </td>`;
+                    tbody.appendChild(row);
                     table.appendChild(tbody);
                     matDiv.appendChild(table);
                     dayDiv.appendChild(matDiv);
@@ -114,5 +152,89 @@
 
         // Initial fetch
         fetchMatches();
+
+        $(document).off('click', '.edit-button').on('click', '.edit-button', function() {
+            console.log('Edit Match ID:', $(this).data('match-id'));
+            const matchId = $(this).data('match-id');
+            const url = "{!! route('event.config.match.edit_status', ['match_id' => '__EVENT_ID__']) !!}".replace('__EVENT_ID__', matchId);
+            $.get(url, function(data) {
+                $('#eventEntryModal').modal();
+                $('#eventEntryModal').on('shown.bs.modal', function() {
+                    $('#eventEntryModal .modal-content').html(data);
+                    $('.selectpicker').selectpicker();
+
+                    $('#start_date').datepicker({
+                        rtl: KTUtil.isRTL(),
+                        todayHighlight: true,
+                        orientation: "bottom left",
+                        format: 'yyyy-mm-dd',
+                        templates: {
+                            leftArrow: '<i class="la la-angle-right"></i>',
+                            rightArrow: '<i class="la la-angle-left"></i>'
+                        }
+                    })
+
+                    $('#end_date').datepicker({
+                        rtl: KTUtil.isRTL(),
+                        todayHighlight: true,
+                        orientation: "bottom left",
+                        format: 'yyyy-mm-dd',
+                        templates: {
+                            leftArrow: '<i class="la la-angle-right"></i>',
+                            rightArrow: '<i class="la la-angle-left"></i>'
+                        }
+                    })
+
+                    $('#event-config-days-entries-form').validate({
+                        rules: {},
+                        messages: {},
+                        submitHandler: function(form) {
+                            $.ajax({
+                                url: form.action,
+                                type: form.method,
+                                data: new FormData(form),
+                                success: function(response) {
+                                    if (response.status ==
+                                        'success') {
+                                        $('#eventConfigModal')
+                                            .find(
+                                                "#close")
+                                            .trigger('click');
+                                        $("#config_tabs").find(
+                                                "li a.active")
+                                            .trigger(
+                                                'click');
+                                        toastr.success(response
+                                            .msg);
+                                    } else {
+                                        toastr.error(response
+                                            .errors,
+                                            response.msg, {
+                                                "closeButton": true,
+                                                "timeOut": "0",
+                                                "extendedTimeOut": "0",
+                                            });
+                                    }
+                                },
+                                error: function(xhr, textStatus,
+                                    error) {
+                                    console.log(xhr.statusText);
+                                    console.log(textStatus);
+                                    console.log(error);
+                                },
+                                async: false,
+                                processData: false,
+                                contentType: false
+                            });
+                        },
+                    });
+
+                    $(this).off('shown.bs.modal');
+                });
+                $('#eventEntryModal').on('hidden.bs.modal', function() {
+                    $('#eventEntryModal .modal-content').empty();
+                });
+            });
+        });
     });
 </script>

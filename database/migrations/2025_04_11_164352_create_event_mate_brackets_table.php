@@ -20,10 +20,7 @@ return new class extends Migration
             $table->unsignedBigInteger('entry_belt_id')->index()->comment('Belt ID');
             $table->unsignedBigInteger('entry_age_id')->index()->comment('Age ID');
             $table->unsignedBigInteger('entry_weight_id')->index()->comment('Weight ID');
-            $table->time('start_time')->comment('Start Time');
-            $table->time('end_time')->comment('End Time');
             $table->integer('total_hour')->comment('Total Hour');
-            $table->string('status', 1)->default('P')->comment('Status: C=Complete, P=Pending, A=Active');
             $table->timestamps();
         });
     }

@@ -8,6 +8,7 @@ use Input;
 use Validator;
 
 use event\EloquentEventConfigDaysRepository as ConfigDays;
+use event\EloquentEventMatchesRespository as Mathes;
 
 use \Auth as Auth;
 use Config;
@@ -20,11 +21,12 @@ class EventMatchController extends Controller
 {
     public $restful = true;
 
-    public function __construct(ConfigDays $configDays, Event $event)
+    public function __construct(ConfigDays $configDays, Event $event, Mathes $mathes)
     {
         $this->view_path = 'event.config.match';
         $this->configDays = $configDays;
         $this->event = $event;
+        $this->mathes = $mathes;
     }
 
     public function show($eventId)
@@ -32,6 +34,24 @@ class EventMatchController extends Controller
         $data['view_path'] = $this->view_path;
         $data['eventId'] = $eventId;
         return view($this->view_path.'.index', $data);
+    }
+
+    public function edit_status_show($match_id)
+    {
+        $data['view_path'] = $this->view_path;
+        $data['matchId'] = $match_id;
+        $data['registered'] = $this->mathes->getMatchesByEventId($match_id);
+        Log::info('registered', ['registered' => $data['registered']]);
+        return view($this->view_path.'.edit', $data);
+    }
+
+    public function edit_winner(Request $request, $match_id)
+    {
+        $this->mathes->updateWinner($match_id, $request);
+        return  array(
+            'status' => 'success',
+            'msg' => trans('messages.success_save')
+        );
     }
 
     public function store(Request $request, $event_id){
@@ -87,10 +107,17 @@ class EventMatchController extends Controller
 
             foreach ($data['schedule'] as $day) {
                 foreach ($day['mats'] as $mat) {
+                    Log::info('Saving brackets', [
+                        'event_id' => $event_id,
+                        'day' => $day['day'],
+                        'mat' => $mat['mat'],
+                        'brackets' => $mat['brackets'] ?? [],
+                    ]);
                     $this->configDays->resetMateBracker($event_id, $day['day'], $mat['mat']);
                     if (isset($mat['brackets']) && !empty($mat['brackets'])) {
                         foreach ($mat['brackets'] as $bracket) {
                             $this->configDays->saveBracket($event_id, $day['day'], $mat['mat'], $bracket, 0);
+                            $this->mathes->generateMatches($event_id,  $bracket);
                         }
                     }
                 }

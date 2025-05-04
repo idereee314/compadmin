@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->integer('event_id');
             $table->integer('item_no');
-            $table->date('start_date');
+            $table->dateTime('start_date');
             $table->boolean('is_archived')->default(false);
             $table->timestamps();
         });

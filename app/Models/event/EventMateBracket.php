@@ -8,6 +8,7 @@ use Carbon;
 use Config;
 use DB;
 
+use Log;
 class EventMateBracket extends Model
 {
     protected $table = 'uq_event_mate_brackets';
@@ -43,6 +44,11 @@ class EventMateBracket extends Model
         return $this->belongsTo('event\Event', 'event_id');
     }
 
+    public function entry()
+    {
+        return $this->belongsTo('reference\EventEntries', 'entry_id');
+    }
+
     public function mate()
     {
         return $this->belongsTo('event\EventMate', 'mat_id');
@@ -55,7 +61,10 @@ class EventMateBracket extends Model
 
     public function brackets()
     {
-        return $this->hasMany('event\EventBrackets', 'entry_id', 'entry_id')
+        Log::info('Entry ID:', ['entry_id' => $this->entry_id]);
+        Log::info('Entry Belt ID:', ['entry_belt_id' => $this->entry_belt_id]);
+        Log::info('Entry Age ID:', ['entry_age_id' => $this->entry_age_id]);
+        return $this->hasMany('event\EventMatches', 'entry_id', 'entry_id')
             ->whereColumn('entry_belt_id', 'entry_belt_id')
             ->whereColumn('entry_age_id', 'entry_age_id')
             ->whereColumn('entry_weight_id', 'entry_weight_id');
