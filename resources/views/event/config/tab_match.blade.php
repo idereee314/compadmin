@@ -108,21 +108,13 @@
                     const tbody = document.createElement('tbody');
                     let matDuration = 0;
                     mat.matches.forEach(match => {
-                        // Move the last two matches in the entry_weight_id group to the end
-                        const weightGroupMatches = match.brackets.filter(bracket => bracket.entry_weight_id);
-                        if (weightGroupMatches.length > 2) {
-                            const lastTwoMatches = weightGroupMatches.slice(-2);
-                            match.brackets = match.brackets.filter(bracket => !lastTwoMatches.includes(bracket));
-                            match.brackets.push(...lastTwoMatches);
-                        }
-
                         match.brackets.map((bracket, index) => {
                             const row = document.createElement('tr');
                             matDuration += (match.entry?.duration ?? 0);
                             starDate.setMinutes(starDate.getMinutes() +
-                                matDuration); // adds 15 minutes
+                                matDuration);
                             row.innerHTML = `
-                                <td>${bracket.id + 1}</td>
+                                <td>${index + 1}</td>
                                 <td>
                                     ${bracket?.reg_one?.member?.firstname ?? 'TBD'} ${bracket?.reg_one?.member?.lastname ?? ''}
                                     -

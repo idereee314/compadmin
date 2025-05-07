@@ -91,6 +91,7 @@ class EloquentEventMatchesRespository implements EventMatchesRespository {
 		if($input['reg_win_id'] != null){
 			$eventMatches->reg_win_id = $input['reg_win_id'];
 			$eventMatches->status = 'C';
+			$eventMatches->endDate = Carbon::now();
 			$eventMatches->save();
 			$this->updateNextReg($id, $input['reg_win_id']);
 		}
