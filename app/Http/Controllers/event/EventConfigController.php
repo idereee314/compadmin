@@ -35,6 +35,7 @@ use \Auth as Auth;
 use Config;
 use \HTML;
 use Image;
+use Log;
 
 class EventConfigController extends Controller
 {
@@ -401,7 +402,7 @@ class EventConfigController extends Controller
         $data['matSettings'] = $event->configMat;
         $data['mateData'] = $mate;
 		$data['bracketPool'] = $eventRegistration->groupBy(['entry.fullname', 'belt.name', 'age.name']);
-        
+        $data['configViewDict'] = $this->eventDays->dictData($eventConfig->event_id);
         
         if($input['code'] == 'entry_config_belt') 
         {

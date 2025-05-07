@@ -9,4 +9,5 @@ interface EventConfigDaysRepository {
     public function getMatByEventId($event_id);
 
     public function generateMatAndDays($event_id, $mat, $start_date, $end_date);
+    public function dictData($event_id);
 }

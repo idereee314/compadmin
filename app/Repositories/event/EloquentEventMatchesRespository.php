@@ -142,7 +142,6 @@ class EloquentEventMatchesRespository implements EventMatchesRespository {
 
 	public function generateMatches($event_id, $input)
 	{
-		Log::info('Event Brackets:', ['event_id' => $event_id, 'input' => $input]);
 		// Step 1: Retrieve the event brackets
 		$eventBrackets = DB::table('uq_event_brackets')
 			->where('event_id', $event_id)
@@ -150,7 +149,6 @@ class EloquentEventMatchesRespository implements EventMatchesRespository {
 			->where('entry_age_id', $input['entry_age_id'])
 			->where('entry_weight_id', $input['entry_weight_id'])
 			->get();
-		Log::info('Event Brackets:', ['event_brackets' => $eventBrackets]);
 		$eventMatches = [];
 
 		// Step 2: Save the brackets as initial matches
@@ -164,6 +162,7 @@ class EloquentEventMatchesRespository implements EventMatchesRespository {
 				->where('reg_one_id', $bracket->reg_one_id)
 				->where('reg_two_id', $bracket->reg_two_id)
 				->first();
+			Log::info('Event Brackets:', ['existing_match' => $existingMatch->toArray()]);
 
 			if ($existingMatch) {
 				$eventMatches[] = $existingMatch; // Add the existing match to the list

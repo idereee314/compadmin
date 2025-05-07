@@ -135,13 +135,11 @@ class EloquentEventConfigDaysRepository implements EventConfigDaysRepository {
 
 	public function dictData($event_id)
 	{
-		return DB::table('uq_comp.uq_event_mate_brackets')
-        ->where('event_id', $event_id)
-        ->where('day_id', $day_id)
-        ->where('mat_id', $mat_id)
-        ->delete();
+		$eventDays['days'] = EventDays::where('event_id', $event_id)->get();
+		$mates = EventMate::select('day_id', 'event_id', 'mate_no', 'id')->where('event_id', $event_id)->get();
+		$eventDays['mate'] = $mates->groupBy('day_id');
+		return $eventDays;
 	}
-
 
 	public function getMatchByGroup(Request $request, $eventId)
 	{

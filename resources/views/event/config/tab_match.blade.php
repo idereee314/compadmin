@@ -8,8 +8,21 @@
             <!-- Search Box -->
             <div class="mb-4 float-end">
                 <h5>Search</h5>
-                <input type="number" class="form-control mb-2" placeholder="Day" id="search-day">
-                <input type="number" class="form-control mb-2" placeholder="Mat" id="search-mat">
+                <div class="mb-2">
+                    <select class="form-control selectpicker" id="search-day" name="type">
+                        @forelse(@$configViewDict['days'] as $day)
+                            <option value="{{ $day->id }}">Day {{ $day->item_no }}</option>
+                        @empty
+                        @endforelse
+                    </select>
+                    <div class="error-here"></div>
+                </div>
+                <div class="mb-2">
+                    <select class="form-control selectpicker" id="search-mat" name="type">
+                        <option value="">-- Mate --</option>
+                    </select>
+                    <div class="error-here"></div>
+                </div>
                 <input type="number" class="form-control mb-2" placeholder="Age" id="search-age">
                 <input type="number" class="form-control mb-2" placeholder="Gender" id="search-gender">
                 <input type="number" class="form-control mb-2" placeholder="Weight" id="search-weight">
@@ -21,6 +34,29 @@
 
 <script>
     $(document).ready(function() {
+        const matesByDay = @json($configViewDict['mate']);
+
+        $('#search-day').on('changed.bs.select', function () {
+            const selectedDayId = this.value;
+            const mateSelect = document.getElementById('search-mat');
+
+            // Clear previous options
+            mateSelect.innerHTML = '<option value="">-- Mate --</option>';
+
+            if (matesByDay[selectedDayId]) {
+                matesByDay[selectedDayId].forEach(mate => {
+                    const option = document.createElement('option');
+                    option.value = mate.id;
+                    option.text = 'Mate ' + mate.mate_no;
+                    mateSelect.appendChild(option);
+                });
+            }
+            $('#search-mat').selectpicker('refresh');
+        });
+
+        $('#search-day, #search-mat').selectpicker();
+        $('#search-day').prop('selectedIndex', 0);
+        $('#search-day').trigger('changed.bs.select');
         const searchInputs = {
             day: $('#search-day'),
             mat: $('#search-mat'),
@@ -72,13 +108,21 @@
                     const tbody = document.createElement('tbody');
                     let matDuration = 0;
                     mat.matches.forEach(match => {
+                        // Move the last two matches in the entry_weight_id group to the end
+                        const weightGroupMatches = match.brackets.filter(bracket => bracket.entry_weight_id);
+                        if (weightGroupMatches.length > 2) {
+                            const lastTwoMatches = weightGroupMatches.slice(-2);
+                            match.brackets = match.brackets.filter(bracket => !lastTwoMatches.includes(bracket));
+                            match.brackets.push(...lastTwoMatches);
+                        }
+
                         match.brackets.map((bracket, index) => {
                             const row = document.createElement('tr');
                             matDuration += (match.entry?.duration ?? 0);
                             starDate.setMinutes(starDate.getMinutes() +
                                 matDuration); // adds 15 minutes
                             row.innerHTML = `
-                                <td>${index + 1}</td>
+                                <td>${bracket.id + 1}</td>
                                 <td>
                                     ${bracket?.reg_one?.member?.firstname ?? 'TBD'} ${bracket?.reg_one?.member?.lastname ?? ''}
                                     -
