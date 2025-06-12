@@ -31,7 +31,7 @@
                     <div class="card-body">
                         <div class="tab-content">
                             <div class="tab-pane fade in {{@$tab_id == $tab['number'] ? 'active show' : '' }}" id="tab1-1">
-                                @include('reference.info.sports.tabs_jiujitsu.tab_division')
+                                @include('rules.info.sports.tabs_jiujitsu.tab_division')
                             </div>
                             <div class="tab-pane fade in {{@$tab_id == $tab['number'] ? 'active show' : '' }}" id="tab1-2">
                                 <div class="card-body">
@@ -214,7 +214,7 @@
 				                </div>
                             </div>
                             <div class="tab-pane fade in {{@$tab_id == $tab['number'] ? 'active show' : '' }}" id="tab1-4">
-                                @include('reference.info.sports.tabs_jiujitsu.tab_rules')
+                                @include('rules.info.sports.tabs_jiujitsu.tab_rules')
                             </div>                            
                         </div>
                     </div>

@@ -439,6 +439,14 @@ class EventConfigController extends Controller
         return view($this->view_path.'.'.$input['name'], $data);
     }
 
+    // Start Rank Information
+    /**
+     * Show the ranking page for a specific sport.
+     *
+     * @param int $sport_id
+     * @return \Illuminate\View\View
+     */
+
     public function ranking($sport_id){
          
         $sport = $this->sport->find($sport_id);
@@ -543,9 +551,11 @@ class EventConfigController extends Controller
         return view('.reference/ranking/kidsRankList', $data);
     }
 
-    
+    //End Rank Information
 
-    public function reference($sport_id){
+    //Rules
+
+    public function rules($sport_id){
          
         $sport = $this->sport->find($sport_id);
 
@@ -555,6 +565,9 @@ class EventConfigController extends Controller
         $data['tab_id'] = @$input['tab_id'] ? @$input['tab_id'] : 'tab1-1';
         $data['view_path'] = $this->view_path;
 
-        return view('.reference/info/reference', $data);
+        return view('.rules/info/rule', $data);
     }
+
+    //Reference Information
+    
 }

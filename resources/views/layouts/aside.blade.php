@@ -8,7 +8,7 @@
             <ul class="menu-nav">
                 <li class="menu-item" aria-haspopup="true">
                     <!-- <a href="/event/sports" class="menu-link"> -->
-                    <a href="/event/competition" class="menu-link">
+                    <a href="/event/sports" class="menu-link">
                         <span class="svg-icon menu-icon">
                             <!--begin::Svg Icon | path:assets/media/svg/icons/Design/Layers.svg-->
                             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
@@ -118,12 +118,12 @@
                 </li>
                 
                 <li class="menu-section">
-                    <h4 class="menu-text">Лавлах</h4>
+                    <h4 class="menu-text">Дүрэм</h4>
                     <i class="menu-icon ki ki-bold-more-hor icon-md"></i>
                 </li>
                 
                 <li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
-                    <a href="/1/reference" class="menu-link menu-toggle">
+                    <a href="/1/rules" class="menu-link menu-toggle">
                         <span class="svg-icon menu-icon">
                             <!--begin::Svg Icon | path:assets/media/svg/icons/Layout/Layout-4-blocks.svg-->
                             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
@@ -138,6 +138,13 @@
                         <span class="menu-text">Жюү жицү</span>
                     </a>
                 </li>
+
+                <li class="menu-section">
+                    <h4 class="menu-text">Лавлах</h4>
+                    <i class="menu-icon ki ki-bold-more-hor icon-md"></i>
+                </li>
+
+
 
                 <!-- <li class="menu-section">
                     <h4 class="menu-text">Чансаа</h4>

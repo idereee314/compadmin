@@ -67,7 +67,7 @@
                                         <a href="" class="text-muted">{{ $sport->name}}</a>
                                     </li>                                    
                                     <li class="breadcrumb-item text-muted">
-                                        <a href="{{ route('event.config.index') }}" class="text-muted">Лавлагаа</a>
+                                        <a href="{{ route('event.config.index') }}" class="text-muted">Мэдээлэл</a>
                                     </li>
                                 </ul>
                                 <!--end::Breadcrumb-->
@@ -78,11 +78,11 @@
                     <!--end::Subheader-->
 
                     @if($sport_id == '1')
-                        @include('reference.info.sports.jiujitsu_division')
+                        @include('rules.info.sports.jiujitsu_division')
                     @elseif($sport_id == '2')
-                        @include('reference.info.sports.volleyball_division')
+                        @include('rules.info.sports.volleyball_division')
                     @elseif($sport_id == '3')
-                        @include('reference.info.sports.judo_division')
+                        @include('rules.info.sports.judo_division')
                     @endif
                 </div>
                 <!--end::Container-->

@@ -712,7 +712,8 @@ class EventRegistrationController extends Controller
 
     public function showSportCard()
     {
-        $sport = $this->sport->all()->toArray(); // Convert the object to an array
+        // $sport = $this->sport->all()->toArray();
+        $sport = $this->sport->getSportList();
         $sports = $sport;
     
         $viewPath = $this->view_path;

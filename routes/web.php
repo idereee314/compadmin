@@ -227,4 +227,4 @@ Route::get('/{sport_id}/ranking/athlete/masters','event\EventConfigController@ma
 Route::get('/{sport_id}/ranking/athlete/kids','event\EventConfigController@kidsRanking')->name('kidsRanking');
 
 //info
-Route::get('/{sport_id}/reference','event\EventConfigController@reference')->name('reference.information');
+Route::get('/{sport_id}/rules','event\EventConfigController@rules')->name('rules.information');
