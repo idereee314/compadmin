@@ -52,6 +52,12 @@ return array(
 		'refunded' => 'Буцаасан',
 	],
 
+	'event_status' => [
+		'created' => 'Үүсгэсэн',
+		'verified' => 'Зөвшөөрсөн',
+		'canceled' => 'Цуцалсан',
+	],
+
 	'event_registration_status_for_stats' => [
 		'created' => 'Баталгаажаагүй',
 		//'registered' => 'Бүртгэсэн',

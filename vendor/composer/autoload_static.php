@@ -9470,6 +9470,7 @@ class ComposerStaticInit8da5d45392af245feb314a3d0411c64d
         'event\\EventConfig' => __DIR__ . '/../..' . '/app/Models/event/EventConfig.php',
         'event\\EventConfigController' => __DIR__ . '/../..' . '/app/Http/Controllers/event/EventConfigController.php',
         'event\\EventConfigRepository' => __DIR__ . '/../..' . '/app/Repositories/event/EventConfigRepository.php',
+        'event\\EventController' => __DIR__ . '/../..' . '/app/Http/Controllers/event/EventController.php',
         'event\\EventPayment' => __DIR__ . '/../..' . '/app/Models/event/EventPayment.php',
         'event\\EventPicture' => __DIR__ . '/../..' . '/app/Models/event/EventPicture.php',
         'event\\EventRankSeason' => __DIR__ . '/../..' . '/app/Models/event/EventRankSeason.php',
@@ -9622,6 +9623,7 @@ class ComposerStaticInit8da5d45392af245feb314a3d0411c64d
         'user\\EloquentCompadUserRepository' => __DIR__ . '/../..' . '/app/Repositories/user/EloquentCompadUserRepository.php',
         'user\\EloquentUserRepository' => __DIR__ . '/../..' . '/app/Repositories/user/EloquentUserRepository.php',
         'user\\User' => __DIR__ . '/../..' . '/app/Models/user/User.php',
+        'user\\UserAdmin' => __DIR__ . '/../..' . '/app/Models/user/UserAdmin.php',
         'user\\UserRepository' => __DIR__ . '/../..' . '/app/Repositories/user/UserRepository.php',
         'voku\\helper\\ASCII' => __DIR__ . '/..' . '/voku/portable-ascii/src/voku/helper/ASCII.php',
     );

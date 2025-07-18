@@ -83,6 +83,18 @@ return array(
 		'support' => 'support',
 	],
 
+	'event_status' => [
+		'created' => 'created',
+		'verified' => 'verified',
+		'canceled' => 'canceled',
+	],
+
+	'event_status_class' => [
+		'created' => 'warning',
+		'verified' => 'success',
+		'canceled' => 'danger ',
+	],
+
 	'menu' => [
 		'home' => [
 			'icon' => 'flaticon2-architecture-and-city', 

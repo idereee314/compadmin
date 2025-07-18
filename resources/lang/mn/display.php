@@ -3,10 +3,7 @@
 
 return [
 
-    // Name
-    "IQ_admin" => "IQ админ",
-     'iq_center' => 'Оюуны хөгжил IQ төв',
-     'contact_us' => 'Холбоо барих',
+    'contact_us' => 'Холбоо барих',
     
 
     /** VERB **/
@@ -19,6 +16,7 @@ return [
     "general_operation" => "Үйлдэл",
     "general_see" => 'Харах',
     "general_fast_operation" => 'Хурдан үйлдэл',
+    "general_notes" => 'Удирдамж',
 
     // Button
     "general_new" => "Шинээр нэмэх",
@@ -39,7 +37,7 @@ return [
     "general_add" => "Нэмэх",
     "general_update" => "Шинэчлэх",
     "general_show" => "Харах",
-    "general_status_change" => "Төлөв шилжүүлэх",
+    "general_status_change" => "Төлөв шилжүБайгууллагаүлэх",
     "general_call" => "Дуудах",
     "general_insert" => "Оруулах",
     "general_choose" => "Сонгох",
@@ -331,14 +329,18 @@ return [
     "organization" => "Байгууллага",
     "best_academy" => "Шилдэг академи",
     "toplist" => "Топ жагсаалт",
+    "event_organizer" => "Зохион байгуулагч",
 
     //Event
     'event_title' => 'Эвент',
+    'event_list' => 'Арга хэмжээний жагсаалт',
     'reg_start_date' => 'Эхлэх огноо',
     'reg_end_date' => 'Дуусах огноо',
     'reg_date' => 'Бүртгэлийн огноо',
     'reg_payment_date' => 'Төлбөр төлөх сүүлийн огноо',
     'reg_update_date' => 'Бүртгэл засах сүүлийн огноо',
+    'event_details' => 'Арга хэмжээний дэлгэрэнгүй мэдээлэл',
+    'general_event_information' => 'Ерөнхий мэдээлэл',
 
     //Event-entries
     'entrance_fee' => 'Төлбөр',

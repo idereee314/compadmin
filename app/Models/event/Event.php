@@ -72,6 +72,10 @@ class Event extends Model
         return $this->hasMany('event\EventRefundRequest', 'event_id');
     }
 
+    public function user()
+    {
+        return $this->belongsTo('user\UserAdmin', 'user_id', 'created_by');
+    }
 
 	public static function boot()
     {

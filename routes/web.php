@@ -119,6 +119,9 @@ Route::group([
     Route::get('/event/registration/team/athlete_team/{id}/pdf', 'event\EventRegistrationController@generatePdf')->name('generate-pdf');
 
     //Event
+    Route::resource('/event/list', 'event\EventController', ['names' => 'event.list']);
+    Route::any('/event/list/data/list', 'event\EventController@getDatatableList')->name('event.data.list');
+    
     Route::resource('/event/registration', 'event\EventRegistrationController', ['names' => 'event.registration']);
     Route::any('/event/registration/data/list', 'event\EventRegistrationController@getDatatableList')->name('event.registration.data.list');
     Route::post('/event/registration/take/config', 'event\EventRegistrationController@getConfigByEntryId')->name('event.registration.take.config');

@@ -8799,6 +8799,7 @@ return array(
     'event\\EventConfig' => $baseDir . '/app/Models/event/EventConfig.php',
     'event\\EventConfigController' => $baseDir . '/app/Http/Controllers/event/EventConfigController.php',
     'event\\EventConfigRepository' => $baseDir . '/app/Repositories/event/EventConfigRepository.php',
+    'event\\EventController' => $baseDir . '/app/Http/Controllers/event/EventController.php',
     'event\\EventPayment' => $baseDir . '/app/Models/event/EventPayment.php',
     'event\\EventPicture' => $baseDir . '/app/Models/event/EventPicture.php',
     'event\\EventRankSeason' => $baseDir . '/app/Models/event/EventRankSeason.php',
@@ -8951,6 +8952,7 @@ return array(
     'user\\EloquentCompadUserRepository' => $baseDir . '/app/Repositories/user/EloquentCompadUserRepository.php',
     'user\\EloquentUserRepository' => $baseDir . '/app/Repositories/user/EloquentUserRepository.php',
     'user\\User' => $baseDir . '/app/Models/user/User.php',
+    'user\\UserAdmin' => $baseDir . '/app/Models/user/UserAdmin.php',
     'user\\UserRepository' => $baseDir . '/app/Repositories/user/UserRepository.php',
     'voku\\helper\\ASCII' => $vendorDir . '/voku/portable-ascii/src/voku/helper/ASCII.php',
 );
