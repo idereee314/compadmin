@@ -1,8 +1,9 @@
 @extends('default')
+
 @section('css')
     <link rel="stylesheet" href="{{asset('assets/css/pages/wizard/wizard-4.css')}}">
-    <link href="{{asset('/assets/plugins/bootstrap-daterangepicker/daterangepicker.css')}}" rel="stylesheet" type="text/css"/>
-    <link href="{{asset('/assets/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css')}}" rel="stylesheet" type="text/css"/>
+    <link href="{{asset('/assets/js/plugins/custom/bootstrap-daterangepicker/daterangepicker.css')}}" rel="stylesheet" type="text/css"/>
+    <link href="{{asset('/assets/js/plugins/custom/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css')}}" rel="stylesheet" type="text/css"/>
 @endsection
 @section('content')
     <!--begin::Main-->
@@ -69,8 +70,8 @@
                                                     <div class="wizard-wrapper">
                                                         <div class="wizard-number">2</div>
                                                         <div class="wizard-label">
-                                                            <div class="wizard-title">{{ trans('display.contact_us') }}</div>
-                                                            <div class="wizard-desc">Утасны дугаар болон имэйл</div>
+                                                            <div class="wizard-title">{{ trans('display.general_notes') }}</div>
+                                                            <div class="wizard-desc">{{ trans('display.general_information_notes') }}</div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -120,10 +121,11 @@
                                                                             </span>
                                                                         </div>
                                                                         <select class="form-control form-control-solid selectpicker" id="sport" name="sport" data-msg-required="{{ trans('messages.validation_field_required') }}">
-                                                                            <option value="0">-- {{ trans('display.general_select') }} --</option>
+                                                                            <option value="">-- {{ trans('display.general_select') }} --</option>
                                                                             @forelse(@$sports as $sport)
                                                                             <option value="{{ $sport->id }}">{{ $sport->name }}</option>
                                                                             @empty
+                                                                            <option disabled>Мэдээлэл байхгүй</option>
                                                                             @endforelse
                                                                         </select>
                                                                         <div class="error-here"></div>
@@ -131,14 +133,6 @@
                                                                     <div class="error-here"></div>
                                                                 </div>
                                                                 <!--end::sport type-->
-                                                                <!--begin::name_english-->
-                                                                <div class="form-group">
-                                                                    <label>{{ trans('display.general_name_en') }}: <span class="text-danger">*</span></label>
-                                                                    <div class="input-group input-group-solid">
-                                                                        <input type="text" class="form-control" name="name_english" id="name_english" data-rule-required="true" data-msg-required="{{ trans('validation.required', ['Attribute' => trans('display.general_name')]) }}"/>
-                                                                    </div>
-                                                                </div>
-                                                                <!--end::name_english-->
                                                                 <!--begin::Name native-->
                                                                 <div class="form-group">
                                                                     <label>{{ trans('display.general_name') }}: <span class="text-danger">*</span></label>
@@ -147,6 +141,14 @@
                                                                     </div>
                                                                 </div>
                                                                 <!--end::Name native-->
+                                                                <!--begin::name_english-->
+                                                                <div class="form-group">
+                                                                    <label>{{ trans('display.general_name_en') }}: <span class="text-danger">*</span></label>
+                                                                    <div class="input-group input-group-solid">
+                                                                        <input type="text" class="form-control" name="name_english" id="name_english" data-rule-required="true" data-msg-required="{{ trans('validation.required', ['Attribute' => trans('display.general_name')]) }}"/>
+                                                                    </div>
+                                                                </div>
+                                                                <!--end::name_english-->
                                                                 <!--begin::Input-->
                                                                 <div class="form-group">
                                                                     <label>{{ trans('display.general_duration') }}: <span class="text-danger">*</span></label>
@@ -184,62 +186,19 @@
                                                                         </div>
                                                                         <!--end::Input-->
                                                                     </div>
-                                                                    <div class="col-xl-6">
-                                                                        <!--begin::Input-->
-                                                                        <div class="form-group">
-                                                                            <label>{{ trans('display.request_contacts') }} 2: </label>
-                                                                            <div class="input-group input-group-solid">
-                                                                                <div class="input-group-prepend">
-                                                                                    <span class="input-group-text">
-                                                                                        <i class="la la-phone"></i>
-                                                                                    </span>
-                                                                                </div>
-                                                                                <input type="text" class="form-control form-control-solid" name="contact_phones[]" id="contact_phones" data-inputmask="'mask': '9{8}', 'greedy': false" data-rule-digits="true" data-msg-digits="{{ trans('validation.phones', ['Attribute' => trans('display.request_contacts')]) }}"/>
-                                                                            </div>
-                                                                            <div class="error-here"></div>
-                                                                        </div>
-                                                                        <!--end::Input-->
-                                                                    </div>
+                                                                    
                                                                 </div>
-                                                                <!--begin::Input-->
-                                                                <div class="form-group">
-                                                                    <label>{{ trans('display.request_contact_email') }}: <span class="text-danger">*</span></label>
-                                                                    <div class="input-group input-group-solid">
-                                                                        <div class="input-group-prepend">
-                                                                            <span class="input-group-text">
-                                                                                <i class="la la-at"></i>
-                                                                            </span>
-                                                                        </div>
-                                                                        <input type="text" class="form-control" name="contact_email" id="contact_email" data-rule-required="true" data-msg-required="{{ trans('validation.required', ['Attribute' => trans('display.request_contact_email')]) }}" data-rule-email="true" data-msg-email="{{ trans('validation.email', ['Attribute' => trans('display.request_contact_email')]) }}" data-inputmask="'alias': 'email'"/>
-                                                                    </div>
-                                                                    <span class="form-text text-muted">Хариуг цахимаар авах бол энэ имэйл хаягаар илгээнэ.</span>
-                                                                </div>
-                                                                <!--end::Input-->
+                                                                
                                                             </div>
                                                             <!--end: Wizard Step 2-->
                                                             <!--begin: Wizard Step 3-->
                                                             <div class="pb-5" data-wizard-type="step-content">
                                                                 <div class="mb-10 font-weight-bold text-dark"><h5>Баримт бичгийн бүрдүүлбэр шалгах</h5></div>
-                                                                <div id="div-file-append"></div>
+                                                                
                                                             </div>
                                                             <!--end: Wizard Step 3-->
                                                             <!--begin: Wizard Step 4-->
                                                             <div class="pb-5" data-wizard-type="step-content">
-                                                                <!--begin::Input-->
-                                                                <div class="form-group response">
-                                                                    <label>{{ trans('display.request_response_type') }}: <span class="text-danger">*</span></label>
-                                                                    <div class="input-group input-group-solid">
-                                                                        <div class="input-group-prepend">
-                                                                            <span class="input-group-text">
-                                                                                <i class="la la-book"></i>
-                                                                            </span>
-                                                                        </div>
-                                                                        <select class="form-control select" name="response_type_id" id="response_type_id" data-style="form-control-solid" data-rule-required="true" data-msg-required="{{ trans('validation.required', ['Attribute' => trans('display.request_response_type')]) }}">
-                                                                        </select>
-                                                                    </div>
-                                                                    <div class="error-here"></div>
-                                                                </div>
-                                                                <!--end::Input-->
                                                                 
                                                             </div>
                                                             <!--end: Wizard Step 4-->
@@ -283,8 +242,9 @@
     <!--end::Main-->
 @endsection
 @section('javascript')
-<script type="text/javascript" src="{{asset('assets/js/plugins/bootstrap-daterangepicker/daterangepicker.js')}}"></script>
-<script type="text/javascript" src="{{asset('assets/js/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js')}}"></script>
+<script type="text/javascript" src="{{asset('assets/js/plugins/custom/bootstrap-daterangepicker/daterangepicker.js')}}"></script>
+<script type="text/javascript" src="{{asset('assets/js/plugins/custom/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js')}}"></script>
+
 <script>
 $(document).ready(function() {
     var applicantSelect, agentSelect;
@@ -302,16 +262,11 @@ $(document).ready(function() {
         language: 'mn'
     });
 
-    $('.date-range-picker-time').daterangepicker({
-        autoUpdateInput: false,
+    $('#create-event-list-form .date-range-picker-time').daterangepicker({
         showWeekNumbers: true,
         showDropdowns: true,
-        //timePicker: true,
-        //timePicker24Hour: true,
-        autoUpdateInput: false,
-        //timePickerIncrement: 10,
         minYear: 2021,
-        maxYear: parseInt(moment().format("YYYY"), 1),
+        maxYear: parseInt(moment().format("YYYY"), 10),
         locale: {
             format: 'YYYY-MM-DD',
             separator: " аас ",
@@ -320,26 +275,60 @@ $(document).ready(function() {
             fromLabel: "аас",
             toLabel: "руу",
             customRangeLabel: "Сонголт",
-            daysOfWeek: [
-                "Ня",
-                "Да",
-                "Мя",
-                "Лха",
-                "Пү",
-                "Ба",
-                "Бя"
-            ],
+            daysOfWeek: ["Ня","Да","Мя","Лха","Пү","Ба","Бя"],
             firstDay: 1
         }
+    }, function(start, end, label) {
+    
+        let html = "";
+        // moment clone ашиглана
+        let s = moment(start);
+        let e = moment(end);
+    
+        for(let m = s.clone(); m.isSameOrBefore(e); m.add(1, 'days')) {
+            html += `
+            <div class="form-group row">
+                <div class="col-md-3 col-sm-12">
+                    <input type="text" class="form-control" name="event_date[]" value="${m.format('YYYY-MM-DD')}" readonly/>
+                </div>
+                <div class="col-md-9 col-sm-12">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="timepicker input-group">
+                                <input class="form-control"
+                                    type="text"
+                                    data-inputmask='{"mask": "99:99"}'
+                                    name="start_time[]"/>
+                                <span class="input-group-addon add-on"><i class="fa fa-clock-o"></i></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="timepicker input-group">
+                                <input class="form-control"
+                                    type="text"
+                                    data-inputmask='{"mask": "99:99"}'
+                                    name="end_time[]"/>
+                                <span class="input-group-addon add-on"><i class="fa fa-clock-o"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+        }
+      
+        // Loop дууссаны дараа ганц удаа DOM update хийнэ
+        $("#div-event-date").html(html);
+      
+        // Plugins дахин идэвхжүүлэх
+        $(":input").inputmask();
+        $('.timepicker').datetimepicker({
+            format: 'HH:mm',    // 24 цагийн формат
+            stepping: 5,        // минутын алхам
+            icons: { time: 'fa fa-clock-o' }
+        });
     });
 
-    $('.date-range-picker-time').on('apply.daterangepicker', function(ev, picker) {
-        $(this).val(picker.startDate.format('YYYY-MM-DD') + ' аас ' + picker.endDate.format('YYYY-MM-DD'));
-    });
 
-    $('.date-range-picker-time').on('cancel.daterangepicker', function(ev, picker) {
-        $(this).val('');
-    });
 
     wizard = new KTWizard('create-event-list-wizard', {
         startStep: 1,

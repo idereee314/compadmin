@@ -17,6 +17,7 @@ return [
     "general_see" => 'Харах',
     "general_fast_operation" => 'Хурдан үйлдэл',
     "general_notes" => 'Удирдамж',
+    "general_information_notes" => "Удирдамжийн мэдээлэл",
 
     // Button
     "general_new" => "Шинээр нэмэх",
@@ -185,6 +186,8 @@ return [
     'general_event_date' => 'Тэмцээний өдөр',
     'general_events' => 'Тэмцээнүүд',
     'general_total_athlete' => 'Нийт тамирчдыг тоо',
+    "general_location" => "Байршил",
+    "general_location_info" => "Тэмцээний заалны байршил",
 
     // Search
     "general_search_list" => "Хайлт",
@@ -389,5 +392,8 @@ return [
     //Card 
     'upcoming_event_list' => 'Удахгүй болох тэмцээнүүд',
     'past_event_list' => 'Болж өнгөрсөн тэмцээнүүд',
+
+    // Other
+    
 
 ];
