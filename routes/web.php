@@ -121,6 +121,18 @@ Route::group([
     //Event
     Route::resource('/event/list', 'event\EventController', ['names' => 'event.list']);
     Route::any('/event/list/data/list', 'event\EventController@getDatatableList')->name('event.data.list');
+
+    // Event Picture
+    Route::resource('/event/picture', 'event\EventPictureController', ['names'=>'event.picture']);
+    Route::get('/event/picture/show/image/{id}', 'event\EventPictureController@showImage')->name('event.show.image');
+    Route::post('/event/picture/remove/image','event\EventPictureController@removeImage')->name('event.picture.remove');
+
+    // Event Organizer
+    Route::resource('/event/organizer', 'event\EventOrganizerController', ['names'=>'event.organizer']);
+
+    // Event Location
+    Route::resource('/event/location', 'event\EventLocationController', ['names'=>'event.location']);
+    Route::post('/event/location/table/data','event\EventLocationController@getDatatableList')->name('event.location.datalist');
     
     Route::resource('/event/registration', 'event\EventRegistrationController', ['names' => 'event.registration']);
     Route::any('/event/registration/data/list', 'event\EventRegistrationController@getDatatableList')->name('event.registration.data.list');

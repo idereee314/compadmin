@@ -28,6 +28,8 @@ class RouteServiceProvider extends ServiceProvider
      */
     // protected $namespace = 'App\\Http\\Controllers';
 
+    protected $np_general = '';
+    protected $np_location = 'location';
     /**
      * Define your route model bindings, pattern filters, etc.
      *
@@ -49,6 +51,14 @@ class RouteServiceProvider extends ServiceProvider
         });
     }
 
+    public function map()
+    {
+        $this->mapWebRoutes();
+        $this->mapLocationRoutes();
+
+        //
+    }
+
     /**
      * Configure the rate limiters for the application.
      *
@@ -60,4 +70,26 @@ class RouteServiceProvider extends ServiceProvider
             return Limit::perMinute(60)->by(optional($request->user())->id ?: $request->ip());
         });
     }*/
+
+        /**
+     * Define the "web" routes for the application.
+     *
+     * These routes all receive session state, CSRF protection, etc.
+     *
+     * @return void
+     */
+    protected function mapWebRoutes()
+    {
+        Route::middleware('web')
+             ->namespace($this->namespace)
+             ->group(base_path('routes/web.php'));
+    }
+
+    protected function mapLocationRoutes()
+    {
+        Route::middleware('web')
+             ->prefix('location')
+             ->namespace($this->np_location)
+             ->group(base_path('routes/location.php'));
+    }
 }
