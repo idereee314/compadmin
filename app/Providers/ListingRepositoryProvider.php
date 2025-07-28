@@ -8,24 +8,15 @@ class ListingRepositoryProvider extends ServiceProvider {
     }
 
     public function register() {
-        // Reference
-        $this->app->bind("listing\\reference\category\CategoryRepository", "listing\\reference\category\EloquentCategoryRepository");
-        $this->app->bind("listing\\reference\\features\FeaturesRepository", "listing\\reference\\features\EloquentFeaturesRepository");
-        $this->app->bind("listing\\reference\contactType\ContactTypeRepository", "listing\\reference\contactType\EloquentContactTypeRepository");
-        $this->app->bind("listing\\reference\pictureType\PictureTypeRepository", "listing\\reference\pictureType\EloquentPictureTypeRepository");
-        $this->app->bind("listing\\reference\organization\OrganizationStatusRepository", "listing\\reference\organization\EloquentOrganizationStatusRepository");
-        $this->app->bind("listing\\reference\organization\OrganizationTypeRepository", "listing\\reference\organization\EloquentOrganizationTypeRepository");
-        $this->app->bind("listing\\reference\service\ServiceRepository", "listing\\reference\service\EloquentServiceRepository");
-
         // Organization
-        $this->app->bind("listing\organization\OrganizationRepository", "listing\organization\EloquentOrganizationRepository");
-        $this->app->bind("listing\organization\OrganizationWorktimeRepository", "listing\organization\EloquentOrganizationWorktimeRepository");
-        $this->app->bind("listing\organization\OrganizationAddressRepository", "listing\organization\EloquentOrganizationAddressRepository");
-        $this->app->bind("listing\organization\OrganizationPictureRepository", "listing\organization\EloquentOrganizationPictureRepository");
-        $this->app->bind("listing\organization\OrganizationContactRepository", "listing\organization\EloquentOrganizationContactRepository");
-        $this->app->bind("listing\organization\OrganizationBannerRepository", "listing\organization\EloquentOrganizationBannerRepository");
-        $this->app->bind("listing\organization\OrganizationSocialRepository", "listing\organization\EloquentOrganizationSocialRepository");
-        $this->app->bind("listing\organization\OrganizationEventRepository", "listing\organization\EloquentOrganizationEventRepository");
+        $this->app->bind("organization\OrganizationRepository", "organization\EloquentOrganizationRepository");
+        $this->app->bind("organization\OrganizationWorktimeRepository", "organization\EloquentOrganizationWorktimeRepository");
+        $this->app->bind("organization\OrganizationAddressRepository", "organization\EloquentOrganizationAddressRepository");
+        $this->app->bind("organization\OrganizationPictureRepository", "organization\EloquentOrganizationPictureRepository");
+        $this->app->bind("organization\OrganizationContactRepository", "organization\EloquentOrganizationContactRepository");
+        $this->app->bind("organization\OrganizationBannerRepository", "organization\EloquentOrganizationBannerRepository");
+        $this->app->bind("organization\OrganizationSocialRepository", "organization\EloquentOrganizationSocialRepository");
+        $this->app->bind("organization\OrganizationEventRepository", "organization\EloquentOrganizationEventRepository");
 
         // // Event
         // $this->app->bind("listing\\event\EventRepository", "listing\\event\EloquentEventRepository");

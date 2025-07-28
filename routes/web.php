@@ -121,6 +121,8 @@ Route::group([
     //Event
     Route::resource('/event/list', 'event\EventController', ['names' => 'event.list']);
     Route::any('/event/list/data/list', 'event\EventController@getDatatableList')->name('event.data.list');
+    Route::get('/event/list/register/table/tabs', 'event\EventController@includeTab')->name('event.tabs');
+    Route::get('/event/list/register/change/image', 'event\EventController@reChangePicture')->name('event.change.image');
 
     // Event Picture
     Route::resource('/event/picture', 'event\EventPictureController', ['names'=>'event.picture']);
@@ -160,6 +162,8 @@ Route::group([
     Route::get('/event/config-tabs', 'event\EventConfigController@includeTab')->name('event.config.tabs');
 
     Route::resource('/event/user', 'event\EventUserController', ['names' => 'event.user']);
+
+    // REFERENCE
 
     Route::resource('/event/toplist/point', 'reference\EventToplistPointController', ['names' => 'event.toplist.point']);
     Route::resource('/event/refund/request', 'event\EventRefundRequestController', ['names' => 'event.refund.request']);
@@ -202,6 +206,10 @@ Route::group([
 
     //stats
     Route::get('/event/{eventId}/statistics', 'event\EventRegistrationController@statistics')->name('event.statistics');
+
+    // Picture type
+    Route::resource('/reference/picture/type', 'reference\PictureTypeController', ['names'=>'reference.picture.type']);
+    Route::post('/reference/picture/type/table/data','reference\PictureTypeController@getDatatableList')->name('reference.picture.type.datalist');
 });
 
 Route::get('/event/{eventId}/bracket', 'event\EventRegistrationController@treeBracket')->name('event.bracket');

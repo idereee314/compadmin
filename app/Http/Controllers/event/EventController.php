@@ -14,6 +14,8 @@ use user\CompadRoleRepository as CompadRole;
 use user\CompadUserRepository as CompadUser;
 use event\EventRepository as Event;
 use sport\SportRepository as Sport;
+use location\unit\AimagCityRepository as AimagCity;
+use reference\PictureTypeRepository as PictureType;
 
 //Models
 use event\Event as EventModel;
@@ -27,12 +29,14 @@ class EventController extends Controller
 {
     public $restful = true;
 
-    public function __construct(Event $event, CompadUser $compadUser, Sport $sport)
+    public function __construct(Event $event, CompadUser $compadUser, Sport $sport, AimagCity $aimagCity, PictureType $pictureType)
     {
         $this->view_path = 'event.listing';
         $this->compadUser = $compadUser;
         $this->event = $event;
         $this->sport = $sport;
+        $this->aimagCity = $aimagCity;
+        $this->pictureType = $pictureType;
     }
 
     /**
@@ -45,7 +49,6 @@ class EventController extends Controller
         $event = $this->event->all();
 
         $data['events'] = $event;
-
         $data['view_path'] = $this->view_path;
 
         return view($this->view_path.'.index', $data);
@@ -60,7 +63,15 @@ class EventController extends Controller
     {
         $input = Input::all();
         $sports = $this->sport->all();
-        
+        $status = @Config::get('smart.event_status');
+        $pictureType = $this->pictureType->all()->where('object_type', Config::get('smart.object_types')[1])->first();
+        $eventOrganizationRoles = @Config::get('enums.event_organization_role');
+        $aimagCity = $this->aimagCity->all();
+
+        $data['statuses'] = $status;
+        $data['pictureType'] = $pictureType;
+        $data['roles'] = $eventOrganizationRoles;
+        $data['aimagCity'] = $aimagCity;
         $data['sports'] = $sports;
         $data['view_path'] = $this->view_path;
 

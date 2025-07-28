@@ -50,27 +50,11 @@
 
                 <!-- Start tabs content -->
                 <div class="panel-body col-md-9">
-                    <form method="POST" id="event-create-form" class="tab-content form-horizontal smart-form" action="{!! route('event.store') !!}">
+                    <form method="POST" id="event-create-form" class="tab-content form-horizontal smart-form" action="{!! route('event.list.store') !!}">
                         <div class="tab-pane fade in active inner-all" id="tab2-1">
                             <h4 class="page-header">Бүртгэл</h4>
-                            <!--
-                            <div class="form-group form-group-divider">
-                                <div class="form-inner">
-                                    <h4 class="no-margin"><span class="label label-success label-circle">1</span> Ерөнхий мэдээлэл</h4>
-                                </div>
-                            </div>-->
                             <br/>
-                            <div class="form-group">
-                                <label class="col-sm-3 text-right">{{trans('display.general_category')}} <span class="asterisk">*</span></label>
-                                <div class="col-md-9 col-sm-12">
-                                    <select class="chosen-select" multiple name="category[]" data-placeholder="-- {{ trans('display.general_select') }} --" data-rule-required="true" data-msg-required="{{ trans('validation.required') }}">
-                                        @foreach($categories as $category)
-                                            <option value="{{ $category->id }}">{{ $category->name }}</option>
-                                        @endforeach
-                                    </select>
-                                    <div class="error-here"></div>
-                                </div>
-                            </div>
+                            <input type="text" name="categories" id="categories" class="form-control" value="357" hidden/>
                             <div class="form-group">
                                 <label class="col-sm-3 text-right">{{trans('display.general_title')}} <span class="asterisk">*</span></label>
                                 <div class="col-md-9 col-sm-12">
