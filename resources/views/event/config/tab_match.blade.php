@@ -19,13 +19,12 @@
                 </div>
                 <div class="mb-2">
                     <select class="form-control selectpicker" id="search-mat" name="type">
-                        <option value="">-- Mate --</option>
                     </select>
                     <div class="error-here"></div>
                 </div>
-                <input type="number" class="form-control mb-2" placeholder="Age" id="search-age">
+                {{-- <input type="number" class="form-control mb-2" placeholder="Age" id="search-age">
                 <input type="number" class="form-control mb-2" placeholder="Gender" id="search-gender">
-                <input type="number" class="form-control mb-2" placeholder="Weight" id="search-weight">
+                <input type="number" class="form-control mb-2" placeholder="Weight" id="search-weight"> --}}
                 <button id="search-button" class="btn btn-primary w-100">Search</button>
             </div>
         </div>
@@ -40,18 +39,18 @@
             const selectedDayId = this.value;
             const mateSelect = document.getElementById('search-mat');
 
-            // Clear previous options
-            mateSelect.innerHTML = '<option value="">-- Mate --</option>';
-
             if (matesByDay[selectedDayId]) {
                 matesByDay[selectedDayId].forEach(mate => {
                     const option = document.createElement('option');
                     option.value = mate.id;
-                    option.text = 'Mate ' + mate.mate_no;
+                    option.text = 'Mate ' + (mate.mate_no);
                     mateSelect.appendChild(option);
                 });
+            } else {
+                mateSelect.innerHTML = '<option value="">-- Mate --</option>';
             }
             $('#search-mat').selectpicker('refresh');
+            $('#search-mat').prop('selectedIndex', 0);
         });
 
         $('#search-day, #search-mat').selectpicker();
@@ -100,31 +99,52 @@
                         <th>#</th>
                         <th>Bracket</th>
                         <th>Winner</th>
+                        <th>Start</th>
                         <th>Duration</th>
                         <th>Status</th>`;
                     thead.appendChild(headerRow);
                     table.appendChild(thead);
 
                     const tbody = document.createElement('tbody');
-                    let matDuration = 0;
+                    let totalDuration = 0;
+                    let duration = 0;
+                    let index = 0;
                     mat.matches.forEach(match => {
-                        match.brackets.map((bracket, index) => {
+                        match.brackets.map((bracket) => {
+                            index++;
                             const row = document.createElement('tr');
-                            matDuration += (match.entry?.duration ?? 0);
                             starDate.setMinutes(starDate.getMinutes() +
-                                matDuration);
+                                duration);
+                            if(bracket.end_time){
+                                const start = new Date(starDate.getTime());
+                                const [hours, minutes, seconds] = bracket.end_time.split(':').map(Number);
+                                const end = new Date(starDate.getTime());
+                                end.setHours(hours, minutes, seconds || 0, 0);
+
+                                const timeDiffMs = end.getTime() - start.getTime();
+                                const timeDiffMin = timeDiffMs / (1000 * 60);
+                                duration = timeDiffMin;
+                            }else{
+                                if ((!bracket?.reg_two_id || !bracket?.reg_one_id)  && bracket.status === 'C') {
+                                    duration = 0
+                                }else{
+                                    duration =  (match.entry?.duration ?? 0);
+                                }
+                            }
+                            totalDuration += duration;
                             row.innerHTML = `
-                                <td>${index + 1}</td>
+                                <td>${index}</td>
                                 <td>
-                                    ${bracket?.reg_one?.member?.firstname ?? 'TBD'} ${bracket?.reg_one?.member?.lastname ?? ''}
-                                    -
-                                     ${bracket?.reg_two?.member?.firstname ?? 'TBD'} ${bracket?.reg_two?.member?.lastname ?? ''}
+                                    ${handleUserNames(bracket)}
                                 </td>
                                 <td>
                                     ${bracket?.reg_win?.member?.firstname ?? 'TBD'} ${bracket?.reg_win?.member?.lastname ?? ''}
                                 </td>
                                 <td>
                                     ${formatToHHmm(starDate)}
+                                </td>
+                                <td>
+                                    ${duration}
                                 </td>
                                 <td><span class="badge bg-${bracket.status == 'P' ? 'warning' : bracket.status == 'A' ? 'primary' : 'success'} text-dark">${bracket.status}</span></td>
                                 <td class="text-center pr-0">
@@ -145,9 +165,11 @@
                             tbody.appendChild(row);
                         });
                     });
+                    starDate.setMinutes(starDate.getMinutes() +
+                        duration);
                     const row = document.createElement('tr');
                     row.innerHTML =
-                        `<td></td><td></td><td></td><td>${matDuration ?? '0'}</td><td></td><td class="text-center pr-0"> </td>`;
+                        `<td></td><td></td><td></td><td>${formatToHHmm(starDate)}</td><td>${formatMinutesToHHmm(totalDuration)}</td><td></td><td class="text-center pr-0"> </td>`;
                     tbody.appendChild(row);
                     table.appendChild(tbody);
                     matDiv.appendChild(table);
@@ -157,6 +179,26 @@
                 container.appendChild(dayDiv);
             });
         }
+        function handleUserNames(bracket) {
+            let firstName = bracket.reg_one?.member?.firstname ?? 'TBD';
+            const lastname = bracket.reg_one?.member?.lastname ?? '';
+            let firstName2 = bracket.reg_two?.member?.firstname ?? 'TBD';
+            const lastname2 = bracket.reg_two?.member?.lastname ?? '';
+            if (firstName === 'TBD' && bracket.status === 'C') {
+                firstName = 'BYE';
+            }
+            if (firstName2 === 'TBD' && bracket.status === 'C') {
+                firstName2 = 'BYE';
+            }
+            return `${firstName} ${lastname} - ${firstName2} ${lastname2}`;
+        }
+
+        function formatMinutesToHHmm(minutes) {
+            const hrs = Math.floor(minutes / 60);
+            const mins = Math.round(minutes % 60);
+            return `${hrs.toString().padStart(2, '')}:${mins.toString().padStart(2, '0')}`;
+        }
+
 
         // Function to fetch matches
         function fetchMatches() {
@@ -182,6 +224,21 @@
                 },
             });
         }
+
+        function shiftFinalToEnd(response) {
+            // Check if the response contains matches
+            if (response && response.length > 0) {
+                // Find the index of the final match
+                const finalIndex = response.findIndex(match => match.is_final);
+                if (finalIndex !== -1) {
+                    // Remove the final match from its current position
+                    const finalMatch = response.splice(finalIndex, 1)[0];
+                    // Add the final match to the end of the array
+                    response.push(finalMatch);
+                }
+            }
+            return response;
+        };
 
         // Attach event listeners
         $('#search-button').on('click', fetchMatches);
@@ -230,12 +287,10 @@
                                 type: form.method,
                                 data: new FormData(form),
                                 success: function(response) {
+                                    console.log(response);
                                     if (response.status ==
                                         'success') {
-                                        $('#eventConfigModal')
-                                            .find(
-                                                "#close")
-                                            .trigger('click');
+                                        $('#eventEntryModal').find("#close").trigger('click');;
                                         $("#config_tabs").find(
                                                 "li a.active")
                                             .trigger(

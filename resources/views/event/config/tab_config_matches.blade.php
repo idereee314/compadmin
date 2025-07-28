@@ -50,7 +50,7 @@
                 treeNode.appendChild(details);
 
                 // Make the tree node draggable
-                treeNode.draggable = true;
+                treeNode.draggable = !bracket?.is_complete;
                 treeNode.dataset.id = bracketId;
 
                 // Append the tree node to the container
@@ -251,14 +251,19 @@
                     drop.dataset.key = key;
 
                     const title = document.createElement('h6');
-                    title.innerText = `Mat ${mat.mat}`;
+                    title.innerText = `Mat ${mat.mat }`;
                     drop.appendChild(title);
 
                     matAssignments[key] = mat.brackets.map(b =>
                         `${b.entry_id}_${b.entry_belt_id}_${b.entry_age_id}_${b.entry_weight_id}`
                     )
                     const fromShortCut = matAssignments[key].map(b => {
-                        return shortCute[b]
+                        const bracket = mat.brackets.find(m => {
+                            return `${m.entry_id}_${m.entry_belt_id}_${m.entry_age_id}_${m.entry_weight_id}` === b
+                        });
+                        const pointer = shortCute[b]
+                        pointer.is_complete = bracket.is_complete;
+                        return pointer
                     });
                     renderBrackets(drop, fromShortCut);
                     mat.brackets.forEach(bid => {
@@ -387,8 +392,8 @@
 
         render();
         originalAssignments = JSON.parse(JSON.stringify(custom_data.schedule));
-    });
 
+        
     $("#generate-btn").on('click', function() {
         var eventId = @json($eventConfig['event_id']);
         console.log(eventId);
@@ -424,6 +429,9 @@
                     rules: {},
                     messages: {},
                     submitHandler: function(form) {
+                        if(bracketLocations && Object.keys(bracketLocations).length > 0 && !confirm("Are you sure you want to generate matches? This will reset all existing matches and days entries.")) {
+                            return 0;
+                        }
                         $.ajax({
                             url: form.action,
                             type: form.method,
@@ -465,4 +473,6 @@
         });
 
     })
+    });
+
 </script>

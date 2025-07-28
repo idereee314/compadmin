@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Html\Builder;
 
 use SecurityHelper;
-use Carbon;
+use Carbon\Carbon;
 use Session;
 use Config;
 
@@ -91,7 +91,8 @@ class EloquentEventMatchesRespository implements EventMatchesRespository {
 		if($input['reg_win_id'] != null){
 			$eventMatches->reg_win_id = $input['reg_win_id'];
 			$eventMatches->status = 'C';
-			$eventMatches->endDate = Carbon::now();
+			$eventMatches->end_time = Carbon::now('GMT+8');
+			Log::info('Event Match Updated:', [$eventMatches->end_time]);
 			$eventMatches->save();
 			$this->updateNextReg($id, $input['reg_win_id']);
 		}
@@ -163,9 +164,9 @@ class EloquentEventMatchesRespository implements EventMatchesRespository {
 				->where('reg_one_id', $bracket->reg_one_id)
 				->where('reg_two_id', $bracket->reg_two_id)
 				->first();
-			Log::info('Event Brackets:', ['existing_match' => $existingMatch->toArray()]);
-
+				
 			if ($existingMatch) {
+				Log::info('Event Brackets:', ['existing_match' => $existingMatch->toArray()]);
 				$eventMatches[] = $existingMatch; // Add the existing match to the list
 				continue; // Skip creating a duplicate match
 			}

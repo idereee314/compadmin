@@ -28,10 +28,6 @@
 </form>
 
 <script>
-    $(document).ready(function() {
-        const registered = @json($registered);
-        console.log('Inputs:', registered);
-    })
     document.addEventListener('DOMContentLoaded', function() {
         // Add focus effect to inputs
         console.log('DOMContentLoaded event fired');

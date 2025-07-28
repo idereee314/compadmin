@@ -78,11 +78,19 @@ class EloquentEventConfigDaysRepository implements EventConfigDaysRepository {
 		}
 	}
 
+    public function resetMatAndDays($event_id)
+	{
+		EventMatches::where('event_id', $event_id)->delete();
+		EventMateBracket::where('event_id', $event_id)->delete();
+		EventMate::where('event_id', $event_id)->delete();
+		EventDays::where('event_id', $event_id)->delete();
+	}
+
 	private function addMatoDays($event_id, $mat, $day_id)
 	{
 		$mat = (int) $mat; // Ensure $mat is an integer
 
-		foreach (range(0, $mat) as $singleMat) {
+		foreach (range(1, $mat) as $singleMat) {
 			$eventMate = new EventMate;
 			$eventMate->event_id = $event_id;
 			$eventMate->mate_no = $singleMat; // Insert each mat as a number from 1 to n
@@ -198,7 +206,7 @@ class EloquentEventConfigDaysRepository implements EventConfigDaysRepository {
 				foreach ($mate->matches as $match) {
 					// Dynamically load brackets for each match
 					$brackets = $match->brackets()
-						->select('id', 'entry_id', 'entry_belt_id', 'entry_age_id', 'entry_weight_id', 'reg_one_id', 'reg_two_id', 'reg_win_id',  'status')
+						->select('id', 'entry_id', 'entry_belt_id', 'entry_age_id', 'entry_weight_id', 'reg_one_id', 'reg_two_id', 'reg_win_id',  'status', 'end_time')
 						->where('entry_belt_id', $match->entry_belt_id)
 						->where('entry_age_id', $match->entry_age_id)
 						->where('entry_weight_id', $match->entry_weight_id)

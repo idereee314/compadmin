@@ -53,6 +53,19 @@ class EventDays extends Model
                     ->get();
                 $bracketsArray = json_decode(json_encode($brackets), true);
 
+                foreach ($bracketsArray as &$ba) {
+                    $match = DB::table('uq_event_matches')
+                        ->select('id')
+                        ->where('event_id', $event_id)
+                        ->where('entry_id', $ba['entry_id'])
+                        ->where('entry_belt_id', $ba['entry_belt_id'])
+                        ->where('entry_age_id', $ba['entry_age_id'])
+                        ->where('entry_weight_id', $ba['entry_weight_id'])
+                        ->where('status', '!=', 'C')
+                        ->first();
+                    $ba['is_complete'] = empty($match);
+                }
+
                 // Build the mat structure
                 $matsWithBrackets[] = [
                     'mat' => $mat->mate_no,

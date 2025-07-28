@@ -68,6 +68,7 @@ class EventMatchController extends Controller
         {
             try
             {
+                $this->configDays->resetMatAndDays($event_id);
                 $this->configDays->generateMatAndDays($event_id, (int) $input['mate_number'], $input['start_date'], $input['end_date']);
                 $response = array(
                     'status' => 'success',
