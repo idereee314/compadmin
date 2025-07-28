@@ -179,7 +179,7 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Providers\LocationRepositoryProvider::class,
-        
+        App\Providers\ListingRepositoryProvider::class,
         Milon\Barcode\BarcodeServiceProvider::class,
     ],
 

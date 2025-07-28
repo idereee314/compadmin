@@ -30,6 +30,7 @@ class RouteServiceProvider extends ServiceProvider
 
     protected $np_general = '';
     protected $np_location = 'location';
+    protected $np_listing = 'listing';
     /**
      * Define your route model bindings, pattern filters, etc.
      *
@@ -48,13 +49,19 @@ class RouteServiceProvider extends ServiceProvider
             Route::middleware('web')
                 ->namespace($this->namespace)
                 ->group(base_path('routes/web.php'));
+
+            Route::middleware('listing')
+                ->namespace($this->namespace)
+                ->group(base_path('routes/listing.php'));
         });
+        
     }
 
     public function map()
     {
         $this->mapWebRoutes();
         $this->mapLocationRoutes();
+        $this->mapListingRoutes();
 
         //
     }
@@ -91,5 +98,16 @@ class RouteServiceProvider extends ServiceProvider
              ->prefix('location')
              ->namespace($this->np_location)
              ->group(base_path('routes/location.php'));
+    }
+
+     /**
+     * 
+     */
+    protected function mapListingRoutes()
+    {
+        Route::middleware('web')
+             ->prefix('listing')
+             ->namespace($this->np_listing)
+             ->group(base_path('routes/listing.php'));
     }
 }

@@ -37,8 +37,14 @@ class EloquentEventRepository implements EventRepository {
 
 	    return DataTables::of($qry)
 	        ->filter(function ($qry) use ($searchData) {
-	            if ($searchData->has('date') && !empty(array_filter($searchData->get('date')))) {
-	                $qry->whereBetween('rti_event.created_at', $searchData->get('date'));
+				if ($searchData->has('search_date') && !empty($searchData->get('search_date'))) {
+					$qry->whereRaw("rti_event.event_date like ?", array('%' . $searchData->get('search_date') . '%'));
+				}
+				if ($searchData->has('search_name') && !empty($searchData->get('search_name'))) {
+	                $qry->whereRaw("LOWER(rti_event.name) like ?", array('%'.mb_strtolower($searchData->get('search_name')).'%'));
+	            }
+				if($searchData->has('search_status') && !empty($searchData->get('search_status'))) {
+	                $qry->where('rti_event.status', $searchData->get('search_status'));
 	            }
 	        })
 	        ->editColumn('status', function($qry) {
