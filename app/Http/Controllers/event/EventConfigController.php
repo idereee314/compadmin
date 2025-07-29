@@ -36,6 +36,7 @@ use Config;
 use \HTML;
 use Image;
 use Log;
+use Carbon;
 
 class EventConfigController extends Controller
 {
@@ -225,6 +226,10 @@ class EventConfigController extends Controller
             );
         } else {
 			try {
+                if (!empty($input['start_time'])) {
+                    $input['start_time'] = Carbon\Carbon::createFromFormat('h:i A', $input['start_time'])->format('H:i:s');
+                    Log::info('Start Time Updated:', [$input['start_time']]);
+                }
                 $event = $this->eventConfig->update($id, $input);
             
 				$response = array(

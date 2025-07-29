@@ -432,35 +432,50 @@
                         if(bracketLocations && Object.keys(bracketLocations).length > 0 && !confirm("Are you sure you want to generate matches? This will reset all existing matches and days entries.")) {
                             return 0;
                         }
-                        $.ajax({
-                            url: form.action,
-                            type: form.method,
-                            data: new FormData(form),
-                            success: function(response) {
-                                if (response.status == 'success') {
-                                    $('#eventConfigModal').find(
-                                        "#close").trigger('click');
-                                    $("#config_tabs").find(
-                                        "li a.active").trigger(
-                                        'click');
-                                    toastr.success(response.msg);
-                                } else {
-                                    toastr.error(response.errors,
-                                        response.msg, {
-                                            "closeButton": true,
-                                            "timeOut": "0",
-                                            "extendedTimeOut": "0",
-                                        });
-                                }
+
+                        Swal.fire({
+                            title: "Are you sure you want to generate matches? This will reset all existing matches and days entries.",
+                            icon: "warning",
+                            showCancelButton: true,
+                            confirmButtonText: "Тийм",
+                            cancelButtonText: 'Үгүй',
+                            customClass: {
+                                confirmButton: "btn btn-primary",
+                                cancelButton: 'btn btn-secondary'
                             },
-                            error: function(xhr, textStatus, error) {
-                                console.log(xhr.statusText);
-                                console.log(textStatus);
-                                console.log(error);
-                            },
-                            async: false,
-                            processData: false,
-                            contentType: false
+                        }).then(function(result) {
+                            if (result.value) {
+                                $.ajax({
+                                    url: form.action,
+                                    type: form.method,
+                                    data: new FormData(form),
+                                    success: function(response) {
+                                        if (response.status == 'success') {
+                                            $('#eventConfigModal').find(
+                                                "#close").trigger('click');
+                                            $("#config_tabs").find(
+                                                "li a.active").trigger(
+                                                'click');
+                                            toastr.success(response.msg);
+                                        } else {
+                                            toastr.error(response.errors,
+                                                response.msg, {
+                                                    "closeButton": true,
+                                                    "timeOut": "0",
+                                                    "extendedTimeOut": "0",
+                                                });
+                                        }
+                                    },
+                                    error: function(xhr, textStatus, error) {
+                                        console.log(xhr.statusText);
+                                        console.log(textStatus);
+                                        console.log(error);
+                                    },
+                                    async: false,
+                                    processData: false,
+                                    contentType: false
+                                });
+                            }
                         });
                     },
                 });

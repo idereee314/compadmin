@@ -75,6 +75,7 @@
         function renderMatches(data) {
             const container = document.getElementById('dynamic-day-matches');
             container.innerHTML = "";
+            const eventConfig = @json($eventConfig) || {};
 
             data.forEach(day => {
                 const dayDiv = document.createElement('div');
@@ -83,6 +84,8 @@
                 dayHeading.innerText = `Day ${day.item_no}`;
                 dayDiv.appendChild(dayHeading);
                 const starDate = new Date(day.start_date);
+                const [cH, cM, cS] = eventConfig.start_time.split(':').map(Number);
+                starDate.setHours(cH, cM, cS || 0, 0);
 
                 day.mates.forEach(mat => {
                     const matDiv = document.createElement('div');
