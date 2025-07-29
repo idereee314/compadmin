@@ -18,7 +18,7 @@ use Illuminate\Http\FileHelper;
 class PictureTypeController extends Controller
 {
     public function __construct(PictureType $pictureType) {
-        $this->view_path = "listing.reference.pictureType";
+        $this->view_path = "reference.pictureType";
         $this->pictureType = $pictureType;
     }
 

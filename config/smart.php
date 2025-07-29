@@ -172,6 +172,29 @@ return array(
 		'adult' => 'adult',
 		'masters' => 'masters',
 	],
+
+	'object_types' => [
+		0 => 'organization',
+		1 => 'event',
+		2 => 'product',
+		3 => 'menu',
+		4 => 'banner'
+	],
+
+	'event_organization_role' => [
+		'organizer' => 'organizer',
+		'co-organizer' => 'co-organizer',
+		'sponsor' => 'sponsor',
+		'participant' => 'participant',
+	],
+
+	'category_type' => [
+		'organization' => 'organization',
+		'proservice' => 'proservices',
+		'event' => 'event',
+		'menu' => 'menu',
+		'product' => 'product'
+	],
 )
 
 ?>

@@ -188,6 +188,9 @@ return [
     'general_total_athlete' => 'Нийт тамирчдыг тоо',
     "general_location" => "Байршил",
     "general_location_info" => "Тэмцээний заалны байршил",
+    "general_title_english" => "Гарчиг Англиар",
+    "general_title_mongolian" => "Гарчиг Монголоор",
+    "general_image_rotate" => "Зургийг эргүүлэх",
 
     // Search
     "general_search_list" => "Хайлт",
@@ -242,6 +245,8 @@ return [
     "general_file_remove" => "Устгах",
     "general_file_select" => "Сонгох",
     "general_file_add" => "Файл нэмэх",
+    "general_image_rotate_left" => "Зургийг зүүн тийш эргүүлэх",
+    "general_image_rotate_right" => "Зургийг баруун тийш эргүүлэх",
 
     // Export
     "general_excel" => "Excel",
@@ -394,6 +399,7 @@ return [
     'past_event_list' => 'Болж өнгөрсөн тэмцээнүүд',
 
     // Other
-    
-
+    "picture_type" => "Зурагны төрөл",
+    "select_picture_type" => "Зурагны төрөл сонгох",
+    "pictures_details" => "Зургийн дэлгэрэнгүй мэдээлэл",
 ];

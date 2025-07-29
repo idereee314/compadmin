@@ -133,44 +133,60 @@ $(document).ready(function() {
         dataType: 'json',
         paginationType: "full_numbers",
         ajax: {
-            url: '{{route('picture.type.data.list')}}',
+            url: '{{route('reference.picture.type.datalist')}}',
             type: 'POST',
             data: function ( d ) {
                 d.name = $('#picture-type-search-form input[id="name"]').val();
             },
         },
         columns: [
-            {
+            { 
                 data: null,
                 render: function (data, type, row, meta) {
                     return meta.row + meta.settings._iDisplayStart + 1;
                 },
                 width: "30px"
             },
-            {data: 'name'},
-            {data: 'name_en'},
-            {data: 'abbreviation'},
-            {data: 'sort_order'},
-            {data: 'created_at'},
-            {data: 'action'},
+            { data: 'code' },
+            { data: 'description' },
+            { data: 'height' },
+            { data: 'width'},
+            { data: 'object_type' },
+            { data: 'dir_url' },
+            { data: 'created_at'},
+            { 
+                data: 'action',
+                orderable: false,
+                searchable: false
+            }
         ],
         columnDefs: [ 
-        {
-            searchable: false,
-            orderable: false,
-            targets: [0]
-        },{
-            class: "text-center",
-            targets: [0]
-        }],
-        order: [[ 5, "desc" ]],
+            {
+                searchable: false,
+                orderable: false,
+                targets: [0, 2, 3, 4, 5, 6]
+            },
+            {
+                class: "text-left border-right",
+                targets: [1, 2, 6]
+            },
+            {
+                class: "text-center border-right",
+                targets: [0, 3, 4, 5, 7]
+            }
+            {
+                class: "text-center",
+                targets: [0]
+            }
+        ],
+        order: [[ 7, "desc" ]],
         dom: "<'top'B><'row'<'col-sm-12'tr>><'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7 dataTables_pager'lp>>",
         buttons: [
         {
             text: '<i class="la la-plus"></i> {{ trans('display.general_new') }}',
             className: "btn btn-light-danger font-weight-bolder mb-2 {{ SecurityHelper::checkPermission(@Config::get('permission.picture_type'), Config::get('permission.editable')) ? '' : 'd-none' }}",
             action: function ( e, dt, node, config ) {
-                $.get('{!! route('picture.type.create') !!}', showAddModal);
+                $.get('{!! route('reference.picture.type.create') !!}', showAddModal);
             }
         }]
 	});

@@ -2,6 +2,15 @@
 
 @section('css')
 <link rel="stylesheet" href="{{asset('assets/js/plugins/custom/datatables/datatables.bundle.css')}}">
+<link rel="stylesheet" href="{{asset('assets/js/plugins/custom/bootstrap-daterangepicker/daterangepicker.css')}}">
+<link rel="stylesheet" href="{{asset('assets/js/plugins/custom/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css')}}">
+<link rel="stylesheet" href="{{asset('assets/js/plugins/custom/bootstrap-datepicker-vitalets/css/datepicker.css')}}">
+<link rel="stylesheet" href="{{asset('assets/js/plugins/custom/jasny-bootstrap-fileinput/css/jasny-bootstrap-fileinput.min.css')}}">
+<link rel="stylesheet" href="{{asset('assets/js/plugins/custom/bootstrap-tagsinput/dist/bootstrap-tagsinput.css')}}">
+<link rel="stylesheet" href="{{asset('assets/js/plugins/custom/ol/css/ol.css')}}">
+<link rel="stylesheet" href="{{asset('assets/js/plugins/custom/ol/css/ol.smart.css')}}">
+<link rel="stylesheet" href="{{asset('assets/js/plugins/custom/croppie-master/croppie.css')}}">
+<link rel="stylesheet" href="{{asset('assets/css/pages/wizard/wizard-4.css')}}">
 @endsection
 
 @section('content')
@@ -149,7 +158,6 @@
 <script src="{{asset('assets/js/plugins/custom/datatables/datatables.bundle.js')}}"></script>
 <script type="text/javascript" src="{{asset('assets/js/plugins/custom/bootstrap-daterangepicker/daterangepicker.js')}}"></script>
 <script type="text/javascript" src="{{asset('assets/js/plugins/custom/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js')}}"></script>
-
 <script type="text/javascript" src="{{asset('assets/js/plugins/custom/bootstrap-datepicker-vitalets/js/bootstrap-datepicker.js')}}"></script>
 <script type="text/javascript" src="{{asset('assets/js/plugins/custom/moment-develop/min/moment.min.js')}}"></script>
 <script type="text/javascript" src="{{asset('assets/js/plugins/custom/jquery-validation/dist/jquery.validate.min.js')}}"></script>
@@ -157,7 +165,6 @@
 <script type="text/javascript" src="{{asset('assets/js/plugins/custom/jasny-bootstrap-fileinput/js/jasny-bootstrap.fileinput.min.js')}}"></script>
 <script type="text/javascript" src="{{asset('assets/js/plugins/custom/croppie-master/croppie.min.js')}}"></script>
 <script type="text/javascript" src="{{asset('assets/js/plugins/custom/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js')}}"></script>
-
 <script type="text/javascript" src="{{asset('assets/js/plugins/custom/ol/build/ol.js')}}"></script>
 <script type="text/javascript" src="{{asset('assets/js/plugins/custom/ol-ext-master/dist/ol-ext.js')}}"></script>
 <script>
@@ -268,8 +275,8 @@ $(document).ready(function() {
             var orgWidth = null;
             var orgHeight = null;
             var $basic = null;
-            var imgWidth = Math.round($("#event-create-form input[name=picture_type]").data('width') / 2);
-            var imgHeight = Math.round($("#event-create-form input[name=picture_type]").data('height') / 2);
+            var imgWidth = Math.round($("#create-event-form input[name=picture_type]").data('width') / 2);
+            var imgHeight = Math.round($("#create-event-form input[name=picture_type]").data('height') / 2);
             var img = null;
             var croppedData = null;
             var orginalData = null;
@@ -278,7 +285,7 @@ $(document).ready(function() {
             var oganizars;
             var i = 0;
 
-            $('#event-create-form .date-range-picker-time').daterangepicker({
+            $('#create-event-form .date-range-picker-time').daterangepicker({
                 showWeekNumbers: true,
                 showDropdowns: true,
                 //timePicker: true,
@@ -348,8 +355,8 @@ $(document).ready(function() {
                 }
             });
 
-            $('#event-create-form input[name=soum_district]').select2({data: ""}).select2("enable", false);
-            $('#event-create-form input[name=bag_khoroo]').select2({data: ""}).select2("enable", false);
+            $('#create-event-form input[name=soum_district]').select2({data: ""}).select2("enable", false);
+            $('#create-event-form input[name=bag_khoroo]').select2({data: ""}).select2("enable", false);
 
             $('#img_canvas').croppie('destroy');
             $basic = $('#img_canvas').croppie({
@@ -398,7 +405,7 @@ $(document).ready(function() {
                 $basic.croppie('rotate', parseInt($(this).data('deg')));
             });
 
-            var $validator = $('#event-create-form').validate({
+            var $validator = $('#create-event-form').validate({
                 ignore: [],
                 highlight:function(element) {
                     $(element).parents('.form-group').addClass('has-error has-feedback');
@@ -440,60 +447,136 @@ $(document).ready(function() {
                 }
             });
 
-            $('#validation-wizard').bootstrapWizard({
-                'onNext': function(tab, navigation, index) {
-                    var $valid = $("#event-create-form").valid();
-                    if(!$valid) {
-                        $validator.focusInvalid();
-                    }
-                    
-                    if(index == 2)
-                    {
-                        role = $("#event-create-form select[name^=roles]")[0];
-                        oganizars = $(role).closest('.form-group').find('input[name^=organizations]').val();
-
-                        
-                        $("#event-create-form input[name=organization_branch]").val(null).trigger('change.select2');
-                        if(oganizars.length > 0)
-                        {
-                            $("#event-create-form input[name=organization_branch]").data("select2").opts.minimumInputLength = 0;
-                        }
-                        else
-                        {
-                            $("#event-create-form input[name=organization_branch]").data("select2").opts.minimumInputLength = 3;
-                        }
-                        $(".ol-unselectable").css('display', 'block');
-                    }
-                },
-                onTabClick: function(tab, navigation, index) {
-                    var $valid = $("#event-create-form").valid();
-                    if(!$valid) {
-                        $validator.focusInvalid();
-                    }
-
-                    if(index == 2)
-                    {
-                        role = $("#event-create-form select[name^=roles]")[0];
-                        oganizars = $(role).closest('.form-group').find('input[name^=organizations]').val();
-
-                        
-                        $("#event-create-form input[name=organization_branch]").val(null).trigger('change.select2');
-                        if(oganizars.length > 0)
-                        {
-                            $("#event-create-form input[name=organization_branch]").data("select2").opts.minimumInputLength = 0;
-                        }
-                        else
-                        {
-                            $("#event-create-form input[name=organization_branch]").data("select2").opts.minimumInputLength = 3;
-                        }
-                    }
-                    $(".ol-unselectable").css('display', 'block');
-                }
+            wizard = new KTWizard('create-event-wizard', {
+                startStep: 1,
+                clickableSteps: true,
             });
+            //wizard.goTo(4);
+        
+            $.validator.addMethod('filesize', function (value, element, param) {
+                return this.optional(element) || (element.files[0].size <= param)
+            }, '{{ trans('messages.error_over_max_file_size', ['size' => SmartHelper::formatSizeUnits(@config('settings.max_file_size'))]) }}');
+        
+            // Change event
+            wizard.on('change', function (wizard) {
+                KTUtil.scrollTop();
+                if (wizard.getStep() > wizard.getNewStep()) {
+                    return;
+                }
+                
+                $('#create-event-form').validate({
+                    ignore: function (index, el) {
+                        var $el = $(el);
+                        var state = $(el).data('wizard-state');
+                        if (typeof state !== 'undefined') {
+                            return true;
+                        }
+                    
+                        return $el.is(':hidden');
+                    },
+                    highlight:function(element) {
+                        $(element).addClass('is-invalid');
+                    },
+                    unhighlight: function(element) {
+                        $(element).removeClass('is-invalid');
+                    },
+                    submitHandler: function(form) {
+                        //form.submit();
+                        $.ajax({
+                            url: form.action,
+                            type: form.method,
+                            data: new FormData(form),
+                            success: function(response) {                           
+                                if(response.status == 'success')
+                                {
+                                    toastr.success(response.msg);
+                                    
+                                }
+                                else 
+                                {
+                                    toastr.error(response.errors, response.msg, {
+                                        "closeButton": true,
+                                        "timeOut": "0",
+                                        "extendedTimeOut": "0",
+                                    });
+                                }
+                            },
+                            error: function (xhr, textStatus, error) {
+                                console.log(xhr.statusText);
+                                console.log(textStatus);
+                                console.log(error);
+                            },
+                            async: false,
+                            processData: false,
+                            contentType: false
+                        });
+                    },
+                    errorPlacement: function(error, element) {
+                        if($(element).parents('.form-group').find(".error-here").length > 0){
+                            error.appendTo($(element).parents('.form-group').find(".error-here"));
+                        } else {
+                            error.insertAfter(element);
+                        }
+                    }
+                });
+            
+                if ($('#create-event-form').length > 0) {
+                    if ($('#create-event-form').valid()) {
+                        wizard.goTo(wizard.getNewStep());
+                    
+                        KTUtil.scrollTop();
+                    } else {
+                        Swal.fire({
+                            text: "Уучлаарай! Алдаа илэрсэн байна, Дахин оролдоно уу.",
+                            icon: "error",
+                            buttonsStyling: false,
+                            confirmButtonText: "Okay",
+                            customClass: {
+                                confirmButton: "btn font-weight-bold btn-light"
+                            }
+                        }).then(function () {
+                            KTUtil.scrollTop();
+                        });
+                    }
+                }
+            
+                return false;
+            });
+
+            // Submit event
+            wizard.on('submit', function (wizard) {
+                Swal.fire({
+                    text: "Бүгд боллоо! Мэдээллийг хадгалахад итгэлтэй байна уу.",
+                    icon: "success",
+                    showCancelButton: true,
+                    buttonsStyling: false,
+                    confirmButtonText: "Тийм, хадгалах!",
+                    cancelButtonText: "Үгүй, цуцлах",
+                    customClass: {
+                        confirmButton: "btn font-weight-bold btn-primary",
+                        cancelButton: "btn font-weight-bold btn-default"
+                    }
+                }).then(function (result) {
+                    if (result.value) {
+                        $('#create-event-form').submit();
+                    } else if (result.dismiss === 'cancel') {
+                        Swal.fire({
+                            text: "Оруулсан мэдээллийг хадгалаагүй болно! Мэдээллээ дахин шалгана уу.",
+                            icon: "error",
+                            buttonsStyling: false,
+                            confirmButtonText: "Ok, тэгье!",
+                            customClass: {
+                                confirmButton: "btn font-weight-bold btn-primary",
+                            }
+                        });
+                    }
+                });
+            });
+    
             
             $("#btn-row-add").on('click', function()
             {
-                var selCount = $("#event-create-form select[name^=roles]:first option").size();
+                var selCount = $("#create-event-form select[name^=roles]:first option").size();
                 var sel = $("#div-form-group");
                 var clone = sel.clone(true, true);
 
@@ -539,7 +622,7 @@ $(document).ready(function() {
                 }
             });
 
-            $("#event-create-form input[name=organization_branch]").select2({
+            $("#create-event-form input[name=organization_branch]").select2({
                 width: 'resolve',
                 tags: true,
                 tokenSeparators: [',', ' '],
@@ -572,7 +655,7 @@ $(document).ready(function() {
                 }
             });
 
-            $('#event-create-form input[name=object_locations]').tagsinput({
+            $('#create-event-form input[name=object_locations]').tagsinput({
                 freeInput: false,
                 maxTags: 20,
                 itemValue: function(item) {
@@ -583,14 +666,14 @@ $(document).ready(function() {
                 }
             });
 
-            $('#event-create-form input[name=object_datas]').tagsinput({
+            $('#create-event-form input[name=object_datas]').tagsinput({
                 freeInput: false,
                 maxTags: 20
             });
 
-            $('#event-create-form input[name=organization_branch]').on('select2-selecting', function (e) {
+            $('#create-event-form input[name=organization_branch]').on('select2-selecting', function (e) {
                 //console.log(e.choice.firstname);
-                $('#event-create-form input[name=object_locations]').tagsinput('add', {id: e.choice.address.object_location_id, text: e.choice.address.object_location.object_name});
+                $('#create-event-form input[name=object_locations]').tagsinput('add', {id: e.choice.address.object_location_id, text: e.choice.address.object_location.object_name});
                 $.ajax({
                     url: '/location/object/find/'+e.choice.address.object_location_id,
                     type: 'GET',
@@ -611,10 +694,10 @@ $(document).ready(function() {
                 });
                 
             }).on("select2-removing", function(e) {
-                $('#event-create-form input[name=object_locations]').tagsinput('remove', e.address.object_location_id);
+                $('#create-event-form input[name=object_locations]').tagsinput('remove', e.address.object_location_id);
             });
 
-            $("#event-create-form select[name=aimag_city]").on("change", function()
+            $("#create-event-form select[name=aimag_city]").on("change", function()
             {
                 var aimagId = $(this).val();
                 $.ajax({
@@ -622,7 +705,7 @@ $(document).ready(function() {
                     url: '/location/unit/soumDistrict',
                     data: {aimagCityId: aimagId},
                     success: function (data) {
-                        $('#event-create-form input[name=soum_district]').select2({
+                        $('#create-event-form input[name=soum_district]').select2({
                             placeholder: "-- {{ trans('display.soum_district') }} --",
                             data: {results: JSON.parse(data), text: function (item) {
                                 return item.name;
@@ -647,10 +730,10 @@ $(document).ready(function() {
                     async: false
                 });
 
-                $('#event-create-form input[name=bag_khoroo]').select2({data: ""}).select2("enable", false);
+                $('#create-event-form input[name=bag_khoroo]').select2({data: ""}).select2("enable", false);
             });
 
-            $("#event-create-form input[name=soum_district]").on("change", function()
+            $("#create-event-form input[name=soum_district]").on("change", function()
             {
                 var soumId = $(this).val();
                 $.ajax({
@@ -658,7 +741,7 @@ $(document).ready(function() {
                     url: '/location/unit/bagKhoroo',
                     data: {soumDistrictId: soumId},
                     success: function (data) {
-                        $('#event-create-form input[name=bag_khoroo]').select2({
+                        $('#create-event-form input[name=bag_khoroo]').select2({
                             placeholder: "-- {{ trans('display.bag_khoroo') }} --",
                             data: {results: JSON.parse(data), text: function (item) {
                                 return item.name;
@@ -685,22 +768,22 @@ $(document).ready(function() {
             });
 
             $("#btn-zoom-unit").on('click', function(){
-                const urlParams = new URLSearchParams($("#event-create-form").serialize());
+                const urlParams = new URLSearchParams($("#create-event-form").serialize());
 
                 if(!!urlParams.get('bag_khoroo') && urlParams.get('bag_khoroo') != '')
                 {
                     locationType = "Bag";
-                    showLocationId = $("#event-create-form input[name=bag_khoroo]").val();
+                    showLocationId = $("#create-event-form input[name=bag_khoroo]").val();
                 }
                 else if(!!urlParams.get('soum_district') && urlParams.get('soum_district') != '')
                 {
                     locationType = "Soum";
-                    showLocationId = $("#event-create-form input[name=soum_district]").val();
+                    showLocationId = $("#create-event-form input[name=soum_district]").val();
                 }
                 else if(!!urlParams.get('aimag_city') && urlParams.get('aimag_city') != '')
                 {
                     locationType = "Aimag";
-                    showLocationId = $("#event-create-form select[name=aimag_city]").val();
+                    showLocationId = $("#create-event-form select[name=aimag_city]").val();
                 }
                 else 
                 {
@@ -730,7 +813,7 @@ $(document).ready(function() {
                         }
                     }).then(function (resp) {
                         croppedData = resp;
-                        $("#event-create-form").submit();
+                        $("#create-event-form").submit();
                     });
                 });
             });
