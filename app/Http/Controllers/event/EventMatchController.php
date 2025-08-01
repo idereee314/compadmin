@@ -9,6 +9,7 @@ use Validator;
 
 use event\EloquentEventConfigDaysRepository as ConfigDays;
 use event\EloquentEventMatchesRespository as Mathes;
+use event\EventConfigRepository as EventConfig;
 
 use \Auth as Auth;
 use Config;
@@ -21,18 +22,21 @@ class EventMatchController extends Controller
 {
     public $restful = true;
 
-    public function __construct(ConfigDays $configDays, Event $event, Mathes $mathes)
+    public function __construct(ConfigDays $configDays, Event $event, Mathes $mathes, EventConfig $eventConfig)
     {
         $this->view_path = 'event.config.match';
         $this->configDays = $configDays;
         $this->event = $event;
         $this->mathes = $mathes;
+        $this->eventConfig = $eventConfig;
     }
 
     public function show($eventId)
     {
         $data['view_path'] = $this->view_path;
         $data['eventId'] = $eventId;
+        // $eventConfig = $this->eventConfig->find($eventId);
+        // $data['event'] = $eventConfig;
         return view($this->view_path.'.index', $data);
     }
 

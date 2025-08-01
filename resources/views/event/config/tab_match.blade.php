@@ -142,7 +142,7 @@
                         endDate.setMinutes(endDate.getMinutes() + duration);
                         totalDuration += duration;
                         row.innerHTML = `
-                            <td>${bracket.order_no} || ${index}</td>
+                            <td> ${index}</td>
                             <td>
                                 ${handleUserNames(bracket)}
                             </td>

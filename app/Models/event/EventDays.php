@@ -65,7 +65,6 @@ class EventDays extends Model
                         ->whereNotNull('reg_two_id')
                         ->where('status', '=', 'C')
                         ->first();
-                    Log::debug('Match found: ', ['match' => $match, 'ba' => $ba, 'cond' => empty($match)]);
                     $ba['is_complete'] = !empty($match);
                 }
 

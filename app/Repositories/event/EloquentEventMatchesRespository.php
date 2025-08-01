@@ -158,7 +158,7 @@ class EloquentEventMatchesRespository implements EventMatchesRespository {
 			$futureMatches = $this->generateGeneralMatch($event_id, $input, $eventMatches, 0);
 			$eventMatches = $futureMatches; // Set future matches as the current matches for the next round
 		}
-
+		
 		$this->generateQuarterFinals($event_id, $input, $eventMatches);
 		
 		return [
@@ -168,17 +168,19 @@ class EloquentEventMatchesRespository implements EventMatchesRespository {
 	}
 
 	private function generateQuarterFinals($event_id, $input, $eventMatches){
-		$futureMatch = new EventMatches();
-		$futureMatch->event_id = $event_id;
-		$futureMatch->entry_id = $input['entry_id'];
-		$futureMatch->entry_age_id = $input['entry_age_id'];
-		$futureMatch->entry_belt_id = $input['entry_belt_id'];
-		$futureMatch->entry_weight_id = $input['entry_weight_id'];
-		$futureMatch->previes_mate_id1 = $eventMatches[0]->id;
-		$futureMatch->previes_mate_id2 = $eventMatches[1]->id;
-		$futureMatch->status = 'P'; // Pending status
-		$futureMatch->order_no = 9998; // Set to a bronze medal match
-		$futureMatch->save();
+		if(count($eventMatches) == 2){
+			$futureMatch = new EventMatches();
+			$futureMatch->event_id = $event_id;
+			$futureMatch->entry_id = $input['entry_id'];
+			$futureMatch->entry_age_id = $input['entry_age_id'];
+			$futureMatch->entry_belt_id = $input['entry_belt_id'];
+			$futureMatch->entry_weight_id = $input['entry_weight_id'];
+			$futureMatch->previes_mate_id1 = $eventMatches[0]->id;
+			$futureMatch->previes_mate_id2 = $eventMatches[1]->id;
+			$futureMatch->status = 'P'; // Pending status
+			$futureMatch->order_no = 9998; // Set to a bronze medal match
+			$futureMatch->save();
+		}
 
 		Log::info('Count of event matches: ' . count($eventMatches));
 		Log::info('eventMatches: ', $eventMatches);

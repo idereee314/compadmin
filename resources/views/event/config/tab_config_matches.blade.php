@@ -45,7 +45,7 @@
                     ${bracket?.entry?.fullname} /
                     ${bracket?.age?.name}  /
                     ${bracket?.belt?.name} /
-                    ${bracket?.weight?.weight} / ${bracket?.total} / ${bracket?.is_complete}
+                    ${bracket?.weight?.weight} / ${bracket?.total}
                 `;
                 treeNode.appendChild(details);
 
@@ -399,7 +399,7 @@
 
         
     $("#generate-btn").on('click', function() {
-        var eventId = @json($eventConfig['event_id']);
+        var eventId = @json($eventConfig['id']);
         console.log(eventId);
         $.get('{!! route('event.config.match.index') !!}/' + eventId, function(data) {
             $('#eventEntryModal').modal();
