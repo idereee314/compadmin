@@ -228,7 +228,6 @@ class EventConfigController extends Controller
 			try {
                 if (!empty($input['start_time'])) {
                     $input['start_time'] = Carbon\Carbon::createFromFormat('h:i A', $input['start_time'])->format('H:i:s');
-                    Log::info('Start Time Updated:', [$input['start_time']]);
                 }
                 $event = $this->eventConfig->update($id, $input);
             

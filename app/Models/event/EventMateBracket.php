@@ -61,9 +61,6 @@ class EventMateBracket extends Model
 
     public function brackets()
     {
-        Log::info('Entry ID:', ['entry_id' => $this->entry_id]);
-        Log::info('Entry Belt ID:', ['entry_belt_id' => $this->entry_belt_id]);
-        Log::info('Entry Age ID:', ['entry_age_id' => $this->entry_age_id]);
         return $this->hasMany('event\EventMatches', 'entry_id', 'entry_id')
             ->whereColumn('entry_belt_id', 'entry_belt_id')
             ->whereColumn('entry_age_id', 'entry_age_id')

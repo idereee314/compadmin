@@ -41,7 +41,6 @@ class EventMatchController extends Controller
         $data['view_path'] = $this->view_path;
         $data['matchId'] = $match_id;
         $data['registered'] = $this->mathes->getMatchesByEventId($match_id);
-        Log::info('registered', ['registered' => $data['registered']]);
         return view($this->view_path.'.edit', $data);
     }
 
@@ -108,12 +107,6 @@ class EventMatchController extends Controller
 
             foreach ($data['schedule'] as $day) {
                 foreach ($day['mats'] as $mat) {
-                    Log::info('Saving brackets', [
-                        'event_id' => $event_id,
-                        'day' => $day['day'],
-                        'mat' => $mat['mat'],
-                        'brackets' => $mat['brackets'] ?? [],
-                    ]);
                     $this->configDays->resetMateBracker($event_id, $day['day'], $mat['mat']);
                     if (isset($mat['brackets']) && !empty($mat['brackets'])) {
                         foreach ($mat['brackets'] as $bracket) {

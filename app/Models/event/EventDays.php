@@ -61,9 +61,12 @@ class EventDays extends Model
                         ->where('entry_belt_id', $ba['entry_belt_id'])
                         ->where('entry_age_id', $ba['entry_age_id'])
                         ->where('entry_weight_id', $ba['entry_weight_id'])
-                        ->where('status', '!=', 'C')
+                        ->whereNotNull('reg_one_id')
+                        ->whereNotNull('reg_two_id')
+                        ->where('status', '=', 'C')
                         ->first();
-                    $ba['is_complete'] = empty($match);
+                    Log::debug('Match found: ', ['match' => $match, 'ba' => $ba, 'cond' => empty($match)]);
+                    $ba['is_complete'] = !empty($match);
                 }
 
                 // Build the mat structure
@@ -81,7 +84,6 @@ class EventDays extends Model
                 'mats' => $matsWithBrackets,
             ];
         }
-        Log::info('Event Days with Mats and Brackets:', ['result' => $result]);
 
         return $result;
     }

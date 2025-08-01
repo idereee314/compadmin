@@ -45,13 +45,17 @@
                     ${bracket?.entry?.fullname} /
                     ${bracket?.age?.name}  /
                     ${bracket?.belt?.name} /
-                    ${bracket?.weight?.weight} / ${bracket?.total}
+                    ${bracket?.weight?.weight} / ${bracket?.total} / ${bracket?.is_complete}
                 `;
                 treeNode.appendChild(details);
 
-                // Make the tree node draggable
+                // Make the tree node 
+                //
                 treeNode.draggable = !bracket?.is_complete;
                 treeNode.dataset.id = bracketId;
+                if(bracket?.is_complete){
+                    treeNode.className += ' bg-secondary text-muted';
+                } 
 
                 // Append the tree node to the container
                 container.appendChild(treeNode);

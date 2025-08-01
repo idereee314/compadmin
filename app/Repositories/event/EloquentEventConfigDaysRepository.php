@@ -102,13 +102,6 @@ class EloquentEventConfigDaysRepository implements EventConfigDaysRepository {
 
 	public function saveBracket($event_id, $day_id, $mat_id, $bracket, $total_hour)
 	{
-		Log::info('saveBracket', [
-			'event_id' => $event_id,
-			'day_id' => $day_id,
-			'mat_id' => $mat_id,
-			'bracket' => $bracket,
-			'total_hour' => $total_hour,
-		]);
 		EventMateBracket::updateOrCreate(
 			[
 				'event_id' => $event_id,
@@ -129,11 +122,6 @@ class EloquentEventConfigDaysRepository implements EventConfigDaysRepository {
 
 	public function resetMateBracker($event_id, $day_id, $mat_id)
 	{
-		Log::info('resetMateBracker', [
-			'event_id' => $event_id,
-			'day_id' => $day_id,
-			'mat_id' => $mat_id,
-		]);
 		return DB::table('uq_comp.uq_event_mate_brackets')
         ->where('event_id', $event_id)
         ->where('day_id', $day_id)
@@ -151,7 +139,6 @@ class EloquentEventConfigDaysRepository implements EventConfigDaysRepository {
 
 	public function getMatchByGroup(Request $request, $eventId)
 	{
-		Log::info('Event ID:', ['event_id' => $eventId]);
 		if (!$eventId) {
 			return [];
 		}
@@ -162,7 +149,6 @@ class EloquentEventConfigDaysRepository implements EventConfigDaysRepository {
 		$day = (int) $request->input('day');
 		$gender = (int) $request->input('gender');
 		$weight = (int) $request->input('weight');
-		Log::info($request->all());
 
 		// Retrieve EventDays with related mates, matches, and brackets
 		$regs = EventDays::with([
@@ -197,34 +183,44 @@ class EloquentEventConfigDaysRepository implements EventConfigDaysRepository {
 		->when($day, function ($query) use ($day) {
 			$query->where('id', $day);
 		})
-	->where('event_id', $eventId)
-		->selectRaw('ROW_NUMBER() OVER (ORDER BY start_date ASC) as day, *')
-		->get();
-
+		->where('event_id', $eventId)
+			->selectRaw('ROW_NUMBER() OVER (ORDER BY start_date ASC) as day, *')
+			->get();
+	
 		foreach ($regs as $day) {
 			foreach ($day->mates as $mate) {
+				$matchCollection = [];
 				foreach ($mate->matches as $match) {
 					// Dynamically load brackets for each match
-					$brackets = $match->brackets()
-						->select('id', 'entry_id', 'entry_belt_id', 'entry_age_id', 'entry_weight_id', 'reg_one_id', 'reg_two_id', 'reg_win_id',  'status', 'end_time')
-						->where('entry_belt_id', $match->entry_belt_id)
-						->where('entry_age_id', $match->entry_age_id)
-						->where('entry_weight_id', $match->entry_weight_id)
-						->where('event_id', $eventId)
-						->with([
-							'entry:id,name,gender_code', // Include entry relationship
-							'belt:id,name', // Include belt relationship
-							'age:id,start_age,end_age', // Include age relationship
-							'weight:id,weight', // Include weight relationship
-							'regOne:id,member_id', // Include regOne relationship
-							'regTwo:id,member_id', // Include regTwo relationship
-							'regOne.member:id,firstname,lastname', // Include member relationship for regOne
-							'regTwo.member:id,firstname,lastname',  // Include member relationship for regTwo
-							'regWin.member:id,firstname,lastname'  // Include member relationship for regTwo
-						])
-						->get();
-					$match->brackets = $brackets;
+					$bracketData = [
+						'entry_id' => $match->entry_id,
+						'entry_belt_id' => $match->entry_belt_id,
+						'entry_age_id' => $match->entry_age_id,
+						'entry_weight_id' => $match->entry_weight_id,
+					];
+					$matchCollection[] = $bracketData;
 				}
+
+				$brackets = EventMatches::select('id', 'entry_id', 'entry_belt_id', 'entry_age_id', 'entry_weight_id', 'reg_one_id', 'reg_two_id', 'reg_win_id',  'status', 'end_time', 'order_no')
+					->whereIn('entry_belt_id', array_column($matchCollection, 'entry_belt_id'))
+					->whereIn('entry_age_id', array_column($matchCollection, 'entry_age_id'))
+					->whereIn('entry_weight_id', array_column($matchCollection, 'entry_weight_id'))
+					->where('event_id', $eventId)
+					->orderBy('end_time', 'asc')
+					->orderBy('order_no', 'asc')
+					->orderBy('id', 'asc')
+					->with([
+						'entry:id,name,gender_code', // Include entry relationship
+						'belt:id,name', // Include belt relationship
+						'age:id,start_age,end_age', // Include age relationship
+						'weight:id,weight', // Include weight relationship
+						'regOne:id,member_id', // Include regOne relationship
+						'regTwo:id,member_id', // Include regTwo relationship
+						'regOne.member:id,firstname,lastname', // Include member relationship for regOne
+						'regTwo.member:id,firstname,lastname',  // Include member relationship for regTwo
+						'regWin.member:id,firstname,lastname'  // Include member relationship for regTwo
+					]);
+				$mate['event_matches'] = $brackets->get();
 			}
 		}
 
