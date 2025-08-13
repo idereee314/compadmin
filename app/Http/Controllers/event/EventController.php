@@ -147,8 +147,12 @@ class EventController extends Controller
     {
         $input = Input::all();
         $event = $this->event->find($id);
+        @$sport = $event->eventSport->sport->name;
         
+        $data['sport'] = $sport;
         $data['event'] = $event;
+
+        $data['view_path'] = $this->view_path;
 
         return view($this->view_path.'.description', $data);
     }

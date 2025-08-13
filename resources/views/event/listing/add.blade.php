@@ -174,14 +174,14 @@
                                                                 <!--end::sport type-->
                                                                 <!--begin::title native-->
                                                                 <div class="form-group">
-                                                                    <label>{{ trans('display.general_title_mongolian') }}: <span class="text-danger">*</span></label>
+                                                                    <label>{{ trans('display.general_title_mongolian') }}:</label>
                                                                     <div class="input-group input-group-solid">
                                                                         <div class="input-group-prepend">
                                                                             <span class="input-group-text">
                                                                                 <i class="la la-phone"></i>
                                                                             </span>
                                                                         </div>
-                                                                        <input type="text" class="form-control" name="title_mongolia" id="title_mongolia" data-inputmask="'regex': '[А-Яа-яЁёҮүӨөҮҮӨӨ\\s]*'" data-rule-required="true" data-msg-required="{{ trans('validation.required', ['Attribute' => trans('display.general_title_mongolian')]) }}"/>
+                                                                        <input type="text" class="form-control" name="title_mongolia" id="title_mongolia" data-inputmask="'regex': '[А-Яа-яЁёҮүӨөҮҮӨӨ\\s]*'"/>
                                                                     </div>
                                                                     <div class="error-here"></div>
                                                                 </div>
@@ -234,7 +234,6 @@
                                                                             </select>
                                                                         </span>
                                                                         <input class="form-control" type="text" name="organizations[]" id="organization"/>
-                                                                        <!--<span class="input-group-addon bg-warning">.00</span>-->
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -265,7 +264,7 @@
                                                                 <!--end::Picture_type-->
 
                                                                 <div class="form-group row">
-                                                                    <label class="col-md-3 col-sm-6 text-right">{{ trans('display.general_image') }} <span class="asterisk">*</span></label>
+                                                                    <label class="col-md-3 col-sm-6 text-right">{{ trans('display.general_image') }} <span class="text-danger">*</span></label>
                                                                     <div class="col-md-9 col-sm-6">
                                                                         <div class="fileinput fileinput-new" data-provides="fileinput">
                                                                             <span class="btn btn-success btn-file">
@@ -281,7 +280,7 @@
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group row">
-                                                                    <label class="col-md-3 col-sm-6 text-right">{{ trans('display.general_image_rotate') }} <span class="asterisk">*</span></label>
+                                                                    <label class="col-md-3 col-sm-6 text-right">{{ trans('display.general_image_rotate') }} <span class="text-danger">*</span></label>
                                                                     <div class="col-md-9 col-sm-6">
                                                                         <button class="btn btn-info rotate" data-deg="90" type="button">{{ trans('display.general_image_rotate_left') }}</button>
                                                                         <button class="btn btn-info rotate" data-deg="-90" type="button">{{ trans('display.general_image_rotate_right') }}</button>
@@ -374,7 +373,7 @@
                                         <!--end: Wizard Bpdy-->
                                     </div>
                                     <!--end: Wizard-->
-                                </div>									
+                                </div>
                             </div>
                         </div>
                         <!--end::Container-->
@@ -565,56 +564,6 @@ $(document).ready(function() {
         $basic.croppie('rotate', parseInt($(this).data('deg')));
     });
 
-    var $validator = $('#create-event-list-form').validate({
-        ignore: [],
-        highlight:function(element) {
-            $(element).parents('.form-group').addClass('has-error has-feedback');
-        },
-        unhighlight: function(element) {
-            $(element).parents('.form-group').removeClass('has-error');
-        },
-        submitHandler: function(form) {
-            var formData = new FormData(form);
-            formData.set('croppedData', croppedData);
-            formData.set('orginalData', orginalData);
-            $.ajax({
-                url: form.action,
-                type: form.method,
-                data: formData,
-                success: function(response) {
-                        if(response.status == 'success')
-                        {
-                            $('#eventModal').find("#close").trigger('click');
-                            toastr.success(response.msg);
-                            eventTable.draw('page');
-                        }
-                        else {
-                            toastr.error(response.errors, response.msg, {
-                                "closeButton": true,
-                                "timeOut": "0",
-                                "extendedTimeOut": "0",
-                            });
-                        }
-                    },
-                error: function (xhr, textStatus, error) {
-                    console.log(xhr.statusText);
-                    console.log(textStatus);
-                    console.log(error);
-                },
-                async: false,
-                processData: false,
-                contentType: false        
-            });
-        },
-        errorPlacement: function(error, element) {
-            if($(element).parents('.form-group').find(".error-here")){
-                error.appendTo($(element).parents('.form-group').find(".error-here"));
-            } else {
-                error.insertAfter(element);
-            }
-        }
-    });
-
     $('#validation-wizard').bootstrapWizard({
         'onNext': function(tab, navigation, index) {
             var $valid = $("#create-event-list-form").valid();
@@ -664,6 +613,9 @@ $(document).ready(function() {
     });
 
     $("#btn-row-add").on('click', function() {
+        $('.select2').select2({
+            placeholder: "-- {{ trans('display.general_select') }} --"
+        });
         var selCount = $("#create-event-list-form select[name^=roles]:first option").length;
         var sel = $("#div-form-group");
         var clone = sel.clone(true, true);

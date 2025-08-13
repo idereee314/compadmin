@@ -33,7 +33,7 @@
                         <!--begin::Contacts-->
                         <div class="d-flex flex-wrap my-2">
                             <a href="#" class="text-muted text-hover-primary font-weight-bold mr-lg-8 mr-5 mb-lg-0 mb-2">
-                                {{ trans('display.general_sport_type') }} : <span class="label label-primary label-inline mr-2">{{ $event->config->sport->name }}</span>
+                                {{ trans('display.general_sport_type') }} : <span class="label label-primary label-inline mr-2">{{ @$sport }}</span>
                             </a>
                         </div>
                         <!--end::Contacts-->

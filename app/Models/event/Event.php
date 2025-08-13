@@ -87,6 +87,11 @@ class Event extends Model
         return $this->hasMany('event\EventLocation', 'event_id');
     }
 
+    public function eventSport()
+    {
+        return $this->belongsTo('event\EventSport', 'id', 'event_id');
+    }
+
 	public static function boot()
     {
         parent::boot();    

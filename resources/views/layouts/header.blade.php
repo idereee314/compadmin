@@ -26,7 +26,7 @@
             <!--end::Logo-->
             <!--begin::Desktop Search-->
             <div class="quick-search quick-search-inline ml-20 w-300px" id="kt_quick_search_inline">
-                <!-- <form method="get" class="quick-search-form">
+                <form method="get" class="quick-search-form">
                     <div class="input-group rounded bg-light">
                         <div class="input-group-prepend">
                             <span class="input-group-text">
@@ -48,7 +48,7 @@
                             </span>
                         </div>
                     </div>
-                </form> -->
+                </form>
                 <!--begin::Search Toggle-->
                 <div id="kt_quick_search_toggle" data-toggle="dropdown" data-offset="0px,1px"></div>
                 <!--end::Search Toggle-->
