@@ -9474,6 +9474,7 @@ class ComposerStaticInit8da5d45392af245feb314a3d0411c64d
         'event\\EventConfigController' => __DIR__ . '/../..' . '/app/Http/Controllers/event/EventConfigController.php',
         'event\\EventConfigDaysRepository' => __DIR__ . '/../..' . '/app/Repositories/event/EventConfigDaysRepository.php',
         'event\\EventConfigRepository' => __DIR__ . '/../..' . '/app/Repositories/event/EventConfigRepository.php',
+        'event\\EventCounterController' => __DIR__ . '/../..' . '/app/Http/Controllers/event/EventCounterController.php',
         'event\\EventDays' => __DIR__ . '/../..' . '/app/Models/event/EventDays.php',
         'event\\EventMatchController' => __DIR__ . '/../..' . '/app/Http/Controllers/event/EventMatchController.php',
         'event\\EventMatches' => __DIR__ . '/../..' . '/app/Models/event/EventMatches.php',

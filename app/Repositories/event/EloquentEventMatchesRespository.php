@@ -132,10 +132,12 @@ class EloquentEventMatchesRespository implements EventMatchesRespository {
 			'belt:id,name',
 			'age:id,start_age,end_age',
 			'weight:id,weight',
-			'regOne:id,member_id',
-			'regTwo:id,member_id',
+			'regOne:id,member_id,academy_id',
+			'regTwo:id,member_id,academy_id',
 			'regOne.member:id,firstname,lastname',
-			'regTwo.member:id,firstname,lastname'
+			'regTwo.member:id,firstname,lastname',
+			'regOne.academy:id,name',
+			'regOne.academy:id,name'
 		])->find($id); // use find() instead of get()
 
 		if (!$match) {

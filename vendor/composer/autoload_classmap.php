@@ -8803,6 +8803,7 @@ return array(
     'event\\EventConfigController' => $baseDir . '/app/Http/Controllers/event/EventConfigController.php',
     'event\\EventConfigDaysRepository' => $baseDir . '/app/Repositories/event/EventConfigDaysRepository.php',
     'event\\EventConfigRepository' => $baseDir . '/app/Repositories/event/EventConfigRepository.php',
+    'event\\EventCounterController' => $baseDir . '/app/Http/Controllers/event/EventCounterController.php',
     'event\\EventDays' => $baseDir . '/app/Models/event/EventDays.php',
     'event\\EventMatchController' => $baseDir . '/app/Http/Controllers/event/EventMatchController.php',
     'event\\EventMatches' => $baseDir . '/app/Models/event/EventMatches.php',
