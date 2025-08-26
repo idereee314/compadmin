@@ -50,10 +50,7 @@ class EventCounterController extends Controller
     public function edit_winner(Request $request, $match_id)
     {
         $this->mathes->updateWinner($match_id, $request);
-        return  array(
-            'status' => 'success',
-            'msg' => trans('messages.success_save')
-        );
+        return view($this->view_path.'.index', []);
     }
 
     public function store(Request $request, $event_id){

@@ -1,5 +1,15 @@
+@if (!isset($matchId) || empty($matchId))
+  <script>
+    window.close();
+  </script>
+  {{-- Prevent further rendering --}}
+  @php exit; @endphp
+@endif
+
 <link rel="stylesheet" href="{{asset('css/scoreboard/scoreboard_css_style2.css')}}">
 <link rel="stylesheet" href="{{asset('css/scoreboard/scoreboard_css_timer.css')}}">
+
+
 
 <form id="winnerForm" action="{{ route('event.config.counter.winner', ['match_id' => $matchId]) }}" method="POST"  style="display:none;">
 
@@ -193,13 +203,13 @@
           <div class="popup-header red-header">WON BY:</div>
           <div class="end-top-row">
             <button class="end-button" onclick="chooseWinner('RED', 'POINTS', {{$registered[0]->id}})">POINTS</button>
-            <button class="end-button" onclick="chooseWinner('RED', 'SUBMISSION', {{$registered[0]->id}}))">SUBMISSION</button>
+            <button class="end-button" onclick="chooseWinner('RED', 'SUBMISSION', {{$registered[0]->id}})">SUBMISSION</button>
           </div>
           <div class="end-bottom-row">
-            <button class="end-button" onclick="chooseWinner('RED', 'DISQUALIFICATION', {{$registered[0]->id}}))">DISQUALIFICATION</button>
-            <button class="end-button"onclick="chooseWinner('RED', 'WALKOVER', {{$registered[0]->id}}))">WALKOVER</button>
-            <button class="end-button"onclick="chooseWinner('RED', 'NOSHOW', {{$registered[0]->id}}))">NOSHOW</button>
-            <button class="end-button"onclick="chooseWinner('RED', 'DECISION', {{$registered[0]->id}}))">DECISION</button>
+            <button class="end-button" onclick="chooseWinner('RED', 'DISQUALIFICATION', {{$registered[0]->id}})">DISQUALIFICATION</button>
+            <button class="end-button"onclick="chooseWinner('RED', 'WALKOVER', {{$registered[0]->id}})">WALKOVER</button>
+            <button class="end-button"onclick="chooseWinner('RED', 'NOSHOW', {{$registered[0]->id}})">NOSHOW</button>
+            <button class="end-button"onclick="chooseWinner('RED', 'DECISION', {{$registered[0]->id}})">DECISION</button>
           </div>
         </div>
 
