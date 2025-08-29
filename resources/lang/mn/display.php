@@ -62,6 +62,7 @@ return [
     'general_sub_part' => 'Дэд хэсэг',
     'general_minute' => 'минут',
     'general_category' => 'Ангилал',
+    "general_object" => "Обьект",   
     'general_event_category' => 'Тэмцээний ангилал',
     'general_rank_season' => 'Улирал',
     'general_result_type' => 'Үр дүн гаргах төрөл',
@@ -334,10 +335,31 @@ return [
 
     //Academy
 
-    "organization" => "Байгууллага",
     "best_academy" => "Шилдэг академи",
     "toplist" => "Топ жагсаалт",
     "event_organizer" => "Зохион байгуулагч",
+
+    //Organization
+    "organization" => "Байгууллага",
+    "is_fulltime" => "Бүтэн цагийн",
+    "organization_parent" => "Төв салбар",
+    "organization_branches" => "Салбарууд",
+    "organization_empty" => "Хоосон байна",
+    "feature" => "Боломж",
+    "select_feature" => "Боломж сонгох",
+    "picture_type" => "Зурагны төрөл",
+    "select_picture_type" => "Зурагны төрөл сонгох",
+    "location_description" => "Байршилын тайлбар",
+    "organization_status" => "Байгууллагын статус",
+    "organization_type" => "Байгууллагын төрөл",
+    "organization_search_filter" => "Хайх төрөл",
+    "select_workday" => "Өдөр сонгох",
+    "select" => "Сонгох",
+    "organizations" => "Байгууллагууд",
+    "features" => "Боломжууд",
+    "organization_worktime" => "Цагийн хуваарь",
+    "status_add" => "Төлөв нэмэх",
+    "key_word" => "Түлхүүр үг",
 
     //Event
     'event_title' => 'Эвент',
@@ -387,7 +409,7 @@ return [
     'registered_event' => 'Бүртгүүлсэн тэмцээн',
 
     //Event-toplist-point
-    'general_point' => 'Оноо',
+    'general_point' => 'Цэг',
     'start_position' => 'Эхлэх байр',
     'end_position' => 'Төгсөх байр',
 
@@ -402,4 +424,11 @@ return [
     "picture_type" => "Зурагны төрөл",
     "select_picture_type" => "Зурагны төрөл сонгох",
     "pictures_details" => "Зургийн дэлгэрэнгүй мэдээлэл",
+
+    // Location
+    "location" => "Байршил",
+    "aimag_city" => "Аймаг сум",
+    "soum_district" => "Сум дүүрэг",
+    "bag_khoroo" => "Баг хороо",
+    "entrance" => "Орц, гарц",
 ];

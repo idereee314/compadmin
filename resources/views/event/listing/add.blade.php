@@ -295,20 +295,34 @@
                                                             <!--begin: Wizard Step 4-->
                                                             <div class="pb-5" data-wizard-type="step-content">
                                                                 <h4 class="page-header">Байршил</h4>
-                                                                <div class="form-group">
-                                                                    <label class="col-md-3 col-sm-6 text-right">{{trans('display.organization_branches')}}</label>
-                                                                    <div class="col-md-9 col-sm-6">
-                                                                        <div class="input-group">
-                                                                            <span class="input-group-addon" >
-                                                                                <div class="ckbox ckbox-success">
-                                                                                    <input id="checkbox-success-all-org" type="checkbox" name="is_all_branch" value="1">
-                                                                                    <label for="checkbox-success-all-org"></label>
-                                                                                </div>
-                                                                            </span>
+                                                                <div class="form-group row">
+                                                                    <label class="col-3 col-form-label text-right">{{trans('display.organization_branches')}}</label>
+                                                                    <div class="col-9 col-form-label">
+                                                                        <div class="checkbox-inline">
+                                                                            <label class="checkbox checkbox-success">
+                                                                                <input id="checkbox-success-all-org" type="checkbox" name="is_all_branch" value="1">
+                                                                                <span></span>
+                                                                            </label>
                                                                             <input type="hidden" name="organization_branch" id="organization_branch"/>
                                                                         </div>
                                                                     </div>
                                                                 </div>
+
+                                                                <div class="form-group">
+			                                                    	<label>{{trans('display.organization_branches')}}</label>
+			                                                    	<div class="input-group">
+			                                                    		<div class="input-group-prepend">
+			                                                    			<span class="input-group-text">
+			                                                    				<label class="checkbox checkbox-inline checkbox-success">
+			                                                    					<input type="checkbox" checked=""/>
+			                                                    					<span></span>
+			                                                    				</label>
+			                                                    			</span>
+			                                                    		</div>
+			                                                    		<input type="hidden" name="organization_branch" id="organization_branch"/>
+			                                                    	</div>
+			                                                    </div>
+
                                                                 <div class="form-group">
                                                                     <label class="col-md-3 col-sm-6 text-right">{{trans('display.general_object')}}</label>
                                                                     <div class="col-md-9 col-sm-6">
@@ -316,7 +330,7 @@
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group">
-                                                                    <label class="col-md-3 col-sm-6 text-right">{{trans('display.general_point')}}</label>
+                                                                    <label class="col-md-3 col-sm-6 text-right">{{trans('display.general_score')}}</label>
                                                                     <div class="col-md-9 col-sm-6">
                                                                         <input type="text" name="location_datas" id="location_datas" class="form-control" data-role="tagsinput" readonly/>
                                                                     </div>
@@ -687,7 +701,7 @@ $(document).ready(function() {
         }
     });
 
-        $('#event-create-form input[name=object_locations]').tagsinput({
+    $('#create-event-list-form input[name=object_locations]').tagsinput({
         freeInput: false,
         maxTags: 20,
         itemValue: function(item) {
@@ -697,13 +711,13 @@ $(document).ready(function() {
             return item.text;
         }
     });
-    $('#event-create-form input[name=object_datas]').tagsinput({
+    $('#create-event-list-form input[name=object_datas]').tagsinput({
         freeInput: false,
         maxTags: 20
     });
-    $('#event-create-form input[name=organization_branch]').on('select2-selecting', function (e) {
+    $('#create-event-list-form input[name=organization_branch]').on('select2-selecting', function (e) {
         //console.log(e.choice.firstname);
-        $('#event-create-form input[name=object_locations]').tagsinput('add', {id: e.choice.address.object_location_id, text: e.choice.address.object_location.object_name});
+        $('#create-event-list-form input[name=object_locations]').tagsinput('add', {id: e.choice.address.object_location_id, text: e.choice.address.object_location.object_name});
         $.ajax({
             url: '/location/object/find/'+e.choice.address.object_location_id,
             type: 'GET',
@@ -724,17 +738,17 @@ $(document).ready(function() {
         });
         
     }).on("select2-removing", function(e) {
-        $('#event-create-form input[name=object_locations]').tagsinput('remove', e.address.object_location_id);
+        $('#create-event-list-form input[name=object_locations]').tagsinput('remove', e.address.object_location_id);
     });
-    $("#event-create-form select[name=aimag_city]").on("change", function()
+    $("#create-event-list-form select[name=aimag_city]").on("change", function()
     {
         var aimagId = $(this).val();
         $.ajax({
             type: 'POST',
-            url: '/location/unit/soumDistrict',
+            url: '/unit/soumDistrict',
             data: {aimagCityId: aimagId},
             success: function (data) {
-                $('#event-create-form input[name=soum_district]').select2({
+                $('#create-event-list-form input[name=soum_district]').select2({
                     placeholder: "-- {{ trans('display.soum_district') }} --",
                     data: {results: JSON.parse(data), text: function (item) {
                         return item.name;
@@ -757,9 +771,9 @@ $(document).ready(function() {
             },
             async: false
         });
-        $('#event-create-form input[name=bag_khoroo]').select2({data: ""}).select2("enable", false);
+        $('#create-event-list-form input[name=bag_khoroo]').select2({data: ""}).select2("enable", false);
     });
-    $("#event-create-form input[name=soum_district]").on("change", function()
+    $("#create-event-list-form input[name=soum_district]").on("change", function()
     {
         var soumId = $(this).val();
         $.ajax({
@@ -767,7 +781,7 @@ $(document).ready(function() {
             url: '/location/unit/bagKhoroo',
             data: {soumDistrictId: soumId},
             success: function (data) {
-                $('#event-create-form input[name=bag_khoroo]').select2({
+                $('#create-event-list-form input[name=bag_khoroo]').select2({
                     placeholder: "-- {{ trans('display.bag_khoroo') }} --",
                     data: {results: JSON.parse(data), text: function (item) {
                         return item.name;
@@ -792,21 +806,21 @@ $(document).ready(function() {
         });    
     });
     $("#btn-zoom-unit").on('click', function(){
-        const urlParams = new URLSearchParams($("#event-create-form").serialize());
+        const urlParams = new URLSearchParams($("#create-event-list-form").serialize());
         if(!!urlParams.get('bag_khoroo') && urlParams.get('bag_khoroo') != '')
         {
             locationType = "Bag";
-            showLocationId = $("#event-create-form input[name=bag_khoroo]").val();
+            showLocationId = $("#create-event-list-form input[name=bag_khoroo]").val();
         }
         else if(!!urlParams.get('soum_district') && urlParams.get('soum_district') != '')
         {
             locationType = "Soum";
-            showLocationId = $("#event-create-form input[name=soum_district]").val();
+            showLocationId = $("#create-event-list-form input[name=soum_district]").val();
         }
         else if(!!urlParams.get('aimag_city') && urlParams.get('aimag_city') != '')
         {
             locationType = "Aimag";
-            showLocationId = $("#event-create-form select[name=aimag_city]").val();
+            showLocationId = $("#create-event-list-form select[name=aimag_city]").val();
         }
         else 
         {
