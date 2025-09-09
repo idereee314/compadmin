@@ -9,6 +9,8 @@
 <link rel="stylesheet" href="{{asset('css/scoreboard/scoreboard_css_style2.css')}}">
 <link rel="stylesheet" href="{{asset('css/scoreboard/scoreboard_css_timer.css')}}">
 
+
+
 <form id="winnerForm" action="{{ route('event.config.counter.winner', ['match_id' => $matchId]) }}" method="POST"  style="display:none;">
 
 </form>
@@ -271,6 +273,12 @@
 
 
 
+<script src="{{ asset('js/scoreboard/scoreboard_js_clock.js') }}"></script>
+<script src="{{ asset('js/scoreboard/scoreboard_js_endgame.js') }}"></script>
+<script src="{{ asset('js/scoreboard/scoreboard_js_mtimer.js') }}"></script>
+<script src="{{ asset('js/scoreboard/scoreboard_js_script.js') }}"></script>
+<script src="{{ asset('js/scoreboard/scoreboard_js_stalling.js') }}"></script>
+
 
 <script>
     window.redirectToNextCounter = function() {
@@ -279,10 +287,9 @@
     window.redirectToPrevCounter = function() {
       window.location.href = "{{ route('event.config.counter.prev', ['match_id' => $matchId]) }}";
     }
+    const winnerData = @json($registered[2]);
+    const regOne = @json($registered[0]);
+    if(winnerData && regOne){
+      setWinner(winnerData.id == regOne.id ? 'red' : 'blue');
+    }
 </script>
-
-<script src="{{ asset('js/scoreboard/scoreboard_js_clock.js') }}"></script>
-<script src="{{ asset('js/scoreboard/scoreboard_js_endgame.js') }}"></script>
-<script src="{{ asset('js/scoreboard/scoreboard_js_mtimer.js') }}"></script>
-<script src="{{ asset('js/scoreboard/scoreboard_js_script.js') }}"></script>
-<script src="{{ asset('js/scoreboard/scoreboard_js_stalling.js') }}"></script>

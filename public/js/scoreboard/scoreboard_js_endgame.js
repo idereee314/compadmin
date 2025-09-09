@@ -14,8 +14,22 @@ document.getElementById("endBtn").addEventListener("click", () => {
 });
 
 function chooseWinner(color, type, selectedWinnerId) {
-    const lowerColor = color.toLowerCase();
+
+    setWinner(color);
     const upperType = type.toUpperCase();
+
+    if (lowerColor === "red") {
+        winnerDiv1.textContent = `Winner by ${upperType}!`;
+
+    } else if (lowerColor === "blue") {
+        winnerDiv2.textContent = `Winner by ${upperType}!`;
+    }
+    setWinnerId(selectedWinnerId); 
+    form.submit();
+}
+
+function setWinner(color) {
+    const lowerColor = color.toLowerCase();
 
     // Hide all popups
     popup1.style.display = "none";
@@ -24,7 +38,7 @@ function chooseWinner(color, type, selectedWinnerId) {
 
 
     if (lowerColor === "red") {
-        winnerDiv1.textContent = `Winner by ${upperType}!`;
+        winnerDiv1.textContent = `Winner`;
         winnerDiv1.style.color = "black";
         winnerDiv1.style.textAlign = "center";
         winnerDiv1.style.background = "yellow";
@@ -32,15 +46,13 @@ function chooseWinner(color, type, selectedWinnerId) {
         winnerDiv1.style.fontWeight = "bold";
 
     } else if (lowerColor === "blue") {
-        winnerDiv2.textContent = `Winner by ${upperType}!`;
+        winnerDiv2.textContent = `Winner`;
         winnerDiv2.style.color = "black";
         winnerDiv2.style.textAlign = "center";
         winnerDiv2.style.background = "yellow";
         winnerDiv2.style.fontSize = "3.5rem";
         winnerDiv2.style.fontWeight = "bold";
     }
-    setWinnerId(selectedWinnerId); 
-    form.submit();
 }
 
 const form = document.getElementById('winnerForm');
