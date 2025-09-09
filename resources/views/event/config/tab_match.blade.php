@@ -1,3 +1,5 @@
+
+
 <div class="container">
     <div class="row">
         <div class="col-8">
@@ -33,11 +35,13 @@
 
 <script>
     $(document).ready(function() {
+        console.log('Config View Dict:', @json($configViewDict));
         const matesByDay = @json($configViewDict['mate']);
 
         $('#search-day').on('changed.bs.select', function () {
             const selectedDayId = this.value;
             const mateSelect = document.getElementById('search-mat');
+            mateSelect.innerHTML = '<option value="">-- Mate --</option>';
 
             if (matesByDay[selectedDayId]) {
                 matesByDay[selectedDayId].forEach(mate => {
@@ -46,8 +50,6 @@
                     option.text = 'Mat ' + (mate.mate_no);
                     mateSelect.appendChild(option);
                 });
-            } else {
-                mateSelect.innerHTML = '<option value="">-- Mate --</option>';
             }
             $('#search-mat').selectpicker('refresh');
             $('#search-mat').prop('selectedIndex', 0);
@@ -79,10 +81,11 @@
             console.log('Event Config:', data);
 
             data.forEach(day => {
+                console.log('Rendering Day:', day);
                 const dayDiv = document.createElement('div');
                 dayDiv.classList.add('col-12', 'mb-4');
                 const dayHeading = document.createElement('h3');
-                dayHeading.innerText = `Day ${day.item_no}`;
+                dayHeading.innerText = `Day ${day.day}`;
                 dayDiv.appendChild(dayHeading);
                 const starDate = new Date(day.start_date);
                 const [cH, cM, cS] = eventConfig.start_time.split(':').map(Number);
@@ -227,9 +230,10 @@
                 });
                 result.push({
                     day: day.day,
-                    day: day.id,
+                    day_id: day.id,
                     start_date: day.start_date,
                     mates: day.mates.map(mat => ({
+                        mate_no: mat.mate_no,
                         event_matches: mat.event_matches.map(match => ({
                             ...match,
                             duration: durationShort[`${match.entry_id}-${match.entry_age_id}-${match.entry_belt_id}-${match.entry_weight_id}`] || 0

@@ -63,6 +63,7 @@ class EloquentEventConfigDaysRepository implements EventConfigDaysRepository {
 
     public function generateMatAndDays($event_id, $mat, $start_date, $end_date)
 	{
+		Log::info("Generating mats and days for event_id: $event_id, mat: $mat, start_date: $start_date, end_date: $end_date");
 		$currentDate = Carbon::parse($start_date);
 		$endDate = Carbon::parse($end_date);
 		$item_no = 1;
@@ -80,6 +81,7 @@ class EloquentEventConfigDaysRepository implements EventConfigDaysRepository {
 
     public function resetMatAndDays($event_id)
 	{
+		Log::info("Resetting mats and days for event_id: $event_id");
 		EventMatches::where('event_id', $event_id)->delete();
 		EventMateBracket::where('event_id', $event_id)->delete();
 		EventMate::where('event_id', $event_id)->delete();
@@ -184,7 +186,7 @@ class EloquentEventConfigDaysRepository implements EventConfigDaysRepository {
 			$query->where('id', $day);
 		})
 		->where('event_id', $eventId)
-			->selectRaw('ROW_NUMBER() OVER (ORDER BY start_date ASC) as day, *')
+			->selectRaw('ROW_NUMBER() OVER (ORDER BY start_date ASC) as day, item_no, *')
 			->get();
 	
 		foreach ($regs as $day) {

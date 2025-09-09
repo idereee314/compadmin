@@ -399,8 +399,7 @@
 
         
     $("#generate-btn").on('click', function() {
-        var eventId = @json($eventConfig['id']);
-        console.log(eventId);
+        var eventId = @json($eventConfig['event_id']);
         $.get('{!! route('event.config.match.index') !!}/' + eventId, function(data) {
             $('#eventEntryModal').modal();
             $('#eventEntryModal').on('shown.bs.modal', function() {

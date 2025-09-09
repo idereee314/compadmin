@@ -9,8 +9,6 @@
 <link rel="stylesheet" href="{{asset('css/scoreboard/scoreboard_css_style2.css')}}">
 <link rel="stylesheet" href="{{asset('css/scoreboard/scoreboard_css_timer.css')}}">
 
-
-
 <form id="winnerForm" action="{{ route('event.config.counter.winner', ['match_id' => $matchId]) }}" method="POST"  style="display:none;">
 
 </form>
@@ -24,9 +22,19 @@
               <div class="name-texts">
                 <div id="winner1"></div>
                 <div class="full-name-wrapper">
-                  <div id="fullNameTop" class="full-name short">{{$registered[0]->member->fullname ?? '-'}}</div>
+                  <div id="fullNameTop" class="full-name short">
+                    @if (!empty($registered) && isset($registered[0]))
+                      {{$registered[0]->member->fullname ?? '-'}}
+                    @else
+                      TDB
+                    @endif
+                  </div>
                 </div>
-                <div id="clubNameTop" class="club-name">{{$registered[0]->academy->name ?? '-'}}</div>
+                <div id="clubNameTop" class="club-name">
+                  @if (!empty($registered) && isset($registered[0]))
+                    {{$registered[0]->academy->name ?? '-'}}
+                  @endif
+                </div>
               </div>
             </div>
 
@@ -112,9 +120,19 @@
           <div class="name-texts">
             <div id="winner2"></div>
             <div class="full-name-wrapper">
-              <div id="fullNameBottom" class="full-name short">{{$registered[1]->member->fullname ?? '-'}}</div>
+              <div id="fullNameBottom" class="full-name short">
+                @if (!empty($registered) && isset($registered[1]))
+                  {{$registered[1]->member->fullname ?? '-'}}
+                @else
+                  TDB
+                @endif
+              </div>
             </div>
-            <div id="clubNameBottom" class="club-name">{{$registered[1]->academy->name ?? '-'}}</div>
+            <div id="clubNameBottom" class="club-name">
+              @if (!empty($registered) && isset($registered[1]))
+                {{$registered[1]->academy->name ?? '-'}}
+              @endif
+            </div>
           </div>
       </div>
 
@@ -197,33 +215,35 @@
         <button class="end-button" onclick="close_window()">Exit</button>
         <button class="end-button" onclick="window.open()">Duplicate</button>
         <button class="end-button" onclick="requestFullscreen()">Full Screen</button>
+        <button class="end-button" onclick="redirectToPrevCounter()">Go to previes match</button>
+        <button class="end-button" onclick="redirectToNextCounter()">Go to next match</button>
         <button id="endBtn" class="end-button">End Game</button>
 
         <div class="popup" id="popup1">
           <div class="popup-header red-header">WON BY:</div>
           <div class="end-top-row">
-            <button class="end-button" onclick="chooseWinner('RED', 'POINTS', {{$registered[0]->id}})">POINTS</button>
-            <button class="end-button" onclick="chooseWinner('RED', 'SUBMISSION', {{$registered[0]->id}})">SUBMISSION</button>
+            <button class="end-button" onclick="chooseWinner('RED', 'POINTS', {{!empty($registered) && isset($registered[0]) ? $registered[0]->id : 'null'}})">POINTS</button>
+            <button class="end-button" onclick="chooseWinner('RED', 'SUBMISSION', {{!empty($registered) && isset($registered[0]) ? $registered[0]->id : 'null'}})">SUBMISSION</button>
           </div>
           <div class="end-bottom-row">
-            <button class="end-button" onclick="chooseWinner('RED', 'DISQUALIFICATION', {{$registered[0]->id}})">DISQUALIFICATION</button>
-            <button class="end-button"onclick="chooseWinner('RED', 'WALKOVER', {{$registered[0]->id}})">WALKOVER</button>
-            <button class="end-button"onclick="chooseWinner('RED', 'NOSHOW', {{$registered[0]->id}})">NOSHOW</button>
-            <button class="end-button"onclick="chooseWinner('RED', 'DECISION', {{$registered[0]->id}})">DECISION</button>
+            <button class="end-button" onclick="chooseWinner('RED', 'DISQUALIFICATION', {{!empty($registered) && isset($registered[0]) ? $registered[0]->id : 'null'}})">DISQUALIFICATION</button>
+            <button class="end-button"onclick="chooseWinner('RED', 'WALKOVER', {{!empty($registered) && isset($registered[0]) ? $registered[0]->id : 'null'}})">WALKOVER</button>
+            <button class="end-button"onclick="chooseWinner('RED', 'NOSHOW', {{!empty($registered) && isset($registered[0]) ? $registered[0]->id : 'null'}})">NOSHOW</button>
+            <button class="end-button"onclick="chooseWinner('RED', 'DECISION', {{!empty($registered) && isset($registered[0]) ? $registered[0]->id : 'null'}})">DECISION</button>
           </div>
         </div>
 
         <div class="popup" id="popup2">
           <div class="popup-header blue-header">WON BY:</div>
           <div class="end-top-row">
-            <button class="end-button" onclick="chooseWinner('BLUE','POINTS', {{$registered[1]->id}})">POINTS</button>
-            <button class="end-button" onclick="chooseWinner('BLUE','SUBMISSION', {{$registered[1]->id}})">SUBMISSION</button>
+            <button class="end-button" onclick="chooseWinner('BLUE','POINTS', {{!empty($registered) && isset($registered[1]) ? $registered[1]->id : 'null'}})">POINTS</button>
+            <button class="end-button" onclick="chooseWinner('BLUE','SUBMISSION', {{!empty($registered) && isset($registered[1]) ? $registered[1]->id : 'null'}})">SUBMISSION</button>
           </div>
           <div class="end-bottom-row">
-            <button class="end-button" onclick="chooseWinner('BLUE','DISQUALIFICATION', {{$registered[1]->id}})">DISQUALIFICATION</button>
-            <button class="end-button" onclick="chooseWinner('BLUE','WALKOVER', {{$registered[1]->id}})">WALKOVER</button>
-            <button class="end-button" onclick="chooseWinner('BLUE','NOSHOW', {{$registered[1]->id}})">NOSHOW</button>
-            <button class="end-button" onclick="chooseWinner('BLUE','DECISION', {{$registered[1]->id}})">DECISION</button>
+            <button class="end-button" onclick="chooseWinner('BLUE','DISQUALIFICATION', {{!empty($registered) && isset($registered[1]) ? $registered[1]->id : 'null'}})">DISQUALIFICATION</button>
+            <button class="end-button" onclick="chooseWinner('BLUE','WALKOVER', {{!empty($registered) && isset($registered[1]) ? $registered[1]->id : 'null'}})">WALKOVER</button>
+            <button class="end-button" onclick="chooseWinner('BLUE','NOSHOW', {{!empty($registered) && isset($registered[1]) ? $registered[1]->id : 'null'}})">NOSHOW</button>
+            <button class="end-button" onclick="chooseWinner('BLUE','DECISION', {{!empty($registered) && isset($registered[1]) ? $registered[1]->id : 'null'}})">DECISION</button>
           </div>
         </div>
       </div>
@@ -253,7 +273,12 @@
 
 
 <script>
-  console.log(@json($registered));
+    window.redirectToNextCounter = function() {
+      window.location.href = "{{ route('event.config.counter.next', ['match_id' => $matchId]) }}";
+    }
+    window.redirectToPrevCounter = function() {
+      window.location.href = "{{ route('event.config.counter.prev', ['match_id' => $matchId]) }}";
+    }
 </script>
 
 <script src="{{ asset('js/scoreboard/scoreboard_js_clock.js') }}"></script>

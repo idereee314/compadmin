@@ -8,4 +8,6 @@ interface EventMatchesRespository {
     public function delete($id);
     public function generateMatches($event_id, $input);
     public function getMatchesByEventId($id);
+    public function getNextMatches($match_id);
+    public function getPrevMatches($match_id);
 }

@@ -35,8 +35,6 @@ class EventMatchController extends Controller
     {
         $data['view_path'] = $this->view_path;
         $data['eventId'] = $eventId;
-        // $eventConfig = $this->eventConfig->find($eventId);
-        // $data['event'] = $eventConfig;
         return view($this->view_path.'.index', $data);
     }
 

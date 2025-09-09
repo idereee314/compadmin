@@ -137,8 +137,9 @@ class EloquentEventMatchesRespository implements EventMatchesRespository {
 			'regOne.member:id,firstname,lastname',
 			'regTwo.member:id,firstname,lastname',
 			'regOne.academy:id,name',
-			'regOne.academy:id,name'
-		])->find($id); // use find() instead of get()
+			'regTwo.academy:id,name',
+			'regWin:id,member_id,academy_id',
+		])->find($id);
 
 		if (!$match) {
 			return collect(); // or throw exception / return empty if not found
@@ -146,9 +147,77 @@ class EloquentEventMatchesRespository implements EventMatchesRespository {
 
 		// Return combined registrations (remove nulls)
 		return collect([
-			$match->regOne,
-			$match->regTwo
+			$match->regOne ?? null,
+			$match->regTwo ?? null,
+			$match->regWin ?? null
 		])->filter();
+	}
+
+	public function getNextMatches($match_id)
+	{
+		$event_id = EventMatches::find($match_id)->event_id ?? null;
+		if (!$event_id) {
+			return [];
+		}
+		$match = EventMatches::where('event_id', $event_id)
+        ->where('id', '>', $match_id)
+        ->orderBy('end_time')
+        ->orderBy('order_no')
+        ->orderBy('id', 'asc')
+        ->limit(1)
+        ->with([
+            'entry:id,name,gender_code',
+            'belt:id,name',
+            'age:id,start_age,end_age',
+            'weight:id,weight',
+            'regOne:id,member_id,academy_id',
+            'regTwo:id,member_id,academy_id',
+            'regOne.member:id,firstname,lastname',
+            'regTwo.member:id,firstname,lastname',
+            'regOne.academy:id,name',
+            'regTwo.academy:id,name'
+        ])
+        ->first();
+
+		if (!$match) {
+			return []; // or throw exception / return empty if not found
+		}
+
+		return $match -> id;
+	}
+
+	public function getPrevMatches($match_id)
+	{	
+		$event_id = EventMatches::find($match_id)->event_id ?? null;
+		if (!$event_id) {
+			return [];
+		}
+		$match = EventMatches::where('event_id', $event_id)
+        ->where('id', '<', $match_id)
+        ->orderBy('end_time')
+        ->orderBy('order_no')
+        ->orderBy('id', 'asc')
+        ->limit(1)
+        ->with([
+            'entry:id,name,gender_code',
+            'belt:id,name',
+            'age:id,start_age,end_age',
+            'weight:id,weight',
+            'regOne:id,member_id,academy_id',
+            'regTwo:id,member_id,academy_id',
+            'regOne.member:id,firstname,lastname',
+            'regTwo.member:id,firstname,lastname',
+            'regOne.academy:id,name',
+            'regTwo.academy:id,name'
+        ])
+        ->first();
+
+		if (!$match) {
+			Log::info('No previous match found for match_id: ' . $match_id);
+			return []; // or throw exception / return empty if not found
+		}
+
+		return $match -> id;
 	}
 
 	public function generateMatches($event_id, $input)
