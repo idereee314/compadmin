@@ -88,7 +88,10 @@
                 dayHeading.innerText = `Day ${day.day}`;
                 dayDiv.appendChild(dayHeading);
                 const starDate = new Date(day.start_date);
-                const [cH, cM, cS] = eventConfig.start_time.split(':').map(Number);
+                let [cH, cM, cS] = [0,0,0];
+                if(eventConfig.start_time){
+                    [cH, cM, cS] =  eventConfig.start_time.split(':')?.map(Number)
+                }
                 starDate.setHours(cH, cM, cS || 0, 0);
 
                 day.mates.forEach(mat => {

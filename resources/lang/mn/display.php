@@ -338,6 +338,7 @@ return [
     'reg_date' => 'Бүртгэлийн огноо',
     'reg_payment_date' => 'Төлбөр төлөх сүүлийн огноо',
     'reg_update_date' => 'Бүртгэл засах сүүлийн огноо',
+    'start_time' => 'Эхлэх цаг',
 
     //Event-match
     'match_day' => 'Өдөр',
