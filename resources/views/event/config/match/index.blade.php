@@ -1,4 +1,4 @@
-<form action="{{ route('event.config.match.store', ['event_id' => $eventId]) }}" method="POST" class="form"
+<form action="{{ route('event.config.match.generate', ['event_id' => $eventId]) }}" method="POST" class="form"
     id="event-config-days-entries-form">
     <div class="modal-header bg-gray-100">
         <h5 class="modal-title" id="exampleModalLabel"></h5>
