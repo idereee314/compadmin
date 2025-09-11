@@ -287,7 +287,8 @@
     window.redirectToPrevCounter = function() {
       window.location.href = "{{ route('event.config.counter.prev', ['match_id' => $matchId]) }}";
     }
-    const winnerData = @json($registered[2]);
+    const allData = @json($registered);
+    const winnerData = allData[2];
     const regOne = @json($registered[0]);
     if(winnerData && regOne){
       setWinner(winnerData.id == regOne.id ? 'red' : 'blue');
