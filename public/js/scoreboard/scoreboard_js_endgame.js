@@ -17,6 +17,7 @@ function chooseWinner(color, type, selectedWinnerId) {
 
     setWinner(color);
     const upperType = type.toUpperCase();
+    const lowerColor = color.toLowerCase();
 
     if (lowerColor === "red") {
         winnerDiv1.textContent = `Winner by ${upperType}!`;
