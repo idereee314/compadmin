@@ -107,7 +107,9 @@
             <label class="col-md-3 col-form-label text-left">{{trans('display.start_time')}}<span class="text-danger"> *</span></label>
             <div class="col-md-9 col-lg-6">
                 <div class="input-group" id="kt_start_time">
-                    <input type="" name="start_time" id="start_time" data-toggle="timepicker" data-target="#start_time" class="form-control timepicker-input" readonly="readonly" value="{{ Carbon\Carbon::parse(@$eventConfig->start_time)->format('H:i:s') }}" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}">
+                    <input type="" name="start_time" id="start_time" data-toggle="timepicker" data-target="#start_time" class="form-control timepicker-input" readonly="readonly"
+                        value="{{ $eventConfig->start_time ? \Carbon\Carbon::parse($eventConfig->start_time)->timezone('Asia/Ulaanbaatar')->format('H:i:s') : null }}"
+                        data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}">
                     <div class="input-group-append">
                         <span class="input-group-text">
                             <i class="la la-calendar-check-o"></i>
@@ -248,7 +250,7 @@ $(document).ready(function () {
     $('#start_time').timepicker({
         timeFormat: 'h:mm',
         interval: 60,
-        defaultTime: '10',
+        defaultTime: false, // important: prevents defaulting to now
         dynamic: true,
         dropdown: true,
         scrollbar: true
