@@ -288,8 +288,9 @@
       window.location.href = "{{ route('event.config.counter.prev', ['match_id' => $matchId]) }}";
     }
     const allData = @json($registered);
+    console.log(allData);
     const winnerData = allData[2];
-    const regOne = @json($registered[0]);
+    const regOne = allData[0];
     if(winnerData && regOne){
       setWinner(winnerData.id == regOne.id ? 'red' : 'blue');
     }
