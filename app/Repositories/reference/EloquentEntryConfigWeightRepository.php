@@ -151,4 +151,12 @@ class EloquentEntryConfigWeightRepository implements EntryConfigWeightRepository
 
 		return $configWeights;
 	}
+
+	public function getMedalGiven()
+	{
+	    return EntryConfigWeight::select('entry_id', 'entry_age_id', 'weight', 'medal_given')
+	        ->where('medal_given', true)
+	        ->get()
+	        ->keyBy(fn($item) => "{$item->entry_id}-{$item->entry_age_id}-{$item->weight}");
+	}
 }

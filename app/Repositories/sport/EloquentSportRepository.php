@@ -108,4 +108,13 @@ class EloquentSportRepository implements SportRepository {
 
         return $data;
 	}
+
+	public function getSportList()
+	{
+		$sports = Sport::where('is_active', true)
+    		->orderBy('sort_order')
+    		->get();
+
+		return $sports;
+	}
 }

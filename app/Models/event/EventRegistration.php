@@ -105,6 +105,11 @@ class EventRegistration extends Model
     {
         return $this->belongsTo('sport\Sport', 'sport_id');
     }
+
+    public function eventRefundRequest()
+    {
+        return $this->hasOne('event\EventRefundRequest', 'event_registration_id');
+    }
     
     public static function boot()
     {

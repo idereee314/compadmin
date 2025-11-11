@@ -20,19 +20,17 @@
             </button>
             <!--end::Aside Toggle-->
             <!--begin::Logo-->
-            <a href="/event/competition">
+            <a href="/event/sports">
                 <img alt="Logo" src="{{asset('assets/images/logo/uniq_logo.png')}}" class="logo-sticky max-h-35px" />
             </a>
             <!--end::Logo-->
             <!--begin::Desktop Search-->
             <div class="quick-search quick-search-inline ml-20 w-300px" id="kt_quick_search_inline">
-                <!--begin::Form-->
                 <form method="get" class="quick-search-form">
                     <div class="input-group rounded bg-light">
                         <div class="input-group-prepend">
                             <span class="input-group-text">
                                 <span class="svg-icon svg-icon-lg">
-                                    <!--begin::Svg Icon | path:assets/media/svg/icons/General/Search.svg-->
                                     <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
                                         <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                                             <rect x="0" y="0" width="24" height="24" />
@@ -40,7 +38,6 @@
                                             <path d="M11,16 C13.7614237,16 16,13.7614237 16,11 C16,8.23857625 13.7614237,6 11,6 C8.23857625,6 6,8.23857625 6,11 C6,13.7614237 8.23857625,16 11,16 Z M11,18 C7.13400675,18 4,14.8659932 4,11 C4,7.13400675 7.13400675,4 11,4 C14.8659932,4 18,7.13400675 18,11 C18,14.8659932 14.8659932,18 11,18 Z" fill="#000000" fill-rule="nonzero" />
                                         </g>
                                     </svg>
-                                    <!--end::Svg Icon-->
                                 </span>
                             </span>
                         </div>
@@ -52,7 +49,6 @@
                         </div>
                     </div>
                 </form>
-                <!--end::Form-->
                 <!--begin::Search Toggle-->
                 <div id="kt_quick_search_toggle" data-toggle="dropdown" data-offset="0px,1px"></div>
                 <!--end::Search Toggle-->
@@ -87,15 +83,14 @@
                 </div>
                 <!--end::Toggle-->
                 <!--begin::Dropdown-->
+                
                 <div class="dropdown-menu p-0 m-0 dropdown-menu-right dropdown-menu-anim-up dropdown-menu-lg">
                     <div class="quick-search quick-search-dropdown" id="kt_quick_search_dropdown">
-                        <!--begin:Form-->
                         <form method="get" class="quick-search-form">
                             <div class="input-group">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text">
                                         <span class="svg-icon svg-icon-lg">
-                                            <!--begin::Svg Icon | path:assets/media/svg/icons/General/Search.svg-->
                                             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
                                                 <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                                                     <rect x="0" y="0" width="24" height="24" />
@@ -103,7 +98,6 @@
                                                     <path d="M11,16 C13.7614237,16 16,13.7614237 16,11 C16,8.23857625 13.7614237,6 11,6 C8.23857625,6 6,8.23857625 6,11 C6,13.7614237 8.23857625,16 11,16 Z M11,18 C7.13400675,18 4,14.8659932 4,11 C4,7.13400675 7.13400675,4 11,4 C14.8659932,4 18,7.13400675 18,11 C18,14.8659932 14.8659932,18 11,18 Z" fill="#000000" fill-rule="nonzero" />
                                                 </g>
                                             </svg>
-                                            <!--end::Svg Icon-->
                                         </span>
                                     </span>
                                 </div>
@@ -115,12 +109,10 @@
                                 </div>
                             </div>
                         </form>
-                        <!--end::Form-->
-                        <!--begin::Scroll-->
                         <div class="quick-search-wrapper scroll" data-scroll="true" data-height="325" data-mobile-height="200"></div>
-                        <!--end::Scroll-->
                     </div>
                 </div>
+                
                 <!--end::Dropdown-->
             </div>
             <!--end::Tablet & Mobile Search-->
@@ -145,28 +137,62 @@
                 </div>
                 <!--end::Toggle-->
                 <!--begin::Dropdown-->
-                <div class="dropdown-menu p-0 m-0 dropdown-menu-right dropdown-menu-anim-up dropdown-menu-md" style="">
+                <div class="dropdown-menu p-0 m-0 dropdown-menu-right dropdown-menu-anim-up dropdown-menu-md">
+                    <!--begin::User Info Section-->
+                    <div class="d-flex align-items-center p-5 border-bottom">
+                        <!-- Avatar -->
+                        <!-- <div class="symbol symbol-50px me-5">
+                            <img src="/assets/media/avatars/blank.png" alt="User" />
+                            <i class="symbol-badge bg-success"></i>
+                        </div> -->
+
+                        <!-- Name + Role + Email -->
+                        <div class="d-flex flex-column">
+                            <!-- Username -->
+                            <span class=" font-weight-bold font-size-h5 text-dark-75 text-hover-primary">
+                                <!-- {{ mb_substr(Auth::user()->lastname, 0, 1) }}.{{ Auth::user()->firstname }} -->
+                                {{ Auth::user()->username }}
+                            </span>
+                            <!-- Role -->
+                            <span class="text-muted">
+                                @foreach(Auth::user()->roles as $role)
+                                    {{ $role->name }}
+                                @endforeach
+                            </span>
+                            <!-- Email -->
+                            <div class="d-flex align-items-center mt-2">
+                                <span class="text-muted text-hover-primary text-break" style="word-break: break-all;">
+                                    {{ Auth::user()->email }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <!--end::User Info Section-->
+
                     <!--begin::Navigation-->
                     <ul class="navi navi-hover py-5">
-                        <li class="navi-item">
+                        <!-- <li class="navi-item">
                             <a href="#" class="navi-link">
-                                <span class="navi-text">{{trans('display.profile_title')}}</span>
+                                <span class="navi-text">{{ trans('display.profile_title') }}</span>
                             </a>
-                        </li>
-                        <li class="navi-separator my-3"></li>
+                        </li> -->
+
+                        <!-- <li class="navi-separator my-3"></li> -->
+
                         <li class="navi-item">
-                            <a href="{{route('user.change.my.password')}}" class="navi-link">
-                                <span class="navi-text">{{trans('display.user_password_change')}}</span>
+                            <a href="{{ route('user.change.my.password') }}" class="navi-link">
+                                <span class="navi-text">{{ trans('display.user_password_change') }}</span>
                             </a>
                         </li>
-  
+
                         <li class="navi-separator my-3"></li>
+
                         <li class="navi-item">
                             <a href="{{ route('system.logout') }}" class="navi-link">
                                 <span class="navi-icon">
                                     <i class="flaticon-logout"></i>
                                 </span>
-                                <span class="navi-text">{{trans('display.logout')}}</span>
+                                <span class="navi-text">{{ trans('display.logout') }}</span>
                             </a>
                         </li>
                     </ul>
@@ -174,7 +200,6 @@
                 </div>
                 <!--end::Dropdown-->
             </div>
-      
             <!--end::User-->
         </div>
         <!--end::Topbar-->

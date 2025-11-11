@@ -94,7 +94,7 @@ class EventRegistrationController extends Controller
                 $eventFees = $this->eventRegistration->getPaymentByEventId(@$input['event_id'])->groupBy('amount');
                 $team_list = $this->team->all();
                 $index = $this->eventType->all();
-            
+                
                 $data['team_list'] = $team_list;
                 $data['event'] = $event;
                 $data['eventEntries'] = $event->entries;
@@ -712,7 +712,8 @@ class EventRegistrationController extends Controller
 
     public function showSportCard()
     {
-        $sport = $this->sport->all()->toArray(); // Convert the object to an array
+        // $sport = $this->sport->all()->toArray();
+        $sport = $this->sport->getSportList();
         $sports = $sport;
     
         $viewPath = $this->view_path;
@@ -1222,11 +1223,43 @@ class EventRegistrationController extends Controller
         if (!empty($configArray) && isset($configArray[0]->event_result_type_id)) {
             $resultType = $configArray[0]->event_result_type_id;
         }
-        $GenderResultFemale = $this->eventRegistration->getToplistByGoldMedalAndGenderFemaleFromEvent($eventId);
-        $GenderResultMale = $this->eventRegistration->getToplistByGoldMedalAndGenderMaleFromEvent($eventId);
+        $genderResultFemale = $this->eventRegistration->getToplistByGoldMedalAndGenderFemaleFromEvent($eventId);
+        $genderResultMale = $this->eventRegistration->getToplistByGoldMedalAndGenderMaleFromEvent($eventId);
+        $genderResultPointMale = $this->eventRegistration->getToplistByPointAndGenderMaleFromEvent($eventId);
+        $genderResultPointFemale = $this->eventRegistration->getToplistByPointAndGenderFemaleFromEvent($eventId);
+        $eventToplistWithAthleteCount = $this->eventRegistration->getToplistWithAthleteCountFromEvent($eventId);
+        
+        $countedWeights = $this->eventRegistration->getCountedWeightForOrg($eventId);
+        $allWeightIds = collect($countedWeights)->pluck('weight_id')->unique();
+        $medaledWeightIds = collect($eventResult)->where('medal_given', true)->pluck('weight_id')->unique();
+        $unawardedWeightIds = $allWeightIds->diff($medaledWeightIds);
+        $medalGivenMap = $this->configWeight->getMedalGiven();
+        $awardedResults = collect($eventResult)->groupBy('weight_id');
+        $registeredWeights = $this->eventRegistration->getRegistredWeightForOrgApproved($eventId);
 
-        $data['GenderResultFemale'] = $GenderResultFemale;
-        $data['GenderResultMale'] = $GenderResultMale;
+        $toplistPointConfig = $this->eventRegistration->getEventToplistPointConfig($eventId);
+        $pointConfig = [
+            'gold' => $toplistPointConfig->firstWhere('start_pos', 1)?->point ?? 7,
+            'silver' => $toplistPointConfig->firstWhere('start_pos', 2)?->point ?? 5,
+            'bronze' => $toplistPointConfig->firstWhere('start_pos', 3)?->point ?? 3,
+            'other' => $toplistPointConfig->firstWhere(function ($item) {
+                return $item->start_pos === null && $item->end_pos === null;
+            })?->point ?? 2,
+        ];
+
+        $data['pointConfig'] = $pointConfig;
+        $data['eventToplistWithAthleteCount'] = $eventToplistWithAthleteCount;
+        $data['genderResultPointMale'] = $genderResultPointMale;
+        $data['genderResultPointFemale'] = $genderResultPointFemale;
+        $data['registeredWeights'] = $registeredWeights;
+        $data['awardedResults'] = $awardedResults;
+        $data['countedWeights'] = $countedWeights;
+        $data['allWeightIds'] = $allWeightIds;
+        $data['medaledWeightIds'] = $medaledWeightIds;
+        $data['unawardedWeightIds'] = $unawardedWeightIds;
+        $data['medalGivenMap'] = $medalGivenMap;
+        $data['genderResultFemale'] = $genderResultFemale;
+        $data['genderResultMale'] = $genderResultMale;
         $data['resultType'] = $resultType;
         $data['statsWeightForOrg'] = $statsWeightForOrg;
         $data['getToplistByGoldMedalFromEvent'] = $getToplistByGoldMedalFromEvent;

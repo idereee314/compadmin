@@ -49,6 +49,13 @@ return array(
 		//'registered' => 'Бүртгэсэн',
 		'approved' => 'Баталгаажсан',
 		'canceled' => 'Цуцалсан',
+		'refunded' => 'Буцаасан',
+	],
+
+	'event_status' => [
+		'created' => 'Үүсгэсэн',
+		'verified' => 'Зөвшөөрсөн',
+		'canceled' => 'Цуцалсан',
 	],
 
 	'event_registration_status_for_stats' => [
@@ -56,6 +63,7 @@ return array(
 		//'registered' => 'Бүртгэсэн',
 		'approved' => 'Баталгаажсан',
 		'canceled' => 'Цуцалсан',
+		'refunded' => 'Буцаасан',
 	],
 
 	'member_status' => [
@@ -145,6 +153,13 @@ return array(
 		'2' => array('title' => "Академийн ранк",'code' => 'academy_rank','name' => "tab_academy_rank", 'icon' => "fa-list",'number' => 'tab1-3'),
     ],
 
+	'event_tabs' => [
+        '0' => array('title' => "Бүртгэл",'code' => 'general','name' => "tab_general", 'icon' => "fa fa-newspaper-o",'number' => 'tab2-1'),
+        '1' => array('title' => "Зураг",'code' => 'picture','name' => "tab_picture", 'icon' => "glyphicon glyphicon-picture",'number' => 'tab2-2'),
+        '2' => array('title' => "Байгууллага",'code' => 'organizer','name' => "tab_organizer", 'icon' => "fa fa-building",'number' => 'tab2-3'),
+        '3' => array('title' => "Байршил",'code' => 'location','name' => "tab_location", 'icon' => "fa fa-map-marker",'number' => 'tab2-4')
+    ],
+
 	'org_type' => [
 		'academy' => 'Академи',
 		'highschool' => 'Дунд сургууль',
@@ -199,6 +214,13 @@ return array(
 		'13' => 'Цагаан бүс - Мастер',
 	],
 
+	/** EVENT */
+	'event_organization_role' => [
+		'organizer' => 'Зохион байгуулагч',
+		'co-organizer' => 'Хамтран зохион байгуулагч',
+		'sponsor' => 'Ивээн тэтгэгч',
+		'participant' => 'Оролцогч',
+	],
 )
 
 ?>

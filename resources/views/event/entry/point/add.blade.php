@@ -9,16 +9,16 @@
     <div class="card-body">
         <input type="hidden" name="event_id" value={{$eventId}} >        
         <div class="form-group row">
-            <label class="col-md-3 col-form-label text-right">{{trans('display.start_position')}}: <span class="text-danger">*</span></label>
+            <label class="col-md-3 col-form-label text-right">{{trans('display.start_position')}}:</label>
             <div class="col-md-9 col-lg-6">
-                <input type="number" class="form-control" autocomplete="off" name="start_pos" min="1" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}"/>
+                <input type="number" class="form-control" autocomplete="off" name="start_pos"/>
                 <div class="error-here"></div>
             </div>
         </div>
         <div class="form-group row">
-            <label class="col-md-3 col-form-label text-right">{{trans('display.end_position')}}: <span class="text-danger">*</span></label>
+            <label class="col-md-3 col-form-label text-right">{{trans('display.end_position')}}:</label>
             <div class="col-md-9 col-lg-6">
-                <input type="number" class="form-control" autocomplete="off" name="end_pos" min="1"/>
+                <input type="number" class="form-control" autocomplete="off" name="end_pos"/>
             </div>
         </div>
         <div class="form-group row">

@@ -29,6 +29,46 @@ class EloquentEventRepository implements EventRepository {
 		return Event::find($id);
 	}
 
+	public function getDatatableList($searchData)
+	{
+	    $qry = Event::select('*')
+		->join('rti_event_category', 'rti_event_category.event_id', '=', 'rti_event.id')
+		->where('rti_event_category.category_id', 357);
+
+	    return DataTables::of($qry)
+	        ->filter(function ($qry) use ($searchData) {
+				if ($searchData->has('search_date') && !empty($searchData->get('search_date'))) {
+					$qry->whereRaw("rti_event.event_date like ?", array('%' . $searchData->get('search_date') . '%'));
+				}
+				if ($searchData->has('search_name') && !empty($searchData->get('search_name'))) {
+	                $qry->whereRaw("LOWER(rti_event.name) like ?", array('%'.mb_strtolower($searchData->get('search_name')).'%'));
+	            }
+				if($searchData->has('search_status') && !empty($searchData->get('search_status'))) {
+	                $qry->where('rti_event.status', $searchData->get('search_status'));
+	            }
+	        })
+	        ->editColumn('status', function($qry) {
+	            $status = '<button type="button" class="btn btn-light-' . @Config::get('smart.event_status_class')[$qry->status] . ' btn-sm btn-status" data-registrationid="' . $qry->id . '">' . @Config::get('enums.event_status')[$qry->status] . '</button>';
+	            return $status;
+	        })
+	        ->editColumn('created_at', function($qry) {
+	            return $qry->created_at;
+	        })
+			->addColumn('description', function($qry) {
+		        return '<a href="javascript:;" class="btn btn-sm btn-clean btn-icon btn-light-success description" data-eventid="' . @$qry->id . '"><i class="la la-eye"></i></a>';
+	        })
+			->addColumn('event_details', function($qry) {
+				return '<a href="javascript:;" class="btn btn-sm btn-clean btn-icon btn-light-success details" data-eventid="' . @$qry->id . '"><i class="la la-info-circle"></i></a>';
+			})
+	        ->addColumn('action', function ($qry) {
+	            $actionHtml  = '<a class="btn btn-sm btn-clean btn-icon edit" href="javascript:;" data-eventid="'.$qry->id.'" title="'.trans('display.general_edit').'"><i class="la la-edit"></i></a>';
+	            $actionHtml .= '<a class="btn btn-sm btn-clean btn-icon delete" href="javascript:;" data-eventid="'.$qry->id.'" title="'.trans('display.general_delete').'"><i class="la la-trash"></i></a>';
+	            return $actionHtml;
+	        })
+	        ->rawColumns(['status', 'action', 'description', 'event_details'])
+	        ->make(true);
+	}
+
 	public function searchEvent($data)
 	{
 		   //DB::enableQueryLog();
