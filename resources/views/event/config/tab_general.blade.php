@@ -24,12 +24,25 @@
         </div>
 
         <div class="form-group row">
-            <label class="col-md-3 col-form-label text-left">{{trans('display.general_sport_type')}}: <span class="text-danger">*</span></label>
+            <label class="col-md-3 col-form-label text-left">{{trans('display.general_event_category')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9 col-lg-6">
                 <select class="form-control selectpicker" id="sport_id" name="sport_id" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}">
                     <option value="0">-- {{ trans('display.general_select') }} --</option>
                     @foreach($sports as $type)
                         <option value="{{ $type->id }}" {{ $type->id == @$eventConfig->sport_id ? 'selected': '' }}>- {{ $type->name }}</option>
+                    @endforeach
+                </select>
+                <div class="error-here"></div>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-md-3 col-form-label text-left">{{trans('display.general_sport_type')}}: <span class="text-danger">*</span></label>
+            <div class="col-md-9 col-lg-6">
+                <select class="form-control selectpicker" id="event_category_id" name="event_category_id" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}">
+                    <option value="0">-- {{ trans('display.general_select') }} --</option>
+                    @foreach($sports as $type)
+                        <option value="{{ $type->id }}" {{ $type->id == @$eventConfig->event_category_id ? 'selected': '' }}>- {{ $type->name }}</option>
                     @endforeach
                 </select>
                 <div class="error-here"></div>
@@ -48,7 +61,7 @@
             </div>
         </div>  -->
 
-        <div class="form-group row">
+        <!-- <div class="form-group row">
             <label class="col-md-3 col-form-label text-left">{{trans('display.general_event_category')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9 col-lg-6">
                 <select class="form-control selectpicker" id="eventCategory" name="eventCategory" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}">
@@ -59,7 +72,7 @@
                 </select>
                 <div class="error-here"></div>
             </div>
-        </div>
+        </div> -->
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-left">{{trans('display.reg_date')}}<span class="text-danger"> *</span></label>
             <div class="col-md-9 col-lg-6">
@@ -201,7 +214,7 @@
 
 <script>
 $(document).ready(function () {
-    $('#sport_id, #eventCategory, #eventRankSeason, #eventResultType').selectpicker();
+    $('#sport_id, #event_category_id , #eventCategory, #eventRankSeason, #eventResultType').selectpicker();
 
     $('#kt_reg_date').daterangepicker({
         buttonClasses: 'btn',
