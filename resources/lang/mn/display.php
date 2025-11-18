@@ -369,11 +369,17 @@ return [
     'reg_date' => 'Бүртгэлийн огноо',
     'reg_payment_date' => 'Төлбөр төлөх сүүлийн огноо',
     'reg_update_date' => 'Бүртгэл засах сүүлийн огноо',
+    'start_time' => 'Эхлэх цаг',
+
+    //Event-match
+    'match_day' => 'Өдөр',
+    'match_mate' => 'Мат',
     'event_details' => 'Арга хэмжээний дэлгэрэнгүй мэдээлэл',
     'general_event_information' => 'Ерөнхий мэдээлэл',
 
     //Event-entries
     'entrance_fee' => 'Төлбөр',
+    'duration' => 'Хугацаа(минут)',
 
     //Event-config-belt
     'possible_belts' => 'Боломжит бүс',
@@ -420,6 +426,7 @@ return [
     'upcoming_event_list' => 'Удахгүй болох тэмцээнүүд',
     'past_event_list' => 'Болж өнгөрсөн тэмцээнүүд',
 
+    'winning' => 'Ялагч',
     // Other
     "picture_type" => "Зурагны төрөл",
     "select_picture_type" => "Зурагны төрөл сонгох",

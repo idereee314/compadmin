@@ -4,6 +4,11 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 
+use event\EventConfigDaysRepository;
+use event\EventMatchesRespository;
+use event\EloquentEventConfigDaysRepository;
+use event\EloquentEventMatchesRespository;
+
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -23,6 +28,8 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind('event\EventAwardRepository', 'event\EloquentEventAwardRepository');
         $this->app->bind('event\EventRepository', 'event\EloquentEventRepository');
         $this->app->bind('event\EventCategoryRepository', 'event\EloquentEventCategoryRepository');
+        $this->app->bind(EventConfigDaysRepository::class, EloquentEventConfigDaysRepository::class);
+        $this->app->bind(EventMatchesRespository::class, EloquentEventMatchesRespository::class);
         $this->app->bind('event\EventSportRepository', 'event\EloquentEventSportRepository');
         $this->app->bind('event\EventRankSeasonRepository', 'event\EloquentEventRankSeasonRepository');
         $this->app->bind('event\EventUserRepository', 'event\EloquentEventUserRepository'); 
@@ -36,6 +43,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind('event\EventTypeRepository', 'event\EloquentEventTypeRepository');
         $this->app->bind('event\EventPictureRepository', 'event\EloquentEventPictureRepository');
         $this->app->bind('event\EventLocationRepository', 'event\EloquentEventLocationRepository');
+
 
         //Organization
         $this->app->bind('organization\OrganizationRepository', 'organization\EloquentOrganizationRepository'); 

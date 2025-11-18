@@ -38,6 +38,16 @@ class EventBrackets extends Model
     {
         return $this->belongsTo('reference\EntryConfigWeight', 'entry_weight_id');
     }
+    
+    public function regOne()
+    {
+        return $this->belongsTo('event\EventRegistration', 'reg_one_id', 'id');
+    }
+
+    public function regTwo()
+    {
+        return $this->belongsTo('event\EventRegistration', 'reg_two_id', 'id');
+    }
 
     public static function boot()
     {

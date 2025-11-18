@@ -368,6 +368,29 @@ class EloquentEventTeamRegistrationRepository implements EventTeamRegistrationRe
 								order by b.id");
 	}
 
+	public function getBracketFromEvent($eventId)
+	{
+		return DB::select("select ro.id as ro, um.firstname as firstname_one, um.lastname as lastname_one, case when ao.is_other = 1 then ro.academy_name else ao.name end as acname_one, 
+								rt.id as rt, umt.firstname as firstname_two, umt.lastname as lastname_two, case when aot.is_other = 1 then rt.academy_name else aot.name end as acname_two,
+								rw.id as rw, umw.firstname as firstname_win, umw.lastname as lastname_win, case when aow.is_other = 1 then rw.academy_name else aow.name end as acname_win
+								from uq_comp.uq_event_brackets b
+								inner join uq_comp.uq_event_entries e on b.entry_id = e.id 
+								inner join uq_comp.uq_entry_config_age a on b.entry_age_id  = a.id 
+								inner join uq_comp.uq_entry_config_belt be on b.entry_belt_id = be.id 
+								inner join uq_comp.uq_entry_config_weight w on b.entry_weight_id = w.id 
+								left join uq_comp.uq_team_registration ro on b.reg_one_id = ro.id 
+								left join uq_comp.uq_member um on ro.member_id = um.id 
+								left join uq_comp.uq_academy ao on ro.academy_id = ao.id 
+								left join uq_comp.uq_team_registration rt on b.reg_two_id = rt.id 
+								left join uq_comp.uq_member umt on rt.member_id = umt.id 
+								left join uq_comp.uq_academy aot on rt.academy_id = aot.id 
+								left join uq_comp.uq_team_registration rw on b.reg_winner_id = rw.id 
+								left join uq_comp.uq_member umw on rw.member_id = umw.id 
+								left join uq_comp.uq_academy aow on rw.academy_id = aow.id 
+								where b.event_id = ".$eventId."
+								order by b.id");
+	}
+
 	public function deleteEventBracket($eventId, $entryId, $entryAgeId, $entryBeltId, $entryWeightId)
 	{
 		return EventBrackets::where('event_id', $eventId)->where('entry_id', $entryId)

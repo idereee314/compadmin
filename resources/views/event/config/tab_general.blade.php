@@ -117,6 +117,23 @@
         </div>
 
         <div class="form-group row">
+            <label class="col-md-3 col-form-label text-left">{{trans('display.start_time')}}<span class="text-danger"> *</span></label>
+            <div class="col-md-9 col-lg-6">
+                <div class="input-group" id="kt_start_time">
+                    <input type="" name="start_time" id="start_time" data-toggle="timepicker" data-target="#start_time" class="form-control timepicker-input" readonly="readonly"
+                        value="{{ $eventConfig->start_time ? \Carbon\Carbon::parse($eventConfig->start_time)->timezone('Asia/Ulaanbaatar')->format('H:i:s') : null }}"
+                        data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}">
+                    <div class="input-group-append">
+                        <span class="input-group-text">
+                            <i class="la la-calendar-check-o"></i>
+                        </span>
+                    </div>
+                </div>
+                <div class="error-here"></div>
+            </div>
+        </div>
+
+        <div class="form-group row">
             <label class="col-md-3 col-form-label text-left">{{trans('display.general_result_type')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9 col-lg-6">
                 <select class="form-control selectpicker" id="eventResultType" name="eventResultType" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}">
@@ -242,6 +259,15 @@ $(document).ready(function () {
     };
 
     $('#reg_payment_date, #reg_update_date').datetimepicker(dateTimePickerOptions);
+
+    $('#start_time').timepicker({
+        timeFormat: 'h:mm',
+        interval: 60,
+        defaultTime: false, // important: prevents defaulting to now
+        dynamic: true,
+        dropdown: true,
+        scrollbar: true
+    });
 
     $('#update-event-config-form select[id=org_types]').select2();
 

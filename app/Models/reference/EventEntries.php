@@ -22,7 +22,8 @@ class EventEntries extends Model
         'name_en' => 'required',
         'gender_code' => 'required',
         'entrance_fee' => 'required',
-        'event_id' => 'required'
+        'event_id' => 'required',
+        'duration' => 'required'
     );
 
     public function getFullnameAttribute()

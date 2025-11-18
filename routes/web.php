@@ -207,6 +207,18 @@ Route::group([
     //stats
     Route::get('/event/{eventId}/statistics', 'event\EventRegistrationController@statistics')->name('event.statistics');
 
+    //Event match
+    Route::resource('/event/config/match', 'event\EventMatchController', ['names' => 'event.config.match']);
+    Route::resource('/event/config/counter', 'event\EventCounterController', ['names' => 'event.config.counter']);
+    Route::post('/event/config/match/{event_id}/generate', 'event\EventMatchController@store')->name('event.config.match.generate');
+    Route::get('/event/config/match/{match_id}/edit-status', 'event\EventCounterController@edit_status_show')->name('event.config.match.edit_status');
+    Route::get('/event/config/match/{event_id}/search-matches', 'event\EventMatchController@getMatchByGroup')->name('event.config.search.matches');
+    Route::post('/event/config/match/{match_id}/winner', 'event\EventMatchController@edit_winner')->name('event.config.match.winner');
+    Route::post('/event/config/counter/{match_id}/winner', 'event\EventCounterController@edit_winner')->name('event.config.counter.winner');
+    Route::get('/event/config/counter/{match_id}/next', 'event\EventCounterController@getNextMatch')->name('event.config.counter.next');
+    Route::get('/event/config/counter/{match_id}/prev', 'event\EventCounterController@getPrevMatch')->name('event.config.counter.prev');
+
+    Route::post('/event/config/save-mate-bracket/{event_id}', 'event\EventMatchController@saveEventMateBracket')->name('event.config.saveMateBracket');
     // Picture type
     Route::resource('/reference/picture/type', 'reference\PictureTypeController', ['names'=>'reference.picture.type']);
     Route::post('/reference/picture/type/table/data','reference\PictureTypeController@getDatatableList')->name('reference.picture.type.datalist');
