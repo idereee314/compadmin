@@ -29,6 +29,46 @@ class EloquentEventRepository implements EventRepository {
 		return Event::find($id);
 	}
 
+	public function create($input)
+    {
+        $dates = explode(" аас ", $input['dates']);
+
+        $event = new Event;
+        $event->name = @$input['name'];
+        $event->description = @$input['description'];
+        $event->event_date = @$dates[0];
+        $event->due_date = @$dates[1];
+        $event->period_id = @$input['period_id'];
+		$event->status = @$input['status'];
+
+        $event->save();
+        return $event;
+    }
+
+	public function update($id, $input)
+	{
+		$dates = explode(" аас ", $input['dates']);
+
+		$event = $this->find($id);
+		$event->name = @$input['name'];
+		$event->description = @$input['description'];
+		$event->event_date = @$dates[0];
+		$event->due_date = @$dates[1];
+		$event->period_id = @$input['period_id'];
+		$event->status = @$input['status'];
+
+		$event->save();
+		return $event;
+	}
+
+	public function delete($id)
+	{
+		$event = $this->find($id);
+		$event->delete();
+	}
+
+	
+
 	public function getDatatableList($searchData)
 	{
 	    $qry = Event::select('*')

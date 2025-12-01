@@ -222,6 +222,10 @@ Route::group([
     // Picture type
     Route::resource('/reference/picture/type', 'reference\PictureTypeController', ['names'=>'reference.picture.type']);
     Route::post('/reference/picture/type/table/data','reference\PictureTypeController@getDatatableList')->name('reference.picture.type.datalist');
+
+    // Sport
+    Route::resource('/sport', 'sport\SportController', ['names'=>'sport']);
+    Route::post('/sport/table/data','sport\SportController@getDatatableList')->name('sport.datalist');
 });
 
 Route::get('/event/{eventId}/bracket', 'event\EventRegistrationController@treeBracket')->name('event.bracket');

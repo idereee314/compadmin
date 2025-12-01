@@ -181,7 +181,7 @@
                                                                                 <i class="la la-phone"></i>
                                                                             </span>
                                                                         </div>
-                                                                        <input type="text" class="form-control" name="title_mongolia" id="title_mongolia" data-inputmask="'regex': '[А-Яа-яЁёҮүӨөҮҮӨӨ\\s]*'"/>
+                                                                        <input type="text" class="form-control" name="name" id="name" data-inputmask="'regex': '[А-Яа-яЁёҮүӨөҮҮӨӨ\\s]*'"/>
                                                                     </div>
                                                                     <div class="error-here"></div>
                                                                 </div>
@@ -236,6 +236,23 @@
                                                                         <input class="form-control" type="text" name="organizations[]" id="organization"/>
                                                                     </div>
                                                                 </div>
+                                                                <div class="form-group">
+                                                                    <label>{{ trans('display.general_status') }}:</label>
+                                                                    <div class="input-group input-group-solid">
+                                                                        <div class="input-group-prepend">
+                                                                            <span class="input-group-text">
+                                                                                <i class="la la-phone"></i>
+                                                                            </span>
+                                                                        </div>
+                                                                        <select class="form-control selectpicker" id="status" name="status">
+                                                                            @forelse(@Config::get('smart.event_status') as $key => $status)
+                                                                            <option value="{{ $key }}">{{ @Config::get('enums.event_status')[$key] }}</option>
+                                                                            @empty
+                                                                            @endforelse
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                                
                                                             </div>
                                                             <!--end: Wizard Step 1-->
                                                             <!--begin: Wizard Step 2-->
@@ -245,7 +262,7 @@
                                                                 <div class="form-group">
                                                                     <!-- <label>{{ trans('display.general_notes') }}: <span class="text-danger">*</span></label> -->
                                                                     <div class="input-group">                                                                        
-				                                                        <textarea class="form-control form-control-solid editor" rows="10"></textarea>
+				                                                        <textarea class="form-control form-control-solid editor" rows="10" name="description" id="description"></textarea>
                                                                     </div>
                                                                 </div>
                                                                 <!--end::Input-->
@@ -256,13 +273,15 @@
                                                                 <div class="mb-10 font-weight-bold text-dark"><h5>{{ trans('display.general_image') }}</h5></div>
                                                                 <!--begin::Picture_type-->
                                                                 <div class="form-group row">
-			                                                    	<label class="col-3 col-form-label">{{trans('display.select_picture_type')}}</label>
-			                                                    	<div class="col-9">
-			                                                    		<input class="form-control" type="text" disabled="disabled" value="{{ $pictureType->description }} {{ $pictureType->width }}X{{ $pictureType->height }}"/>
-			                                                    	</div>
-			                                                    </div>
+                                                                    <label class="col-3 col-form-label">{{ trans('display.select_picture_type') }}</label>
+                                                                    <div class="col-9">
+                                                                        {{-- Croppie / JS-д хэрэглэх жинхэнэ hidden утга --}}
+                                                                        <input type="hidden" name="picture_type" value="{{ $pictureType->id }}" data-width="{{ $pictureType->width }}" data-height="{{ $pictureType->height }}">
+                                                                        {{-- Зөвхөн харагдах текст талбар --}}
+                                                                        <input class="form-control" type="text" value="{{ $pictureType->description }} {{ $pictureType->width }}X{{ $pictureType->height }}"/>
+                                                                    </div>
+                                                                </div>
                                                                 <!--end::Picture_type-->
-
                                                                 <div class="form-group row">
                                                                     <label class="col-md-3 col-sm-6 text-right">{{ trans('display.general_image') }} <span class="text-danger">*</span></label>
                                                                     <div class="col-md-9 col-sm-6">
@@ -270,7 +289,6 @@
                                                                             <span class="btn btn-success btn-file">
                                                                                 <span class="fileinput-new">{{ trans('display.general_file_select') }}</span>
                                                                                 <span class="fileinput-exists">{{ trans('display.general_file_change') }}</span>
-                                                                                <input type="hidden" value="" name="...">
                                                                                 <input type="file" name="cover_image" id="btn-upload" accept="image/*" value=""  data-rule-required="true" data-msg-required="{{ trans('validation.required') }}" data-rule-filesize="10485760" data-msg-filesize="{{ trans('messages.validation_file_size') }}">
                                                                             </span>
                                                                             <span class="fileinput-filename"></span>
@@ -296,7 +314,7 @@
                                                             <div class="pb-5" data-wizard-type="step-content">
                                                                 <h4 class="page-header">Байршил</h4>
                                                                 <div class="form-group row">
-                                                                    <label class="col-3 col-form-label text-right">{{trans('display.organization_branches')}}</label>
+                                                                    <label class="col-3 col-form-label text-right">{{trans('display.organization_branches')}}:</label>
                                                                     <div class="col-9 col-form-label">
                                                                         <div class="checkbox-inline">
                                                                             <label class="checkbox checkbox-success">
@@ -467,43 +485,43 @@ $(document).ready(function() {
         }
     }, function(start, end, label) {
         var html = "";
-        for(var d = new Date(start); d <= new Date(end); d.setDate(d.getDate() + 1))
-        {
+        for (var d = new Date(start); d <= new Date(end); d.setDate(d.getDate() + 1)) {
+
             html += '\
-            <div class="form-group">\
-                <div class="col-md-3 col-sm-12">\
-                    <input type="type" class="form-control" name="event_date[]" id="event_date" value="'+moment(d).format("YYYY-MM-DD")+'" readonly/>\
+            <div class="form-group row mb-3">\
+                <div class="col-md-3 col-sm-12 mb-2 mb-md-0">\
+                    <input type="text" class="form-control" name="event_date[]" \
+                           value="'+ moment(d).format("YYYY-MM-DD") +'" readonly/>\
                 </div>\
                 <div class="col-md-9 col-sm-12">\
                     <div class="row">\
-                        <div class="col-md-6">\
+                        <div class="col-md-6 col-sm-6">\
                             <div class="timepicker input-group">\
-                                <input class="form-control" type="text" data-format="hh:mm" data-inputmask="hh:mm" name="start_time[]" id="start_time" data-rule-required="true" data-msg-required=""/>\
-                                <span class="input-group-addon add-on"><i class="fa fa-clock-o"></i></span>\
+                                <input class="form-control" type="text" name="start_time[]" id="start_time" \
+                                       data-rule-required="true" data-msg-required=""/>\
+                                <span class="input-group-addon add-on">\
+                                    <i class="fa fa-clock-o"></i>\
+                                </span>\
                             </div>\
                         </div>\
-                        <div class="col-md-6">\
+                        <div class="col-md-6 col-sm-6">\
                             <div class="timepicker input-group">\
-                                <input class="form-control" type="text" data-format="hh:mm" data-inputmask="hh:mm" name="end_time[]" id="end_time" data-rule-required="true" data-msg-required=""/>\
-                                <span class="input-group-addon add-on"><i class="fa fa-clock-o"></i></span>\
+                                <input class="form-control" type="text" name="end_time[]" id="end_time" \
+                                       data-rule-required="true" data-msg-required=""/>\
+                                <span class="input-group-addon add-on">\
+                                    <i class="fa fa-clock-o"></i>\
+                                </span>\
                             </div>\
                         </div>\
                     </div>\
                 </div>\
             </div>\
             ';
-            $.when($("#div-event-date").html(html)).then(function( data, textStatus, jqXHR ) {
-                $(":input").inputmask(); 
-                $('.timepicker').datetimepicker({
-                    timePicker24Hour: true,
-                    pickDate: false,
-                    timeFormat:  "hh:mm",
-                    pickSeconds: false,
-                    minuteStep: 1,
-                    container: '.modal-content'
-                });
-            });                    
         }
+
+        $.when($("#div-event-date").html(html)).then(function() {
+            $(":input").inputmask();
+        });
     });
 
     $('.editor').summernote({
@@ -532,7 +550,7 @@ $(document).ready(function() {
     var i = 0;
 
     $('#img_canvas').croppie('destroy');
-        $basic = $('#img_canvas').croppie({
+    $basic = $('#img_canvas').croppie({
         enableExif: true,
         viewport: {
             width: imgWidth,
@@ -549,33 +567,97 @@ $(document).ready(function() {
 
     $('#btn-upload').on('change', function(){
         if (this.files && this.files[0]) {
-            if ( this.files[0].type.match(/^image\//) ) {
+            if (this.files[0].type.match(/^image\//)) {
                 var reader = new FileReader();
                 reader.onload = function(evt) {
                     img = new Image();
-                    
                     img.onload = function() {
+                        orginalData = evt.target.result;
+
                         $basic.croppie('bind', {
                             url: evt.target.result,
                             orientation: 1,
                             zoom: 0
                         });                 
-                    }
+                    };
                     img.src = evt.target.result;
                 };
                 reader.readAsDataURL(this.files[0]);
-            }
-            else {
+            } else {
                 alert("{{ trans('messages.error_file_type') }} {{ trans('messages.warning_image_file') }}");
             }
-        }
-        else {
+        } else {
             alert("{{ trans('messages.error_no_record') }}");
         }
     });
 
     $('.rotate').on('click', function(ev) {
         $basic.croppie('rotate', parseInt($(this).data('deg')));
+    });
+
+    $('#create-event-list-form').validate({
+        ignore: "input[type=hidden], .note-editable, [contenteditable], .fileinput-new, .fileinput-filename, .fileinput *",
+
+        highlight:function(element) {
+            $(element).addClass('is-invalid');
+        },
+        unhighlight: function(element) {
+            $(element).removeClass('is-invalid');
+        },
+
+        submitHandler: function(form) {
+            if ($basic && orginalData) {
+                $basic.croppie('result', {
+                    type: 'base64',
+                    size: 'viewport',
+                    format: 'jpeg',
+                    quality: 1
+                }).then(function(resp) {
+                    croppedData = resp;
+
+                    let formData = new FormData(form);
+                    formData.set('croppedData', croppedData);
+                    formData.set('orginalData', orginalData);
+
+                    $.ajax({
+                        url: form.action,
+                        type: form.method,
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function (response) {
+                            if (response.status == 'success') {
+                                toastr.success(response.msg);
+                                window.open('{!! route('event.list.index') !!}', '_self');
+                            } else {
+                                toastr.error(response.errors, response.msg, {
+                                    "closeButton": true,
+                                    "timeOut": "0"
+                                });
+                            }
+                        }
+                    });
+                });
+            } else {
+                // зураг байхгүй үед
+                let formData = new FormData(form);
+                $.ajax({
+                    url: form.action,
+                    type: form.method,
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (response) {
+                        if (response.status == 'success') {
+                            toastr.success(response.msg);
+                            window.open('{!! route('event.list.index') !!}', '_self');
+                        } else {
+                            toastr.error(response.errors, response.msg);
+                        }
+                    }
+                });
+            }
+        }
     });
 
     $('#validation-wizard').bootstrapWizard({

@@ -25,7 +25,7 @@
                     <div class="card card-custom">
                         <div class="card-header flex-wrap py-5">
                             <div class="card-title">
-                                <h3 class="card-label">{{trans('menu.picture_type')}}
+                                <h3 class="card-label">{{trans('menu.sport')}}
                                 <span class="d-block text-muted pt-2 font-size-sm"></span></h3>
                             </div>
                         </div>
@@ -85,16 +85,12 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-sm-12">
-                                        <table class="table table-separate table-head-custom table-checkable dataTable no-footer dtr-inline" id="picture_type_datatable" role="grid" aria-describedby="kt_datatable_info" style="width: 1235px;">
+                                        <table class="table table-separate table-head-custom table-checkable dataTable no-footer dtr-inline" id="sport_datatable" role="grid" aria-describedby="kt_datatable_info" style="width: 1235px;">
                                             <thead>
                                                 <tr>
                                                     <th class="text-center border-right" width="15px">No.</th>
                                                     <th width="10%">{{trans('display.general_code')}}</th>
-                                                    <th width="20%">{{trans('display.general_description')}}</th>
-                                                    <th width="5%">{{trans('display.height')}}</th>
-                                                    <th width="5%">{{trans('display.width')}}</th>
-                                                    <th width="10%">{{trans('display.object_type')}}</th>
-                                                    <th width="30%">{{trans('display.dir_url')}}</th>
+                                                    <th width="20%">{{trans('display.general_name')}}</th>
                                                     <th width="30%">{{trans('display.general_created_at')}}</th>
                                                     <th width="30px">{{trans('display.general_manage')}}</th>
                                                 </tr>
@@ -123,17 +119,18 @@
 <script src="{{asset('assets/js/smart.js')}}"></script>
 <script>
 $(document).ready(function() {
-    pictureTypeTable = $("#picture_type_datatable").DataTable({
+    sportTable = $("#sport_datatable").DataTable({
         processing:     true,
         serverSide:     true,
-        deferRender:    true,
-        autoWidth:      true,
-        filter:         false,
         responsive:     true,
+
+        //deferRender:    true,
+        //autoWidth:      true,
+        //filter:         false,
         dataType: 'json',
         paginationType: "full_numbers",
         ajax: {
-            url: '{{route('reference.picture.type.datalist')}}',
+            url: '{{route('sport.datalist')}}',
             type: 'POST',
             data: function ( d ) {
                 d.name = $('#picture-type-search-form input[id="name"]').val();
@@ -148,11 +145,7 @@ $(document).ready(function() {
                 width: "30px"
             },
             { data: 'code' },
-            { data: 'description' },
-            { data: 'height' },
-            { data: 'width'},
-            { data: 'object_type' },
-            { data: 'dir_url' },
+            { data: 'name' },
             { data: 'created_at'},
             { 
                 data: 'action',
@@ -164,35 +157,36 @@ $(document).ready(function() {
             {
                 searchable: false,
                 orderable: false,
-                targets: [0, 2, 3, 4, 5, 6]
+                targets: [0]
             },
             {
                 class: "text-left border-right",
-                targets: [1, 2, 6]
+                targets: [1, 2]
             },
             {
                 class: "text-center border-right",
-                targets: [0, 3, 4, 5, 7]
+                targets: [0]
             },
             {
                 class: "text-center",
                 targets: [0]
             }
         ],
-        order: [[ 7, "desc" ]],
+        order: [[ 3, "desc" ]],
         dom: "<'top'B><'row'<'col-sm-12'tr>><'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7 dataTables_pager'lp>>",
         buttons: [
         {
             text: '<i class="la la-plus"></i> {{ trans('display.general_new') }}',
-            className: "btn btn-light-danger font-weight-bolder mb-2 {{ SecurityHelper::checkPermission(@Config::get('permission.picture_type'), Config::get('permission.editable')) ? '' : 'd-none' }}",
+            // className: "btn btn-light-danger font-weight-bolder mb-2 {{ SecurityHelper::checkPermission(@Config::get('permission.sport'), Config::get('permission.editable')) ? '' : 'd-none' }}",
+            className: "btn btn-light-danger font-weight-bolder mb-2",
             action: function ( e, dt, node, config ) {
-                $.get('{!! route('reference.picture.type.create') !!}', showAddModal);
+                $.get('{!! route('sport.create') !!}', showAddModal);
             }
         }]
 	});
 
     $('#picture-type-search-form').on('submit', function(e) {
-        pictureTypeTable.draw();
+        sportTable.draw();
         e.preventDefault();
     });
 
@@ -200,9 +194,9 @@ $(document).ready(function() {
         e.preventDefault();
         $('.datatable-input').each(function() {
             $(this).val('');
-            pictureTypeTable.column($(this).data('col-index')).search('', false, false);
+            sportTable.column($(this).data('col-index')).search('', false, false);
         });
-        pictureTypeTable.draw();
+        sportTable.draw();
     });
 
 }).ajaxStart($.blockUI).ajaxStop($.unblockUI);

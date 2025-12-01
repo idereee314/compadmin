@@ -195,6 +195,17 @@ return array(
 		'menu' => 'menu',
 		'product' => 'product'
 	],
+
+	'event_image_size' => [
+		'event_cover_mobile' => [
+			'cropped' => [1000, 700],
+			'thumbnail' => [500, 375]
+		],
+		'event_gallery' => [
+			'cropped' => [1000, 700],
+			'thumbnail' => [500, 375]
+		]
+	],
 )
 
 ?>
