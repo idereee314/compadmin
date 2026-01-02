@@ -61,9 +61,21 @@ class EventMateBracket extends Model
 
     public function brackets()
     {
-        return $this->hasMany('event\EventMatches', 'entry_id', 'entry_id')
-            ->whereColumn('entry_belt_id', 'entry_belt_id')
-            ->whereColumn('entry_age_id', 'entry_age_id')
-            ->whereColumn('entry_weight_id', 'entry_weight_id');
+        return $this->hasMany('event\EventMatches', 'bracket_id');
+    }
+
+    public function age()
+    {
+        return $this->belongsTo('reference\EntryConfigAge', 'entry_age_id');
+    }
+
+    public function belt()
+    {
+        return $this->belongsTo('reference\EntryConfigBelt', 'entry_belt_id');
+    }
+
+    public function weight()
+    {
+        return $this->belongsTo('reference\EntryConfigWeight', 'entry_weight_id');
     }
 }

@@ -42,7 +42,8 @@ class EventMatchController extends Controller
     {
         $data['view_path'] = $this->view_path;
         $data['matchId'] = $match_id;
-        $data['registered'] = $this->mathes->getMatchesByEventId($match_id);
+        $matchData = $this->mathes->getMatchesByEventId($match_id);
+        $data['registered'] = $matchData['registrations'];
         return view($this->view_path.'.edit', $data);
     }
 
@@ -113,7 +114,7 @@ class EventMatchController extends Controller
                     if (isset($mat['brackets']) && !empty($mat['brackets'])) {
                         foreach ($mat['brackets'] as $bracket) {
                             $this->configDays->saveBracket($event_id, $day['day'], $mat['mat'], $bracket, 0);
-                            $this->mathes->generateMatches($event_id,  $bracket);
+                            $this->mathes->generateMatches($event_id,  $bracket, $day['day'], $mat['mat']);
                         }
                     }
                 }

@@ -46,21 +46,18 @@ class EventDays extends Model
             foreach ($mats as $mat) {
                 // Fetch brackets for the current mat
                 $brackets = DB::table('uq_event_mate_brackets')
-                    ->select('entry_id','entry_belt_id','entry_age_id','entry_weight_id')
+                    ->select('id as bracket_id','entry_id','entry_belt_id','entry_age_id','entry_weight_id')
                     ->where('mat_id', $mat->mat_id)
                     ->where('day_id', $day->day_id)
                     ->where('event_id', $event_id)
                     ->get();
                 $bracketsArray = json_decode(json_encode($brackets), true);
 
-                foreach ($bracketsArray as &$ba) {
+                foreach ($bracketsArray as $ba) {
                     $match = DB::table('uq_event_matches')
                         ->select('id')
                         ->where('event_id', $event_id)
-                        ->where('entry_id', $ba['entry_id'])
-                        ->where('entry_belt_id', $ba['entry_belt_id'])
-                        ->where('entry_age_id', $ba['entry_age_id'])
-                        ->where('entry_weight_id', $ba['entry_weight_id'])
+                        ->where('bracket_id', $ba['bracket_id'])
                         ->whereNotNull('reg_one_id')
                         ->whereNotNull('reg_two_id')
                         ->where('status', '=', 'C')

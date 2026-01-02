@@ -195,27 +195,19 @@ class EloquentEventConfigDaysRepository implements EventConfigDaysRepository {
 				foreach ($mate->matches as $match) {
 					// Dynamically load brackets for each match
 					$bracketData = [
-						'entry_id' => $match->entry_id,
-						'entry_belt_id' => $match->entry_belt_id,
-						'entry_age_id' => $match->entry_age_id,
-						'entry_weight_id' => $match->entry_weight_id,
+						'bracket_id' => $match->id,
 					];
 					$matchCollection[] = $bracketData;
 				}
+				Log::info('Match Collection: ', array_column($matchCollection, 'bracket_id'));
 
-				$brackets = EventMatches::select('id', 'entry_id', 'entry_belt_id', 'entry_age_id', 'entry_weight_id', 'reg_one_id', 'reg_two_id', 'reg_win_id',  'status', 'end_time', 'order_no')
-					->whereIn('entry_belt_id', array_column($matchCollection, 'entry_belt_id'))
-					->whereIn('entry_age_id', array_column($matchCollection, 'entry_age_id'))
-					->whereIn('entry_weight_id', array_column($matchCollection, 'entry_weight_id'))
+				$brackets = EventMatches::select('id', 'reg_one_id', 'reg_two_id', 'reg_win_id',  'status', 'end_time', 'order_no')
+					->whereIn('bracket_id', array_column($matchCollection, 'bracket_id'))
 					->where('event_id', $eventId)
 					->orderBy('end_time', 'asc')
 					->orderBy('order_no', 'asc')
 					->orderBy('id', 'asc')
 					->with([
-						'entry:id,name,gender_code', // Include entry relationship
-						'belt:id,name', // Include belt relationship
-						'age:id,start_age,end_age', // Include age relationship
-						'weight:id,weight', // Include weight relationship
 						'regOne:id,member_id', // Include regOne relationship
 						'regTwo:id,member_id', // Include regTwo relationship
 						'regOne.member:id,firstname,lastname', // Include member relationship for regOne

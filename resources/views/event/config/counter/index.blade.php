@@ -281,11 +281,37 @@
 
 
 <script>
-    window.redirectToNextCounter = function() {
-      window.location.href = "{{ route('event.config.counter.next', ['match_id' => $matchId]) }}";
-    }
-    window.redirectToPrevCounter = function() {
-      window.location.href = "{{ route('event.config.counter.prev', ['match_id' => $matchId]) }}";
+    const bracket = @json($bracket);
+    const localStorageKey = `${bracket.event_id}_${bracket.day_id}_${bracket.mat_id}`;
+    const localStorageData = JSON.parse(localStorage.getItem(localStorageKey));
+    console.log('Local Storage Data:', localStorageData);
+    if (localStorageData) {
+      const id = localStorageData.findIndex(x => x == {{ $matchId }});
+      window.redirectToNextCounter = function() {
+        let prevMatchId;
+        if (id < localStorageData.length - 1) {
+          const nextMatchId = localStorageData[id + 1];
+        } else {
+          prevMatchId = localStorageData[id];
+        }
+          window.location.href = "{{ route('event.config.match.edit_status', ['match_id' => ':matchId']) }}".replace(':matchId', prevMatchId);
+      }
+      window.redirectToPrevCounter = function() {
+        let prevMatchId;
+        if (id > 0) {
+          prevMatchId = localStorageData[id - 1];
+        } else {
+          prevMatchId = localStorageData[id];
+        }
+          window.location.href = "{{ route('event.config.match.edit_status', ['match_id' => ':matchId']) }}".replace(':matchId', prevMatchId);
+      }
+    } else {
+      window.redirectToNextCounter = function() {
+        window.location.href = "{{ route('event.config.counter.next', ['match_id' => $matchId]) }}";
+      }
+      window.redirectToPrevCounter = function() {
+        window.location.href = "{{ route('event.config.counter.prev', ['match_id' => $matchId]) }}";
+      }
     }
     const allData = @json($registered);
     console.log(allData);

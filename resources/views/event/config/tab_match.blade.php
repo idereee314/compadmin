@@ -118,14 +118,16 @@
                     const tbody = document.createElement('tbody');
                     let totalDuration = 0;
                     let duration = 0;
-                    let index = 0;
+                    let index = 0; 
                     const collection = [];
+                    const matchData = [];
 
                     mat.event_matches.map((bracket) => {
                         if(isItBYE(bracket)){
                             return;
                         }
                         index++;
+                        matchData.push(bracket.id);
                         const row = document.createElement('tr');
                         starDate.setMinutes(starDate.getMinutes() + duration);
                         if(bracket.end_time){
@@ -179,6 +181,8 @@
                         `;
                         tbody.appendChild(row);
                     });
+
+                    localStorage.setItem(`${@json($eventConfig['event_id'])}_${day.day_id}_${mat.mate_id}`, JSON.stringify(matchData));
 
                     starDate.setMinutes(starDate.getMinutes() +
                         duration);
@@ -237,6 +241,7 @@
                     start_date: day.start_date,
                     mates: day.mates.map(mat => ({
                         mate_no: mat.mate_no,
+                        mate_id: mat.id,
                         event_matches: mat.event_matches.map(match => ({
                             ...match,
                             duration: durationShort[`${match.entry_id}-${match.entry_age_id}-${match.entry_belt_id}-${match.entry_weight_id}`] || 0

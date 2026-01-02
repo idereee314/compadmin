@@ -2,6 +2,7 @@
 
 use event\EventConfig;
 use event\EventMatches;
+use event\EventMateBracket;
 use core\sessions\Sessions;
 
 use Hash;
@@ -34,20 +35,15 @@ class EloquentEventMatchesRespository implements EventMatchesRespository {
 	{
 		$eventMatches = new EventMatches();
 		$eventBracket = findBracket($input['bracket_id']);
+		Log::info('Event Bracket: ', (array)$eventBracket);
 		if (!$eventBracket) {
 			$eventMatches->event_id = $eventBracket['event_id'];
-			$eventMatches->entry_id = $eventBracket['entry_id'];
-			$eventMatches->entry_age_id = $eventBracket['entry_age_id'];
-			$eventMatches->entry_belt_id = $eventBracket['entry_belt_id'];
-			$eventMatches->entry_weight_id = $eventBracket['entry_weight_id'];
+			$eventMatches->bracket_id = $eventBracket['bracket_id'];
 			$eventMatches->reg_one_id = $eventBracket['reg_one_id'];
 			$eventMatches->reg_two_id = $eventBracket['reg_two_id'];
 		} else{
 			$eventMatches->event_id = $input['event_id'];
-			$eventMatches->entry_id = $input['entry_id'];
-			$eventMatches->entry_age_id = $input['entry_age_id'];
-			$eventMatches->entry_belt_id = $input['entry_belt_id'];
-			$eventMatches->entry_weight_id = $input['entry_weight_id'];
+			$eventMatches->bracket_id = $input['bracket_id'];
 			$eventMatches->reg_one_id = null;
 			$eventMatches->reg_two_id = null;
 			$eventMatches->previes_mate_id1 = $input['previes_mate_id1'];
@@ -147,10 +143,6 @@ class EloquentEventMatchesRespository implements EventMatchesRespository {
 	public function getMatchesByEventId($id)
 	{
 		$match = EventMatches::with([
-			'entry:id,name,gender_code',
-			'belt:id,name',
-			'age:id,start_age,end_age',
-			'weight:id,weight',
 			'regOne:id,member_id,academy_id',
 			'regTwo:id,member_id,academy_id',
 			'regOne.member:id,firstname,lastname',
@@ -158,154 +150,47 @@ class EloquentEventMatchesRespository implements EventMatchesRespository {
 			'regOne.academy:id,name',
 			'regTwo.academy:id,name',
 			'regWin:id,member_id,academy_id',
+			'bracket'
 		])->find($id);
 
 		if (!$match) {
 			return collect(); // or throw exception / return empty if not found
 		}
+		Log::info('Match Details: '. $match->bracket);
 
-		// Return combined registrations (remove nulls)
-		return collect([
-			$match->regOne ?? null,
-			$match->regTwo ?? null,
-			$match->regWin ?? null
-		])->filter();
+		// Return combined data
+		return [
+			'registrations' => collect([
+				$match->regOne ?? null,
+				$match->regTwo ?? null,
+				$match->regWin ?? null
+			])->filter(),
+			'bracket' => $match->bracket
+		];
 	}
 
-	public function getNextMatches($match_id)
+	public function generateMatches($event_id, $input, $day, $mat)
 	{
-		$currentMatch = EventMatches::find($match_id) ?? null;
-		if (!$currentMatch) {
-			return [];
-		}
-		$script = EventMatches::select('uq_event_matches.*')
-			->join('uq_event_mate_brackets', function ($join) {
-				$join->on('uq_event_matches.entry_id', '=', 'uq_event_mate_brackets.entry_id')
-					 ->whereColumn('uq_event_matches.entry_belt_id', '=', 'uq_event_mate_brackets.entry_belt_id')
-					 ->whereColumn('uq_event_matches.entry_age_id', '=', 'uq_event_mate_brackets.entry_age_id')
-					 ->whereColumn('uq_event_matches.event_id', '=', 'uq_event_mate_brackets.event_id')
-					 ->whereColumn('uq_event_matches.entry_weight_id', '=', 'uq_event_mate_brackets.entry_weight_id');
-			})
-			->where('uq_event_mate_brackets.day_id', $currentMatch->bracket()->first()->day_id ?? null)
-			->where('uq_event_mate_brackets.mat_id', $currentMatch->bracket()->first()->mat_id ?? null)
-			->whereRaw(
-				"1 = CASE" .
-				"    WHEN uq_event_matches.end_time is null AND uq_event_matches.id >= ? and uq_event_matches.order_no >= ? THEN 1 " .
-				"    WHEN uq_event_matches.end_time IS NOT NULL AND COALESCE(uq_event_matches.end_time, ?) >= ? THEN 1 " .
-				"	 ELSE 0 " .
-				"END",
-				[
-					$currentMatch->id,
-					$currentMatch->order_no,
-					$currentMatch->end_time ?? '23:59:59+00',
-					$currentMatch->end_time ?? '23:59:59+00',
-				]
-			)
-			->whereNotNull('uq_event_matches.reg_one_id')
-			->whereNotNull('uq_event_matches.reg_two_id')
-			->orderByRaw('uq_event_matches.end_time ASC')
-			->orderBy('uq_event_matches.order_no', 'asc')
-			->orderBy('uq_event_matches.id', 'asc')
-			->with([
-				'entry:id,name,gender_code',
-				'belt:id,name',
-				'age:id,start_age,end_age',
-				'weight:id,weight',
-				'regOne:id,member_id,academy_id',
-				'regTwo:id,member_id,academy_id',
-				'regOne.member:id,firstname,lastname',
-				'regTwo.member:id,firstname,lastname',
-				'regOne.academy:id,name',
-				'regTwo.academy:id,name'
-			])->limit(4);
-        $matches = $script->get();
-
-		// Find the next match in the ordered list
-		$found = false;
-		foreach ($matches as $match) {
-			if ($found) {
-				return $match->id;
-			}
-			if ($match->id == $match_id) {
-				$found = true;
-			}
-		}
-		return $match_id;
-	}
-
-	public function getPrevMatches($match_id)
-	{	
-		$currentMatch = EventMatches::find($match_id) ?? null;
-		if (!$currentMatch) {
-			return [];
-		}
-		$match = EventMatches::select('uq_event_matches.*')
-			->join('uq_event_mate_brackets', function ($join) {
-				$join->on('uq_event_matches.entry_id', '=', 'uq_event_mate_brackets.entry_id')
-					 ->whereColumn('uq_event_matches.entry_belt_id', '=', 'uq_event_mate_brackets.entry_belt_id')
-					 ->whereColumn('uq_event_matches.entry_age_id', '=', 'uq_event_mate_brackets.entry_age_id')
-					 ->whereColumn('uq_event_matches.event_id', '=', 'uq_event_mate_brackets.event_id')
-					 ->whereColumn('uq_event_matches.entry_weight_id', '=', 'uq_event_mate_brackets.entry_weight_id');
-			})
-			->where('uq_event_mate_brackets.day_id', $currentMatch->bracket()->first()->day_id ?? null)
-			->where('uq_event_mate_brackets.mat_id', $currentMatch->bracket()->first()->mat_id ?? null)
-			->whereRaw(
-				"1 = CASE" .
-				"    WHEN uq_event_matches.end_time is null AND uq_event_matches.id <= ? and uq_event_matches.order_no <= ? THEN 1 " .
-				"    WHEN uq_event_matches.end_time IS NOT NULL AND COALESCE(uq_event_matches.end_time, ?) <= ? THEN 1 " .
-				"	 ELSE 0 " .
-				"END",
-				[
-					$currentMatch->id,
-					$currentMatch->order_no,
-					$currentMatch->end_time ?? '00:00:00+00',
-					$currentMatch->end_time ?? '00:00:00+00',
-				]
-			)
-        ->orderBy('end_time')
-        ->orderBy('order_no')
-        ->orderBy('id', 'asc')
-        ->limit(1)
-        ->with([
-            'entry:id,name,gender_code',
-            'belt:id,name',
-            'age:id,start_age,end_age',
-            'weight:id,weight',
-            'regOne:id,member_id,academy_id',
-            'regTwo:id,member_id,academy_id',
-            'regOne.member:id,firstname,lastname',
-            'regTwo.member:id,firstname,lastname',
-            'regOne.academy:id,name',
-            'regTwo.academy:id,name'
-        ])->limit(4);
-        $matches = $script->get();
-
-		// Find the next match in the ordered list
-		$found = false;
-		$preMatch = null;
-		foreach ($matches as $match) {
-			$preMatch = $match;
-			if ($found) {
-				return $preMatch->id;
-			}
-			if ($match->id == $match_id) {
-				$found = true;
-			}
-		}
-		return $match_id;
-	}
-
-	public function generateMatches($event_id, $input)
-	{
-		$eventMatches = $this->generateInitMatchs($event_id, $input);
+		
+		$mateBracket = EventMateBracket::where('event_id', $event_id)
+			->where('entry_id', $input['entry_id'])
+			->where('entry_age_id', $input['entry_age_id'])
+			->where('entry_belt_id', $input['entry_belt_id'])
+			->where('entry_weight_id', $input['entry_weight_id'])
+			->where('day_id', $day)
+			->where('mat_id', $mat)
+			->first();
+		Log::info('Mate Bracket: ' . $mateBracket);
+		Log::info('Mate Bracket ID: ' . $mateBracket->id);
+		$eventMatches = $this->generateInitMatchs($event_id, $mateBracket);
 
 		$allMatches = $eventMatches; // Store all matches (current and future)
 		while (count($eventMatches) > 2) {
-			$futureMatches = $this->generateGeneralMatch($event_id, $input, $eventMatches, 0);
+			$futureMatches = $this->generateGeneralMatch($event_id, $eventMatches, 0, $mateBracket);
 			$eventMatches = $futureMatches; // Set future matches as the current matches for the next round
 		}
 		
-		$this->generateQuarterFinals($event_id, $input, $eventMatches);
+		$this->generateQuarterFinals($event_id, $eventMatches, $mateBracket);
 		
 		return [
 			'all_matches' => $allMatches,
@@ -313,33 +198,44 @@ class EloquentEventMatchesRespository implements EventMatchesRespository {
 		];
 	}
 
-	private function generateQuarterFinals($event_id, $input, $eventMatches){
+	private function generateQuarterFinals($event_id, $eventMatches, $mateBracket){
+		$eventBrackets = DB::table('uq_event_brackets')
+			->where('event_id', $event_id)
+			->where('entry_id', $mateBracket->entry_id)
+			->where('entry_age_id', $mateBracket->entry_age_id)
+			->where('entry_belt_id', $mateBracket->entry_belt_id)
+			->where('entry_weight_id', $mateBracket->entry_weight_id)
+			->first();
+		if (!$eventBrackets) {
+			Log::info('No brackets found for quarter finals generation for event_id: ' . $event_id);
+			throw new \Exception('No brackets found for the provided event and entry details.');
+		}
 		if(count($eventMatches) == 2){
 			$futureMatch = new EventMatches();
 			$futureMatch->event_id = $event_id;
-			$futureMatch->entry_id = $input['entry_id'];
-			$futureMatch->entry_age_id = $input['entry_age_id'];
-			$futureMatch->entry_belt_id = $input['entry_belt_id'];
-			$futureMatch->entry_weight_id = $input['entry_weight_id'];
 			$futureMatch->previes_mate_id1 = $eventMatches[0]->id;
 			$futureMatch->previes_mate_id2 = $eventMatches[1]->id;
 			$futureMatch->status = 'P'; // Pending status
 			$futureMatch->order_no = 9998; // Set to a bronze medal match
+			$futureMatch->bracket_id = $mateBracket->id;
+			Log::info('Bracker final id: ' . $mateBracket->id);
 			$futureMatch->save();
 		}
 
 		Log::info('Count of event matches: ' . count($eventMatches));
 		Log::info('eventMatches: ', $eventMatches);
-		$this->generateGeneralMatch($event_id, $input, $eventMatches, 9999);
+		$this->generateGeneralMatch($event_id, $eventMatches, 9999, $mateBracket);
 	}
 
-	private function generateInitMatchs($event_id, $input){
+	private function generateInitMatchs($event_id, $mateBracket){
+		Log::info('Generating initial matches for event_id: ' . $event_id);
 		// Step 1: Retrieve the event brackets
 		$eventBrackets = DB::table('uq_event_brackets')
 			->where('event_id', $event_id)
-			->where('entry_id', $input['entry_id'])
-			->where('entry_age_id', $input['entry_age_id'])
-			->where('entry_weight_id', $input['entry_weight_id'])
+			->where('entry_id', $mateBracket->entry_id)
+			->where('entry_age_id', $mateBracket->entry_age_id)
+			->where('entry_belt_id', $mateBracket->entry_belt_id)
+			->where('entry_weight_id', $mateBracket->entry_weight_id)
 			->get();
 		$eventMatches = [];
 
@@ -347,10 +243,7 @@ class EloquentEventMatchesRespository implements EventMatchesRespository {
 		foreach ($eventBrackets as $bracket) {
 			// Check if the match already exists
 			$existingMatch = EventMatches::where('event_id', $bracket->event_id)
-				->where('entry_id', $bracket->entry_id)
-				->where('entry_age_id', $bracket->entry_age_id)
-				->where('entry_belt_id', $bracket->entry_belt_id)
-				->where('entry_weight_id', $bracket->entry_weight_id)
+			    ->where('bracket_id', $mateBracket->id)
 				->where('reg_one_id', $bracket->reg_one_id)
 				->where('reg_two_id', $bracket->reg_two_id)
 				->first();
@@ -363,37 +256,38 @@ class EloquentEventMatchesRespository implements EventMatchesRespository {
 			// Create a new match if it doesn't exist
 			$match = new EventMatches();
 			$match->event_id = $bracket->event_id;
-			$match->entry_id = $bracket->entry_id;
-			$match->entry_age_id = $bracket->entry_age_id;
-			$match->entry_belt_id = $bracket->entry_belt_id;
-			$match->entry_weight_id = $bracket->entry_weight_id;
 			$match->reg_one_id = $bracket->reg_one_id;
 			$match->reg_two_id = $bracket->reg_two_id;
 			$match->order_no = 0;
 			$match->status = 'P'; // Pending status
+			$match->bracket_id = $mateBracket->id;
+			Log::info('Bracker id init: ' . $mateBracket->id);
 			if($bracket->reg_one_id == null || $bracket->reg_two_id == null){
 				$match->reg_win_id = $bracket->reg_one_id ?? $bracket->reg_two_id;
 				$match->status = 'C'; // Complete status
 			}
 			$match->save();
-
 			$eventMatches[] = $match;
 		}
 		return $eventMatches;
 	}
 
-	private function generateGeneralMatch($event_id, $input, $eventMatches, $round_counter)
+	private function generateGeneralMatch($event_id, $eventMatches, $round_counter, $mateBracket)
 	{
 		$futureMatches = [];
 		$matchCount = count($eventMatches);
+
+		// Set bracket_id if EventMateBracket exists
+		if ($mateBracket === null) {
+			Log::info('No mate bracket found for event_id: ' . $event_id);
+			throw new \Exception('No mate bracket found for the provided event and entry details.');
+		}
+		
 		for ($i = 0; $i < $matchCount; $i += 2) {
 			if (isset($eventMatches[$i + 1])) {
 				// Check if the future match already exists
 				$existingFutureMatch = EventMatches::where('event_id', $event_id)
-					->where('entry_id', $input['entry_id'])
-					->where('entry_age_id', $input['entry_age_id'])
-					->where('entry_belt_id', $input['entry_belt_id'])
-					->where('entry_weight_id', $input['entry_weight_id'])
+					->where('bracket_id', $mateBracket->id)
 					->where('previes_mate_id1', $eventMatches[$i]->id)
 					->where('previes_mate_id2', $eventMatches[$i + 1]->id)
 					->where('order_no',  $round_counter)
@@ -409,14 +303,12 @@ class EloquentEventMatchesRespository implements EventMatchesRespository {
 				// Create a new future match if it doesn't exist
 				$futureMatch = new EventMatches();
 				$futureMatch->event_id = $event_id;
-				$futureMatch->entry_id = $input['entry_id'];
-				$futureMatch->entry_age_id = $input['entry_age_id'];
-				$futureMatch->entry_belt_id = $input['entry_belt_id'];
-				$futureMatch->entry_weight_id = $input['entry_weight_id'];
 				$futureMatch->previes_mate_id1 = $eventMatches[$i]->id;
 				$futureMatch->previes_mate_id2 = $eventMatches[$i + 1]->id;
 				$futureMatch->status = 'P'; // Pending status
 				$futureMatch->order_no = $round_counter;
+				$futureMatch->bracket_id = $mateBracket->id;
+				Log::info('Bracker following id: ' . $mateBracket->id);
 				if($eventMatches[$i]->reg_win_id != null){
 					if($futureMatch->reg_one_id == null){
 						$futureMatch->reg_one_id = $eventMatches[$i]->reg_win_id;
