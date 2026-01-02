@@ -113,6 +113,42 @@ class EloquentEventMatchesRespository implements EventMatchesRespository {
 		return $eventMatche;
 
 	}
+	
+
+	public function editWinner($id, $input)
+	{
+		$eventMatche = $this->find($id);
+		if($input['reg_win_id'] != null){
+			$eventMatche->reg_win_id = $input['reg_win_id'];
+			$eventMatche->status = 'C';
+			if(isset($eventMatche->end_time) == null){
+				$eventMatche->end_time = Carbon::now('GMT+8');
+			}
+			$eventMatche->save();
+			$this->updateNextReg($id, $eventMatche);
+		}
+		$eventBracket = EventBrackets::where('event_id', $eventMatche->event_id)
+			->where('entry_id', $eventMatche->entry_id)
+			->where('entry_age_id', $eventMatche->entry_age_id)
+			->where('entry_belt_id', $eventMatche->entry_belt_id)
+			->where('entry_weight_id', $eventMatche->entry_weight_id)
+			->where(function($query) use ($eventMatche) {
+				$query->where(function($q) use ($eventMatche) {
+					$q->where('reg_one_id', $eventMatche->reg_one_id)
+					  ->where('reg_two_id', $eventMatche->reg_two_id);
+				})->orWhere(function($q) use ($eventMatche) {
+					$q->where('reg_one_id', $eventMatche->reg_two_id)
+					  ->where('reg_two_id', $eventMatche->reg_one_id);
+				});
+			})
+			->first();
+		if($eventBracket){
+			$eventBracket->reg_winner_id = $input['reg_win_id'];
+			$eventBracket->save();
+		}
+		return $eventMatche;
+
+	}
 
 	private function updateNextReg($id, $previesMatch)
 	{

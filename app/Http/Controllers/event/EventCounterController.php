@@ -49,10 +49,16 @@ class EventCounterController extends Controller
         return view($this->view_path.'.index', $data);
     }
 
-    public function edit_winner(Request $request, $match_id)
+    public function set_winner(Request $request, $match_id)
     {
         $this->mathes->updateWinner($match_id, $request);
-        return $this->show($match_id);
+        return $this->edit_status_show($match_id);
+    }
+
+    public function edit_winner(Request $request, $match_id)
+    {
+        $this->mathes->editWinner($match_id, $request);
+        return $this->edit_status_show($match_id);
     }
 
     public function getPrevMatch(Request $request, $match_id)

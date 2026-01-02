@@ -6,12 +6,21 @@
   @php exit; @endphp
 @endif
 
+{{-- @extends('default')
+
+@section('styles')
+<link rel="stylesheet" href="{{asset('assets/js/plugins/custom/datatables/datatables.bundle.css')}}">
+@endsection
+
+@section('content') --}}
+
+
 <link rel="stylesheet" href="{{asset('css/scoreboard/scoreboard_css_style2.css')}}">
 <link rel="stylesheet" href="{{asset('css/scoreboard/scoreboard_css_timer.css')}}">
 
 
 
-<form id="winnerForm" action="{{ route('event.config.counter.winner', ['match_id' => $matchId]) }}" method="POST"  style="display:none;">
+<form id="winnerForm" action="{{ route('event.config.match.winner', ['match_id' => $matchId]) }}" method="POST"  style="display:none;">
 
 </form>
 
@@ -220,6 +229,7 @@
         <button class="end-button" onclick="redirectToPrevCounter()">Go to previes match</button>
         <button class="end-button" onclick="redirectToNextCounter()">Go to next match</button>
         <button id="endBtn" class="end-button">End Game</button>
+        <button id="editBtn" class="end-button d-none">Edit Game</button>
 
         <div class="popup" id="popup1">
           <div class="popup-header red-header">WON BY:</div>
@@ -288,13 +298,13 @@
     if (localStorageData) {
       const id = localStorageData.findIndex(x => x == {{ $matchId }});
       window.redirectToNextCounter = function() {
-        let prevMatchId;
+        let nextMatchId;
         if (id < localStorageData.length - 1) {
-          const nextMatchId = localStorageData[id + 1];
+          nextMatchId = localStorageData[id + 1];
         } else {
-          prevMatchId = localStorageData[id];
+          nextMatchId = localStorageData[id];
         }
-          window.location.href = "{{ route('event.config.match.edit_status', ['match_id' => ':matchId']) }}".replace(':matchId', prevMatchId);
+          window.location.href = "{{ route('event.config.match.edit_status', ['match_id' => ':matchId']) }}".replace(':matchId', nextMatchId);
       }
       window.redirectToPrevCounter = function() {
         let prevMatchId;
@@ -319,5 +329,20 @@
     const regOne = allData[0];
     if(winnerData && regOne){
       setWinner(winnerData.id == regOne.id ? 'red' : 'blue');
+      document.getElementById('editBtn').style.display = 'block';
+      document.getElementById('endBtn').style.display = 'none';
+    } else {
+      document.getElementById('editBtn').style.display = 'none';
+      document.getElementById('endBtn').style.display = 'block';
     }
+
+    document.getElementById("editBtn").addEventListener("click", () => {
+      popup1.style.display = "block";
+      popup2.style.display = "block";
+      popup3.style.display = "block";
+      winnerDiv1.textContent = ""; // clear previous winner
+      winnerDiv2.textContent = ""; // clear previous winner
+      document.getElementById('winnerForm').setAttribute('action', "{{ route('event.config.match.update.winner', ['match_id' => $matchId]) }}");
+    });
+
 </script>
