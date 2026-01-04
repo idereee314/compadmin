@@ -31,4 +31,15 @@ return array (
     'uq_event_registration' => 'Тэмцээн',
     'uq_event_config' => 'Тэмцээний тохиргоо',
 
+	/** REFERENCE */
+	"reference" => "Лавлах мэдээлэл",
+	"reference_category" => "Ангилал",
+	"reference_category_edit" => "Ангилал засварлах",
+	"features" => "Боломжууд",
+	"service" => "Үйлчилгээ",
+	"contact_type" => "Холбоо барих төрөл",
+	"picture_type" => "Зургийн төрөл",
+	"organization_status" => "Байгууллагын төлөв",
+	"organization_type" => "Байгууллагын төрөл",
+
 );

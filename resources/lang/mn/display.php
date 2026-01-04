@@ -3,10 +3,7 @@
 
 return [
 
-    // Name
-    "IQ_admin" => "IQ админ",
-     'iq_center' => 'Оюуны хөгжил IQ төв',
-     'contact_us' => 'Холбоо барих',
+    'contact_us' => 'Холбоо барих',
     
 
     /** VERB **/
@@ -19,6 +16,8 @@ return [
     "general_operation" => "Үйлдэл",
     "general_see" => 'Харах',
     "general_fast_operation" => 'Хурдан үйлдэл',
+    "general_notes" => 'Удирдамж',
+    "general_information_notes" => "Удирдамжийн мэдээлэл",
 
     // Button
     "general_new" => "Шинээр нэмэх",
@@ -39,7 +38,7 @@ return [
     "general_add" => "Нэмэх",
     "general_update" => "Шинэчлэх",
     "general_show" => "Харах",
-    "general_status_change" => "Төлөв шилжүүлэх",
+    "general_status_change" => "Төлөв шилжүБайгууллагаүлэх",
     "general_call" => "Дуудах",
     "general_insert" => "Оруулах",
     "general_choose" => "Сонгох",
@@ -63,10 +62,12 @@ return [
     'general_sub_part' => 'Дэд хэсэг',
     'general_minute' => 'минут',
     'general_category' => 'Ангилал',
+    "general_object" => "Обьект",   
     'general_event_category' => 'Тэмцээний ангилал',
     'general_rank_season' => 'Улирал',
     'general_result_type' => 'Үр дүн гаргах төрөл',
     'general_total_score' => 'Нийт оноо',
+    'general_desc_score' => 'Онооны тайлбар',
     'general_you_are_here' => 'Таны байгаа газар',
     'general_group' => 'Бүлэглэх',
     'general_welcome' => 'Тавтай морилно уу',
@@ -185,7 +186,12 @@ return [
     'general_checked_weight' => 'Шалгагдсан жин',
     'general_event_date' => 'Тэмцээний өдөр',
     'general_events' => 'Тэмцээнүүд',
-    
+    'general_total_athlete' => 'Нийт тамирчдыг тоо',
+    "general_location" => "Байршил",
+    "general_location_info" => "Тэмцээний заалны байршил",
+    "general_title_english" => "Гарчиг Англиар",
+    "general_title_mongolian" => "Гарчиг Монголоор",
+    "general_image_rotate" => "Зургийг эргүүлэх",
 
     // Search
     "general_search_list" => "Хайлт",
@@ -240,6 +246,8 @@ return [
     "general_file_remove" => "Устгах",
     "general_file_select" => "Сонгох",
     "general_file_add" => "Файл нэмэх",
+    "general_image_rotate_left" => "Зургийг зүүн тийш эргүүлэх",
+    "general_image_rotate_right" => "Зургийг баруун тийш эргүүлэх",
 
     // Export
     "general_excel" => "Excel",
@@ -327,12 +335,35 @@ return [
 
     //Academy
 
-    "organization" => "Байгууллага",
     "best_academy" => "Шилдэг академи",
     "toplist" => "Топ жагсаалт",
+    "event_organizer" => "Зохион байгуулагч",
+
+    //Organization
+    "organization" => "Байгууллага",
+    "is_fulltime" => "Бүтэн цагийн",
+    "organization_parent" => "Төв салбар",
+    "organization_branches" => "Салбарууд",
+    "organization_empty" => "Хоосон байна",
+    "feature" => "Боломж",
+    "select_feature" => "Боломж сонгох",
+    "picture_type" => "Зурагны төрөл",
+    "select_picture_type" => "Зурагны төрөл сонгох",
+    "location_description" => "Байршилын тайлбар",
+    "organization_status" => "Байгууллагын статус",
+    "organization_type" => "Байгууллагын төрөл",
+    "organization_search_filter" => "Хайх төрөл",
+    "select_workday" => "Өдөр сонгох",
+    "select" => "Сонгох",
+    "organizations" => "Байгууллагууд",
+    "features" => "Боломжууд",
+    "organization_worktime" => "Цагийн хуваарь",
+    "status_add" => "Төлөв нэмэх",
+    "key_word" => "Түлхүүр үг",
 
     //Event
     'event_title' => 'Эвент',
+    'event_list' => 'Арга хэмжээний жагсаалт',
     'reg_start_date' => 'Эхлэх огноо',
     'reg_end_date' => 'Дуусах огноо',
     'reg_date' => 'Бүртгэлийн огноо',
@@ -343,6 +374,8 @@ return [
     //Event-match
     'match_day' => 'Өдөр',
     'match_mate' => 'Мат',
+    'event_details' => 'Арга хэмжээний дэлгэрэнгүй мэдээлэл',
+    'general_event_information' => 'Ерөнхий мэдээлэл',
 
     //Event-entries
     'entrance_fee' => 'Төлбөр',
@@ -382,7 +415,7 @@ return [
     'registered_event' => 'Бүртгүүлсэн тэмцээн',
 
     //Event-toplist-point
-    'general_point' => 'Оноо',
+    'general_point' => 'Цэг',
     'start_position' => 'Эхлэх байр',
     'end_position' => 'Төгсөх байр',
 
@@ -394,4 +427,15 @@ return [
     'past_event_list' => 'Болж өнгөрсөн тэмцээнүүд',
 
     'winning' => 'Ялагч',
+    // Other
+    "picture_type" => "Зурагны төрөл",
+    "select_picture_type" => "Зурагны төрөл сонгох",
+    "pictures_details" => "Зургийн дэлгэрэнгүй мэдээлэл",
+
+    // Location
+    "location" => "Байршил",
+    "aimag_city" => "Аймаг сум",
+    "soum_district" => "Сум дүүрэг",
+    "bag_khoroo" => "Баг хороо",
+    "entrance" => "Орц, гарц",
 ];

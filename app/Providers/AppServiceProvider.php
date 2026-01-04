@@ -30,6 +30,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind('event\EventCategoryRepository', 'event\EloquentEventCategoryRepository');
         $this->app->bind(EventConfigDaysRepository::class, EloquentEventConfigDaysRepository::class);
         $this->app->bind(EventMatchesRespository::class, EloquentEventMatchesRespository::class);
+        $this->app->bind('event\EventSportRepository', 'event\EloquentEventSportRepository');
         $this->app->bind('event\EventRankSeasonRepository', 'event\EloquentEventRankSeasonRepository');
         $this->app->bind('event\EventUserRepository', 'event\EloquentEventUserRepository'); 
         $this->app->bind('user\CompadRoleRepository', 'user\EloquentCompadRoleRepository'); 
@@ -40,9 +41,18 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind('member\TeamMemberRepository', 'member\EloquentTeamMemberRepository');  
         $this->app->bind('member\TeamMemberAttributeRepository', 'member\EloquentTeamMemberAttributeRepository');  
         $this->app->bind('event\EventTypeRepository', 'event\EloquentEventTypeRepository');
+        $this->app->bind('event\EventPictureRepository', 'event\EloquentEventPictureRepository');
+        $this->app->bind('event\EventLocationRepository', 'event\EloquentEventLocationRepository');
 
 
+        //Organization
         $this->app->bind('organization\OrganizationRepository', 'organization\EloquentOrganizationRepository'); 
+        $this->app->bind('organization\OrganizationEventRepository', 'organization\EloquentOrganizationEventRepository'); 
+        $this->app->bind('organization\OrganizationAddressRepository', 'organization\EloquentOrganizationAddressRepository');
+        $this->app->bind('organization\OrganizationBannerRepository', 'organization\EloquentOrganizationBannerRepository');
+        $this->app->bind('organization\OrganizationContactRepository', 'organization\EloquentOrganizationContactRepository');
+        $this->app->bind('organization\OrganizationSocialRepository', 'organization\EloquentOrganizationSocialRepository');
+        $this->app->bind('organization\OrganizationWorktimeRepository', 'organization\EloquentOrganizationWorktimeRepository');
 
         $this->app->bind('country\CountryRepository', 'country\EloquentCountryRepository');
         $this->app->bind('event\EventRefundRequestRepository', 'event\EloquentEventRefundRequestRepository'); 
@@ -57,7 +67,14 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind('reference\BeltGroupRepository', 'reference\EloquentBeltGroupRepository'); 
         $this->app->bind('reference\EntryResultTypeRepository', 'reference\EloquentEntryResultTypeRepository');
         $this->app->bind('reference\EventToplistPointRepository', 'reference\EloquentEventToplistPointRepository');
-        $this->app->bind('reference\ConfigMatRepository', 'reference\EloquentConfigMatRepository'); 
+        $this->app->bind('reference\ConfigMatRepository', 'reference\EloquentConfigMatRepository');
+        $this->app->bind("reference\PictureTypeRepository", "reference\EloquentPictureTypeRepository");
+        $this->app->bind('reference\CategoryRepository', 'reference\EloquentCategoryRepository');
+        $this->app->bind('reference\ServiceRepository', 'reference\EloquentServiceRepository');
+        $this->app->bind("reference\OrganizationStatusRepository", "reference\EloquentOrganizationStatusRepository");
+        $this->app->bind("reference\OrganizationTypeRepository", "reference\EloquentOrganizationTypeRepository");
+        $this->app->bind("reference\FeaturesRepository", "reference\EloquentFeaturesRepository");
+        $this->app->bind("reference\ContactTypeRepository", "reference\EloquentContactTypeRepository");
     }
 
     /**

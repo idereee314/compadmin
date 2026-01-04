@@ -93,7 +93,7 @@ class LoginController extends Controller
 
 				Session::put('userMenus', @$menuArr);
 
-				return Redirect::intended('/event/competition');
+				return Redirect::intended('/event/sports');
 
 			} else {
 				Session::flash('message', trans('messages.error_login'));

@@ -36,12 +36,14 @@ class EloquentEventRefundRequestRepository implements EventRefundRequestReposito
 
 	public function create($input)
 	{
+		
 		$eventRefundRequest = new EventRefundRequest;
-		$eventRefundRequest->member_id = $input['athlete_id'];
+		$eventRefundRequest->member_id = $input['member_id'];
 		$eventRefundRequest->event_id = $input['event_id'];
 		$eventRefundRequest->academy_id = @$input['academy_id'];
 		$eventRefundRequest->amount = @$input['amount'];
 		$eventRefundRequest->description = @$input['description'];
+		$eventRefundRequest->event_registration_id = @$input['event_registration_id'];
 		
 		$eventRefundRequest->save();
 		return $eventRefundRequest;

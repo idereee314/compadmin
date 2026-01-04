@@ -72,9 +72,40 @@ class Event extends Model
         return $this->hasMany('event\EventRefundRequest', 'event_id');
     }
 
+    public function user()
+    {
+        return $this->belongsTo('user\UserAdmin', 'user_id', 'created_by');
+    }
+
+    public function datetimes()
+    {
+        return $this->hasMany('event\EventDate', 'event_id');
+    }
+
+    public function locations()
+    {
+        return $this->hasMany('event\EventLocation', 'event_id');
+    }
+
+    public function eventSport()
+    {
+        return $this->belongsTo('event\EventSport', 'id', 'event_id');
+    }
 
 	public static function boot()
     {
         parent::boot();    
+
+        static::updating(function($event)
+        {
+            $event->updated_by = Auth::id();
+			$event->updated_at = Carbon\Carbon::now()->toDateTimeString();
+        });
+
+        static::creating(function($event)
+        {
+            $event->created_by = Auth::id();
+			$event->created_at = Carbon\Carbon::now()->toDateTimeString();
+        });
     }
 }

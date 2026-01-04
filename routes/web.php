@@ -28,6 +28,12 @@ Route::get('/clearcache', function()
     return "Cache cleared".date("D M d, Y G:i a");
 });
 
+Route::get('/optimize', function()
+{
+    Artisan::call('optimize');
+    return "php artisan optimize".date("D M d, Y G:i a");
+});
+
 Route::get('/phpinfo', function()
 {
     phpinfo();
@@ -113,6 +119,23 @@ Route::group([
     Route::get('/event/registration/team/athlete_team/{id}/pdf', 'event\EventRegistrationController@generatePdf')->name('generate-pdf');
 
     //Event
+    Route::resource('/event/list', 'event\EventController', ['names' => 'event.list']);
+    Route::any('/event/list/data/list', 'event\EventController@getDatatableList')->name('event.data.list');
+    Route::get('/event/list/register/table/tabs', 'event\EventController@includeTab')->name('event.tabs');
+    Route::get('/event/list/register/change/image', 'event\EventController@reChangePicture')->name('event.change.image');
+
+    // Event Picture
+    Route::resource('/event/picture', 'event\EventPictureController', ['names'=>'event.picture']);
+    Route::get('/event/picture/show/image/{id}', 'event\EventPictureController@showImage')->name('event.show.image');
+    Route::post('/event/picture/remove/image','event\EventPictureController@removeImage')->name('event.picture.remove');
+
+    // Event Organizer
+    Route::resource('/event/organizer', 'event\EventOrganizerController', ['names'=>'event.organizer']);
+
+    // Event Location
+    Route::resource('/event/location', 'event\EventLocationController', ['names'=>'event.location']);
+    Route::post('/event/location/table/data','event\EventLocationController@getDatatableList')->name('event.location.datalist');
+    
     Route::resource('/event/registration', 'event\EventRegistrationController', ['names' => 'event.registration']);
     Route::any('/event/registration/data/list', 'event\EventRegistrationController@getDatatableList')->name('event.registration.data.list');
     Route::post('/event/registration/take/config', 'event\EventRegistrationController@getConfigByEntryId')->name('event.registration.take.config');
@@ -139,6 +162,8 @@ Route::group([
     Route::get('/event/config-tabs', 'event\EventConfigController@includeTab')->name('event.config.tabs');
 
     Route::resource('/event/user', 'event\EventUserController', ['names' => 'event.user']);
+
+    // REFERENCE
 
     Route::resource('/event/toplist/point', 'reference\EventToplistPointController', ['names' => 'event.toplist.point']);
     Route::resource('/event/refund/request', 'event\EventRefundRequestController', ['names' => 'event.refund.request']);
@@ -194,6 +219,9 @@ Route::group([
     Route::get('/event/config/counter/{match_id}/prev', 'event\EventCounterController@getPrevMatch')->name('event.config.counter.prev');
 
     Route::post('/event/config/save-mate-bracket/{event_id}', 'event\EventMatchController@saveEventMateBracket')->name('event.config.saveMateBracket');
+    // Picture type
+    Route::resource('/reference/picture/type', 'reference\PictureTypeController', ['names'=>'reference.picture.type']);
+    Route::post('/reference/picture/type/table/data','reference\PictureTypeController@getDatatableList')->name('reference.picture.type.datalist');
 });
 
 Route::get('/event/{eventId}/bracket', 'event\EventRegistrationController@treeBracket')->name('event.bracket');
@@ -202,6 +230,11 @@ Route::get('/event/{eventId}/bracket/show', 'event\EventRegistrationController@s
 //result
 Route::get('/event/{eventId}/results', 'event\EventRegistrationController@results')->name('event.results');
 Route::get('/event/{eventId}/toplist', 'event\EventRegistrationController@toplist')->name('event.toplist');
+Route::get('/event/{eventId}/toplist/print', 'event\EventRegistrationController@toplistPrint')->name('event.toplist.print');
+Route::get('/event/{eventId}/results/print', 'event\EventRegistrationController@resultsPrint')->name('event.results.print');
+
+Route::get('/event/{eventId}/results/medal/given', 'reference\EventEntryWeightController@resultsMedalGiven')->name('event.results.medal.given');
+Route::post('/event/{eventId}/results/medal/given', 'reference\EventEntryWeightController@resultsMedalGivenStore')->name('event.results.medal.given.store');
 
 //profile
 Route::get('/profile/{member}','member\MemberController@profile')->name('member.profile');
@@ -229,4 +262,4 @@ Route::get('/{sport_id}/ranking/athlete/masters','event\EventConfigController@ma
 Route::get('/{sport_id}/ranking/athlete/kids','event\EventConfigController@kidsRanking')->name('kidsRanking');
 
 //info
-Route::get('/{sport_id}/reference','event\EventConfigController@reference')->name('reference.information');
+Route::get('/{sport_id}/rules','event\EventConfigController@rules')->name('rules.information');

@@ -59,6 +59,13 @@
                         </div>
                     </div>
                 </div>
+                {{-- Буцаалтын тайлбар (refunded үед харагдана) --}}
+                <div class="form-group row refund" style="display: none;">
+                    <label class="col-md-3 col-form-label text-right">Буцаалтын тайлбар:</label>
+                    <div class="col-md-9">
+                        <textarea name="description" id="description" class="form-control" rows="3" placeholder="Тайлбар оруулна уу">{{ $eventRegistration->eventRefundRequest->description ?? '' }}</textarea>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

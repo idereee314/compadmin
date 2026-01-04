@@ -125,12 +125,13 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 						$q->where('gender_code', $searchData->get('gender'));
 					});				
 				}
-
-				if($searchData->has('award') && $searchData->get('award') !== null)
-				{
-					$qry->whereHas('award', function($q) use($searchData){
-						$q->where('place_number', $searchData->get('award'));
-					});				
+ 
+				if ($searchData->has('is_award') && $searchData->get('is_award') !== null) {
+					if ($searchData->get('is_award')) {
+						$qry->whereHas('award');
+					} else {
+						$qry->whereDoesntHave('award');
+					}
 				}
 
 				if($searchData->has('is_weight') && $searchData->get('is_weight') !== null)
@@ -249,7 +250,7 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 					}
 					$member .= '<div class="ml-3">';
 					// $member .= '<a href="/profile/' . $qry->member->id . '" class="text-dark-75 line-height-sm d-block pb-3" style="white-space: nowrap;" target="_blank">' . $qry->member->lastname . ' <strong>' . $qry->member->firstname . '</strong><img class="rounded" src="/assets/images/flags/4x3/'.$qry->member->country_id.'.svg" alt="flag" width="25" height="15"></a>';
-					$member .= '<a href="/profile/' . $qry->member->id . '" class="text-dark-75 line-height-sm d-block pb-3" style="white-space: nowrap;" target="_blank"><img class="mb-1 rounded" src="/assets/images/flags/4x3/'.Config::get("enums.country_alpha")[@$qry->member->country_id].'.svg" alt="flag" width="25" height="15">' . $qry->member->lastname . ' <strong>' . $qry->member->firstname . '</strong></a>';
+					$member .= '<a href="/profile/' . $qry->member->id . '" class="text-dark-75 line-height-sm d-block pb-3" style="white-space: nowrap;" target="_blank"><img class="mb-1 rounded" src="/assets/images/flags/4x3/'.Config::get("enums.country_alpha")[@$qry->member->country_id].'.svg" alt="flag" width="25" height="15">' . $qry->member->lastname . ' <strong>' . $qry->member->firstname . '</strong> , </a>';
 					$member .= '<span class="text-dark-75 line-height-sm d-block pb-2"><i class="la la-address-book"></i>'.$qry->member->register_number.', <i class="la la-phone"></i>'.$qry->member->contact_phone.'</span>';
 					$member .= '</div>';
                 $member .= '</div>';
@@ -659,14 +660,26 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 
 	public function getRegistredWeightForOrgApproved($eventId)
 	{
-		return DB::select("select uee.id as entry_id ,uee.name as category_name, uecw.weight ,uecb.name as belt_name, count(uer.member_id) as athlete_count,
-		uee.gender_code from uq_comp.uq_event_registration uer
-		join uq_comp.uq_event_entries uee ON uee.id = uer.entry_id
-		join uq_comp.uq_entry_config_weight uecw on uecw.id = uer.entry_weight_id 
-		join uq_comp.uq_entry_config_belt uecb on uecb.id = uer.entry_belt_id 
-		where uer.event_id = $eventId and uer.status = 'approved'
-		GROUP by uee.id ,uee.name , uecw.weight ,uecb.name,uee.gender_code ");
+	    return DB::select("
+		    SELECT
+		        uee.id as entry_id,
+		        uee.name as category_name,
+		        uecw.id as weight_id,
+		        uecw.weight,
+		        uecb.id as belt_id,
+		        uecb.name as belt_name,
+		        COUNT(uer.member_id) as athlete_count,
+		        uee.gender_code , ueca.start_age , ueca.end_age, ueca.id as ageId
+		    FROM uq_comp.uq_event_registration uer
+		    JOIN uq_comp.uq_event_entries uee ON uee.id = uer.entry_id
+		    JOIN uq_comp.uq_entry_config_weight uecw ON uecw.id = uer.entry_weight_id
+		    JOIN uq_comp.uq_entry_config_belt uecb ON uecb.id = uer.entry_belt_id
+			LEFT JOIN uq_comp.uq_entry_config_age ueca ON ueca.id = uer.entry_age_id 
+		    WHERE uer.event_id = $eventId AND uer.status = 'approved'
+		    GROUP BY uee.id, uee.name, uecw.id, uecw.weight, uecb.id, uecb.name, uee.gender_code, ueca.start_age , ueca.end_age, ueca.id
+		");
 	}
+
 
 	public function getRegistredCountedWeightForOrgApproved($eventId)
 	{
@@ -726,8 +739,8 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 
 	public function getResultFromEvent($eventId)
 	{
-		return DB::select("select CONCAT(um.lastname, ' ',um.firstname) AS fullname, uea.place_number, uee.name as category_name, uecw.weight, 
-		ua.name as academy_name , uecb.name as bus, uer.academy_name as busad, ueca.start_age , ueca.end_age, ueca.id as ageId, um.profile_url, um.id AS memberid , uee.gender_code , um.gender_code
+		return DB::select("select CONCAT(um.lastname, ' ',um.firstname) AS fullname, uea.place_number, uee.name as category_name, uee.id as category_id, uecw.weight, uecw.id as weight_id,
+		ua.name as academy_name , ua.id as academy_id , uecb.name as bus, uecb.id as belt_id, uer.academy_name as busad, ueca.start_age , ueca.end_age, ueca.id as ageId, um.profile_url, um.id AS memberid , uee.gender_code , um.gender_code, uecw.medal_given
 			FROM uq_comp.uq_event_award uea
 			LEFT JOIN uq_comp.uq_event_registration uer ON uer.id = uea.event_registration_id 
 			LEFT JOIN uq_comp.uq_academy ua ON ua.id = uer.academy_id 
@@ -737,7 +750,7 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 			LEFT JOIN uq_comp.uq_entry_config_belt uecb  ON uecb.id = uer.entry_belt_id 
 			LEFT JOIN uq_comp.uq_entry_config_age ueca ON ueca.id = uer.entry_age_id 
 			WHERE uer.event_id = $eventId and uee.gender_code = um.gender_code
-			GROUP BY uee.name, ua.name, fullname, uea.place_number, uecw.weight, uee.id, ua.name, bus, uer.academy_name, ueca.id, um.profile_url, memberid , uee.gender_code,um.gender_code
+			GROUP BY uee.name, ua.name, fullname, uea.place_number, uecw.weight, ua.id, uee.id, uecb.id, ua.name, bus, uer.academy_name, ueca.id, um.profile_url, memberid , uee.gender_code,um.gender_code , uecw.medal_given, uecw.id
 			ORDER BY uee.id desc, ueca.id desc, bus , uecw.weight desc, uea.place_number asc");
 	}
 
@@ -780,6 +793,36 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 					GROUP BY ua.id, ua.name
 					order by total_point desc");
 	}
+
+	public function getToplistWithAthleteCountFromEvent($eventId)
+	{
+		return DB::select("
+			SELECT 
+				ua.id AS academy_id,
+				ua.name,
+				SUM(CASE WHEN uea.place_number = 1 THEN 1 ELSE 0 END) AS gold,
+				SUM(CASE WHEN uea.place_number = 2 THEN 1 ELSE 0 END) AS silver,
+				SUM(CASE WHEN uea.place_number = 3 THEN 1 ELSE 0 END) AS bronze,
+				COUNT(DISTINCT uer.id) AS total_athletes,
+				COALESCE(SUM(point.point), 0) AS total_point
+			FROM uq_comp.uq_event_registration uer
+			LEFT JOIN uq_comp.uq_event_award uea ON uea.event_registration_id = uer.id
+			JOIN uq_comp.uq_academy ua ON ua.id = uer.academy_id
+			LEFT JOIN LATERAL (
+				SELECT uetp.point
+				FROM uq_comp.uq_event_toplist_point uetp
+				WHERE uetp.event_id = uer.event_id
+				  AND (
+					  (uea.place_number BETWEEN uetp.start_pos AND uetp.end_pos)
+					  OR (uetp.start_pos IS NULL AND uetp.end_pos IS NULL AND uea.place_number IS NULL)
+				  )
+				LIMIT 1
+			) AS point ON true
+			WHERE uer.event_id = ?
+			GROUP BY ua.id, ua.name
+			ORDER BY total_point DESC
+		", [$eventId]);
+	}
 	
 	public function getToplistByGoldMedalAndGenderMaleFromEvent($eventId)
 	{
@@ -810,6 +853,50 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 			GROUP BY ua.name,uer.academy_id
 			ORDER BY gold desc, silver desc, bronze desc");
 	}
+
+	public function getToplistByPointAndGenderMaleFromEvent($eventId)
+	{
+		return DB::select("SELECT ua.id AS academy_id, ua.name,
+						SUM(CASE WHEN uea.place_number = 1 THEN 1 ELSE 0 END) AS gold,
+						SUM(CASE WHEN uea.place_number = 2 THEN 1 ELSE 0 END) AS silver,
+						SUM(CASE WHEN uea.place_number = 3 THEN 1 ELSE 0 END) AS bronze,
+						COALESCE(SUM(point), 0) AS total_point
+					FROM uq_comp.uq_event_award uea
+					JOIN uq_comp.uq_event_registration uer ON uer.id = uea.event_registration_id
+					JOIN uq_comp.uq_academy ua ON ua.id = uer.academy_id
+					JOIN uq_comp.uq_member um ON um.id = uea.member_id
+					LEFT JOIN LATERAL (
+						SELECT uetp.point
+						FROM uq_comp.uq_event_toplist_point uetp
+						WHERE uer.event_id = uetp.event_id 
+						  AND uea.place_number BETWEEN uetp.start_pos AND uetp.end_pos
+					) point ON true
+					WHERE uer.event_id = $eventId AND um.gender_code = '1'
+					GROUP BY ua.id, ua.name
+					ORDER BY total_point DESC");
+	}
+	public function getToplistByPointAndGenderFemaleFromEvent($eventId)
+	{
+		return DB::select("SELECT ua.id AS academy_id, ua.name,
+						SUM(CASE WHEN uea.place_number = 1 THEN 1 ELSE 0 END) AS gold,
+						SUM(CASE WHEN uea.place_number = 2 THEN 1 ELSE 0 END) AS silver,
+						SUM(CASE WHEN uea.place_number = 3 THEN 1 ELSE 0 END) AS bronze,
+						COALESCE(SUM(point), 0) AS total_point
+					FROM uq_comp.uq_event_award uea
+					JOIN uq_comp.uq_event_registration uer ON uer.id = uea.event_registration_id
+					JOIN uq_comp.uq_academy ua ON ua.id = uer.academy_id
+					JOIN uq_comp.uq_member um ON um.id = uea.member_id
+					LEFT JOIN LATERAL (
+						SELECT uetp.point
+						FROM uq_comp.uq_event_toplist_point uetp
+						WHERE uer.event_id = uetp.event_id 
+						  AND uea.place_number BETWEEN uetp.start_pos AND uetp.end_pos
+					) point ON true
+					WHERE uer.event_id = $eventId AND um.gender_code = '2'
+					GROUP BY ua.id, ua.name
+					ORDER BY total_point DESC");
+	}
+
 	
 	//RESULTS queries .end
 
@@ -953,4 +1040,10 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 		return $eventBrackets->save();
 	}
 	
+	public function getEventToplistPointConfig($eventId)
+	{
+		return DB::table('uq_comp.uq_event_toplist_point')
+			->where('event_id', $eventId)
+			->get();
+	}
 }

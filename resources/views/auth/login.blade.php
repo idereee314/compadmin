@@ -1,6 +1,5 @@
 
 @extends('default')
-
 @section('styles')
     <link rel="stylesheet" href="{{asset('assets/css/pages/login/classic/login-1.css')}}">
 	<style>
@@ -128,9 +127,5 @@
 		<!--end::Login-->
 	</div>
 </body>
-
-
-
 @section('javascript')
-
 @endsection

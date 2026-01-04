@@ -17,8 +17,7 @@ class EventToplistPoint extends Model
     public static function rules($id) 
     {
 		return array(
-            'start_pos' => 'required|numeric',
-            'end_pos' => 'nullable|numeric'
+            'point' => 'required|numeric',
 		);
 	}
 

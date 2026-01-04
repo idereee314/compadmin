@@ -20,18 +20,21 @@ return array(
 		'created' => 'created',
 		'approved' => 'approved',
 		'canceled' => 'canceled',
+		'refunded' => 'refunded',
 	],
 
 	'event_registration_status_class' => [
 		'created' => 'warning',
 		'approved' => 'success',
 		'canceled' => 'danger ',
+		'refunded' => 'info',
 	],
 
 	'event_registration_status_flow' => [
 		'' => ['created'],
 		'created' => ['approved', 'canceled'],
-		'approved' => ['canceled'],
+		'approved' => ['canceled', 'refunded'],
+		'refunded' => ['approved', 'canceled'],
 		'canceled' => ['approved'],
 	],
 
@@ -78,6 +81,18 @@ return array(
 	'athlete_role' => [
 		'forward' => 'forward',
 		'support' => 'support',
+	],
+
+	'event_status' => [
+		'created' => 'created',
+		'verified' => 'verified',
+		'canceled' => 'canceled',
+	],
+
+	'event_status_class' => [
+		'created' => 'warning',
+		'verified' => 'success',
+		'canceled' => 'danger ',
 	],
 
 	'menu' => [
@@ -156,6 +171,29 @@ return array(
 		'kids' => 'kids',
 		'adult' => 'adult',
 		'masters' => 'masters',
+	],
+
+	'object_types' => [
+		0 => 'organization',
+		1 => 'event',
+		2 => 'product',
+		3 => 'menu',
+		4 => 'banner'
+	],
+
+	'event_organization_role' => [
+		'organizer' => 'organizer',
+		'co-organizer' => 'co-organizer',
+		'sponsor' => 'sponsor',
+		'participant' => 'participant',
+	],
+
+	'category_type' => [
+		'organization' => 'organization',
+		'proservice' => 'proservices',
+		'event' => 'event',
+		'menu' => 'menu',
+		'product' => 'product'
 	],
 )
 
