@@ -9564,6 +9564,12 @@ class ComposerStaticInit8da5d45392af245feb314a3d0411c64d
         'member\\TeamMember' => __DIR__ . '/../..' . '/app/Models/member/TeamMember.php',
         'member\\TeamMemberAttributeRepository' => __DIR__ . '/../..' . '/app/Repositories/member/TeamMemberAttributeRepository.php',
         'member\\TeamMemberRepository' => __DIR__ . '/../..' . '/app/Repositories/member/TeamMemberRepository.php',
+        'membership\\EloquentMembershipAcademyRepository' => __DIR__ . '/../..' . '/app/Repositories/membership/EloquentMembershipAcademyRepository.php',
+        'membership\\EloquentMembershipTypeRepository' => __DIR__ . '/../..' . '/app/Repositories/membership/EloquentMembershipTypeRepository.php',
+        'membership\\MembershipAcademy' => __DIR__ . '/../..' . '/app/Models/membership/MembershipAcademy.php',
+        'membership\\MembershipAcademyRepository' => __DIR__ . '/../..' . '/app/Repositories/membership/MembershipAcademyRepository.php',
+        'membership\\MembershipType' => __DIR__ . '/../..' . '/app/Models/membership/MembershipType.php',
+        'membership\\MembershipTypeRepository' => __DIR__ . '/../..' . '/app/Repositories/membership/MembershiptypeRepository.php',
         'niklasravnsborg\\LaravelPdf\\Facades\\Pdf' => __DIR__ . '/..' . '/niklasravnsborg/laravel-pdf/src/LaravelPdf/Facades/Pdf.php',
         'niklasravnsborg\\LaravelPdf\\Pdf' => __DIR__ . '/..' . '/niklasravnsborg/laravel-pdf/src/LaravelPdf/Pdf.php',
         'niklasravnsborg\\LaravelPdf\\PdfServiceProvider' => __DIR__ . '/..' . '/niklasravnsborg/laravel-pdf/src/LaravelPdf/PdfServiceProvider.php',
@@ -9738,6 +9744,7 @@ class ComposerStaticInit8da5d45392af245feb314a3d0411c64d
         'user\\UserAdmin' => __DIR__ . '/../..' . '/app/Models/user/UserAdmin.php',
         'user\\UserRepository' => __DIR__ . '/../..' . '/app/Repositories/user/UserRepository.php',
         'voku\\helper\\ASCII' => __DIR__ . '/..' . '/voku/portable-ascii/src/voku/helper/ASCII.php',
+        'ware\\ApiController' => __DIR__ . '/../..' . '/app/Http/Controllers/ware/ApiController.php',
     );
 
     public static function getInitializer(ClassLoader $loader)

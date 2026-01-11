@@ -98,7 +98,17 @@ Route::group([
     Route::post('/academy/isother', 'academy\AcademyController@getIsOther')->name('academy.isother');
     Route::get('/academy/search/org', 'academy\AcademyController@findOrganizationByName')->name('academy.search.org');
 
-     //Event Team
+    // Academy Membership
+    Route::get('membership/academy/list', 'academy\AcademyController@indexMembershipAcademy')->name('membership.academy.list.index');
+    Route::get('membership/academy/list/create', 'academy\AcademyController@createMembershipAcademyList')->name('membership.academy.list.create');
+    Route::post('/membership/academy/list/store', 'academy\AcademyController@storeMembershipAcademyList')->name('membership.academy.list.store');
+    Route::get('/membership/academy/list/{id}/edit', 'academy\AcademyController@editMembershipAcademyList')->name('membership.academy.list.edit');
+    Route::post('/membership/academy/list/{id}/update', 'academy\AcademyController@updateMembershipAcademyList')->name('membership.academy.list.update');
+    Route::post('/membership/academy/list/{id}', 'academy\AcademyController@deleteMembershipAcademyList')->name('membership.academy.list.delete');
+    Route::any('/membership/academy/list', 'academy\AcademyController@getDatatableMembershipAcademyList')->name('membership.academy.data.list');
+    Route::get('/membership/academy/search/sport', 'academy\AcademyController@findSportByAcademy')->name('academy.search.sport');
+
+    //Event Team
     Route::resource('/event/registration/team', 'event\EventRegistrationController', ['names' => 'event.team.registration']);
     Route::any('/event/registration/team/data/list', 'event\EventRegistrationController@getDatatableList')->name('event.team.registration.data.list');
     
@@ -267,3 +277,11 @@ Route::get('/{sport_id}/ranking/athlete/kids','event\EventConfigController@kidsR
 
 //info
 Route::get('/{sport_id}/rules','event\EventConfigController@rules')->name('rules.information');
+
+// list
+Route::get('/regulations/merge-rule','academy\AcademyController@showMergeRule')->name('regulations.merge.rule');
+
+
+Route::get('/ideree', function () {
+    return redirect()->away('https://forms.gle/ey999waG7NrWe13C7');
+});

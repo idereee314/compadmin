@@ -8893,6 +8893,12 @@ return array(
     'member\\TeamMember' => $baseDir . '/app/Models/member/TeamMember.php',
     'member\\TeamMemberAttributeRepository' => $baseDir . '/app/Repositories/member/TeamMemberAttributeRepository.php',
     'member\\TeamMemberRepository' => $baseDir . '/app/Repositories/member/TeamMemberRepository.php',
+    'membership\\EloquentMembershipAcademyRepository' => $baseDir . '/app/Repositories/membership/EloquentMembershipAcademyRepository.php',
+    'membership\\EloquentMembershipTypeRepository' => $baseDir . '/app/Repositories/membership/EloquentMembershipTypeRepository.php',
+    'membership\\MembershipAcademy' => $baseDir . '/app/Models/membership/MembershipAcademy.php',
+    'membership\\MembershipAcademyRepository' => $baseDir . '/app/Repositories/membership/MembershipAcademyRepository.php',
+    'membership\\MembershipType' => $baseDir . '/app/Models/membership/MembershipType.php',
+    'membership\\MembershipTypeRepository' => $baseDir . '/app/Repositories/membership/MembershiptypeRepository.php',
     'niklasravnsborg\\LaravelPdf\\Facades\\Pdf' => $vendorDir . '/niklasravnsborg/laravel-pdf/src/LaravelPdf/Facades/Pdf.php',
     'niklasravnsborg\\LaravelPdf\\Pdf' => $vendorDir . '/niklasravnsborg/laravel-pdf/src/LaravelPdf/Pdf.php',
     'niklasravnsborg\\LaravelPdf\\PdfServiceProvider' => $vendorDir . '/niklasravnsborg/laravel-pdf/src/LaravelPdf/PdfServiceProvider.php',
@@ -9067,4 +9073,5 @@ return array(
     'user\\UserAdmin' => $baseDir . '/app/Models/user/UserAdmin.php',
     'user\\UserRepository' => $baseDir . '/app/Repositories/user/UserRepository.php',
     'voku\\helper\\ASCII' => $vendorDir . '/voku/portable-ascii/src/voku/helper/ASCII.php',
+    'ware\\ApiController' => $baseDir . '/app/Http/Controllers/ware/ApiController.php',
 );

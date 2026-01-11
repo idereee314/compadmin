@@ -34,6 +34,16 @@ class EloquentEventConfigRepository implements EventConfigRepository {
 		return EventConfig::find($id);
 	}
 
+	public function findByEvent($eventId)
+	{
+		return EventConfig::where('event_id', $eventId)->first();
+	}
+
+	public function findByAcademyType($event)
+	{
+		return EventConfig::where('org_types', 'LIKE', '%'.$event.'%')->get();
+	}
+
 	public function create($input)
 	{
 		$dates = explode("/", @$input['reg_date']);

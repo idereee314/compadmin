@@ -132,7 +132,8 @@ class EventRegistrationController extends Controller
         $is_team = $this->event->find(request()->event_id)->config->is_team;
         
         $entries = $this->eventEntries->getEntryByEventId(@$input['event_id']);
-        $academies = $this->academy->all();
+        // $academies = $this->academy->all();
+        $academies = $this->academy->getAcademyListByEvent(@$input['event_id']);
         $team_list = $this->team->all();
         
         $data['team_list'] = $team_list;
@@ -272,7 +273,8 @@ class EventRegistrationController extends Controller
 
         if($eventTeamRegistration == null)
         {
-            $academies = $this->academy->all();
+            // $academies = $this->academy->all();
+            $academies = $this->academy->getAcademyListByEvent(@$input['event_id']);
             $eventEntries = $this->eventEntries->getEntryByEventId($eventRegistration->event_id);
             $configBelts = $this->configBelt->getEntryBeltByEntryId($eventRegistration->entry_id);
             $configAges = $this->configAge->getEntryAgeByEntryId($eventRegistration->entry_id);

@@ -29,6 +29,16 @@ class Academy extends Model
         return $this->belongsTo(Organization::class, 'organization_id');
     }
 
+    public function sport()
+    {
+        return $this->belongsTo('sport\Sport', 'sport_id', 'id');
+    }
+
+    public function membershipAcademy()
+    {
+        return $this->hasOne('membership\MembershipAcademy', 'academy_id', 'id');
+    }
+
     public static function boot()
     {
         parent::boot();

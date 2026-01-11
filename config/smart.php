@@ -167,6 +167,11 @@ return array(
 		'university' => 'university'
 	],
 
+	'membership_role_type' => [
+		'academy' => 'academy',
+		'athlete' => 'athlete',
+	],
+
 	'rank_category' => [
 		'kids' => 'kids',
 		'adult' => 'adult',

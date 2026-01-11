@@ -48,7 +48,27 @@
                 <input type="text" class="form-control" autocomplete="off" min="1" max="5000" step="1" name="sort_order"  data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}"/>
                 <div class="error-here"></div>
             </div>
-        </div> 
+        </div>
+        <div class="form-group row">
+            <label class="col-md-3 col-form-label text-right">{{trans('display.general_founded_year')}}:</label>
+            <div class="col-md-9">
+                <input type="number" class="form-control" autocomplete="off" name="founded_year" id="founded_year" min="1900" max="{{ date('Y') }}" placeholder="Жишээ: 2015"/>
+                <div class="error-here"></div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-md-3 col-form-label text-right">{{ trans('display.general_sport_type') }}: <span class="text-danger">*</span></label>
+            <div class="col-md-9">
+                <select class="form-control selectpicker" data-live-search="true" id="sport_id" name="sport_id" required data-validation-required-message="{{ trans('messages.validation_field_required') }}">
+                    <option value="">-- {{ trans('display.general_select') }} --</option>
+                    @forelse($sport as $sports)
+                        <option value="{{ $sports->id }}">{{ $sports->name }} - {{ $sports->name_en }}</option>
+                    @empty
+                        <option value="">{{ trans('display.no_results_found') }}</option>
+                    @endforelse
+                </select>
+            </div>
+        </div>
     </div>
 
     <div class="modal-footer text-right bg-gray-100 border-top-0">

@@ -18,6 +18,10 @@ return [
     "general_fast_operation" => 'Хурдан үйлдэл',
     "general_notes" => 'Удирдамж',
     "general_information_notes" => "Удирдамжийн мэдээлэл",
+    "general_confirm_button_yes" => "Тийм, устгах",
+    "general_confirm_button_no" => "Үгүй, болих",
+    "general_confirm_cancel_yes" => "Тийм, хаах",
+    "general_confirm_cancel_no" => "Үгүй, буцах",
 
     // Button
     "general_new" => "Шинээр нэмэх",
@@ -192,6 +196,7 @@ return [
     "general_title_english" => "Гарчиг Англиар",
     "general_title_mongolian" => "Гарчиг Монголоор",
     "general_image_rotate" => "Зургийг эргүүлэх",
+    "general_founded_year" => "Үүсгэн байгуулагдсан он",
 
     // Search
     "general_search_list" => "Хайлт",
@@ -313,6 +318,7 @@ return [
     'comp_university' => 'Их сургууль',
     'comp_school' => 'Сургууль',
     'comp_academy_name' => 'Академи нэр',
+    'comp_academy_name_eng' => 'Академи нэр (Англи)',
     'comp_country_name' => 'Улсын нэр',
     'comp_country' => 'Улс',
     'comp_member' => 'Оролцогч',
@@ -438,4 +444,11 @@ return [
     "soum_district" => "Сум дүүрэг",
     "bag_khoroo" => "Баг хороо",
     "entrance" => "Орц, гарц",
+
+    // Membership
+    "membership" => "Гишүүнчлэл",
+    "membership_type" => "Гишүүнчлэлийн төрөл",
+    "membership_start_date" => "Гишүүнчлэлийн эхлэх огноо",
+    "membership_end_date" => "Гишүүнчлэлийн дуусах огноо",
+    "membership_academy_list" => "Академийн гишүүнчлэлийн жагсаалт",
 ];

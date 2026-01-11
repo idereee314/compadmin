@@ -57,6 +57,10 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind('country\CountryRepository', 'country\EloquentCountryRepository');
         $this->app->bind('event\EventRefundRequestRepository', 'event\EloquentEventRefundRequestRepository'); 
 
+        // Membership
+        $this->app->bind('membership\MembershipTypeRepository', 'membership\EloquentMembershipTypeRepository'); 
+        $this->app->bind('membership\MembershipAcademyRepository', 'membership\EloquentMembershipAcademyRepository'); 
+
         //reference
         $this->app->bind('reference\EventEntriesRepository', 'reference\EloquentEventEntriesRepository'); 
         $this->app->bind('reference\EntryConfigAgeRepository', 'reference\EloquentEntryConfigAgeRepository'); 

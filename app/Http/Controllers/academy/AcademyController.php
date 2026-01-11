@@ -7,30 +7,35 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Input;
 use Validator;
+use \Auth as Auth;
+use Config;
+use Image;
 
 //Repositories
 use academy\AcademyRepository as Academy;
 use organization\OrganizationRepository as Organization;
 use member\MemberRepository as Member;
+use sport\SportRepository as Sport;
+use membership\MembershipTypeRepository as MembershipType;
+use membership\MembershipAcademyRepository as MembershipAcademy;
 
 //Models
 use academy\Academy as AcademyModel;
-
-use \Auth as Auth;
-use Config;
-
-use Image;
+use membership\MembershipAcademy as MembershipAcademyModel; 
 
 class AcademyController extends Controller
 {
     public $restful = true;
 
-    public function __construct(Academy $academy, Organization $organization, Member $member)
+    public function __construct(Academy $academy, Organization $organization, Member $member, Sport $sport, MembershipType $membershipType, MembershipAcademy $membershipAcademy)
     {
         $this->view_path = 'academy';
         $this->academy = $academy;
         $this->organization = $organization;
         $this->member = $member;
+        $this->sport = $sport;
+        $this->membershipAcademy = $membershipAcademy;
+        $this->membershipType = $membershipType;
     }
 
     /**
@@ -52,6 +57,8 @@ class AcademyController extends Controller
      */
     public function create()
     {
+        $sport = $this->sport->all();
+        $data['sport'] = $sport;
         $data['view_path'] = $this->view_path;
 
         return view($this->view_path.'.add', $data);
@@ -124,6 +131,9 @@ class AcademyController extends Controller
     public function edit($id)
     {
         $academy = $this->academy->find($id);
+        $sport = $this->sport->all();
+        
+        $data['sport'] = $sport;
         $data['academy'] = $academy;
 
         return view($this->view_path.'.edit', $data);
@@ -225,22 +235,25 @@ class AcademyController extends Controller
         return json_encode($organization);
     }
 
+    public function findSportByAcademy()
+    {
+        $input = Input::all();
+        $academy = $this->academy->findSportByAcademy($input['sport_id'],$input['q']);
+
+        return json_encode($academy);
+    }
+
     public function academies($academyId)
     {
         $academy = $this->academy->find($academyId);
         $athlete = $this->academy->getMemberOfAcademy($academyId);
         $upcomingEventJiuJitsuData = $this->member->getUpcomingJiuJitsuEvent();
         $pastEventJiuJitsuData = $this->academy->getPastEventRegisteredAcademy($academyId);
-        // dd($pastEventJiuJitsuData);
-        //days left start
-        // Check if there are upcoming events before proceeding
         $eventDate = $upcomingEventJiuJitsuData[0]->event_date;
         $now = time();
         $eventTimestamp = strtotime($eventDate);
         $timeDifference = $eventTimestamp - $now;
-        // Convert the time difference to days
         $daysLeft = floor($timeDifference / (60 * 60 * 24));
-        //days left end
 
         $data['daysLeft'] = $daysLeft;
         $data['upcomingEventJiuJitsuData'] = $upcomingEventJiuJitsuData;
@@ -253,4 +266,149 @@ class AcademyController extends Controller
         return view('.reference/academyProfile/academyProfile', $data); 
     }
 
+    public function showMergeRule()
+    {
+        $input = Input::all();
+        
+        $data['view_path'] = $this->view_path;
+
+        return view($this->view_path.'.show_membership_list', $data);
+    }
+
+    public function indexMembershipAcademy()
+    {
+        $data['view_path'] = $this->view_path;
+
+        return view($this->view_path.'.membership.index', $data);
+    }
+
+    public function createMembershipAcademyList()
+    {
+        $sport = $this->sport->all();
+        $academy = $this->academy->academyList();
+        $membershipType = $this->membershipType->all();
+
+        $data['membershipType'] = $membershipType;
+        $data['academy'] = $academy;
+        $data['sport'] = $sport;
+        $data['view_path'] = $this->view_path;
+
+        return view($this->view_path.'.membership.add', $data);
+    }
+
+    public function storeMembershipAcademyList(Request $request)
+    {
+        $input = Input::all();
+
+        $validator = Validator::make($input, MembershipAcademyModel::rules(0, 1));
+        
+        if ($validator->fails())
+        {
+            $response = array(
+                'status' => 'error',
+                'msg' => trans('messages.error_save'),
+                'errors' => $validator->errors()
+            );
+        }  
+        else
+        {
+            try
+            {
+                $academy = $this->membershipAcademy->create($input);
+
+                $response = array(
+                    'status' => 'success',
+                    'msg' => trans('messages.success_save')
+                ); 
+            }
+            catch(\Illuminate\Database\QueryException $e)
+            {
+                $response = array(
+                    'status' => 'error',
+                    'msg' => trans('messages.error_save'),
+                    'errors' => $e->getMessage()
+                );
+            }
+        }
+        return $response;
+    }
+
+    public function editMembershipAcademyList($id)
+    {
+        $membership = $this->membershipAcademy->find($id);
+        $academy = $this->academy->find($id);
+        $sport = $this->sport->all();
+        $membershipType = $this->membershipType->all();
+        
+        $data['membership'] = $membership;
+        $data['membershipType'] = $membershipType;
+        $data['sport'] = $sport;
+        $data['academy'] = $academy;
+
+        return view($this->view_path.'.membership.edit', $data);
+    }
+
+    public function updateMembershipAcademyList(Request $request, $id)
+    {
+        $input = Input::all();
+        
+        $validator = Validator::make($input, MembershipAcademyModel::rules($id));
+
+        if ($validator->fails())
+        {
+            $response = array(
+                'status' => 'error',
+                'msg' => trans('messages.error_save'),
+                'errors' => $validator->errors()
+            );
+        }
+        else
+        {
+            try
+            {
+                $academy = $this->membershipAcademy->update($id, $input);
+
+                $response = array(
+                    'status' => 'success',
+                    'msg' => trans('messages.success_save')
+                );
+            }
+            catch(\Illuminate\Database\QueryException $e)
+            {
+                $response = array(
+                    'status' => 'error',
+                    'msg' => trans('messages.error_save'),
+                    'errors' => $e->getMessage()
+                );
+            }
+        }
+        return $response;
+    }
+
+    public function deleteMembershipAcademyList($id)
+    {
+        try {
+            $this->membershipAcademy->delete($id);
+
+            $response = array(
+                'status' => 'success',
+                'msg' => trans('messages.success_delete')
+            );
+            return $response;
+        }
+        catch(\Illuminate\Database\QueryException $e)
+        {
+            $response = array(
+                'status' => 'error',
+                'msg' => trans('messages.error_delete'),
+                'errors' => $e->getMessage()
+            );
+            return $response;
+        }
+    } 
+
+    public function getDatatableMembershipAcademyList(Request $request)
+    {
+        return $this->academy->getDatatableMembershipAcademyList($request);
+    }
 }
