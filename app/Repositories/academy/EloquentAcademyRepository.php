@@ -176,7 +176,8 @@ class EloquentAcademyRepository implements AcademyRepository {
 
 	public function getAcademyListByEvent($event_id)
 	{
-		$academyTypes = app('event\EventConfigRepository')->findByEvent($event_id)->org_types;
+		@$academyTypes = app('event\EventConfigRepository')->findByEvent($event_id)->org_types;
+		
 		$types = collect(explode(',', trim($academyTypes, '{}')))
 			->map(fn ($t) => trim($t))
 			->filter()
@@ -184,14 +185,7 @@ class EloquentAcademyRepository implements AcademyRepository {
 			->all();
 		
 		$list = DB::table('uq_comp.uq_academy as academy')
-			->select([
-				'academy.id as id',
-				'academy.name as name',
-				'academy.name_en as name_en',
-				'academy.type as type',
-				'academy.sport_id as sport_id',
-				'academy.founded_year as founded_year',
-			])
+			->select(['academy.id as id','academy.name as name','academy.name_en as name_en','academy.type as type','academy.sport_id as sport_id','academy.founded_year as founded_year'])
 			->whereIn('academy.type', $types)
 			->orderBy('academy.name_en', 'asc')
 			->get();

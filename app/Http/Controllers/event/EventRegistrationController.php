@@ -268,13 +268,16 @@ class EventRegistrationController extends Controller
      */
     public function edit($id)
     {
+        $input = Input::all();
+        
         $eventRegistration = $this->eventRegistration->find($id);
         $eventTeamRegistration = $this->eventTeamRegistration->find($id);
 
         if($eventTeamRegistration == null)
         {
             // $academies = $this->academy->all();
-            $academies = $this->academy->getAcademyListByEvent(@$input['event_id']);
+            
+            $academies = $this->academy->getAcademyListByEvent($eventRegistration->event_id);
             $eventEntries = $this->eventEntries->getEntryByEventId($eventRegistration->event_id);
             $configBelts = $this->configBelt->getEntryBeltByEntryId($eventRegistration->entry_id);
             $configAges = $this->configAge->getEntryAgeByEntryId($eventRegistration->entry_id);
