@@ -41,7 +41,7 @@ class EventCounterController extends Controller
 
     public function edit_status_show($match_id)
     {
-        $data['view_path'] = $this->view_path;
+        $data['view_path'] = 'event.config.match';
         $data['matchId'] = $match_id;
         $matchData = $this->mathes->getMatchesByEventId($match_id);
         $data['registered'] = $matchData['registrations'];
