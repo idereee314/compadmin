@@ -236,6 +236,10 @@ Route::group([
     // Sport
     Route::resource('/sport', 'sport\SportController', ['names'=>'sport']);
     Route::post('/sport/table/data','sport\SportController@getDatatableList')->name('sport.datalist');
+
+    // Award Cermony
+    Route::resource('/event/{eventId}/award/ceremony', 'event\EventDivisionController', ['names' => 'event.award.ceremony']);
+    Route::post('/event/{eventId}/award/ceremony/table/data','event\EventDivisionController@getDatatableList')->name('event.award.ceremony.datalist');
 });
 
 Route::get('/event/{eventId}/bracket', 'event\EventRegistrationController@treeBracket')->name('event.bracket');

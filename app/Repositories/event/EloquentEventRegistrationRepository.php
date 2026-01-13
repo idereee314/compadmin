@@ -824,6 +824,54 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 		", [$eventId]);
 	}
 	
+public function getToplistWithAthleteCountFromEventByAge($eventId, array $ageIds, $withPoint = true, $orderBy = 'point')
+{
+    if (empty($ageIds)) return [];
+
+    $selectPoint = $withPoint
+        ? "COALESCE(SUM(uetp.point), 0) AS total_point"
+        : "0 AS total_point";
+
+    $joinPoint = $withPoint ? "
+        LEFT JOIN uq_comp.uq_event_toplist_point uetp
+            ON uetp.event_id = uer.event_id
+           AND (
+                (uea.place_number BETWEEN uetp.start_pos AND uetp.end_pos)
+                OR (uea.place_number IS NULL AND uetp.start_pos IS NULL AND uetp.end_pos IS NULL)
+           )
+    " : "";
+
+    $orderSql = ($orderBy === 'gold')
+        ? "ORDER BY gold DESC, silver DESC, bronze DESC, total_athletes DESC"
+        : "ORDER BY total_point DESC, gold DESC, silver DESC, bronze DESC, total_athletes DESC";
+
+    $agePlaceholders = implode(',', array_fill(0, count($ageIds), '?'));
+
+    $sql = "
+        SELECT
+            uer.academy_id,
+            COALESCE(NULLIF(uer.academy_name,''), ua.name) AS name,
+            SUM(CASE WHEN uea.place_number = 1 THEN 1 ELSE 0 END) AS gold,
+            SUM(CASE WHEN uea.place_number = 2 THEN 1 ELSE 0 END) AS silver,
+            SUM(CASE WHEN uea.place_number = 3 THEN 1 ELSE 0 END) AS bronze,
+            COUNT(DISTINCT uer.id) AS total_athletes,
+            {$selectPoint}
+        FROM uq_comp.uq_event_registration uer
+        LEFT JOIN uq_comp.uq_event_award uea
+            ON uea.event_registration_id = uer.id
+        LEFT JOIN uq_comp.uq_academy ua
+            ON ua.id = uer.academy_id
+        {$joinPoint}
+        WHERE uer.event_id = ?
+          AND uer.entry_age_id IN ({$agePlaceholders})
+          AND uer.status = 'approved'
+        GROUP BY uer.academy_id, uer.academy_name, ua.name
+        {$orderSql}
+    ";
+
+    return DB::select($sql, array_merge([$eventId], $ageIds));
+}
+
 	public function getToplistByGoldMedalAndGenderMaleFromEvent($eventId)
 	{
 		return DB::select("select uer.academy_id, ua.name,

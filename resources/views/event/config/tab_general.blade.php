@@ -117,12 +117,10 @@
         </div>
 
         <div class="form-group row">
-            <label class="col-md-3 col-form-label text-left">{{trans('display.start_time')}}<span class="text-danger"> *</span></label>
+            <label class="col-md-3 col-form-label text-left">{{trans('display.start_time')}}</label>
             <div class="col-md-9 col-lg-6">
                 <div class="input-group" id="kt_start_time">
-                    <input type="" name="start_time" id="start_time" data-toggle="timepicker" data-target="#start_time" class="form-control timepicker-input" readonly="readonly"
-                        value="{{ $eventConfig->start_time ? \Carbon\Carbon::parse($eventConfig->start_time)->timezone('Asia/Ulaanbaatar')->format('H:i:s') : null }}"
-                        data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}">
+                    <input type="" name="start_time" id="start_time" data-toggle="timepicker" data-target="#start_time" class="form-control timepicker-input" readonly="readonly" value="{{ $eventConfig->start_time ? \Carbon\Carbon::parse($eventConfig->start_time)->timezone('Asia/Ulaanbaatar')->format('H:i:s') : null }}">
                     <div class="input-group-append">
                         <span class="input-group-text">
                             <i class="la la-calendar-check-o"></i>
@@ -240,7 +238,8 @@ $(document).ready(function () {
         startDate: '{{ @$eventConfig->reg_start_date ? Carbon\Carbon::parse($eventConfig->reg_start_date)->format('Y-m-d g:i A') : '' }}',
         endDate: '{{ @$eventConfig->reg_end_date ? Carbon\Carbon::parse($eventConfig->reg_end_date)->format('Y-m-d g:i A') : '' }}',
         timePicker: true,
-        timePickerIncrement: 30,
+        timePickerIncrement: 1,
+        timePicker24Hour: true,
         locale: { format: 'YYYY-MM-DD hh:mm A' },
     }, function (start, end) {
         $('#kt_reg_date .form-control').val(`${start.format('YYYY-MM-DD hh:mm A')} / ${end.format('YYYY-MM-DD hh:mm A')}`);
@@ -251,6 +250,9 @@ $(document).ready(function () {
         todayHighlight: true,
         orientation: "bottom left",
         format: 'yyyy-MM-D HH:mm',
+        minuteStep: 1,
+        showMeridian: false,
+        autoclose: true,
         templates: {
             leftArrow: '<i class="la la-angle-right"></i>',
             rightArrow: '<i class="la la-angle-left"></i>',
@@ -263,7 +265,7 @@ $(document).ready(function () {
     $('#start_time').timepicker({
         timeFormat: 'h:mm',
         interval: 60,
-        defaultTime: false, // important: prevents defaulting to now
+        defaultTime: false,
         dynamic: true,
         dropdown: true,
         scrollbar: true

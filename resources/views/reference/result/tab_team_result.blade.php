@@ -61,7 +61,8 @@
             'withAthleteCount' => true,
             'id' => 'toplist_point_athlete'
         ];
-    }
+    } 
+    
 @endphp
 @foreach($toplists as $toplist)
     <div class="row mb-5">

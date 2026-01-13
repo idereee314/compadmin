@@ -77,7 +77,7 @@ class EloquentEventConfigRepository implements EventConfigRepository {
 		$eventConfig->is_active = @$input['is_active'] ? $input['is_active'] : false;
 		$eventConfig->payment_final_date = @$input['reg_payment_date'];
 		$eventConfig->update_final_date = @$input['reg_update_date'];
-		$eventConfig->start_time = @$input['start_time'];
+		// $eventConfig->start_time = @$input['start_time'];
 		$eventConfig->sport_id = @$input['sport_id'];
 		$eventConfig->is_team = @$input['is_team'] ? $input['is_team'] : false;
 		$eventConfig->point_type_id = @$input['eventCategory'];

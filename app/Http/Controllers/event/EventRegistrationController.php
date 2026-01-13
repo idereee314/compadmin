@@ -1233,6 +1233,12 @@ class EventRegistrationController extends Controller
         $genderResultPointMale = $this->eventRegistration->getToplistByPointAndGenderMaleFromEvent($eventId);
         $genderResultPointFemale = $this->eventRegistration->getToplistByPointAndGenderFemaleFromEvent($eventId);
         $eventToplistWithAthleteCount = $this->eventRegistration->getToplistWithAthleteCountFromEvent($eventId);
+        // $adultResultPoint = $this->getToplistWithAthleteCountFromEventByAge($eventId, $adultAgeIds, true, 'point');
+        // $childResultPoint = $this->getToplistWithAthleteCountFromEventByAge($eventId, $childAgeIds, true, 'point');
+
+        // $adultResultGold = $this->getToplistWithAthleteCountFromEventByAge($eventId, $adultAgeIds, false, 'gold');
+        // $childResultGold = $this->getToplistWithAthleteCountFromEventByAge($eventId, $childAgeIds, false, 'gold');
+
         
         $countedWeights = $this->eventRegistration->getCountedWeightForOrg($eventId);
         $allWeightIds = collect($countedWeights)->pluck('weight_id')->unique();
@@ -1252,6 +1258,10 @@ class EventRegistrationController extends Controller
             })?->point ?? 2,
         ];
 
+        // $data['adultResultPoint'] = $adultResultPoint;
+        // $data['childResultPoint'] = $childResultPoint;
+        // $data['adultResultGold'] = $adultResultGold;
+        // $data['childResultGold'] = $childResultGold;
         $data['pointConfig'] = $pointConfig;
         $data['eventToplistWithAthleteCount'] = $eventToplistWithAthleteCount;
         $data['genderResultPointMale'] = $genderResultPointMale;
@@ -1537,5 +1547,25 @@ class EventRegistrationController extends Controller
         $data['academyInfo'] = $academyInfo;
 
         return view($this->view_path.'.weight', $data);
+    }
+
+    public function awardCermony($eventId)
+    {
+        $weightList = $this->configWeight->getWeightList($eventId);
+        
+        $data['view_path'] = $this->view_path;
+        $data['weightList'] = $weightList;
+
+        return view($this->view_path.'.award.award_cermony', $data);
+    }
+
+    public function awardCermonyEdit()
+    {
+
+    }
+
+    public function awardCermonyUpdate()
+    {
+        
     }
 }

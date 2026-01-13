@@ -15,6 +15,7 @@ return array(
 	'member' => 'uq_member',
 	'event_registration' => 'uq_event_registration',
 	'event_config' => 'uq_event_config', 
+	'award' => 'uq_event_division',
 	
 	'visit' => 'visit',
 	'editable' => 'editable',

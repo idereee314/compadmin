@@ -42,7 +42,7 @@ return [
     "general_add" => "Нэмэх",
     "general_update" => "Шинэчлэх",
     "general_show" => "Харах",
-    "general_status_change" => "Төлөв шилжүБайгууллагаүлэх",
+    "general_status_change" => "Төлөв шилжүүлэх",
     "general_call" => "Дуудах",
     "general_insert" => "Оруулах",
     "general_choose" => "Сонгох",
@@ -70,6 +70,7 @@ return [
     'general_event_category' => 'Тэмцээний ангилал',
     'general_rank_season' => 'Улирал',
     'general_result_type' => 'Үр дүн гаргах төрөл',
+    'general_award_cermony' => 'Шагнал',
     'general_total_score' => 'Нийт оноо',
     'general_desc_score' => 'Онооны тайлбар',
     'general_you_are_here' => 'Таны байгаа газар',
@@ -451,4 +452,8 @@ return [
     "membership_start_date" => "Гишүүнчлэлийн эхлэх огноо",
     "membership_end_date" => "Гишүүнчлэлийн дуусах огноо",
     "membership_academy_list" => "Академийн гишүүнчлэлийн жагсаалт",
+
+    //others 
+    "weight_is_finish" => "Дууссан эсэх",
+    "weight_award_cermony" => "Шагнал гардуулсан эсэх",
 ];
