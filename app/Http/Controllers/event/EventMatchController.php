@@ -10,6 +10,7 @@ use Validator;
 use event\EloquentEventConfigDaysRepository as ConfigDays;
 use event\EloquentEventMatchesRespository as Mathes;
 use event\EventConfigRepository as EventConfig;
+use event\EventConfigDaysRepository as EventDays;
 
 use \Auth as Auth;
 use Config;
@@ -22,13 +23,14 @@ class EventMatchController extends Controller
 {
     public $restful = true;
 
-    public function __construct(ConfigDays $configDays, Event $event, Mathes $mathes, EventConfig $eventConfig)
+    public function __construct(ConfigDays $configDays, Event $event, Mathes $mathes, EventConfig $eventConfig, EventDays $eventDays)
     {
         $this->view_path = 'event.config.match';
         $this->configDays = $configDays;
         $this->event = $event;
         $this->mathes = $mathes;
         $this->eventConfig = $eventConfig;
+        $this->eventDays = $eventDays;
     }
 
     public function show($eventId)
@@ -36,6 +38,17 @@ class EventMatchController extends Controller
         $data['view_path'] = $this->view_path;
         $data['eventId'] = $eventId;
         return view($this->view_path.'.index', $data);
+    }
+
+    public function showSchedule($eventId)
+    {
+        Log::info('Show Schedule for Event ID: '.$eventId);
+        $eventConfig = $this->eventConfig->find($eventId);
+        $data['view_path'] = 'schedule';
+        $data['eventConfig'] = $eventConfig;
+        $data['configViewDict'] = $this->eventDays->dictData($eventConfig->event_id);
+        $data['disableEdit'] = true;
+        return view('schedule.index', $data);
     }
 
     public function edit_status_show($match_id)
@@ -49,11 +62,13 @@ class EventMatchController extends Controller
 
     public function edit_winner(Request $request, $match_id)
     {
-        $this->mathes->updateWinner($match_id, $request);
-        return  array(
-            'status' => 'success',
-            'msg' => trans('messages.success_save')
-        );
+        if(!$request->has('reg_win_id')){
+           $this->mathes->updateWinner($match_id, $request);
+        } else {
+           $this->mathes->setDoubleLoser($match_id, $request);
+        }
+        $match = $this->mathes->find($match_id);
+        return redirect()->route('event.config.match.edit_status', ['eventId' => $match->event_id, 'match_id' => $match_id]);
     }
 
     public function store(Request $request, $event_id){

@@ -212,6 +212,7 @@ Route::group([
     Route::resource('/event/config/counter', 'event\EventCounterController', ['names' => 'event.config.counter']);
     Route::post('/event/config/match/{event_id}/generate', 'event\EventMatchController@store')->name('event.config.match.generate');
     Route::get('/event/config/match/{match_id}/edit-status', 'event\EventCounterController@edit_status_show')->name('event.config.match.edit_status');
+    Route::get('/schedule/{eventId}', 'event\EventMatchController@showSchedule')->name('schedule.show_schedule');
     Route::get('/event/config/match/{event_id}/search-matches', 'event\EventMatchController@getMatchByGroup')->name('event.config.search.matches');
     Route::post('/event/config/match/{match_id}/winner', 'event\EventMatchController@edit_winner')->name('event.config.match.winner');
     Route::post('/event/config/match/{match_id}/update/winner', 'event\EventCounterController@edit_winner')->name('event.config.match.update.winner');

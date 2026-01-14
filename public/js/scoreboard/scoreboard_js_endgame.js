@@ -69,6 +69,18 @@ function setWinnerId(winnerId) {
 }
 
 
+function setDoubleLoser(winnerId) {
+  let input = form.querySelector('input[name="is_double_loser"]');
+  if (!input) {
+    input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = 'is_double_loser';
+    form.appendChild(input);
+  }
+  input.value = true;
+}
+
+
 function doubleLoser(type) {
     const doubleType = type.toUpperCase();
 
@@ -76,7 +88,7 @@ function doubleLoser(type) {
     popup1.style.display = "none";
     popup2.style.display = "none";
     popup3.style.display = "none";
-
+    setDoubleLoser(true);
     if (doubleType === 'WO/DQ') {
         winnerDiv1.textContent = `DOUBLE ${doubleType}!`;
         winnerDiv1.style.color = "black";
@@ -104,5 +116,6 @@ function doubleLoser(type) {
         winnerDiv2.style.fontSize = "2rem";
         winnerDiv2.style.fontWeight = "bold";
     }
+    form.submit();
 }
 

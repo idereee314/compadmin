@@ -24,7 +24,20 @@
 
 </form>
 
-  <div class="top-section">
+    <div class="match-info">
+      <div id="fullNameTop" class="match-title short">
+        @if (!empty($bracket))
+          {{-- {{$registered[0]->member->fullname ?? '-'}} --}}
+          {{$bracket->entry->name ?? '-'}}
+            {{$bracket->age->name ?? ''}},
+            {{$bracket->belt->name ?? ''}},
+            {{$bracket->weight->weight ?? ''}}kg
+        @else
+          TBD
+        @endif
+      </div>
+    </div>
+  <div class="row top-section">
       <!-- Left Side -->
       <div class="top-left-section">
 
@@ -37,7 +50,7 @@
                     @if (!empty($registered) && isset($registered[0]))
                       {{$registered[0]->member->fullname ?? '-'}}
                     @else
-                      TDB
+                      TBD
                     @endif
                   </div>
                 </div>
@@ -123,7 +136,7 @@
       <div></div>
   </div>
 
-  <div class="middle-section">
+  <div class="row middle-section">
       <!-- Left Side -->
       <div class="middle-left-section">
         <div class="name-section">
@@ -221,7 +234,7 @@
 
   </div>
 
-  <div class="bottom-section">
+  <div class="row bottom-section">
       <div class="exit-buttons">
         <button class="end-button" onclick="close_window()">Exit</button>
         <button class="end-button" onclick="window.open()">Duplicate</button>
@@ -292,6 +305,7 @@
 
 <script>
     const bracket = @json($bracket);
+    console.log('Bracket Data:', bracket);
     const localStorageKey = `${bracket.event_id}_${bracket.day_id}_${bracket.mat_id}`;
     const localStorageData = JSON.parse(localStorage.getItem(localStorageKey));
     console.log('Local Storage Data:', localStorageData);

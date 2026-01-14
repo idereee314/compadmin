@@ -113,20 +113,37 @@ class EloquentEventMatchesRespository implements EventMatchesRespository {
 		return $eventMatche;
 
 	}
-	
 
+	// public function setDoubleLoser($id, $input)
+	// {
+	// 	$eventMatche = $this->find($id);
+	// 	$eventMatche->status = 'C';
+	// 	$eventMatche->is_double_loser = true;
+	// 	$eventMatche->end_time = Carbon::now('GMT+8');
+	// 	$eventMatche->save();
+	// 	$this->updateNextReg($id, $eventMatche);
+	// 	return $eventMatche;
+
+	// }
+	
 	public function editWinner($id, $input)
 	{
 		$eventMatche = $this->find($id);
 		if($input['reg_win_id'] != null){
 			$eventMatche->reg_win_id = $input['reg_win_id'];
-			$eventMatche->status = 'C';
-			if(isset($eventMatche->end_time) == null){
-				$eventMatche->end_time = Carbon::now('GMT+8');
-			}
-			$eventMatche->save();
-			$this->updateNextReg($id, $eventMatche);
 		}
+		if($input['is_double_loser'] ?? false){
+			$eventMatche->is_double_loser = true;
+			$eventMatche->reg_win_id = null;
+		} else{
+			$eventMatche->is_double_loser = false;
+		}
+		$eventMatche->status = 'C';
+		if(isset($eventMatche->end_time) == null){
+			$eventMatche->end_time = Carbon::now('GMT+8');
+		}
+		$eventMatche->save();
+		$this->updateNextReg($id, $eventMatche);
 		$eventBracket = EventBrackets::where('event_id', $eventMatche->event_id)
 			->where('entry_id', $eventMatche->entry_id)
 			->where('entry_age_id', $eventMatche->entry_age_id)
@@ -150,12 +167,12 @@ class EloquentEventMatchesRespository implements EventMatchesRespository {
 
 	}
 
-	private function updateNextReg($id, $previesMatch)
+	private function updateNextReg($id, $currentMatch)
 	{
 		$eventMatches = EventMatches::where('previes_mate_id1', $id)
 			->orWhere('previes_mate_id2', $id)->get();
-		$winner = $previesMatch->reg_win_id;
-		$losser = $previesMatch->reg_one_id == $winner ? $previesMatch->reg_two_id : $previesMatch->reg_one_id;
+		$winner = $currentMatch->reg_win_id;
+		$losser = $currentMatch->reg_one_id == $winner ? $currentMatch->reg_two_id : $currentMatch->reg_one_id;
 		if($eventMatches->count() > 0) {
 			foreach ($eventMatches as $eventMatch) {
 				if($eventMatch ->order_no == 9998){
@@ -172,6 +189,9 @@ class EloquentEventMatchesRespository implements EventMatchesRespository {
 					}
 				}
 				$eventMatch->save();
+				// if ($autoAdvanced) {
+				// 	$this->updateNextReg($eventMatch->id, $eventMatch);
+				// }
 			}
 		}
 	}
@@ -186,7 +206,13 @@ class EloquentEventMatchesRespository implements EventMatchesRespository {
 			'regOne.academy:id,name',
 			'regTwo.academy:id,name',
 			'regWin:id,member_id,academy_id',
-			'bracket'
+			'bracket',
+			'bracket.entry:id,name',
+			'bracket.entry:id,name',
+			'bracket.age:id,start_age,end_age',
+			'bracket.age:id,start_age,end_age',
+			'bracket.belt:id,name',
+			'bracket.weight:id,weight',
 		])->find($id);
 
 		if (!$match) {

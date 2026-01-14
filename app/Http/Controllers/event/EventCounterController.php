@@ -35,7 +35,9 @@ class EventCounterController extends Controller
     {
         $data['view_path'] = $this->view_path;
         $data['matchId'] = $match_id;
-        $data['registered'] = $this->mathes->getMatchesByEventId($match_id);
+        $matchData = $this->mathes->getMatchesByEventId($match_id);
+        $data['registered'] = $matchData['registrations'];
+        $data['bracket'] = $matchData['bracket'];
         return view($this->view_path.'.index', $data);
     }
 
@@ -58,6 +60,13 @@ class EventCounterController extends Controller
     public function edit_winner(Request $request, $match_id)
     {
         $this->mathes->editWinner($match_id, $request);
+        return $this->edit_status_show($match_id);
+    }
+
+    public function set_double_loser(Request $request, $match_id)
+    {
+        $this->mathes->setDoubleLoser($match_id, $request);
+        $match = $this->mathes->find($match_id);
         return $this->edit_status_show($match_id);
     }
 
