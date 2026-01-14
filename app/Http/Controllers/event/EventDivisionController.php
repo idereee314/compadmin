@@ -209,6 +209,6 @@ class EventDivisionController extends Controller
 
     public function getDatatableList(Request $request, $eventId)
     {
-        return $this->eventDivision->getDatatableList($request);
+        return $this->eventDivision->getDatatableList($request, $eventId);
     }
 }

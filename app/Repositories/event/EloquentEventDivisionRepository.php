@@ -66,7 +66,7 @@ class EloquentEventDivisionRepository implements EventDivisionRepository {
 		$eventDivision->delete();
 	}
 
-	public function getDatatableList($searchData)
+	public function getDatatableList($searchData, $eventId)
     {
 		$qry = EventDivision::query()
     		->from('uq_comp.uq_event_division as ed')
@@ -75,14 +75,14 @@ class EloquentEventDivisionRepository implements EventDivisionRepository {
     		->leftJoin('uq_comp.uq_event_entries as e', 'e.id', '=', 'w.entry_id')
     		->leftJoin('uq_comp.uq_entry_config_age as a', 'a.id', '=', 'w.entry_age_id')
     		->select(['ed.*', 'b.name as belt_name', 'e.name as entry_name', 'e.gender_code as gender_code', 'w.weight as weight_value', 'a.start_age', 'a.end_age'])
-    		->orderBy('ed.is_finish', 'desc')
+			->orderBy('ed.is_finish', 'desc')
 			->orderBy('a.start_age', 'asc')
     		->orderBy('a.end_age', 'asc')
     		->orderBy('b.name', 'asc')
     		->orderBy('w.weight', 'asc');
 
-		if (!empty($searchData['event_id'])) {
-    	    $qry->where('event_id', (int) $searchData['event_id']);
+		if (!empty($eventId)) {
+    	    $qry->where('ed.event_id', (int)$eventId);
     	}
 
 		$data = Datatables::make($qry)

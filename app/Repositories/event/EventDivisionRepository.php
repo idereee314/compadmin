@@ -10,5 +10,5 @@ interface EventDivisionRepository
     public function create($input); 
     public function update($id, $input);  
     public function delete($id);
-    public function getDatatableList($searchData);
+    public function getDatatableList($searchData, $eventId);
 }
