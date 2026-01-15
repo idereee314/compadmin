@@ -1257,9 +1257,11 @@ class EventRegistrationController extends Controller
                 return $item->start_pos === null && $item->end_pos === null;
             })?->point ?? 2,
         ];
+        $eventToplistWithAthleteCountChild = $this->eventRegistration->getToplistWithAthleteCountFromEventByEntries($eventId, [671,672,673,674,675,676,677,678,679,680]);
+        $eventToplistWithAthleteCountAdult = $this->eventRegistration->getToplistWithAthleteCountFromEventByEntries($eventId, [681,682,683]);
 
-        // $data['adultResultPoint'] = $adultResultPoint;
-        // $data['childResultPoint'] = $childResultPoint;
+        $data['eventToplistWithAthleteCountChild'] = $eventToplistWithAthleteCountChild;
+        $data['eventToplistWithAthleteCountAdult'] = $eventToplistWithAthleteCountAdult;
         // $data['adultResultGold'] = $adultResultGold;
         // $data['childResultGold'] = $childResultGold;
         $data['pointConfig'] = $pointConfig;
