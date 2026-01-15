@@ -289,3 +289,7 @@ Route::get('/regulations/merge-rule','academy\AcademyController@showMergeRule')-
 Route::get('/ideree', function () {
     return redirect()->away('https://forms.gle/ey999waG7NrWe13C7');
 });
+
+Route::get('/mjjf/academy/membership/survey', function () {
+    return redirect()->away('https://forms.gle/ey999waG7NrWe13C7');
+});
