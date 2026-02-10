@@ -16,7 +16,7 @@
                 {{ @$entry->name }} | {{ @$age->name }} | {{ @$weight->weight }}кг | {{ Config::get("enums.gender_code")[@$entry->gender_code] }} | {{ date_format(date_create(@$eventConfig->event->event_date), 'Y-m-d') }}
             </div>
         </div>
-        <div style="text-align: right; font-size: 11px; font-weight: bold; color: #2563eb;">
+        <div style="text-align: right; font-size: 12px; font-weight: bold; color: #e11d48;">
             8 тамирчинтай оноолт
         </div>
     </div>

@@ -60,6 +60,11 @@ class EventConfig extends Model
     {
         return $this->belongsTo('sport\Sport', 'sport_id');
     }
+
+    public function bracketType()
+    {
+        return $this->belongsTo('event\EventBracketType', 'event_bracket_type_id');
+    }
     
 	public static function boot()
     {

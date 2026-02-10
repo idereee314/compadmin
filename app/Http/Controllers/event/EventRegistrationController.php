@@ -1090,13 +1090,18 @@ class EventRegistrationController extends Controller
             $data['round'] = intval(log($total, 2)) + 1;
         }
         
-        if(@$eventConfig->sport_id == 6)
+        // if(@$eventConfig->sport_id == 6)
+        // {
+        //     return view('event.bracket.print_sambo', $data);
+        // }
+        // else
+        // {
+        //     // return view('event.bracket.print', $data);
+        //     return view('event.bracket.print_bracket_jjif', $data);
+        // }
+        if($eventConfig->event_bracket_type_id)
         {
-            return view('event.bracket.print_sambo', $data);
-        }
-        else
-        {
-            return view('event.bracket.print', $data);
+            return view("event.bracket.{$eventConfig->bracketType->print_code}", $data);
         }
     }
 

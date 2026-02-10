@@ -77,8 +77,8 @@
             @endforeach
         </div>
 
-    {{-- CASE 2: 3-4 ТАМИРЧИНТАЙ БОЛ (Single Pool Round Robin) --}}
-    @elseif($count > 2 && $count <= 4)
+    {{-- CASE 2: 3-5 ТАМИРЧИНТАЙ БОЛ (Single Pool Round Robin) --}}
+    @elseif($count > 2 && $count <= 5)
         @php
             if ($count == 3) {
                 $matches = [

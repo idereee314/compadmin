@@ -44,6 +44,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind('event\EventPictureRepository', 'event\EloquentEventPictureRepository');
         $this->app->bind('event\EventLocationRepository', 'event\EloquentEventLocationRepository');
         $this->app->bind('event\EventDivisionRepository', 'event\EloquentEventDivisionRepository');
+        $this->app->bind('event\EventBracketTypeRepository', 'event\EloquentEventBracketTypeRepository');
 
         //Organization
         $this->app->bind('organization\OrganizationRepository', 'organization\EloquentOrganizationRepository'); 

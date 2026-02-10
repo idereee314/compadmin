@@ -89,8 +89,7 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 				$qry->where('uq_event_registration.event_id', $searchData->get('event'));
 			}
 
-			$qry->with(['entry:id,name', 'age:id,start_age,end_age', 'belt:id,name', 'weight:id,weight', 'academy:id,name,is_other']);
-
+		$qry->with(['entry:id,name', 'age:id,start_age,end_age', 'belt:id,name', 'weight:id,weight', 'academy:id,name,is_other', 'member.membershipAthlete.membershipType:id,name']);
         $data = Datatables::make($qry)
             ->filter(function ($qry) use ($searchData) {
                 
@@ -182,6 +181,19 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 					});
                 }
 
+				if ($searchData->has('search_is_membership') && $searchData->get('search_is_membership') !== null) {
+				    $is = (int) $searchData->get('search_is_membership');
+				    if ($is === 1) {
+				        $qry->whereHas('member', function ($q) {
+				            $q->whereHas('activeMembership');
+				        });
+				    } elseif ($is === 2) {
+				        $qry->whereHas('member', function ($q) {
+				            $q->whereDoesntHave('activeMembership');
+				        });
+				    }
+				}
+
 				if($searchData->has('amount') && $searchData->get('amount') !== null)
                 {
 					if($searchData->get('amount') > 0 || $searchData->get('amount') == 0)
@@ -236,26 +248,64 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 				return ' <span class="label label-primary label-dot mr-2"></span><span class="font-weight-bold text-danger">'.$qry->event->name.'</span> /'.$qry->event->event_date.' - '.$qry->event->due_date.'/';
 			})
 			->addColumn('member', function($qry){
-				$member = "";
-				$member .= '<div class="d-flex align-items-center">';
-					if(@$qry->member->profile_url xor ((@env('production') && \Storage::disk('s3')->exists($qry->member->profile_url)) || @env('local')))
-					{
-						$member .= '<a href="javascript:;" class="show-image" data-id="'.$qry->member->id.'" data-type="profile"><div class="symbol symbol-50 flex-shrink-0">';
-							$member .= '<img src="'.\Storage::disk('s3')->url($qry->member->profile_url).'" alt="Profile">';
-						$member .= '</div></a>';
-					}
-					else 
-					{
-						$member .= '<div class="symbol symbol-50 flex-shrink-0"><img src="/assets/images/default_profile.jpg" alt="Profile"></div>';
-					}
-					$member .= '<div class="ml-3">';
-					// $member .= '<a href="/profile/' . $qry->member->id . '" class="text-dark-75 line-height-sm d-block pb-3" style="white-space: nowrap;" target="_blank">' . $qry->member->lastname . ' <strong>' . $qry->member->firstname . '</strong><img class="rounded" src="/assets/images/flags/4x3/'.$qry->member->country_id.'.svg" alt="flag" width="25" height="15"></a>';
-					$member .= '<a href="/profile/' . $qry->member->id . '" class="text-dark-75 line-height-sm d-block pb-3" style="white-space: nowrap;" target="_blank"><img class="mb-1 rounded" src="/assets/images/flags/4x3/'.Config::get("enums.country_alpha")[@$qry->member->country_id].'.svg" alt="flag" width="25" height="15">' . $qry->member->lastname . ' <strong>' . $qry->member->firstname . '</strong> , </a>';
-					$member .= '<span class="text-dark-75 line-height-sm d-block pb-2"><i class="la la-address-book"></i>'.$qry->member->register_number.', <i class="la la-phone"></i>'.$qry->member->contact_phone.', <i class="la la-calendar"></i>'.$qry->member->birth.'</span>';
-					$member .= '</div>';
-                $member .= '</div>';
-				return $member;
-			})
+
+    // --- 1) Membership underline status (minimal logic)
+    $membership = $qry->member?->membershipAthlete ?? null;
+
+    $underlineClass = 'underline-none';
+    $title = 'Гишүүнчлэлгүй';
+
+    if ($membership && !empty($membership->end_date)) {
+        $end = \Carbon\Carbon::parse($membership->end_date);
+        $days = now()->diffInDays($end, false);
+
+        if ($days >= 0) {
+            $underlineClass = $days <= 14 ? 'underline-expiring' : 'underline-active';
+            $title = $days <= 14
+                ? "Гишүүнчлэл дуусах гэж байна · {$end->format('Y-m-d')}"
+                : "Гишүүнчлэлтэй · {$end->format('Y-m-d')} хүртэл";
+        } else {
+            $underlineClass = 'underline-expired';
+            $title = "Гишүүнчлэл дууссан · {$end->format('Y-m-d')}";
+        }
+    }
+
+    $member = "";
+    $member .= '<div class="d-flex align-items-center">';
+
+        // --- avatar
+        if(@$qry->member->profile_url xor ((@env('production') && \Storage::disk('s3')->exists($qry->member->profile_url)) || @env('local')))
+        {
+            $member .= '<a href="javascript:;" class="show-image" data-id="'.$qry->member->id.'" data-type="profile"><div class="symbol symbol-50 flex-shrink-0">';
+                $member .= '<img src="'.\Storage::disk('s3')->url($qry->member->profile_url).'" alt="Profile">';
+            $member .= '</div></a>';
+        }
+        else
+        {
+            $member .= '<div class="symbol symbol-50 flex-shrink-0"><img src="/assets/images/default_profile.jpg" alt="Profile"></div>';
+        }
+
+        $member .= '<div class="ml-3">';
+
+            // --- name + flag (⭐ энд underline нэмэгдэнэ)
+            $member .= '<a href="/profile/' . $qry->member->id . '" class="text-dark-75 line-height-sm d-block pb-3" style="white-space: nowrap;" target="_blank">';
+
+                $member .= '<img class="mb-1 rounded" src="/assets/images/flags/4x3/'.Config::get("enums.country_alpha")[@$qry->member->country_id].'.svg" alt="flag" width="25" height="15"> ';
+
+                $member .= '<span class="uq-name '.$underlineClass.'" data-bs-toggle="tooltip" title="'.e($title).'">'
+                            . e($qry->member->lastname) . ' <strong>' . e($qry->member->firstname) . '</strong>'
+                          . '</span> , ';
+
+            $member .= '</a>';
+
+            // --- meta info
+            $member .= '<span class="text-dark-75 line-height-sm d-block pb-2"><i class="la la-address-book"></i>'.e($qry->member->register_number).', <i class="la la-phone"></i>'.e($qry->member->contact_phone).', <i class="la la-calendar"></i>'.e($qry->member->birth).'</span>';
+
+        $member .= '</div>';
+    $member .= '</div>';
+
+    return $member;
+})
 			->editColumn('academy_name', function($qry)
 			{
 				if($qry->academy->is_other == 1) {
@@ -276,6 +326,15 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 			})
 			->addColumn('gender', function($qry){
 				return Config::get('enums.gender_code')[$qry->member->gender_code];
+			})
+			->addColumn('membership_athlete', function ($row) {
+			    $typeName = $row->member?->membershipAthlete?->membershipType?->name ?? null;
+
+			    if (!$typeName) {
+			        return '<span class="label label-light-danger label-inline">Гишүүнчлэлгүй</span>';
+			    }
+
+			    return '<span class="label label-light-success label-inline">'. e($typeName). '</span>';
 			})
             ->addColumn('action', function ($qry) {
 				$permissionEdit = SecurityHelper::checkPermission(@Config::get('permission.event_registration'), Config::get('permission.editable'));
@@ -330,7 +389,7 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
 					return $actionHtml;
 				}
 
-            })->rawColumns(['action', 'status', 'member', 'id_photo', 'event', 'academy_name', 'award', 'gender'])
+            })->rawColumns(['action', 'status', 'member', 'id_photo', 'event', 'academy_name', 'award', 'gender', 'membership_athlete'])
             ->make(true);
 
 			$jsonData = json_decode($data->content());

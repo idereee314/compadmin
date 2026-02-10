@@ -54,6 +54,22 @@ class Member extends Model
         return $this->belongsTo(Event::class, 'event_id');
     }
 
+    public function membershipAthlete()
+    {
+        return $this->hasOne('membership\MembershipAthlete', 'member_id', 'id');
+    }
+
+    public function activeMembership()
+    {
+        return $this->hasOne(\membership\MembershipAthlete::class, 'member_id', 'id')
+            ->whereDate('start_date', '<=', now()->toDateString())
+            ->where(function ($q) {
+                $q->whereNull('end_date')
+                  ->orWhereDate('end_date', '>=', now()->toDateString());
+            })
+            ->orderByDesc('start_date');
+    }
+
     public function memberAttribute()
     {
         return $this->hasMany('member\MemberAttribute', 'member_id');

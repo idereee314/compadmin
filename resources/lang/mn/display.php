@@ -198,6 +198,7 @@ return [
     "general_title_mongolian" => "Гарчиг Монголоор",
     "general_image_rotate" => "Зургийг эргүүлэх",
     "general_founded_year" => "Үүсгэн байгуулагдсан он",
+    "general_bracket_type" => "Оноолтын төрөл",
 
     // Search
     "general_search_list" => "Хайлт",
@@ -452,6 +453,7 @@ return [
     "membership_start_date" => "Гишүүнчлэлийн эхлэх огноо",
     "membership_end_date" => "Гишүүнчлэлийн дуусах огноо",
     "membership_academy_list" => "Академийн гишүүнчлэлийн жагсаалт",
+    "is_membership" => "Гишүүнчлэлтэй эсэх",
 
     //others 
     "weight_is_finish" => "Дууссан эсэх",

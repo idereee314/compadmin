@@ -1,5 +1,4 @@
-<div style="width:1150px; margin:0 auto; background-color: white; border: 1px solid #ccc; padding: 30px; font-family: 'Helvetica', 'Arial', sans-serif; position: relative; min-height: 1400px; color: #333;">
-    
+<div style="width:1100px; margin:0 auto; background-color: white; border: 1px solid #ccc; padding: 30px; font-family: 'Helvetica', 'Arial', sans-serif; position: relative; min-height: 1000px; color: #333;">
     <?php
         $seedPairs = [
             0 => [1, 16], 1 => [9, 8], 2 => [5, 12], 3 => [13, 4],
@@ -21,7 +20,7 @@
         </div>
     </div>
 
-    <div style="margin-bottom: 60px;">
+    <div style="margin-bottom: 50px;">
         <table width="100%" border="0" style="border-collapse: collapse; table-layout: fixed;">
             <thead>
                 <tr>

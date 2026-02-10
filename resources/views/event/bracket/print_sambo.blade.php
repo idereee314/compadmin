@@ -25,6 +25,6 @@
     $background = "gray";
 ?>
 <body style="background-color: {{ $background }};">
-    @include('event.bracket.print_bracket_sambo')
+    @include('event.bracket.sambo_bracket.print_bracket_sambo')
 </body>
 </html>

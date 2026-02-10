@@ -24,7 +24,7 @@
         </div>
 
         <div class="form-group row">
-            <label class="col-md-3 col-form-label text-left">{{trans('display.general_event_category')}}: <span class="text-danger">*</span></label>
+            <label class="col-md-3 col-form-label text-left">{{trans('display.general_sport_type')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9 col-lg-6">
                 <select class="form-control selectpicker" id="sport_id" name="sport_id" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}">
                     <option value="0">-- {{ trans('display.general_select') }} --</option>
@@ -37,12 +37,12 @@
         </div>
 
         <div class="form-group row">
-            <label class="col-md-3 col-form-label text-left">{{trans('display.general_sport_type')}}: <span class="text-danger">*</span></label>
+            <label class="col-md-3 col-form-label text-left">{{trans('display.general_event_category')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9 col-lg-6">
                 <select class="form-control selectpicker" id="event_category_id" name="event_category_id" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}">
                     <option value="0">-- {{ trans('display.general_select') }} --</option>
-                    @foreach($sports as $type)
-                        <option value="{{ $type->id }}" {{ $type->id == @$eventConfig->event_category_id ? 'selected': '' }}>- {{ $type->name }}</option>
+                    @foreach($eventCategory as $category)
+                        <option value="{{ $category->id }}" {{ $category->id == @$eventConfig->event_category_id ? 'selected': '' }}>- {{ $category->name }}</option>
                     @endforeach
                 </select>
                 <div class="error-here"></div>
@@ -51,7 +51,7 @@
         <!-- <div class="form-group row">
             <label class="col-md-3 col-form-label text-left">{{trans('display.general_rank_season')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9 col-lg-6">
-                <select class="form-control selectpicker" id="eventRankSeason" name="eventRankSeason" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}">
+                <select class="form-control selectpicker" id="event_rank_season" name="event_rank_season" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}">
                     <option value="0">-- {{ trans('display.general_select') }} --</option>
                     @foreach($eventRankSeason as $season)
                         <option value="{{ $season->id }}" {{ $season->id == @$eventConfig->event_rank_season_id ? 'selected': '' }}>- {{ $season->name }} - {{ Config::get("enums.sport_category")[$season->sport_id] }}</option>
@@ -60,19 +60,6 @@
                 <div class="error-here"></div>
             </div>
         </div>  -->
-
-        <!-- <div class="form-group row">
-            <label class="col-md-3 col-form-label text-left">{{trans('display.general_event_category')}}: <span class="text-danger">*</span></label>
-            <div class="col-md-9 col-lg-6">
-                <select class="form-control selectpicker" id="eventCategory" name="eventCategory" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}">
-                    <option value="0">-- {{ trans('display.general_select') }} --</option>
-                    @foreach($eventCategory as $category)
-                        <option value="{{ $category->id }}" {{ $category->id == @$eventConfig->point_type_id ? 'selected': '' }}>- {{ $category->name }}</option>
-                    @endforeach
-                </select>
-                <div class="error-here"></div>
-            </div>
-        </div> -->
         <div class="form-group row">
             <label class="col-md-3 col-form-label text-left">{{trans('display.reg_date')}}<span class="text-danger"> *</span></label>
             <div class="col-md-9 col-lg-6">
@@ -132,9 +119,22 @@
         </div>
 
         <div class="form-group row">
+            <label class="col-md-3 col-form-label text-left">{{trans('display.general_bracket_type')}}: <span class="text-danger">*</span></label>
+            <div class="col-md-9 col-lg-6">
+                <select class="form-control selectpicker" id="event_bracket_type_id" name="event_bracket_type_id" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}">
+                    <option value="0">-- {{ trans('display.general_select') }} --</option>
+                    @foreach($bracketType as $type)
+                        <option value="{{ $type->id }}" {{ $type->id == @$eventConfig->event_bracket_type_id ? 'selected': '' }}>- {{ $type->name }} </option>
+                    @endforeach
+                </select>
+                <div class="error-here"></div>
+            </div>
+        </div> 
+
+        <div class="form-group row">
             <label class="col-md-3 col-form-label text-left">{{trans('display.general_result_type')}}: <span class="text-danger">*</span></label>
             <div class="col-md-9 col-lg-6">
-                <select class="form-control selectpicker" id="eventResultType" name="eventResultType" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}">
+                <select class="form-control selectpicker" id="event_result_type" name="event_result_type" data-rule-required="true" data-msg-required="{{ trans('messages.validation_field_required') }}">
                     <option value="0">-- {{ trans('display.general_select') }} --</option>
                     @foreach($eventResultType as $type)
                         <option value="{{ $type->id }}" {{ $type->id == @$eventConfig->event_result_type_id ? 'selected': '' }}>- {{ $type->name }} </option>
@@ -219,7 +219,7 @@
             </div>
         </div>
         
-    </div>
+    </div> 
 
     <div class="modal-footer text-left">
         <a href="{{ route('event.config.index') }}" class="btn btn-light-primary font-weight-bold">{{trans('display.general_back')}}</a>
@@ -229,7 +229,7 @@
 
 <script>
 $(document).ready(function () {
-    $('#sport_id, #event_category_id , #eventCategory, #eventRankSeason, #eventResultType').selectpicker();
+    $('#sport_id, #event_category_id , #event_category_id, #event_rank_season, #event_result_type, #event_bracket_type_id').selectpicker();
 
     $('#kt_reg_date').daterangepicker({
         buttonClasses: 'btn',
