@@ -65,10 +65,10 @@
 
     @switch($bracketType)
         @case('RR_2_6')
-            @include('event.bracket.double_elimination_2bronze.print_bracket_RRdouble')
+            @include('event.bracket.double_elimination_1bronze.print_bracket_RRdouble')
             @break
         @case('DOUBLE')
-            @include('event.bracket.double_elimination_2bronze.print_bracket_double_elimination')
+            @include('event.bracket.double_elimination_1bronze.print_bracket_double_elimination')
             @break
 
         @default
