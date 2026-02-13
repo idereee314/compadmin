@@ -61,7 +61,34 @@
             'withAthleteCount' => true,
             'id' => 'toplist_point_athlete'
         ];
+    } elseif ($resultType == 6) {
+        // 1️⃣ Нийт (байгаа хэвээр)
+        $toplists[] = [
+            'title' => trans('display.best_academy') . ' (Нийт)',
+            'list' => $eventToplistWithAthleteCount,
+            'withPoint' => true,
+            'withAthleteCount' => true,
+            'id' => 'toplist_general'
+        ];
+
+        $toplists[] = [
+            'title' => trans('display.best_academy') . ' - ӨСВӨР',
+            'list' => $eventToplistWithAthleteCountChild,
+            'withPoint' => true,
+            'withAthleteCount' => true,
+            'id' => 'toplist_child'
+        ];
+
+        $toplists[] = [
+            'title' => trans('display.best_academy') . ' - ADULT / MASTERS',
+            'list' => $eventToplistWithAthleteCountAdult,
+            'withPoint' => true,
+            'withAthleteCount' => true,
+            'id' => 'toplist_adult'
+        ];
     }
+
+    
 @endphp
 @foreach($toplists as $toplist)
     <div class="row mb-5">
@@ -146,9 +173,9 @@
 @endforeach
 <script>
     const pointConfig = @json($pointConfig);
-    const withAthleteCountMap = {};
+    // const withAthleteCountMap = {};
 
-    withAthleteCountMap["{{ $toplist['id'] }}"] = {{ $toplist['withAthleteCount'] ?? 'false' }};
+    // withAthleteCountMap["{{ $toplist['id'] }}"] = {{ $toplist['withAthleteCount'] ?? 'false' }};
 
     function printToplist(id, title, eventName) {
     const card = document.getElementById(id);
@@ -254,11 +281,19 @@
         printWindow.close();
     }
 
+    // ✅ бүх toplist-ийн тохиргоог map болгоод JS-р дамжуулна
+    const withAthleteCountMap = @json(collect($toplists)->mapWithKeys(function($t){
+        return [$t['id'] => (bool)($t['withAthleteCount'] ?? false)];
+    }));
+
     function generatePopover(btn, data) {
         const tableId = btn.closest('.card').id;
         const withAthleteCount = withAthleteCountMap[tableId] ?? false;
 
-        const noMedal = data.total_athletes - (data.gold + data.silver + data.bronze);
+        // ✅ medalтай давхар авахгүй тул medalгүй тоог л other-д үржүүлнэ
+        const noMedalRaw = data.total_athletes - (data.gold + data.silver + data.bronze);
+        const noMedal = Math.max(0, noMedalRaw); // хамгаалалт
+
         const pGold = data.gold * data.point_config.gold;
         const pSilver = data.silver * data.point_config.silver;
         const pBronze = data.bronze * data.point_config.bronze;

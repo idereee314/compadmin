@@ -266,6 +266,49 @@ $(document).ready(function() {
         });
     }
 
+    $('#event-datatable tbody').on( 'click', 'tr td a.delete', function () {
+        var id = $(this).data("eventid");
+
+        Swal.fire({
+            title: "Та устгахдаа итгэлтэй байна уу",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Тийм",
+            cancelButtonText: 'Үгүй',
+            customClass: {
+                confirmButton: "btn btn-primary",
+                cancelButton: 'btn btn-secondary'
+            },
+        }).then(function(result) {
+            if (result.value) {
+                $.ajax({
+                    url: '/event/list/' + id,
+                    type: 'DELETE',
+                    success: function(response) {
+                        if(response.status == 'success')
+                        {
+                            toastr.success(response.msg);
+                            eventTable.draw();
+                        }
+                        else {
+                            toastr.error(response.errors, response.msg, {
+                                "closeButton": true,
+                                "timeOut": "0",
+                                "extendedTimeOut": "0",
+                            });
+                        }
+                    },
+                    error: function (xhr, textStatus, error) {
+                        console.log(xhr.statusText);
+                        console.log(textStatus);
+                        console.log(error);
+                    },
+                    async: false
+                });
+            }
+        });
+    });
+
 }).ajaxStart($.blockUI).ajaxStop($.unblockUI);
 </script>
 @endsection

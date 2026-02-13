@@ -27,6 +27,7 @@ use reference\EventToplistPointRepository as EventToplistPoint;
 use sport\SportRepository as Sport;
 use event\EventConfigDaysRepository as EventDays;
 use event\EventRegistrationRepository as EventRegistration;
+use event\EventBracketTypeRepository as BracketType;
 
 //Models
 use event\EventConfig as EventConfigModel;
@@ -42,7 +43,7 @@ class EventConfigController extends Controller
 {
     public $restful = true;
 
-    public function __construct(EventConfig $eventConfig, Event $event, EventCategory $eventCategory, EventEntries $eventEntries, EntryConfigBelt $entryConfigBelt, EntryConfigAge $entryConfigAge, EntryConfigWeight $entryConfigWeight, EventEntriesFee $eventEntriesFee, Sport $sport, EventRankSeason $eventRankSeason, BeltGroup $beltGroup, EventResultType $eventResultType, EventToplistPoint $eventToplistPoint, EventDays $eventDays, EventRegistration $eventRegistration)
+    public function __construct(EventConfig $eventConfig, Event $event, EventCategory $eventCategory, EventEntries $eventEntries, EntryConfigBelt $entryConfigBelt, EntryConfigAge $entryConfigAge, EntryConfigWeight $entryConfigWeight, EventEntriesFee $eventEntriesFee, Sport $sport, EventRankSeason $eventRankSeason, BeltGroup $beltGroup, EventResultType $eventResultType, EventToplistPoint $eventToplistPoint, EventDays $eventDays, EventRegistration $eventRegistration, BracketType $bracketType)
     {
         $this->view_path = 'event.config';
         $this->eventConfig = $eventConfig;
@@ -61,6 +62,7 @@ class EventConfigController extends Controller
         $this->days = $eventToplistPoint;
         $this->eventDays = $eventDays;
         $this->eventRegistration = $eventRegistration;
+        $this->bracketType = $bracketType;
     }
 
     /**
@@ -226,9 +228,9 @@ class EventConfigController extends Controller
             );
         } else {
 			try {
-                if (!empty($input['start_time'])) {
-                    $input['start_time'] = Carbon\Carbon::createFromFormat('h:i A', $input['start_time'])->format('H:i:s');
-                }
+                // if (!empty($input['start_time'])) {
+                //     $input['start_time'] = Carbon\Carbon::createFromFormat('h:i A', $input['start_time'])->format('H:i:s');
+                // }
                 $event = $this->eventConfig->update($id, $input);
             
 				$response = array(
@@ -311,7 +313,7 @@ class EventConfigController extends Controller
                 'msg' => trans('messages.error_save'),
                 'errors' => html_entity_decode(HTML::ul($validator->errors()->all()))
             );
-        } else {
+        } else { 
             try {
                 $eventConfig = $this->eventConfig->find($eventConfigId);
                 $eventConfigCopy = $this->eventConfig->copyEventConfig($eventConfigId, $input);
@@ -389,7 +391,9 @@ class EventConfigController extends Controller
         
         $mate = $this->eventDays->getMatByEventId($eventConfig->event_id);
         $eventRegistration = $this->eventDays->getEventEntries($eventConfig->event_id);
-
+        $bracketType = $this->bracketType->activeList();
+        
+        $data['bracketType'] = $bracketType;
         $data['eventResultType'] = $eventResultType;
         $data['beltGroup'] = $beltGroup;
         $data['eventRankSeason'] = $eventRankSeason;

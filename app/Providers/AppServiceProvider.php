@@ -28,8 +28,8 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind('event\EventAwardRepository', 'event\EloquentEventAwardRepository');
         $this->app->bind('event\EventRepository', 'event\EloquentEventRepository');
         $this->app->bind('event\EventCategoryRepository', 'event\EloquentEventCategoryRepository');
-        $this->app->bind(EventConfigDaysRepository::class, EloquentEventConfigDaysRepository::class);
-        $this->app->bind(EventMatchesRespository::class, EloquentEventMatchesRespository::class);
+        $this->app->bind('event\EventConfigDaysRepository', 'event\EloquentEventConfigDaysRepository');
+        $this->app->bind('event\EventMatchesRespository', 'event\EloquentEventMatchesRespository');
         $this->app->bind('event\EventSportRepository', 'event\EloquentEventSportRepository');
         $this->app->bind('event\EventRankSeasonRepository', 'event\EloquentEventRankSeasonRepository');
         $this->app->bind('event\EventUserRepository', 'event\EloquentEventUserRepository'); 
@@ -43,7 +43,8 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind('event\EventTypeRepository', 'event\EloquentEventTypeRepository');
         $this->app->bind('event\EventPictureRepository', 'event\EloquentEventPictureRepository');
         $this->app->bind('event\EventLocationRepository', 'event\EloquentEventLocationRepository');
-
+        $this->app->bind('event\EventDivisionRepository', 'event\EloquentEventDivisionRepository');
+        $this->app->bind('event\EventBracketTypeRepository', 'event\EloquentEventBracketTypeRepository');
 
         //Organization
         $this->app->bind('organization\OrganizationRepository', 'organization\EloquentOrganizationRepository'); 
@@ -56,6 +57,10 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->bind('country\CountryRepository', 'country\EloquentCountryRepository');
         $this->app->bind('event\EventRefundRequestRepository', 'event\EloquentEventRefundRequestRepository'); 
+
+        // Membership
+        $this->app->bind('membership\MembershipTypeRepository', 'membership\EloquentMembershipTypeRepository'); 
+        $this->app->bind('membership\MembershipAcademyRepository', 'membership\EloquentMembershipAcademyRepository'); 
 
         //reference
         $this->app->bind('reference\EventEntriesRepository', 'reference\EloquentEventEntriesRepository'); 

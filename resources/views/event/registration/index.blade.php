@@ -1,6 +1,28 @@
 @extends('default')
 @section('css')
 <link rel="stylesheet" href="{{asset('assets/js/plugins/custom/datatables/datatables.bundle.css')}}">
+<style>
+    .uq-name{
+      position: relative;
+      display: inline-block;
+      font-weight: 600;
+    }
+
+    .uq-name::after{
+      content:"";
+      position:absolute;
+      left:0;
+      bottom:-3px;
+      width:100%;
+      height:2px;
+      border-radius:2px;
+    }
+
+    .underline-active::after{ background:#50cd89; }
+    .underline-expiring::after{ background:#ffc700; }
+    .underline-expired::after{ background:#f1416c; }
+    .underline-none::after{ background:#e4e6ef; }
+</style>
 @endsection
 @section('content')
 <!--begin::Main-->
@@ -366,6 +388,17 @@
                                                     </select>
                                                 </div>
 
+                                                <div class="col-lg-2 mb-lg-0 mb-4 mt-5">
+                                                    <label>{{ trans('display.is_membership') }}:</label>
+                                                    <select class="form-control selectpicker datatable-input" data-live-search="true" name="search_is_membership" id="search_is_membership" data-col-index="5">
+                                                        <option value="">-- {{ trans('display.general_all') }} --</option>
+                                                        @forelse(@Config::get('enums.boolean_type') as $key => $type)
+                                                        <option value="{{ $key }}">{{ $type }}</option>
+                                                        @empty
+                                                        @endforelse
+                                                    </select>
+                                                </div>
+
                                                 <!-- <div class="col-lg-2 mb-lg-0 mb-6 mt-5">
                                                     <label>Оролцогчдийн тоо:</label>
                                                     <input type="text" class="form-control datatable-input" name="search_memberCount" id="search_memberCount" placeholder="Оролцогчдийн тоо бичнэ үү" data-col-index="8"/>
@@ -405,17 +438,18 @@
                             <thead>
                                 <tr>
                                     <th width="5%">No.</th>
-                                    <th width="20%">{{trans('display.comp_member')}}</th>
-                                    <th width="10%">{{trans('display.comp_entry')}}</th>
-                                    <th width="8%">{{trans('display.human_gender_code')}}</th>
+                                    <th width="15%">{{trans('display.comp_member')}}</th>
+                                    <th width="8%">{{trans('display.comp_entry')}}</th>
+                                    <th width="5%">{{trans('display.human_gender_code')}}</th>
                                     <th width="5%">{{trans('display.comp_entry_age')}}</th>
                                     <th width="8%">{{trans('display.comp_entry_belt')}}</th>
                                     <th width="5%">{{trans('display.comp_entry_weight')}}</th>
                                     <th width="10%">{{trans('display.comp_academy')}}</th>
+                                    <!-- <th width="10%">{{trans('display.membership')}}</th> -->
                                     <th width="1%">{{trans('display.general_status')}}</th>
                                     <th width="1%">{{trans('display.comp_place_number')}}</th>
                                     <th width="8%">{{trans('display.general_created_at')}}</th>
-                                    <th width="15%">{{trans('display.general_manage')}}</th>
+                                    <th width="10%">{{trans('display.general_manage')}}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -475,6 +509,7 @@ $(document).ready(function() {
                 d.country = $('#event-registration-search-form select[id="search_country"]').val();
                 d.date = dateArr;
                 d.is_award = $('#event-registration-search-form select[id="is_award"]').val();
+                d.search_is_membership = $('#event-registration-search-form select[id="search_is_membership"]').val();
             },
         },
         columns: [
@@ -507,6 +542,7 @@ $(document).ready(function() {
             {data: 'belt.name', "defaultContent": ""},
             {data: 'weight.weight', "defaultContent": ""},
             {data: 'academy_name'},
+            
             {data: 'status', "defaultContent": ""},
             {data: 'award', "defaultContent": ""},
             {data: 'created_at'},

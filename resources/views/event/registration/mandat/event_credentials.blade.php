@@ -7,7 +7,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 
         <title>UniQ Certificate</title>
-
+ 
         <style>
             body{
                 margin: 0;
@@ -195,18 +195,48 @@
                 text-align: left;
                 color: #222;
             }
-            
-
             footer {page-break-after: always;}
         </style>
-        
-        
     </head>
     <body>
         @forelse(@$regs as $chunk)
         <div class="main_container">
             @foreach($chunk as $reg)
             <div class="container">
+                @if(@$eventConfig->sport_id == 5)
+                    @if(@$eventConfig->event_category_id == 11)
+                    <div class="content">
+                        <div class="image_container">
+                            <img src="{{ \Storage::disk('s3')->url($reg->member->profile_url) }}" width="100%" height="100%" />
+                        </div>
+                        <div class="eventName"> 
+                            {{ @$eventConfig->event->name }}
+                        </div>
+                        <div class="org">
+                            {{ @$reg->academy->is_other ? @$reg->academy_name : @$reg->academy->name }}
+                        </div>
+                        <div class="name">
+                            {{ @$reg->member->lastname }} {{ @$reg->member->firstname }}
+                        </div>
+                        <div class="category">
+                            Ангилал : {{$reg->entry->name}}
+                        </div>
+                        <div class="gender">
+                            Хүйс : {{ Config::get("enums.gender_code")[@$reg->member->gender_code] }}
+                        </div>
+                        <div class="birthdate">
+                            Төрсөн огноо : {{@$reg->member->birth}}
+                        </div>
+
+                        <div class="qrcode">
+                            <img src="data:image/png;base64,{{\DNS2D::getBarcodePNG(strval(@$reg->id), 'QRCODE')}}" width="100px" height="100px">
+                        </div>
+                        <div class="regid">
+                            {{@$reg->id}}
+                        </div>
+                    </div>
+                    @endif
+                @elseif(@$eventConfig->sport_id == 1)
                 <div class="content">
                     <div class="image_container">
                         <img src="{{ \Storage::disk('s3')->url($reg->member->profile_url) }}" width="100%" height="100%" />
@@ -243,6 +273,7 @@
                         {{@$reg->id}}
                     </div>
                 </div>
+                @endif
             </div>
             @endforeach                              
         </div>

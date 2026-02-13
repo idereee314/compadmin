@@ -71,5 +71,7 @@ return array (
 	"validation_register_field_password_confirmed" => "Нууц үгийг дахин оруулахдаа буруу оруулсан байна",
 	"validation_register_field_password_min" => "Нууц үг хамгийн багадаа 8 тэмдэгт байна",
 	"error_no_record" => "Мэдээлэл байхгүй",
-	"warning_image_file" => "Зургийн файл сонгоно уу."
+	"warning_image_file" => "Зургийн файл сонгоно уу.",
+	"info_confirm_delete_title" => "Та устгахдаа итгэлтэй байна уу?",
+
 );

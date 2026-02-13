@@ -151,6 +151,14 @@
                                                                 <span class="navi-text">{{ trans('display.general_result') }}</span>
                                                             </a>
                                                         </li>
+                                                        <li class="navi-item">
+                                                            <a href="{{ route('event.award.ceremony.index', ['eventId' => $event['id']]) }}" class="navi-link">
+                                                                <span class="navi-icon">
+                                                                    <i class="fas fa-medal"></i>
+                                                                </span>
+                                                                <span class="navi-text">{{ trans('display.general_award_cermony') }}</span>
+                                                            </a>
+                                                        </li>
 
                                                         <!-- <li class="navi-item">
                                                             <a href="{{ route('event.schedule', @$event['id']) }}" class="navi-link">

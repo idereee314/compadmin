@@ -159,4 +159,39 @@ class EloquentEntryConfigWeightRepository implements EntryConfigWeightRepository
 	        ->get()
 	        ->keyBy(fn($item) => "{$item->entry_id}-{$item->entry_age_id}-{$item->weight}");
 	}
+
+	public function getWeightList($eventId)
+	{
+		return EntryConfigWeight::select(['uee.name as entry_name', 'uee.gender_code' , 'uecb.name as belt_name','uq_entry_config_weight.weight','uq_entry_config_weight.is_finish','uq_entry_config_weight.medal_given'])
+    		->join('uq_comp.uq_event_entries as uee', 'uee.id', '=', 'uq_entry_config_weight.entry_id')
+    		->join('uq_comp.uq_entry_config_belt as uecb', 'uecb.entry_id', '=', 'uee.id')
+    		->where('uee.event_id', $eventId)
+    		->orderBy('uee.name')
+			->orderBy('uee.gender_code')
+			->orderBy('uecb.name')
+    		->get();
+	}
+
+	public function getWeightDivisionList($eventId)
+	{
+	    return EntryConfigWeight::query()
+	        ->from('uq_comp.uq_entry_config_weight as uecw')
+	        ->join('uq_comp.uq_event_entries as uee', 'uee.id', '=', 'uecw.entry_id')
+	        ->join('uq_comp.uq_entry_config_belt as uecb', 'uecb.entry_id', '=', 'uee.id')
+	        ->selectRaw("
+	            uee.gender_code,
+	            uecb.name as belt_name,
+	            uecw.weight,
+	            max(uecw.is_finish::int) as is_finish,
+	            max(uecw.medal_given::int) as medal_given,
+	            count(distinct uee.id) as athlete_count
+	        ")
+	        ->where('uee.event_id', $eventId)
+	        ->groupBy('uee.gender_code', 'uecb.name', 'uecw.weight')
+	        ->orderBy('uecb.name')
+	        ->orderBy('uee.gender_code')
+	        ->orderBy('uecw.weight')
+	        ->get();
+	}
+	
 }

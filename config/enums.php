@@ -52,6 +52,11 @@ return array(
 		'refunded' => 'Буцаасан',
 	],
 
+	'membership_role_type' => [
+		'academy' => 'Академи',
+		'athlete' => 'Тамирчин',
+	],
+
 	'event_status' => [
 		'created' => 'Үүсгэсэн',
 		'verified' => 'Зөвшөөрсөн',

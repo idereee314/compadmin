@@ -20,6 +20,7 @@ use reference\CategoryRepository as Category;
 
 //Models
 use event\Event as EventModel;
+use event\EventUser as EventUserModel;
 
 use \Auth as Auth;
 use Config;
@@ -88,52 +89,199 @@ class EventController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store()
     {
-        $input = Input::all(); 
-  
-        $validator = Validator::make($input, EventUserModel::rules(0));
-
+        $input = Input::all();
+        
+        $validator = Validator::make($input, EventModel::rules(0));
+        $dates = array();
+        
+        // process the save
         if ($validator->fails())
         {
             $response = array(
                 'status' => 'error',
                 'msg' => trans('messages.error_save'),
-                'errors' => html_entity_decode(HTML::ul($validator->errors()->all()))
+                'errors' => $validator->errors()
             );
         }
-        else
-        {
-            try
-            {     
-                $event = $this->event->find($input['event_id']);
-                foreach($input['user_id'] as $userId)
-                {
-                    $unArr['event_id'] = $event->id;
-                    $unArr['user_id'] = $userId;
-            
-                    $userArr['event_id'] = $event->id;
-                    $userArr['user_id'] = $userId;
+        else {
+            try 
+            {
+                $event = $this->event->create($input);
 
-                    $event->eventUsers()->updateOrCreate($unArr, $userArr);
+                $event->categories()->sync(@$input['category']);
+
+                if(@$input['event_date'])
+                {
+                    foreach(@$input['event_date'] as $key => $date)
+                    {
+                        $arr['start_date'] = $date.' '.$input['start_time'][$key];
+                        $arr['end_date'] = $date.' '.$input['end_time'][$key];
+                        array_push($dates, $arr);
+                    }
+                    $event->datetimes()->createMany($dates);
                 }
 
-                $response = array(
-                    'status' => 'success',
-                    'msg' => trans('messages.success_save')
-                );
+                foreach(@$input['roles'] as $key => $role)
+                {
+                    $orgArr = explode(",", $input['organizations'][$key]);
+                    foreach($orgArr as $org)
+                    {
+                        if(!empty($org))
+                        {
+                            $uniqOrgArr['event_id'] = $event->id;
+                            $uniqOrgArr['organization_id'] = $org;
+                            $uniqOrgArr['role'] = $role;
+                                
+                            $event->organizations()->updateOrCreate($uniqOrgArr, $uniqOrgArr);
+                        }
+                    }
+                }
+
+                if(@$input['is_all_branch'])
+                {
+                    
+                }
+                else 
+                {
+                    if(!empty(@$input['object_locations']))
+                    {
+                        $uniqLocationArr = array();
+                        $objectLocations = explode(",", $input['object_locations']);
+                        foreach($objectLocations as $location)
+                        {
+                            
+                            $uniqLocationArr['event_id'] = $event->id;
+                            $uniqLocationArr['object_location_id'] = $location;
+                                
+                            $event->locations()->updateOrCreate($uniqLocationArr, $uniqLocationArr);
+                        }
+                    }
+                }
+
+                if(@$input['location_datas'])
+                {
+                    $points = $objectLocations = explode(",", $input['location_datas']);
+                    foreach($points as $point)
+                    {
+                        $coords = explode(';', $point);
+                        $locationArr['event_id'] = $event->id;
+                        $locationArr['point_geom'] = new Point($coords[0], $coords[1]);
+                            
+                        $event->locations()->create($locationArr);
+                    }
+                }
+                
+                $pictureType = $this->pictureType->find(@$input['picture_type']);
+
+                if ($pictureType && !empty($input['croppedData']) && !empty($input['orginalData'])) {
+                
+                    $imageData   = $input['croppedData'];
+                    $orginalData = $input['orginalData'];
+                
+                    $imageName   = 'event_' . date('YmdHis') . '_' . uniqid() . '.jpg';
+                    $imagePathS3 = $pictureType->dir_url . "/" . $imageName;
+                
+                    // 1) CONFIG шалгах
+                    $allSizes = config('smart.event_image_size');
+                    if (!is_array($allSizes) || !array_key_exists($pictureType->code, $allSizes)) {
+                        $validator->errors()->add(
+                            'picture',
+                            "smart.event_image_size[{$pictureType->code}] тохиргоо олдсонгүй."
+                        );
+                        throw new \RuntimeException("event_image_size config алга байна");
+                    }
+                
+                    $sizes = $allSizes[$pictureType->code];
+                    if (!is_array($sizes) || empty($sizes)) {
+                        $validator->errors()->add(
+                            'picture',
+                            "smart.event_image_size[{$pictureType->code}] хоосон эсвэл буруу байна."
+                        );
+                        throw new \RuntimeException("event_image_size хоосон байна");
+                    }
+                
+                    // 2) original base64-аас data-г салгаж decode хийх
+                    if (strpos($orginalData, 'base64,') !== false) {
+                        list($baseType, $image) = explode(';', $orginalData, 2);
+                        list(, $image) = explode(',', $image, 2);
+                    } else {
+                        $image = $orginalData;
+                    }
+                    $imageOrginal = base64_decode($image);
+                
+                    try {
+                        // эх хувилбарыг S3 руу
+                        \Storage::disk('s3')->put($imagePathS3, (string) $imageOrginal, 'public');
+                    
+                        // 3) тохиргооны бүх хэмжээгээр crop хийх
+                        foreach ($sizes as $key => $type) {
+                            // type нь заавал [w, h] массив байх ёстой
+                            if (!is_array($type) || count($type) < 2) {
+                                // буруу config байвал алгасах эсвэл алдаа нэмэх
+                                $validator->errors()->add(
+                                    'picture',
+                                    "Image size config алдаа: {$pictureType->code}.{$key}"
+                                );
+                                continue;
+                            }
+                        
+                            [$w, $h] = $type;
+                        
+                            $imagePath = $pictureType->dir_url;
+                            if (!empty($key)) {
+                                $imagePath .= "/" . $key;
+                            }
+                            $imagePath .= "/" . $imageName;
+                        
+                            $image = \Image::make($imageData);
+                            if ($image->width() >= $w) {
+                                $image = $image->fit($w, $h);
+                            }
+                        
+                            $imageCropped = $image->encode('jpg');
+                            \Storage::disk('s3')->put($imagePath, (string) $imageCropped, 'public');
+                        }
+                    
+                        $inputPicture = [
+                            'picture_type_id' => $pictureType->id,
+                            'url'             => $imageName,
+                        ];
+                        $event->pictures()->create($inputPicture);
+                    
+                    } catch (\Exception $e) {
+                        $validator->errors()->add('picture', $e->getMessage());
+                    }
+                
+                } else {
+                    $validator->errors()->add('picture', trans('messages.no_picture_type'));
+                }
 
             }
             catch(\Illuminate\Database\QueryException $e)
             {
-                $response = array(
-                    'status' => 'error',
-                    'msg' => trans('messages.error_save'),
-                    'errors' => $e->getMessage()
-                );
-
+                $validator->errors()->add('', $e->getMessage());
             }
+            
         }
+
+        if(count($validator->errors()) > 0)
+        {
+            $response = array(
+                'status' => 'error',
+                'msg' => trans('messages.error_save'),
+                'errors' => $validator->errors()
+            );
+        }
+        else 
+        {
+            $response = array(
+                'status' => 'success',
+                'msg' => trans('messages.success_save')
+            );
+        }
+
         return $response;
     }
 
@@ -184,7 +332,7 @@ class EventController extends Controller
     {
         $input = Input::all();
 
-        $validator = Validator::make($input, EventUserModel::rules($id));
+        $validator = Validator::make($input, EventModel::rules($id));
 
         if ($validator->fails())
 		{
@@ -224,7 +372,7 @@ class EventController extends Controller
     public function destroy($id)
     {
         try {
-            $this->eventUser->delete($id);
+            $this->event->delete($id);
 
             $response = array(
                 'status' => 'success',

@@ -132,7 +132,8 @@ class EventRegistrationController extends Controller
         $is_team = $this->event->find(request()->event_id)->config->is_team;
         
         $entries = $this->eventEntries->getEntryByEventId(@$input['event_id']);
-        $academies = $this->academy->all();
+        // $academies = $this->academy->all();
+        $academies = $this->academy->getAcademyListByEvent(@$input['event_id']);
         $team_list = $this->team->all();
         
         $data['team_list'] = $team_list;
@@ -267,12 +268,16 @@ class EventRegistrationController extends Controller
      */
     public function edit($id)
     {
+        $input = Input::all();
+        
         $eventRegistration = $this->eventRegistration->find($id);
         $eventTeamRegistration = $this->eventTeamRegistration->find($id);
 
         if($eventTeamRegistration == null)
         {
-            $academies = $this->academy->all();
+            // $academies = $this->academy->all();
+            
+            $academies = $this->academy->getAcademyListByEvent($eventRegistration->event_id);
             $eventEntries = $this->eventEntries->getEntryByEventId($eventRegistration->event_id);
             $configBelts = $this->configBelt->getEntryBeltByEntryId($eventRegistration->entry_id);
             $configAges = $this->configAge->getEntryAgeByEntryId($eventRegistration->entry_id);
@@ -1085,13 +1090,18 @@ class EventRegistrationController extends Controller
             $data['round'] = intval(log($total, 2)) + 1;
         }
         
-        if(@$eventConfig->sport_id == 6)
+        // if(@$eventConfig->sport_id == 6)
+        // {
+        //     return view('event.bracket.print_sambo', $data);
+        // }
+        // else
+        // {
+        //     // return view('event.bracket.print', $data);
+        //     return view('event.bracket.print_bracket_jjif', $data);
+        // }
+        if($eventConfig->event_bracket_type_id)
         {
-            return view('event.bracket.print_sambo', $data);
-        }
-        else
-        {
-            return view('event.bracket.print', $data);
+            return view("event.bracket.{$eventConfig->bracketType->print_code}", $data);
         }
     }
 
@@ -1228,6 +1238,12 @@ class EventRegistrationController extends Controller
         $genderResultPointMale = $this->eventRegistration->getToplistByPointAndGenderMaleFromEvent($eventId);
         $genderResultPointFemale = $this->eventRegistration->getToplistByPointAndGenderFemaleFromEvent($eventId);
         $eventToplistWithAthleteCount = $this->eventRegistration->getToplistWithAthleteCountFromEvent($eventId);
+        // $adultResultPoint = $this->getToplistWithAthleteCountFromEventByAge($eventId, $adultAgeIds, true, 'point');
+        // $childResultPoint = $this->getToplistWithAthleteCountFromEventByAge($eventId, $childAgeIds, true, 'point');
+
+        // $adultResultGold = $this->getToplistWithAthleteCountFromEventByAge($eventId, $adultAgeIds, false, 'gold');
+        // $childResultGold = $this->getToplistWithAthleteCountFromEventByAge($eventId, $childAgeIds, false, 'gold');
+
         
         $countedWeights = $this->eventRegistration->getCountedWeightForOrg($eventId);
         $allWeightIds = collect($countedWeights)->pluck('weight_id')->unique();
@@ -1246,7 +1262,13 @@ class EventRegistrationController extends Controller
                 return $item->start_pos === null && $item->end_pos === null;
             })?->point ?? 2,
         ];
+        $eventToplistWithAthleteCountChild = $this->eventRegistration->getToplistWithAthleteCountFromEventByEntries($eventId, [671,672,673,674,675,676,677,678,679,680]);
+        $eventToplistWithAthleteCountAdult = $this->eventRegistration->getToplistWithAthleteCountFromEventByEntries($eventId, [681,682,683]);
 
+        $data['eventToplistWithAthleteCountChild'] = $eventToplistWithAthleteCountChild;
+        $data['eventToplistWithAthleteCountAdult'] = $eventToplistWithAthleteCountAdult;
+        // $data['adultResultGold'] = $adultResultGold;
+        // $data['childResultGold'] = $childResultGold;
         $data['pointConfig'] = $pointConfig;
         $data['eventToplistWithAthleteCount'] = $eventToplistWithAthleteCount;
         $data['genderResultPointMale'] = $genderResultPointMale;
@@ -1532,5 +1554,25 @@ class EventRegistrationController extends Controller
         $data['academyInfo'] = $academyInfo;
 
         return view($this->view_path.'.weight', $data);
+    }
+
+    public function awardCermony($eventId)
+    {
+        $weightList = $this->configWeight->getWeightList($eventId);
+        
+        $data['view_path'] = $this->view_path;
+        $data['weightList'] = $weightList;
+
+        return view($this->view_path.'.award.award_cermony', $data);
+    }
+
+    public function awardCermonyEdit()
+    {
+
+    }
+
+    public function awardCermonyUpdate()
+    {
+        
     }
 }

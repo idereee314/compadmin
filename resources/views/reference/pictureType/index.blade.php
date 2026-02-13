@@ -173,7 +173,7 @@ $(document).ready(function() {
             {
                 class: "text-center border-right",
                 targets: [0, 3, 4, 5, 7]
-            }
+            },
             {
                 class: "text-center",
                 targets: [0]

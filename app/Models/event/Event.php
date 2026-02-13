@@ -12,6 +12,20 @@ class Event extends Model
     protected $table = 'rti_event';
     protected $primaryKey = 'id';
 
+    public static function rules($id) 
+    {
+		return array(
+            'name' => 'required',
+            'dates' => 'required',
+            'event_date' => 'required|array|min:1',
+		);
+	}
+
+    public function categories()
+    {
+        return $this->belongsToMany('reference\Category', 'rti_event_category', 'event_id', 'category_id')->orderBy('category_id', 'asc');
+    }
+
     public function pictures()
     {       
         return $this->hasMany('event\EventPicture', 'event_id');

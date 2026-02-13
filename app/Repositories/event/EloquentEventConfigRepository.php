@@ -34,6 +34,16 @@ class EloquentEventConfigRepository implements EventConfigRepository {
 		return EventConfig::find($id);
 	}
 
+	public function findByEvent($eventId)
+	{
+		return EventConfig::where('event_id', $eventId)->first();
+	}
+
+	public function findByAcademyType($event)
+	{
+		return EventConfig::where('org_types', 'LIKE', '%'.$event.'%')->get();
+	}
+
 	public function create($input)
 	{
 		$dates = explode("/", @$input['reg_date']);
@@ -47,9 +57,11 @@ class EloquentEventConfigRepository implements EventConfigRepository {
 		$eventConfig->update_final_date = @$input['reg_update_date'];
 		$eventConfig->sport_id = @$input['sport_id'];
 		$eventConfig->is_team = @$input['is_team'] ? $input['is_team'] : false;
-		$eventConfig->point_type_id = @$input['eventCategory'];
-		$eventConfig->event_rank_season_id = @$input['eventRankSeason'];
-		$eventConfig->event_result_type_id = @$input['eventResultType']; 
+		$eventConfig->point_type_id = @$input['event_category_id'];
+		$eventConfig->event_rank_season_id = @$input['event_rank_season'];
+		$eventConfig->event_result_type_id = @$input['event_result_type']; 
+		$eventConfig->event_category_id = @$input['event_category_id'];
+		$eventConfig->event_bracket_type_id = @$input['event_bracket_type_id'];
 
 		$eventConfig->save();
 		return $eventConfig;
@@ -66,12 +78,14 @@ class EloquentEventConfigRepository implements EventConfigRepository {
 		$eventConfig->is_active = @$input['is_active'] ? $input['is_active'] : false;
 		$eventConfig->payment_final_date = @$input['reg_payment_date'];
 		$eventConfig->update_final_date = @$input['reg_update_date'];
-		$eventConfig->start_time = @$input['start_time'];
+		// $eventConfig->start_time = @$input['start_time'];
 		$eventConfig->sport_id = @$input['sport_id'];
 		$eventConfig->is_team = @$input['is_team'] ? $input['is_team'] : false;
-		$eventConfig->point_type_id = @$input['eventCategory'];
-		$eventConfig->event_rank_season_id = @$input['eventRankSeason'];
-		$eventConfig->event_result_type_id = @$input['eventResultType'];
+		$eventConfig->point_type_id = @$input['event_category_id'];
+		$eventConfig->event_rank_season_id = @$input['event_rank_season'];
+		$eventConfig->event_result_type_id = @$input['event_result_type']; 
+		$eventConfig->event_category_id = @$input['event_category_id'];
+		$eventConfig->event_bracket_type_id = @$input['event_bracket_type_id'];
 
 		$eventConfig->save();
 		return $eventConfig;
@@ -304,5 +318,4 @@ class EloquentEventConfigRepository implements EventConfigRepository {
 	
 	    return $results;
 	}
-
 }

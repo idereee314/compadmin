@@ -21,10 +21,10 @@
     </style>
 </head>
 <?php
-    $width = "800px";
+    $width = "1600px";
     $background = "gray";
 ?>
 <body style="background-color: {{ $background }};">
-    @include('event.bracket.print_bracket_double')
+    @include('event.bracket.single_elimination.print_bracket')
 </body>
 </html>

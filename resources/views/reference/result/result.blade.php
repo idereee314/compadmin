@@ -25,12 +25,12 @@
 @include('layouts.mobile')
 <!--end::Header Mobile-->
 <!--begin::Aside-->
-@include('layouts.aside')
+
 <!--end::Aside-->
 <!--begin::Wrapper-->
 <div class="d-flex flex-column flex-row-fluid wrapper" id="kt_wrapper">
     <!--begin::Header-->
-    @include('layouts.header')
+
     <!--end::Header-->
     <!--begin::Content-->
     <div class="content d-flex flex-column flex-column-fluid">
@@ -80,7 +80,7 @@
                                     <!--begin::User-->
                                     <div class="mr-3">
                                         <!--begin::Name-->
-                                        <a href="{{ route('event.registration.index').'?event_id='.@$event->id }}" class="d-flex align-items-center text-dark text-hover-primary font-size-h5 font-weight-bold mr-3">{{@$event->name}}
+                                        <p class="d-flex align-items-center text-dark text-hover-primary font-size-h5 font-weight-bold mr-3">{{@$event->name}}
                                         <i class="flaticon2-correct text-success icon-md ml-2"></i></a>
                                         <!--end::Name-->
                                         <!--begin::Contacts-->
@@ -126,13 +126,7 @@
                                     </div>
                                     <div class="col-md-5">
                                         <!--begin::Progress-->
-                                        <div class="d-flex mt-4 mt-sm-0 float-right">
-                                            <span class="font-weight-bold mr-4">Бүртгэлийн явц</span>
-                                            <div class="progress progress-xs mt-2 mb-2 flex-shrink-0 w-150px w-xl-250px">
-                                                <div class="progress-bar bg-success" role="progressbar" style="width: {{@$progressPercent}}%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
-                                            </div>
-                                            <span class="font-weight-bolder text-dark ml-4">{{ @$progressPercent }}%</span>
-                                        </div>
+                                        
                                         <!--end::Progress-->
                                     </div>
                                 </div>

@@ -18,7 +18,6 @@ class EventConfig extends Model
 		return array(
             'event_id' => 'required|unique:uq_event_config,event_id,'.$id.',id',
             'reg_date' => 'required',
-            'start_time' => 'required',
 		);
 	}
 
@@ -60,6 +59,11 @@ class EventConfig extends Model
     public function sport()
     {
         return $this->belongsTo('sport\Sport', 'sport_id');
+    }
+
+    public function bracketType()
+    {
+        return $this->belongsTo('event\EventBracketType', 'event_bracket_type_id');
     }
     
 	public static function boot()

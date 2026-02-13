@@ -21,4 +21,6 @@ Route::group([
     // References
     Route::get('/sport/certificate/print', 'event\EventRegistrationController@printCertificateByMember')->name('api.sport.certificate.print');
     
+    Route::get('/academy/membership/list','ware\ApiController@membershipList')->name('api.academy.membership.list');
+    
 });

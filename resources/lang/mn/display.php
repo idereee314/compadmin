@@ -18,6 +18,10 @@ return [
     "general_fast_operation" => 'Хурдан үйлдэл',
     "general_notes" => 'Удирдамж',
     "general_information_notes" => "Удирдамжийн мэдээлэл",
+    "general_confirm_button_yes" => "Тийм, устгах",
+    "general_confirm_button_no" => "Үгүй, болих",
+    "general_confirm_cancel_yes" => "Тийм, хаах",
+    "general_confirm_cancel_no" => "Үгүй, буцах",
 
     // Button
     "general_new" => "Шинээр нэмэх",
@@ -38,7 +42,7 @@ return [
     "general_add" => "Нэмэх",
     "general_update" => "Шинэчлэх",
     "general_show" => "Харах",
-    "general_status_change" => "Төлөв шилжүБайгууллагаүлэх",
+    "general_status_change" => "Төлөв шилжүүлэх",
     "general_call" => "Дуудах",
     "general_insert" => "Оруулах",
     "general_choose" => "Сонгох",
@@ -66,6 +70,7 @@ return [
     'general_event_category' => 'Тэмцээний ангилал',
     'general_rank_season' => 'Улирал',
     'general_result_type' => 'Үр дүн гаргах төрөл',
+    'general_award_cermony' => 'Шагнал',
     'general_total_score' => 'Нийт оноо',
     'general_desc_score' => 'Онооны тайлбар',
     'general_you_are_here' => 'Таны байгаа газар',
@@ -192,6 +197,8 @@ return [
     "general_title_english" => "Гарчиг Англиар",
     "general_title_mongolian" => "Гарчиг Монголоор",
     "general_image_rotate" => "Зургийг эргүүлэх",
+    "general_founded_year" => "Үүсгэн байгуулагдсан он",
+    "general_bracket_type" => "Оноолтын төрөл",
 
     // Search
     "general_search_list" => "Хайлт",
@@ -313,6 +320,7 @@ return [
     'comp_university' => 'Их сургууль',
     'comp_school' => 'Сургууль',
     'comp_academy_name' => 'Академи нэр',
+    'comp_academy_name_eng' => 'Академи нэр (Англи)',
     'comp_country_name' => 'Улсын нэр',
     'comp_country' => 'Улс',
     'comp_member' => 'Оролцогч',
@@ -438,4 +446,16 @@ return [
     "soum_district" => "Сум дүүрэг",
     "bag_khoroo" => "Баг хороо",
     "entrance" => "Орц, гарц",
+
+    // Membership
+    "membership" => "Гишүүнчлэл",
+    "membership_type" => "Гишүүнчлэлийн төрөл",
+    "membership_start_date" => "Гишүүнчлэлийн эхлэх огноо",
+    "membership_end_date" => "Гишүүнчлэлийн дуусах огноо",
+    "membership_academy_list" => "Академийн гишүүнчлэлийн жагсаалт",
+    "is_membership" => "Гишүүнчлэлтэй эсэх",
+
+    //others 
+    "weight_is_finish" => "Дууссан эсэх",
+    "weight_award_cermony" => "Шагнал гардуулсан эсэх",
 ];

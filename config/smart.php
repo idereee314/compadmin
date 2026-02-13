@@ -167,6 +167,11 @@ return array(
 		'university' => 'university'
 	],
 
+	'membership_role_type' => [
+		'academy' => 'academy',
+		'athlete' => 'athlete',
+	],
+
 	'rank_category' => [
 		'kids' => 'kids',
 		'adult' => 'adult',
@@ -194,6 +199,17 @@ return array(
 		'event' => 'event',
 		'menu' => 'menu',
 		'product' => 'product'
+	],
+
+	'event_image_size' => [
+		'event_cover_mobile' => [
+			'cropped' => [1000, 700],
+			'thumbnail' => [500, 375]
+		],
+		'event_gallery' => [
+			'cropped' => [1000, 700],
+			'thumbnail' => [500, 375]
+		]
 	],
 )
 
