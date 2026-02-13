@@ -31,7 +31,7 @@
                                 <!--begin::Pic-->
                                 <div class="flex-shrink-0 mr-7">
                                     <div class="symbol symbol-50 symbol-lg-120">
-                                        <img alt="Pic" src="{{ \Storage::disk('s3')->url(@$event->picturesMobileCover->first()->dir_url.'/thumbnail/'.@$event->picturesMobileCover->first()->url) }}">
+                                        {{-- <img alt="Pic" src="{{ \Storage::disk('s3')->url(@$event->picturesMobileCover->first()->dir_url.'/thumbnail/'.@$event->picturesMobileCover->first()->url) }}"> --}}
                                     </div>
                                 </div>
                                 <!--end::Pic-->

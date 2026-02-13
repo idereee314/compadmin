@@ -62,11 +62,7 @@ class EventMatchController extends Controller
 
     public function edit_winner(Request $request, $match_id)
     {
-        if(!$request->has('reg_win_id')){
-           $this->mathes->updateWinner($match_id, $request);
-        } else {
-           $this->mathes->setDoubleLoser($match_id, $request);
-        }
+        $this->mathes->updateWinner($match_id, $request);
         $match = $this->mathes->find($match_id);
         return redirect()->route('event.config.match.edit_status', ['eventId' => $match->event_id, 'match_id' => $match_id]);
     }

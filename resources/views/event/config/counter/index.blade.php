@@ -15,297 +15,313 @@
 @section('content') --}}
 
 
-<link rel="stylesheet" href="{{asset('css/scoreboard/scoreboard_css_style2.css')}}">
-<link rel="stylesheet" href="{{asset('css/scoreboard/scoreboard_css_timer.css')}}">
-
-
+<link rel="stylesheet" href="{{asset('css/scoreboard/scoreboard.css')}}">
 
 <form id="winnerForm" action="{{ route('event.config.match.winner', ['match_id' => $matchId]) }}" method="POST"  style="display:none;">
 
 </form>
 
-    <div class="match-info">
-      <div id="fullNameTop" class="match-title short">
-        @if (!empty($bracket))
-          {{-- {{$registered[0]->member->fullname ?? '-'}} --}}
-          {{$bracket->entry->name ?? '-'}}
-            {{$bracket->age->name ?? ''}},
-            {{$bracket->belt->name ?? ''}},
-            {{$bracket->weight->weight ?? ''}}kg
-        @else
-          TBD
-        @endif
-      </div>
+    <div class="container">
+        <div class="row">
+            <div class="player-info">
+                <div class="player-row-1">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/4/4c/Flag_of_Mongolia.svg" alt="Mongolia Flag" class="player-flag">
+                    <div class="player-name">
+                        @if (!empty($registered) && isset($registered[0]))
+                            {{$registered[0]->member->firstname ?? '-'}}
+                            {{$registered[0]->member->lastname }}
+                        @else
+                            TBD
+                        @endif
+                    </div>
+                </div>
+                <div class="player-row-2">
+                    <div class="country-code">MGL</div>
+                    <img src="{{asset('assets/images/logo/club/1.jpg')}}" alt="Club Logo" class="club-logo">
+                    <div class="club-name">
+                        @if (!empty($registered) && isset($registered[0]))
+                            {{$registered[0]->academy->name }}
+                        @endif
+                    </div>
+                </div>
+            </div>
+            <div class="row-content">
+                <!-- First row content goes here -->
+            </div>
+            <div class="action-buttons" id="actionButtons1">
+                <table class="button-table">
+                    <tr>
+                        <td><button class="action-button positive" onclick="event.stopPropagation(); adjustScore('red', 1)">+1</button></td>
+                        <td><button class="action-button positive" onclick="event.stopPropagation(); adjustScore('red', 2)">+2</button></td>
+                        <td><button class="action-button positive" onclick="event.stopPropagation(); adjustScore('red', 3)">+3</button></td>
+                        <td><button class="action-button positive" onclick="event.stopPropagation(); adjustScore('red', 4)">+4</button></td>
+                        <td><button class="action-button positive" onclick="event.stopPropagation(); adjustAdvantage('red', 1)">+A</button></td>
+                        <td><button class="action-button positive" onclick="event.stopPropagation(); adjustPenalty('red', 1)">+P</button></td>
+                        <td><button class="action-button white" onclick="event.stopPropagation(); toggleMedical('red')">MEDIC</button></td>
+                    </tr>
+                    <tr>
+                        <td><button class="action-button negative" onclick="event.stopPropagation(); adjustScore('red', -1)">-1</button></td>
+                        <td><button class="action-button negative" onclick="event.stopPropagation(); adjustScore('red', -2)">-2</button></td>
+                        <td><button class="action-button negative" onclick="event.stopPropagation(); adjustScore('red', -3)">-3</button></td>
+                        <td><button class="action-button negative" onclick="event.stopPropagation(); adjustScore('red', -4)">-4</button></td>
+                        <td><button class="action-button negative" onclick="event.stopPropagation(); adjustAdvantage('red', -1)">-A</button></td>
+                        <td><button class="action-button negative" onclick="event.stopPropagation(); adjustPenalty('red', -1)">-P</button></td>
+                        <td><button class="action-button white" onclick="event.stopPropagation(); toggleStalling('red')">STALLING</button></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="scores-container">
+                <div class="stalling-alert" id="redStallingAlert" onclick="stopStalling('red')">
+                    <div class="stalling-timer" id="redStallingTimer">00:10</div>
+                    <div class="stalling-label">Stalling</div>
+                </div>
+                <div class="medical-alert" id="redMedicalAlert">
+                    <div class="medical-timer" id="redMedicalTimer">02:00</div>
+                    <div class="medical-label">Medical</div>
+                    <div class="medical-controls">
+                        <button class="medical-control-btn center" id="redMedicalPlay" onclick="event.stopPropagation(); toggleMedicalPlay('red')">PLAY</button>
+                        <button class="medical-control-btn top" onclick="event.stopPropagation(); swapMedical('red')">SWAP</button>
+                        <button class="medical-control-btn bottom" onclick="event.stopPropagation(); resetMedical('red')">RESET</button>
+                        <button class="medical-control-btn left" onclick="event.stopPropagation(); adjustMedicalTimer('red', -1)">-1</button>
+                        <button class="medical-control-btn right" onclick="event.stopPropagation(); adjustMedicalTimer('red', 1)">+1</button>
+                    </div>
+                </div>
+                <div class="small-scores">
+                    <div class="small-score-wrapper">
+                        <div class="small-score-label" id="redAdvLabel">Advantage</div>
+                        <div class="small-score" id="redAdv">0</div>
+                    </div>
+                    <div class="small-score-wrapper">
+                        <div class="small-score-label" id="redPenLabel">Penalty</div>
+                        <div class="small-score" id="redPen">0</div>
+                    </div>
+                </div>
+                <div class="score-square red" id="redScore">0</div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="player-info">
+                <div class="player-row-1">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/4/4c/Flag_of_Mongolia.svg" alt="Mongolia Flag" class="player-flag">
+                    <div class="player-name">
+                        @if (!empty($registered) && isset($registered[1]))
+                            {{$registered[1]->member->firstname ?? '-'}}
+                            {{$registered[1]->member->lastname }}
+                        @else
+                            TBD
+                        @endif
+                    </div>
+                </div>
+                <div class="player-row-2">
+                    <div class="country-code">MGL</div>
+                    <img src="{{asset('assets/images/logo/club/2.jpg')}}" alt="Club Logo" class="club-logo">
+                    <div class="club-name">
+                        @if (!empty($registered) && isset($registered[1]))
+                            {{$registered[1]->academy->name ?? '-'}}
+                        @endif
+                    </div>
+                </div>
+            </div>
+            <div class="row-content">
+                <!-- Second row content goes here -->
+            </div>
+            <div class="action-buttons" id="actionButtons2">
+                <table class="button-table">
+                    <tr>
+                        <td><button class="action-button positive" onclick="event.stopPropagation(); adjustScore('blue', 1)">+1</button></td>
+                        <td><button class="action-button positive" onclick="event.stopPropagation(); adjustScore('blue', 2)">+2</button></td>
+                        <td><button class="action-button positive" onclick="event.stopPropagation(); adjustScore('blue', 3)">+3</button></td>
+                        <td><button class="action-button positive" onclick="event.stopPropagation(); adjustScore('blue', 4)">+4</button></td>
+                        <td><button class="action-button positive" onclick="event.stopPropagation(); adjustAdvantage('blue', 1)">+A</button></td>
+                        <td><button class="action-button positive" onclick="event.stopPropagation(); adjustPenalty('blue', 1)">+P</button></td>
+                        <td><button class="action-button white" onclick="event.stopPropagation(); toggleMedical('blue')">MEDIC</button></td>
+                    </tr>
+                    <tr>
+                        <td><button class="action-button negative" onclick="event.stopPropagation(); adjustScore('blue', -1)">-1</button></td>
+                        <td><button class="action-button negative" onclick="event.stopPropagation(); adjustScore('blue', -2)">-2</button></td>
+                        <td><button class="action-button negative" onclick="event.stopPropagation(); adjustScore('blue', -3)">-3</button></td>
+                        <td><button class="action-button negative" onclick="event.stopPropagation(); adjustScore('blue', -4)">-4</button></td>
+                        <td><button class="action-button negative" onclick="event.stopPropagation(); adjustAdvantage('blue', -1)">-A</button></td>
+                        <td><button class="action-button negative" onclick="event.stopPropagation(); adjustPenalty('blue', -1)">-P</button></td>
+                        <td><button class="action-button white" onclick="event.stopPropagation(); toggleStalling('blue')">STALLING</button></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="scores-container">
+                <div class="stalling-alert" id="blueStallingAlert" onclick="stopStalling('blue')">
+                    <div class="stalling-timer" id="blueStallingTimer">00:10</div>
+                    <div class="stalling-label">Stalling</div>
+                </div>
+                <div class="medical-alert" id="blueMedicalAlert">
+                    <div class="medical-timer" id="blueMedicalTimer">02:00</div>
+                    <div class="medical-label">Medical</div>
+                    <div class="medical-controls">
+                        <button class="medical-control-btn center" id="blueMedicalPlay" onclick="event.stopPropagation(); toggleMedicalPlay('blue')">PLAY</button>
+                        <button class="medical-control-btn top" onclick="event.stopPropagation(); swapMedical('blue')">SWAP</button>
+                        <button class="medical-control-btn bottom" onclick="event.stopPropagation(); resetMedical('blue')">RESET</button>
+                        <button class="medical-control-btn left" onclick="event.stopPropagation(); adjustMedicalTimer('blue', -1)">-1</button>
+                        <button class="medical-control-btn right" onclick="event.stopPropagation(); adjustMedicalTimer('blue', 1)">+1</button>
+                    </div>
+                </div>
+                <div class="small-scores">
+                    <div class="small-score-wrapper">
+                        <div class="small-score-label" id="blueAdvLabel">Advantage</div>
+                        <div class="small-score" id="blueAdv">0</div>
+                    </div>
+                    <div class="small-score-wrapper">
+                        <div class="small-score-label" id="bluePenLabel">Penalty</div>
+                        <div class="small-score" id="bluePen">0</div>
+                    </div>
+                </div>
+                <div class="score-square blue" id="blueScore">0</div>
+            </div>
+        </div>
+        <!-- Timer section -->
+        <div class="timer-section" id="timerSection">
+            <div class="match-info">
+                <div class="match-details" id="matchDetails">
+                    <span class="marquee-content">{{ $bracket->entry->name }} / {{ $bracket->age->name }} / {{ $bracket->belt->name }}  / {{ $bracket->weight->weight }}KG</span>
+                </div>
+                <div class="match-stage" id="matchStage">
+                    <span class="marquee-content">
+                        @if($bracket->is_double_loser)
+                             {{ $bracket->round }}
+                        @else
+                             {{ $bracket->round }}
+                        @endif
+                    </span>
+                </div>
+            </div>
+            <div class="timer" id="timerDisplay">
+                05:00
+                <div class="timer-controls" id="timerControls">
+                    <table class="timer-control-table">
+                        <tr>
+                            <td><button class="timer-control-button" onclick="event.stopPropagation(); adjustTimer(-30)">-30</button></td>
+                            <td><button class="timer-control-button" onclick="event.stopPropagation(); adjustTimer(-1)">-1</button></td>
+                            <td><button class="timer-control-button" id="playPauseBtn" onclick="event.stopPropagation(); togglePlayPause()">PLAY</button></td>
+                            <td><button class="timer-control-button" onclick="event.stopPropagation(); adjustTimer(1)">+1</button></td>
+                            <td><button class="timer-control-button" onclick="event.stopPropagation(); adjustTimer(30)">+30</button></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="control-buttons" id="controlButtons">
+                <table class="control-table">
+                    <tr>
+                        <td><button class="control-button" onclick="event.stopPropagation(); undoScoringAction()">UNDO SCORING ACTION</button></td>
+                        <td><button class="control-button" onclick="event.stopPropagation(); switchSides()">SWITCH SIDES</button></td>
+                    </tr>
+                    <tr>
+                        <td><button class="control-button" onclick="event.stopPropagation()">BACK TO BRACKET</button></td>
+                        <td><button class="control-button" onclick="event.stopPropagation()">BACK TO FIGHTORDER</button></td>
+                        <td><button class="control-button" onclick="event.stopPropagation(); showEndGame()">END GAME</button></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
     </div>
-  <div class="row top-section">
-      <!-- Left Side -->
-      <div class="top-left-section">
 
-            <div class="name-section">
-              <img class="flag" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Flag_of_Mongolia.svg/1920px-Flag_of_Mongolia.svg.png" alt="Mongolian Flag" />
-              <div class="name-texts">
-                <div id="winner1"></div>
-                <div class="full-name-wrapper">
-                  <div id="fullNameTop" class="full-name short">
-                    @if (!empty($registered) && isset($registered[0]))
-                      {{$registered[0]->member->fullname ?? '-'}}
-                    @else
-                      TBD
-                    @endif
-                  </div>
-                </div>
-                <div id="clubNameTop" class="club-name">
-                  @if (!empty($registered) && isset($registered[0]))
-                    {{$registered[0]->academy->name ?? '-'}}
-                  @endif
-                </div>
-              </div>
-            </div>
+    <!-- End Game Panels -->
+    <!-- Panel 1: Draw/DQ/NoShow - right side between rows -->
+    <div class="end-game-panel end-game-draw" id="endGameDraw">
+        <table class="end-game-table" style="background: #000; padding: 10px;">
+            <tr>
+                <td><button class="end-game-button" onclick="event.stopPropagation(); announceDraw('DRAW')">DRAW</button></td>
+                <td><button class="end-game-button" onclick="event.stopPropagation(); announceDraw('DOUBLE WO/DQ')">DOUBLE WO/DQ</button></td>
+                <td><button class="end-game-button" onclick="event.stopPropagation(); announceDraw('DOUBLE NO SHOW')">DOUBLE NO SHOW</button></td>
+            </tr>
+        </table>
+    </div>
 
+    <!-- Panel 2: Red Won By - left side, row 1 -->
+    <div class="end-game-panel end-game-red" id="endGameRed">
+        <table class="end-game-table" style="background: #000; padding: 10px;">
+            <tr>
+                <td colspan="4"><div class="end-game-header red-header">WON BY:</div></td>
+            </tr>
+            <tr>
+                <td colspan="2"><button class="end-game-button" onclick="event.stopPropagation(); announceWinner('red', 'POINTS', {{!empty($registered) && isset($registered[0]) ? $registered[0]->id : 'null'}} )">POINTS</button></td>
+                <td colspan="2"><button class="end-game-button" onclick="event.stopPropagation(); announceWinner('red', 'SUBMISSION', {{!empty($registered) && isset($registered[0]) ? $registered[0]->id : 'null'}} )">SUBMISSION</button></td>
+            </tr>
+            <tr>
+                <td><button class="end-game-button" onclick="event.stopPropagation(); announceWinner('red', 'DISQUALIFICATION', {{!empty($registered) && isset($registered[0]) ? $registered[0]->id : 'null'}} )">DISQUALIFICATION</button></td>
+                <td><button class="end-game-button" onclick="event.stopPropagation(); announceWinner('red', 'WALKOVER', {{!empty($registered) && isset($registered[0]) ? $registered[0]->id : 'null'}} )">WALKOVER</button></td>
+                <td><button class="end-game-button" onclick="event.stopPropagation(); announceWinner('red', 'NO SHOW', {{!empty($registered) && isset($registered[0]) ? $registered[0]->id : 'null'}} )">NO SHOW</button></td>
+                <td><button class="end-game-button" onclick="event.stopPropagation(); announceWinner('red', 'DECISION', {{!empty($registered) && isset($registered[0]) ? $registered[0]->id : 'null'}} )">DECISION</button></td>
+            </tr>
+        </table>
+    </div>
 
-            <div class="controls-mini">
-              <div class="controls">
-                <button class="positive" onclick="changeScore('top', 1)">+1</button>
-                <button class="positive" onclick="changeScore('top', 2)">+2</button>
-                <button class="positive" onclick="changeScore('top', 3)">+3</button>
-                <button class="positive" onclick="changeScore('top', 4)">+4</button>
-                <button class="positive" onclick="changeMiniScore('top', 'advantage', 1)">+A</button>
-                <button class="positive" onclick="changeMiniScore('top', 'penalty', 1)">+P</button>
-                <button class="positive mplay">MEDIC</button>
+    <!-- Panel 3: Blue Won By - left side, row 2 -->
+    <div class="end-game-panel end-game-blue" id="endGameBlue">
+        <table class="end-game-table" style="background: #000; padding: 10px;">
+            <tr>
+                <td colspan="4"><div class="end-game-header blue-header">WON BY:</div></td>
+            </tr>
+            <tr>
+                <td colspan="2"><button class="end-game-button" onclick="event.stopPropagation(); announceWinner('blue', 'POINTS', {{!empty($registered) && isset($registered[1]) ? $registered[1]->id : 'null'}} )">POINTS</button></td>
+                <td colspan="2"><button class="end-game-button" onclick="event.stopPropagation(); announceWinner('blue', 'SUBMISSION', {{!empty($registered) && isset($registered[1]) ? $registered[1]->id : 'null'}} )">SUBMISSION</button></td>
+            </tr>
+            <tr>
+                <td><button class="end-game-button" onclick="event.stopPropagation(); announceWinner('blue', 'DISQUALIFICATION', {{!empty($registered) && isset($registered[1]) ? $registered[1]->id : 'null'}} )">DISQUALIFICATION</button></td>
+                <td><button class="end-game-button" onclick="event.stopPropagation(); announceWinner('blue', 'WALKOVER', {{!empty($registered) && isset($registered[1]) ? $registered[1]->id : 'null'}} )">WALKOVER</button></td>
+                <td><button class="end-game-button" onclick="event.stopPropagation(); announceWinner('blue', 'NO SHOW', {{!empty($registered) && isset($registered[1]) ? $registered[1]->id : 'null'}} )">NO SHOW</button></td>
+                <td><button class="end-game-button" onclick="event.stopPropagation(); announceWinner('blue', 'DECISION', {{!empty($registered) && isset($registered[1]) ? $registered[1]->id : 'null'}} )">DECISION</button></td>
+            </tr>
+        </table>
+    </div>
 
-                <button class="negative" onclick="changeScore('top', -1)">-1</button>
-                <button class="negative" onclick="changeScore('top', -2)">-2</button>
-                <button class="negative" onclick="changeScore('top', -3)">-3</button>
-                <button class="negative" onclick="changeScore('top', -4)">-4</button>
-                <button class="negative" onclick="changeMiniScore('top', 'advantage', -1)">-A</button>
-                <button class="negative" onclick="changeMiniScore('top', 'penalty', -1)">-P</button>
-                <button id="sbtn1" class="sbuttons">STALLING</button>
-              </div>
-            </div>
-      </div>
+    <button class="stalling-button" id="stallingButton" onclick="event.stopPropagation(); toggleDoubleStalling()">DOUBLE STALLING</button>
 
-      <!-- Middle -->
-      <div class="top-mid-section">
-          <div class="stimer-container">
-            <div id="stimer1" class="stimer">10</div>
-            <button id="sbtn4" class="stalling_transparent_button"; style="border: none; background: rgba(0, 0, 0, 0.0); color: black;"> </button>
-          </div>
+    <!-- Winner Banner -->
+    <div class="winner-banner" id="winnerBanner"></div>
 
-          <div class="mtimer-container" data-id="0">
-              <div class="mcontrols">
-                  <div class="mrow">
-                      <button class="mminus">-1</button>
-                      <button class="mplay">Play</button>
-                      <button class="mplus">+1</button>
-                  </div>
-                  <div class="mrow"><button class="mreset">Reset</button></div>
-              </div>
-              <span class="mtime">2:00</span>
-          </div>
+    <!-- Draw Banners (for DRAW, DOUBLE WO/DQ, DOUBLE NO SHOW) -->
+    <div class="draw-banner top-banner" id="drawBannerTop"></div>
+    <div class="draw-banner bottom-banner" id="drawBannerBottom"></div>
 
-      </div>
+    <!-- Post-Result Buttons (appear after winner/draw announced) -->
+    <div class="post-result-buttons" id="postResultButtons">
+        <table style="background: #000; padding: 10px; border-collapse: separate; border-spacing: 0;">
+            <tr>
+                <td>
+                    <table class="post-result-table" style="width: 100%;">
+                        <tr>
+                            <td style="padding-bottom: 6px;">
+                                <button class="post-result-button save-button" onclick="event.stopPropagation()" style="width: 100%;">SAVE</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 0;">
+                                <table class="post-result-table">
+                                    <tr>
+                                        <td><button class="post-result-button" onclick="event.stopPropagation(); goBack()">BACK</button></td>
+                                        <td><button class="post-result-button" onclick="event.stopPropagation()">FIGHTORDER</button></td>
+                                        <td><button class="post-result-button" onclick="event.stopPropagation()">BRACKET</button></td>
+                                        <td><button class="post-result-button" onclick="event.stopPropagation()">NEXT</button></td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </div>
 
-      <!-- Right Side -->
-      <div class="top-right-section">
-          <div class="column-left">
-              <div class="mini-scores">
-                  <div class="mini-score-box1">
-                      <div class="mini-label">Advantage</div>
-                      <div id="advantageTop" class="mini-score">0</div>
-                  </div>
-                  <div class="mini-score-box2">
-                        <div class="mini-label">Penalty</div>
-                        <div id="penaltyTop" class="mini-score">0</div>
-                  </div>
-              </div>
-          </div>
-                  
-          <div id="scoreTop" class="score-container score-top">
-              <div id="scoreValueTop" class="score">0</div>
-          </div>
-
-      </div>
-
-  </div>
-
-  <div class="double-stimer-container">
-      <div></div>
-      <div class="dsbuttons">
-          <button id="sbtn2" class="ds_button">DOUBLE STALLING</button>
-      </div>
-      <div></div>
-  </div>
-
-  <div class="row middle-section">
-      <!-- Left Side -->
-      <div class="middle-left-section">
-        <div class="name-section">
-          <img class="flag" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Flag_of_Mongolia.svg/1920px-Flag_of_Mongolia.svg.png" alt="Mongolian Flag" />
-          <div class="name-texts">
-            <div id="winner2"></div>
-            <div class="full-name-wrapper">
-              <div id="fullNameBottom" class="full-name short">
-                @if (!empty($registered) && isset($registered[1]))
-                  {{$registered[1]->member->fullname ?? '-'}}
-                @else
-                  TDB
-                @endif
-              </div>
-            </div>
-            <div id="clubNameBottom" class="club-name">
-              @if (!empty($registered) && isset($registered[1]))
-                {{$registered[1]->academy->name ?? '-'}}
-              @endif
-            </div>
-          </div>
-      </div>
-
-        <div class="controls-mini" id="controlsMini">
-          <div class="controls">
-            <button class="positive" onclick="changeScore('bottom', 1)">+1</button>
-            <button class="positive" onclick="changeScore('bottom', 2)">+2</button>
-            <button class="positive" onclick="changeScore('bottom', 3)">+3</button>
-            <button class="positive" onclick="changeScore('bottom', 4)">+4</button>
-            <button class="positive" onclick="changeMiniScore('bottom', 'advantage', 1)">+A</button>
-            <button class="positive" onclick="changeMiniScore('bottom', 'penalty', 1)">+P</button>
-            <button class="positive mplay">MEDIC</button>
-
-            <button class="negative" onclick="changeScore('bottom', -1)">-1</button>
-            <button class="negative" onclick="changeScore('bottom', -2)">-2</button>
-            <button class="negative" onclick="changeScore('bottom', -3)">-3</button>
-            <button class="negative" onclick="changeScore('bottom', -4)">-4</button>
-            <button class="negative" onclick="changeMiniScore('bottom', 'advantage', -1)">-A</button>
-            <button class="negative" onclick="changeMiniScore('bottom', 'penalty', -1)">-P</button>
-            <button id="sbtn3" class="sbuttons">STALLING</button>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- Middle -->
-      <div class="middle-mid-section">
-        <div class="stimer-container">
-          
-          <div id="stimer2" class="stimer">10</div>
-          <div class="sbuttons">
-            <button id="sbtn5" class="stalling_transparent_button"; style="border: none; background: rgba(0, 0, 0, 0.0); color: black;"> </button>
-          </div>
-        </div>
-
-        <div class="mtimer-container" data-id="1">
-            <div class="mcontrols">
-                <div class="mrow">
-                    <button class="mminus">-1</button>
-                    <button class="mplay">Play</button>
-                    <button class="mplus">+1</button>
-                </div>
-                <div class="mrow"><button class="mreset">Reset</button></div>
-            </div>
-            <span class="mtime">2:00</span>
-        </div>
-
-      </div>
-
-      <!-- Right Side -->
-
-      <div class="middle-right-section">
-          <div class="column-left">
-
-              <div class="mini-scores">
-                <div class="mini-score-box1">
-                  <div class="mini-label">Advantage</div>
-                  <div id="advantageBottom" class="mini-score">0</div>
-                </div>
-                <div class="mini-score-box2">
-                  <div class="mini-label">Penalty</div>
-                  <div id="penaltyBottom" class="mini-score">0</div>
-                </div>
-              </div>
-          </div>      
-
-          <div id="scoreBottom" class="score-container score-bottom">
-              <div id="scoreValueBottom" class="score">0</div>
-          </div>
+<input id="reg_win_id" type="hidden" name="reg_win_id" value=""></input>
 
 
-
-      </div>
-
-
-  </div>
-
-  <div class="row bottom-section">
-      <div class="exit-buttons">
-        <button class="end-button" onclick="close_window()">Exit</button>
-        <button class="end-button" onclick="window.open()">Duplicate</button>
-        <button class="end-button" onclick="requestFullscreen()">Full Screen</button>
-        <button class="end-button" onclick="redirectToPrevCounter()">Go to previes match</button>
-        <button class="end-button" onclick="redirectToNextCounter()">Go to next match</button>
-        <button id="endBtn" class="end-button">End Game</button>
-        <button id="editBtn" class="end-button d-none">Edit Game</button>
-
-        <div class="popup" id="popup1">
-          <div class="popup-header red-header">WON BY:</div>
-          <div class="end-top-row">
-            <button class="end-button" onclick="chooseWinner('RED', 'POINTS', {{!empty($registered) && isset($registered[0]) ? $registered[0]->id : 'null'}})">POINTS</button>
-            <button class="end-button" onclick="chooseWinner('RED', 'SUBMISSION', {{!empty($registered) && isset($registered[0]) ? $registered[0]->id : 'null'}})">SUBMISSION</button>
-          </div>
-          <div class="end-bottom-row">
-            <button class="end-button" onclick="chooseWinner('RED', 'DISQUALIFICATION', {{!empty($registered) && isset($registered[0]) ? $registered[0]->id : 'null'}})">DISQUALIFICATION</button>
-            <button class="end-button"onclick="chooseWinner('RED', 'WALKOVER', {{!empty($registered) && isset($registered[0]) ? $registered[0]->id : 'null'}})">WALKOVER</button>
-            <button class="end-button"onclick="chooseWinner('RED', 'NOSHOW', {{!empty($registered) && isset($registered[0]) ? $registered[0]->id : 'null'}})">NOSHOW</button>
-            <button class="end-button"onclick="chooseWinner('RED', 'DECISION', {{!empty($registered) && isset($registered[0]) ? $registered[0]->id : 'null'}})">DECISION</button>
-          </div>
-        </div>
-
-        <div class="popup" id="popup2">
-          <div class="popup-header blue-header">WON BY:</div>
-          <div class="end-top-row">
-            <button class="end-button" onclick="chooseWinner('BLUE','POINTS', {{!empty($registered) && isset($registered[1]) ? $registered[1]->id : 'null'}})">POINTS</button>
-            <button class="end-button" onclick="chooseWinner('BLUE','SUBMISSION', {{!empty($registered) && isset($registered[1]) ? $registered[1]->id : 'null'}})">SUBMISSION</button>
-          </div>
-          <div class="end-bottom-row">
-            <button class="end-button" onclick="chooseWinner('BLUE','DISQUALIFICATION', {{!empty($registered) && isset($registered[1]) ? $registered[1]->id : 'null'}})">DISQUALIFICATION</button>
-            <button class="end-button" onclick="chooseWinner('BLUE','WALKOVER', {{!empty($registered) && isset($registered[1]) ? $registered[1]->id : 'null'}})">WALKOVER</button>
-            <button class="end-button" onclick="chooseWinner('BLUE','NOSHOW', {{!empty($registered) && isset($registered[1]) ? $registered[1]->id : 'null'}})">NOSHOW</button>
-            <button class="end-button" onclick="chooseWinner('BLUE','DECISION', {{!empty($registered) && isset($registered[1]) ? $registered[1]->id : 'null'}})">DECISION</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="popup" id="popup3">
-        <div class="end-double-btn">
-          <button class="end-button" onclick="doubleLoser('WO/DQ')">DOUBLE WO/DQ</button>
-          <button class="end-button" onclick="doubleLoser('NO SHOW')">DOUBLE NO SHOW</button>
-        </div>
-      </div>
-
-      <div class="clock-section">
-          <div class="clock-container">
-            <div id="timer">5:00</div>
-          </div>
-
-          <div class="clock-controls">
-          <button onclick="adjustTime(-30)">-30</button>
-          <button onclick="adjustTime(-1)">-1</button>
-          <button id="startPauseBtn" onclick="toggleTimer()">Start</button>
-          <button onclick="adjustTime(1)">+1</button>
-          <button onclick="adjustTime(30)">+30</button>
-      </div>
-  </div>
-
-
-
-<script src="{{ asset('js/scoreboard/scoreboard_js_clock.js') }}"></script>
-<script src="{{ asset('js/scoreboard/scoreboard_js_endgame.js') }}"></script>
-<script src="{{ asset('js/scoreboard/scoreboard_js_mtimer.js') }}"></script>
-<script src="{{ asset('js/scoreboard/scoreboard_js_script.js') }}"></script>
-<script src="{{ asset('js/scoreboard/scoreboard_js_stalling.js') }}"></script>
-
+<script src="{{ asset('js/scoreboard/scoreboard.js') }}"></script>
 
 <script>
     const bracket = @json($bracket);
-    console.log('Bracket Data:', bracket);
+    const allData = @json($registered);
+    const winnerData = allData[2];
+    const regOne = allData[0];
+    console.log('Registered One:', bracket);
+
     const localStorageKey = `${bracket.event_id}_${bracket.day_id}_${bracket.mat_id}`;
     const localStorageData = JSON.parse(localStorage.getItem(localStorageKey));
     console.log('Local Storage Data:', localStorageData);
@@ -337,26 +353,4 @@
         window.location.href = "{{ route('event.config.counter.prev', ['match_id' => $matchId]) }}";
       }
     }
-    const allData = @json($registered);
-    console.log(allData);
-    const winnerData = allData[2];
-    const regOne = allData[0];
-    if(winnerData && regOne){
-      setWinner(winnerData.id == regOne.id ? 'red' : 'blue');
-      document.getElementById('editBtn').style.display = 'block';
-      document.getElementById('endBtn').style.display = 'none';
-    } else {
-      document.getElementById('editBtn').style.display = 'none';
-      document.getElementById('endBtn').style.display = 'block';
-    }
-
-    document.getElementById("editBtn").addEventListener("click", () => {
-      popup1.style.display = "block";
-      popup2.style.display = "block";
-      popup3.style.display = "block";
-      winnerDiv1.textContent = ""; // clear previous winner
-      winnerDiv2.textContent = ""; // clear previous winner
-      document.getElementById('winnerForm').setAttribute('action', "{{ route('event.config.match.update.winner', ['match_id' => $matchId]) }}");
-    });
-
 </script>

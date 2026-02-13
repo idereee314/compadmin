@@ -3,29 +3,22 @@
 @section('css')
 <link rel="stylesheet" href="{{asset('assets/js/plugins/custom/datatables/datatables.bundle.css')}}">
 @endsection
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 @section('content')
 <!--begin::Main-->
-<!--begin::Header Mobile-->
-@include('layouts.mobile')
-<!--end::Header Mobile-->
-<!--begin::Aside-->
-@include('layouts.aside')
-<!--end::Aside-->
 <!--begin::Wrapper-->
-<div class="d-flex flex-column flex-row-fluid wrapper" id="kt_wrapper">
-    @include('layouts.header')
-    <div class="content d-flex flex-column flex-column-fluid">
+    <div class="d-flex flex-column flex-row-fluid" id="kt_wrapper">
+        <div class="content d-flex flex-column flex-column-fluid">
         @include('event.config.tab_match')
+        </div>
+        <!--end::Content-->
+        <!--begin::Footer-->
+        @include('layouts.footer')
+        <!--end::Footer-->
     </div>
-</div>
-<!--begin::Footer-->
-@include('layouts.footer')
-<!--end::Footer-->
-
+    <!--end::Wrapper-->
+<!--end::Main-->
 @section('javascript')
-<script src="{{asset('assets/js/plugins/custom/datatables/datatables.bundle.js')}}"></script>
-<script  type="text/javascript">
-</script>
 @endsection
 @stop
