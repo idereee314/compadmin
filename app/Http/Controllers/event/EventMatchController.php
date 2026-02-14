@@ -64,7 +64,10 @@ class EventMatchController extends Controller
     {
         $this->mathes->updateWinner($match_id, $request);
         $match = $this->mathes->find($match_id);
-        return redirect()->route('event.config.match.edit_status', ['eventId' => $match->event_id, 'match_id' => $match_id]);
+        return  response()->json([
+                'status' => 'success',
+                'msg'    => trans('messages.success_update'),
+            ]);;
     }
 
     public function store(Request $request, $event_id){

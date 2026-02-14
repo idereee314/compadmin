@@ -6,22 +6,39 @@
   @php exit; @endphp
 @endif
 
-{{-- @extends('default')
+<html lang="{{ app()->getLocale() }}">
+	<!--begin::Head-->
+	<head><base href="">
+		<meta charset="utf-8" />
+		<meta name="description" content="Competition, Тэмцээн" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+		<meta name="author" content="Smart Data LLC">
+		<meta name="csrf-token" content="{{ csrf_token() }}">
+		<!--begin::Fonts-->
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" />
 
-@section('styles')
-<link rel="stylesheet" href="{{asset('assets/js/plugins/custom/datatables/datatables.bundle.css')}}">
-@endsection
+		<!-- Global Theme Styles (used by all pages) -->
+		<link rel="stylesheet" href="{{ asset('/assets/plugins/global/plugins.bundle.css') }}" media="screen" />
+		<link rel="stylesheet" href="{{ asset('/assets/plugins/custom/prismjs/prismjs.bundle.css') }}" media="screen" />
+		<link rel="stylesheet" href="{{ asset('/assets/css/style.bundle.css') }}" media="screen" />
+		<link rel="stylesheet" href="{{ asset('/assets/css/style.bundle.css') }}" media="screen" />
+        <link rel="stylesheet" href="{{asset('css/scoreboard/scoreboard.css')}}">
 
-@section('content') --}}
+		<!--end::Global Theme Styles-->
+		
+		<!--begin::Layout Themes(used by all pages)-->
+		@yield('css')
+		<!--end::Layout Themes-->
+		<link rel="shortcut icon" href="{{asset('assets/images/logo/uniq_logo.ico')}}" />
+		<title>Тэмцээний Удирдлагын Систем</title>
+	</head>
 
-
-<link rel="stylesheet" href="{{asset('css/scoreboard/scoreboard.css')}}">
+<body>
 
 <form id="winnerForm" action="{{ route('event.config.match.winner', ['match_id' => $matchId]) }}" method="POST"  style="display:none;">
 
 </form>
-
-    <div class="container">
+    <div class="">
         <div class="row">
             <div class="player-info">
                 <div class="player-row-1">
@@ -243,14 +260,14 @@
                 <td colspan="4"><div class="end-game-header red-header">WON BY:</div></td>
             </tr>
             <tr>
-                <td colspan="2"><button class="end-game-button" onclick="event.stopPropagation(); announceWinner('red', 'POINTS', {{!empty($registered) && isset($registered[0]) ? $registered[0]->id : 'null'}} )">POINTS</button></td>
-                <td colspan="2"><button class="end-game-button" onclick="event.stopPropagation(); announceWinner('red', 'SUBMISSION', {{!empty($registered) && isset($registered[0]) ? $registered[0]->id : 'null'}} )">SUBMISSION</button></td>
+                <td colspan="2"><button class="end-game-button" onclick="event.stopPropagation(); announceWinner('red', 'POINTS' ); setWinnerId({{!empty($registered) && isset($registered[0]) ? $registered[0]->id : 'null'}})">POINTS</button></td>
+                <td colspan="2"><button class="end-game-button" onclick="event.stopPropagation(); announceWinner('red', 'SUBMISSION'); setWinnerId({{!empty($registered) && isset($registered[0]) ? $registered[0]->id : 'null'}})">SUBMISSION</button></td>
             </tr>
             <tr>
-                <td><button class="end-game-button" onclick="event.stopPropagation(); announceWinner('red', 'DISQUALIFICATION', {{!empty($registered) && isset($registered[0]) ? $registered[0]->id : 'null'}} )">DISQUALIFICATION</button></td>
-                <td><button class="end-game-button" onclick="event.stopPropagation(); announceWinner('red', 'WALKOVER', {{!empty($registered) && isset($registered[0]) ? $registered[0]->id : 'null'}} )">WALKOVER</button></td>
-                <td><button class="end-game-button" onclick="event.stopPropagation(); announceWinner('red', 'NO SHOW', {{!empty($registered) && isset($registered[0]) ? $registered[0]->id : 'null'}} )">NO SHOW</button></td>
-                <td><button class="end-game-button" onclick="event.stopPropagation(); announceWinner('red', 'DECISION', {{!empty($registered) && isset($registered[0]) ? $registered[0]->id : 'null'}} )">DECISION</button></td>
+                <td><button class="end-game-button" onclick="event.stopPropagation(); announceWinner('red', 'DISQUALIFICATION'); setWinnerId({{!empty($registered) && isset($registered[0]) ? $registered[0]->id : 'null'}})">DISQUALIFICATION</button></td>
+                <td><button class="end-game-button" onclick="event.stopPropagation(); announceWinner('red', 'WALKOVER'); setWinnerId({{!empty($registered) && isset($registered[0]) ? $registered[0]->id : 'null'}})">WALKOVER</button></td>
+                <td><button class="end-game-button" onclick="event.stopPropagation(); announceWinner('red', 'NO SHOW'); setWinnerId({{!empty($registered) && isset($registered[0]) ? $registered[0]->id : 'null'}})">NO SHOW</button></td>
+                <td><button class="end-game-button" onclick="event.stopPropagation(); announceWinner('red', 'DECISION'); setWinnerId({{!empty($registered) && isset($registered[0]) ? $registered[0]->id : 'null'}})">DECISION</button></td>
             </tr>
         </table>
     </div>
@@ -262,14 +279,14 @@
                 <td colspan="4"><div class="end-game-header blue-header">WON BY:</div></td>
             </tr>
             <tr>
-                <td colspan="2"><button class="end-game-button" onclick="event.stopPropagation(); announceWinner('blue', 'POINTS', {{!empty($registered) && isset($registered[1]) ? $registered[1]->id : 'null'}} )">POINTS</button></td>
-                <td colspan="2"><button class="end-game-button" onclick="event.stopPropagation(); announceWinner('blue', 'SUBMISSION', {{!empty($registered) && isset($registered[1]) ? $registered[1]->id : 'null'}} )">SUBMISSION</button></td>
+                <td colspan="2"><button class="end-game-button" onclick="event.stopPropagation(); announceWinner('blue', 'POINTS' ); setWinnerId({{!empty($registered) && isset($registered[1]) ? $registered[1]->id : 'null'}})">POINTS</button></td>
+                <td colspan="2"><button class="end-game-button" onclick="event.stopPropagation(); announceWinner('blue', 'SUBMISSION'); setWinnerId({{!empty($registered) && isset($registered[1]) ? $registered[1]->id : 'null'}})">SUBMISSION</button></td>
             </tr>
             <tr>
-                <td><button class="end-game-button" onclick="event.stopPropagation(); announceWinner('blue', 'DISQUALIFICATION', {{!empty($registered) && isset($registered[1]) ? $registered[1]->id : 'null'}} )">DISQUALIFICATION</button></td>
-                <td><button class="end-game-button" onclick="event.stopPropagation(); announceWinner('blue', 'WALKOVER', {{!empty($registered) && isset($registered[1]) ? $registered[1]->id : 'null'}} )">WALKOVER</button></td>
-                <td><button class="end-game-button" onclick="event.stopPropagation(); announceWinner('blue', 'NO SHOW', {{!empty($registered) && isset($registered[1]) ? $registered[1]->id : 'null'}} )">NO SHOW</button></td>
-                <td><button class="end-game-button" onclick="event.stopPropagation(); announceWinner('blue', 'DECISION', {{!empty($registered) && isset($registered[1]) ? $registered[1]->id : 'null'}} )">DECISION</button></td>
+                <td><button class="end-game-button" onclick="event.stopPropagation(); announceWinner('blue', 'DISQUALIFICATION'); setWinnerId({{!empty($registered) && isset($registered[1]) ? $registered[1]->id : 'null'}})">DISQUALIFICATION</button></td>
+                <td><button class="end-game-button" onclick="event.stopPropagation(); announceWinner('blue', 'WALKOVER'); setWinnerId({{!empty($registered) && isset($registered[1]) ? $registered[1]->id : 'null'}})">WALKOVER</button></td>
+                <td><button class="end-game-button" onclick="event.stopPropagation(); announceWinner('blue', 'NO SHOW'); setWinnerId({{!empty($registered) && isset($registered[1]) ? $registered[1]->id : 'null'}})">NO SHOW</button></td>
+                <td><button class="end-game-button" onclick="event.stopPropagation(); announceWinner('blue', 'DECISION'); setWinnerId({{!empty($registered) && isset($registered[1]) ? $registered[1]->id : 'null'}})">DECISION</button></td>
             </tr>
         </table>
     </div>
@@ -291,7 +308,7 @@
                     <table class="post-result-table" style="width: 100%;">
                         <tr>
                             <td style="padding-bottom: 6px;">
-                                <button class="post-result-button save-button" onclick="event.stopPropagation()" style="width: 100%;">SAVE</button>
+                                <button class="post-result-button save-button" onclick="event.stopPropagation(); saveMatchResult()" style="width: 100%;">SAVE</button>
                             </td>
                         </tr>
                         <tr>
@@ -301,7 +318,7 @@
                                         <td><button class="post-result-button" onclick="event.stopPropagation(); goBack()">BACK</button></td>
                                         <td><button class="post-result-button" onclick="event.stopPropagation()">FIGHTORDER</button></td>
                                         <td><button class="post-result-button" onclick="event.stopPropagation()">BRACKET</button></td>
-                                        <td><button class="post-result-button" onclick="event.stopPropagation()">NEXT</button></td>
+                                        <td><button class="post-result-button" onclick="event.stopPropagation(); redirectToNextCounter()">NEXT</button></td>
                                     </tr>
                                 </table>
                             </td>
@@ -316,6 +333,19 @@
 
 
 <script src="{{ asset('js/scoreboard/scoreboard.js') }}"></script>
+<!--begin::Global Config(global config for global JS scripts)-->
+<script>var KTAppSettings = { "breakpoints": { "sm": 576, "md": 768, "lg": 992, "xl": 1200, "xxl": 1200 }, "colors": { "theme": { "base": { "white": "#ffffff", "primary": "#6993FF", "secondary": "#E5EAEE", "success": "#1BC5BD", "info": "#8950FC", "warning": "#FFA800", "danger": "#F64E60", "light": "#F3F6F9", "dark": "#212121" }, "light": { "white": "#ffffff", "primary": "#E1E9FF", "secondary": "#ECF0F3", "success": "#C9F7F5", "info": "#EEE5FF", "warning": "#FFF4DE", "danger": "#FFE2E5", "light": "#F3F6F9", "dark": "#D6D6E0" }, "inverse": { "white": "#ffffff", "primary": "#ffffff", "secondary": "#212121", "success": "#ffffff", "info": "#ffffff", "warning": "#ffffff", "danger": "#ffffff", "light": "#464E5F", "dark": "#ffffff" } }, "gray": { "gray-100": "#F3F6F9", "gray-200": "#ECF0F3", "gray-300": "#E5EAEE", "gray-400": "#D6D6E0", "gray-500": "#B5B5C3", "gray-600": "#80808F", "gray-700": "#464E5F", "gray-800": "#1B283F", "gray-900": "#212121" } }, "font-family": "Poppins" };</script>
+<!--end::Global Config-->
+<!--begin::Global Theme Bundle(used by all pages)-->
+<script src="{{asset('assets/plugins/global/plugins.bundle.js')}}"></script>
+<script src="{{asset('assets/plugins/custom/prismjs/prismjs.bundle.js')}}"></script>
+<script src="{{asset('assets/js/scripts.bundle.js')}}"></script>
+<script src="{{ asset('assets/js/plugins/custom/datatables/datatables.bundle.js') }}"></script>
+<script src="{{asset('assets/js/smart.js')}}"></script>
+
+<script src="{{asset('assets/js/plugins/custom/blockui/jquery.blockUI.js')}}"> </script>
+<script src="{{asset('assets/js/plugins/custom/jquery-confirm/jquery-confirm.min.js') }}"></script>
+<script src="{{asset('assets/js/plugins/custom/jquery-validation/dist/jquery.validate.js') }}"></script>
 
 <script>
     const bracket = @json($bracket);
@@ -355,4 +385,39 @@
         window.location.href = "{{ route('event.config.counter.prev', ['match_id' => $matchId]) }}";
       }
     }
+
+    
+    if(winnerData && winnerData.id) {
+        const localStorageKey1 = `{{ $matchId }}-winner`;
+        const localStorageData1 = JSON.parse(localStorage.getItem(localStorageKey1));
+        announceWinner(winnerData.id === regOne.id ? 'red' : 'blue', localStorageData1.method);
+    }
+
+    function saveMatchResult() {
+        const form = document.getElementById('winnerForm');
+        const regWinId = form.querySelector('input[name="reg_win_id"]').value;
+        const winnerMethod = form.querySelector('input[name="reg_win_method"]').value;
+        console.log('Saving match result with winner reg ID:', regWinId);
+        postData = {
+            '_token': '{{ csrf_token() }}',
+            'reg_win_id': regWinId
+        };
+        fetch("{{ route('event.config.match.winner', ['match_id' => $matchId]) }}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            body: JSON.stringify(postData)
+        })        .then(response => response.json())
+        .then(data => {
+            toastr.success(data.msg);
+            localStorage.setItem(`{{ $matchId }}-winner`, JSON.stringify({winner: regWinId, method: winnerMethod}));
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+    }
 </script>
+</body>
+</html>

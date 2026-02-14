@@ -10,6 +10,16 @@
             }
             input.value = winnerId;
         }   
+        function setWinnerMethod(winnerMethod) {
+            let input = form.querySelector('input[name="reg_win_method"]');
+            if (!input) {
+                input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'reg_win_method';
+                form.appendChild(input);
+            }
+            input.value = winnerMethod;
+        }   
         let endGameVisible = false;
 
         function showEndGame() {
@@ -30,13 +40,13 @@
             document.getElementById('endGameBlue').classList.remove('visible');
         }
 
-        function announceWinner(player, method, id) {
+        function announceWinner(player, method) {
             hideEndGame();
             
             const banner = document.getElementById('winnerBanner');
             banner.textContent = `WINNER BY ${method}`;
+            setWinnerMethod(method);
             banner.classList.add('visible');
-            setWinnerId(id);
             banner.classList.add(player === 'red' ? 'red-winner' : 'blue-winner');
             
             // Keep timer controls and control buttons hidden
@@ -45,7 +55,6 @@
             
             // Show post-result buttons
             document.getElementById('postResultButtons').classList.add('visible');
-            form.submit();
         }
 
         function announceDraw(result) {
