@@ -25,7 +25,7 @@
         <div class="row">
             <div class="player-info">
                 <div class="player-row-1">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/4/4c/Flag_of_Mongolia.svg" alt="Mongolia Flag" class="player-flag">
+                    <img src="{{asset('assets/images/flags/4x3/' . ($registered[0]->abb )) .'.svg'}}" alt="Mongolia Flag" class="player-flag">
                     <div class="player-name">
                         @if (!empty($registered) && isset($registered[0]))
                             {{$registered[0]->member->firstname ?? '-'}}
@@ -36,8 +36,9 @@
                     </div>
                 </div>
                 <div class="player-row-2">
-                    <div class="country-code">MGL</div>
-                    <img src="{{asset('assets/images/logo/club/1.jpg')}}" alt="Club Logo" class="club-logo">
+                    <div class="country-code">{{$registered[1]->abb_full ?? '-'}}</div>
+                    <img src="{{asset('assets/images/logo/club/' . ($registered[0]->academy_id )) .'.jpg'}}" alt="Club Logo" class="club-logo"
+                    onerror="this.src='{{asset('assets/images/logo/club/0.png')}}'">
                     <div class="club-name">
                         @if (!empty($registered) && isset($registered[0]))
                             {{$registered[0]->academy->name }}
@@ -102,7 +103,7 @@
         <div class="row">
             <div class="player-info">
                 <div class="player-row-1">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/4/4c/Flag_of_Mongolia.svg" alt="Mongolia Flag" class="player-flag">
+                    <img src="{{asset('assets/images/flags/4x3/' . ($registered[1]->abb )) .'.svg'}}" alt="Mongolia Flag" class="player-flag">
                     <div class="player-name">
                         @if (!empty($registered) && isset($registered[1]))
                             {{$registered[1]->member->firstname ?? '-'}}
@@ -113,8 +114,9 @@
                     </div>
                 </div>
                 <div class="player-row-2">
-                    <div class="country-code">MGL</div>
-                    <img src="{{asset('assets/images/logo/club/2.jpg')}}" alt="Club Logo" class="club-logo">
+                    <div class="country-code">{{$registered[1]->abb_full ?? '-'}}</div>
+                    <img src="{{asset('assets/images/logo/club/' . ($registered[1]->academy_id )) .'.jpg'}}" alt="Club Logo" class="club-logo"
+                    onerror="this.src='{{asset('assets/images/logo/club/0.png')}}'">
                     <div class="club-name">
                         @if (!empty($registered) && isset($registered[1]))
                             {{$registered[1]->academy->name ?? '-'}}

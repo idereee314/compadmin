@@ -221,6 +221,20 @@ class EloquentEventMatchesRespository implements EventMatchesRespository {
 			->where('order_no', 100, '<')
 			->count();
 
+		$token = DB::select('SELECT A.* FROM uq_country_abbrevation A inner join uq_country uc ON a.abbrevation = uc.abbreviation LEFT JOIN uq_member  B on uc.id = b.country_id  WHERE B.id = ?', [
+			$match->regOne->member_id ?? 0,
+		]);
+
+		$match->regOne->abb_full = $token[0]->token ?? null;
+		$match->regOne->abb = $token[0]->abbrevation ?? null;
+
+		$token = DB::select('SELECT A.* FROM uq_country_abbrevation A inner join uq_country uc ON a.abbrevation = uc.abbreviation LEFT JOIN uq_member  B on uc.id = b.country_id  WHERE B.id = ?', [
+			$match->regTwo->member_id ?? 0,
+		]);
+
+		$match->regTwo->abb_full = $token[0]->token ?? null;
+		$match->regTwo->abb = $token[0]->abbrevation ?? null;
+		
 		$match->bracket->round = TournamentEliminationStrategyFactory::determineRound(
 			$count,
 			$match->order_no,
