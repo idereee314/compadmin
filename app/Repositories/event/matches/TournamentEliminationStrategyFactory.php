@@ -28,6 +28,7 @@ class TournamentEliminationStrategyFactory implements TournamentEliminationFacto
     {
         $this->strategies = [
             'single' => SingleEliminationStrategy::class,
+            'double_single_bronze' => DoubleEliminationStrategy::class,
             'double' => DoubleEliminationStrategy::class,
             // 'round_robin' => RoundRobinStrategy::class,
         ];

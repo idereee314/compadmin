@@ -33,11 +33,15 @@ class EloquentEventMatchesRespository implements EventMatchesRespository {
 		return EventBrackets::find($id);
 	}
 
+	public function findMateBracket($id)
+	{
+		return EventMateBracket::find($id);
+	}
+
 	public function create($input)
 	{
 		$eventMatches = new EventMatches();
 		$eventBracket = findBracket($input['bracket_id']);
-		Log::info('Event Bracket: ', (array)$eventBracket);
 		if (!$eventBracket) {
 			$eventMatches->event_id = $eventBracket['event_id'];
 			$eventMatches->bracket_id = $eventBracket['bracket_id'];
@@ -86,18 +90,19 @@ class EloquentEventMatchesRespository implements EventMatchesRespository {
 	public function updateWinner($id, $input)
 	{
 		$eventMatche = $this->find($id);
+		$bracketMat = $this->findMateBracket($eventMatche->bracket_id);
 		if($input['reg_win_id'] != null){
 			$eventMatche->reg_win_id = $input['reg_win_id'];
 			$eventMatche->status = 'C';
 			$eventMatche->end_time = Carbon::now('GMT+8');
 			$eventMatche->save();
-			$this->updateNextReg($id, $eventMatche);
+			$this->updateNextReg($id, $eventMatche, $bracketMat);
 		}
-		$eventBracket = EventBrackets::where('event_id', $eventMatche->event_id)
-			->where('entry_id', $eventMatche->entry_id)
-			->where('entry_age_id', $eventMatche->entry_age_id)
-			->where('entry_belt_id', $eventMatche->entry_belt_id)
-			->where('entry_weight_id', $eventMatche->entry_weight_id)
+		$eventBracket = EventBrackets::where('event_id', $bracketMat->event_id)
+			->where('entry_id', $bracketMat->entry_id)
+			->where('entry_age_id', $bracketMat->entry_age_id)
+			->where('entry_belt_id', $bracketMat->entry_belt_id)
+			->where('entry_weight_id', $bracketMat->entry_weight_id)
 			->where(function($query) use ($eventMatche) {
 				$query->where(function($q) use ($eventMatche) {
 					$q->where('reg_one_id', $eventMatche->reg_one_id)
@@ -131,6 +136,7 @@ class EloquentEventMatchesRespository implements EventMatchesRespository {
 	public function editWinner($id, $input)
 	{
 		$eventMatche = $this->find($id);
+		$bracketMat = $this->findMateBracket($eventMatche->bracket_id);
 		if($input['reg_win_id'] != null){
 			$eventMatche->reg_win_id = $input['reg_win_id'];
 		}
@@ -145,12 +151,12 @@ class EloquentEventMatchesRespository implements EventMatchesRespository {
 			$eventMatche->end_time = Carbon::now('GMT+8');
 		}
 		$eventMatche->save();
-		$this->updateNextReg($id, $eventMatche);
+		$this->updateNextReg($id, $eventMatche, $bracketMat);
 		$eventBracket = EventBrackets::where('event_id', $eventMatche->event_id)
-			->where('entry_id', $eventMatche->entry_id)
-			->where('entry_age_id', $eventMatche->entry_age_id)
-			->where('entry_belt_id', $eventMatche->entry_belt_id)
-			->where('entry_weight_id', $eventMatche->entry_weight_id)
+			->where('entry_id', $bracketMat->entry_id)
+			->where('entry_age_id', $bracketMat->entry_age_id)
+			->where('entry_belt_id', $bracketMat->entry_belt_id)
+			->where('entry_weight_id', $bracketMat->entry_weight_id)
 			->where(function($query) use ($eventMatche) {
 				$query->where(function($q) use ($eventMatche) {
 					$q->where('reg_one_id', $eventMatche->reg_one_id)
@@ -169,7 +175,7 @@ class EloquentEventMatchesRespository implements EventMatchesRespository {
 
 	}
 
-	private function updateNextReg($id, $currentMatch)
+	private function updateNextReg($id, $currentMatch, $braketData)
 	{
 		$eventMatches = EventMatches::where('previes_mate_id1', $id)
 			->orWhere('previes_mate_id2', $id)->get();
@@ -177,20 +183,32 @@ class EloquentEventMatchesRespository implements EventMatchesRespository {
 		$losser = $currentMatch->reg_one_id == $winner ? $currentMatch->reg_two_id : $currentMatch->reg_one_id;
 		if($eventMatches->count() > 0) {
 			foreach ($eventMatches as $eventMatch) {
+				// $bracket = new EventBrackets();
+				// $bracket->event_id = $currentMatch->event_id;
+				// $bracket->entry_id = $braketData->entry_id;
+				// $bracket->entry_age_id = $braketData->entry_age_id;
+				// $bracket->entry_belt_id = $braketData->entry_belt_id;
+				// $bracket->entry_weight_id = $braketData->entry_weight_id;
+
 				if($eventMatch ->order_no == 9998 || $eventMatch -> is_double_loser){
 					if ($eventMatch->previes_mate_id1 == $id) {
 						$eventMatch->reg_one_id = $losser;
+						// $bracket->reg_one_id = $losser;
 					} else {
 						$eventMatch->reg_two_id = $losser;
+						// $bracket->reg_two_id = $losser;
 					}
 				} else{
 					if ($eventMatch->previes_mate_id1 == $id) {
 						$eventMatch->reg_one_id = $winner;
+						// $bracket->reg_one_id = $winner;
 					} else {
 						$eventMatch->reg_two_id = $winner;
+						// $bracket->reg_two_id = $winner;
 					}
 				}
 				$eventMatch->save();
+				// $bracket->save();
 			}
 		}
 	}
@@ -242,10 +260,6 @@ class EloquentEventMatchesRespository implements EventMatchesRespository {
 		);
 		$match->bracket->is_double_loser = $match->is_double_loser;
 
-		Log::info('round determined', [
-			'round' => $match->bracket->round,
-		]);
-
 		// Return combined data
 		return [
 			'registrations' => collect([
@@ -269,12 +283,18 @@ class EloquentEventMatchesRespository implements EventMatchesRespository {
 			->where('mat_id', $mat)
 			->first();
 		
-		$participants = EventRegistration::where('event_id', $event_id)
+		$participants = EventBrackets::where('event_id', $event_id)
 			->where('entry_id', $input['entry_id'])
 			->where('entry_age_id', $input['entry_age_id'])
 			->where('entry_belt_id', $input['entry_belt_id'])
 			->where('entry_weight_id', $input['entry_weight_id'])
-			->where('status', 'approved')->get()->pluck('id')->toArray();
+			->get()->flatMap(function ($row) {
+				return [$row->reg_one_id, $row->reg_two_id];
+			})
+			->toArray();
+		Log::info('Participants for match generation: ', [
+			'participants' => $participants,
+		]);
 
 		if (empty($participants)) {
 			return collect();
@@ -282,7 +302,12 @@ class EloquentEventMatchesRespository implements EventMatchesRespository {
 
 		$event = EventConfig::where('event_id', $event_id)
 			->first();
-		$bracketType = EventBracketType::find($event->bracket_type_id);
+		$bracketType = EventBracketType::find($event->event_bracket_type_id);
+
+		Log::info('Generating matches for Event ID: '.$event_id, [
+			'bracketType' => $bracketType->code,
+			'mateBracket' => $mateBracket ? $mateBracket->toArray() : null,
+		]);
 
 		$tournamentService = app()->make(TournamentMatchServiceAlias::class);
 		return $tournamentService->initializeTournament($event_id, $bracketType->code, $participants, $mateBracket);

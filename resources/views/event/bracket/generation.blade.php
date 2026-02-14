@@ -23,6 +23,7 @@
                 <script>
                     console.log("This is a log message from Blade");
                     console.log(@json($members)); // To log a PHP variable to console
+                    console.log(@json($byeList)); // To log a PHP variable to console
                 </script>
                 @for ($i = 0; $i < $round; $i++)
                     <div class="tournament-bracket__round">

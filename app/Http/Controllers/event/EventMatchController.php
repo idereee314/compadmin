@@ -42,7 +42,6 @@ class EventMatchController extends Controller
 
     public function showSchedule($eventId)
     {
-        Log::info('Show Schedule for Event ID: '.$eventId);
         $eventConfig = $this->eventConfig->find($eventId);
         $data['view_path'] = 'schedule';
         $data['eventConfig'] = $eventConfig;
