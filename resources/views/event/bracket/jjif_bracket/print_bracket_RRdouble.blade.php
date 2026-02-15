@@ -31,7 +31,7 @@
         <div>
             <h2 style="margin:0; font-size: 22px;">{{ @$eventConfig->event->name }}</h2>
             <div style="font-size: 14px; color: #444; margin-top: 5px; font-weight: bold;">
-                {{ @$entry->name }} | {{ @$age->name }} | {{ @$weight->weight }}кг | {{ Config::get("enums.gender_code")[@$entry->gender_code] }} | {{ date_format(date_create(@$eventConfig->event->event_date), 'Y-m-d') }}
+                {{ @$entry->name }} | {{ @$age->name }} | {{ @$belt->name ?? '-' }} | {{ @$weight->weight }}кг | {{ Config::get("enums.gender_code")[@$entry->gender_code] }} | {{ date_format(date_create(@$eventConfig->event->event_date), 'Y-m-d') }}
             </div>
         </div>
         <div style="text-align: right; font-size: 12px; font-weight: bold; color: #e11d48; text-transform: uppercase;">
