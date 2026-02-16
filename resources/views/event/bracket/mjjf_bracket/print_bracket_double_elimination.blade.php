@@ -132,6 +132,7 @@
             <div style="font-size: {{ $cfg['sub_font'] }}; color: #444; margin-top: 5px; font-weight: bold;">
                 {{ @$entry->name }} |
                 {{ @$age->name }} |
+                {{ @$belt->name ?? '-' }} |
                 {{ @$weight->weight }}кг |
                 {{ Config::get("enums.gender_code")[@$entry->gender_code] ?? '' }} |
                 {{ !empty(@$eventConfig->event->event_date) ? date_format(date_create(@$eventConfig->event->event_date), 'Y-m-d') : '' }}

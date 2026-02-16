@@ -18,14 +18,14 @@ class EventRegistration extends Model
     public static function rules($id)
     {
         return [
-            'member_id' => [
-                'required',
-                Rule::unique('uq_event_registration')->where(function ($query) use ($id) {
-                    return $query->where('event_id', request()->input('event_id'))
-                        ->where('entry_id', request()->input('entry_id'))
-                        ->where('id', '!=', $id);
-                }),
-            ],
+            // 'member_id' => [
+            //     'required',
+            //     Rule::unique('uq_event_registration')->where(function ($query) use ($id) {
+            //         return $query->where('event_id', request()->input('event_id'))
+            //             ->where('entry_id', request()->input('entry_id'))
+            //             ->where('id', '!=', $id);
+            //     }),
+            // ],
             'event_id' => 'required',
             'entry_id' => 'required',
             'entry_age_id' => 'required',

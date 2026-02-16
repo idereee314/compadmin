@@ -123,7 +123,7 @@
     };
 @endphp
 
-<div style="width:1600px; margin:0 auto; background-color: white; border: 1px solid #ccc; padding: 30px; font-family: 'Helvetica', 'Arial', sans-serif; position: relative; min-height: 1000px; color: #333;">
+<div style="width:{{ $width }}; margin:0 auto; background-color: white; border: 1px solid #ccc; padding: 30px; font-family: 'Helvetica', 'Arial', sans-serif; position: relative; min-height: 1000px; color: #333;">
 
     {{-- ========================= HEADER ========================= --}}
     <div style="border-bottom: 2px solid {{ $cfg['header_color'] }}; margin-bottom: 25px; padding-bottom: 10px; display: flex; justify-content: space-between; align-items: flex-end;">
@@ -132,6 +132,7 @@
             <div style="font-size: {{ $cfg['sub_font'] }}; color: #444; margin-top: 5px; font-weight: bold;">
                 {{ @$entry->name }} |
                 {{ @$age->name }} |
+                {{ @$belt->name ?? '-' }} |
                 {{ @$weight->weight }}кг |
                 {{ Config::get("enums.gender_code")[@$entry->gender_code] ?? '' }} |
                 {{ !empty(@$eventConfig->event->event_date) ? date_format(date_create(@$eventConfig->event->event_date), 'Y-m-d') : '' }}

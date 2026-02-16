@@ -1,7 +1,4 @@
 @php
-    /**
-     * 1. ӨГӨГДӨЛ БОЛОВСРУУЛАХ (DATA PREPARATION)
-     */
     $all_athletes = [];
     if (isset($members) && count($members) > 0) {
         foreach($members as $m) {
@@ -31,7 +28,7 @@
         <div>
             <h2 style="margin:0; font-size: 22px;">{{ @$eventConfig->event->name }}</h2>
             <div style="font-size: 14px; color: #444; margin-top: 5px; font-weight: bold;">
-                {{ @$entry->name }} | {{ @$age->name }} | {{ @$weight->weight }}кг | {{ Config::get("enums.gender_code")[@$entry->gender_code] }} | {{ date_format(date_create(@$eventConfig->event->event_date), 'Y-m-d') }}
+                {{ @$entry->name }} | {{ @$age->name }} | {{ @$belt->name ?? '-' }} | {{ @$weight->weight }}кг | {{ Config::get("enums.gender_code")[@$entry->gender_code] }} | {{ date_format(date_create(@$eventConfig->event->event_date), 'Y-m-d') }}
             </div>
         </div>
         <div style="text-align: right; font-size: 12px; font-weight: bold; color: #e11d48; text-transform: uppercase;">
@@ -85,21 +82,18 @@
     {{-- CASE 2: 3-5 ТАМИРЧИНТАЙ БОЛ (Single Pool Round Robin) --}}
     @elseif($count > 2 && $count <= 5)
         @php
-            if ($count == 3) {
-                $matches = [
-                    ['r' => $all_athletes[0], 'b' => $all_athletes[1], 'l' => 'Match 1'],
-                    ['r' => $all_athletes[0], 'b' => $all_athletes[2], 'l' => 'Match 2'],
-                    ['r' => $all_athletes[1], 'b' => $all_athletes[2], 'l' => 'Match 3'],
-                ];
-            } else {
-                $matches = [
-                    ['r' => $all_athletes[0], 'b' => $all_athletes[1], 'l' => 'Match 1'],
-                    ['r' => $all_athletes[2], 'b' => $all_athletes[3], 'l' => 'Match 2'],
-                    ['r' => $all_athletes[0], 'b' => $all_athletes[2], 'l' => 'Match 3'],
-                    ['r' => $all_athletes[1], 'b' => $all_athletes[3], 'l' => 'Match 4'],
-                    ['r' => $all_athletes[0], 'b' => $all_athletes[3], 'l' => 'Match 5'],
-                    ['r' => $all_athletes[1], 'b' => $all_athletes[2], 'l' => 'Match 6'],
-                ];
+            // Round robin: бүх хослол (n*(n-1)/2)
+            $matches = [];
+            $k = 1;
+            for ($i = 0; $i < $count - 1; $i++) {
+                for ($j = $i + 1; $j < $count; $j++) {
+                    $matches[] = [
+                        'r' => $all_athletes[$i],
+                        'b' => $all_athletes[$j],
+                        'l' => 'Match ' . $k,
+                    ];
+                    $k++;
+                }
             }
         @endphp
         
@@ -133,6 +127,38 @@
             @endforeach
         </div>
         <div style="text-align: center; margin-top: 30px; font-weight: bold; font-size: 13px;">* Бүх тамирчид хоорондоо тойргоор барилдаж ялагчийг тодруулна.</div>
+        <div style="margin-top: 25px;">
+            <div style="font-weight: bold; margin-bottom: 8px; color:#0f172a;">
+                Оролцогчид / Оноо
+            </div>
+
+            <table style="width: 100%; border-collapse: collapse; border: 1px solid #0f172a; font-size: 12px;">
+                <tr style="background:#f1f5f9;">
+                    <th style="border:1px solid #0f172a; padding:8px; width:40px;">#</th>
+                    <th style="border:1px solid #0f172a; padding:8px; text-align:left;">Тамирчин / Академи</th>
+                    <th style="border:1px solid #0f172a; padding:8px; width:70px;">W</th>
+                    <th style="border:1px solid #0f172a; padding:8px; width:70px;">L</th>
+                    <th style="border:1px solid #0f172a; padding:8px; width:80px;">Pts</th>
+                    <th style="border:1px solid #0f172a; padding:8px; width:110px;">Тайлбар</th>
+                </tr>
+
+                @foreach($all_athletes as $idx => $a)
+                    <tr>
+                        <td style="border:1px solid #0f172a; padding:8px; font-weight:bold; text-align:center;">
+                            {{ $idx + 1 }}
+                        </td>
+                        <td style="border:1px solid #0f172a; padding:8px; text-align:left;">
+                            {{ $a['lastname'] }} <strong>{{ $a['firstname'] }}</strong>
+                            <div style="font-size: 11px; color:#64748b;">{{ $a['academy'] }}</div>
+                        </td>
+                        <td style="border:1px solid #0f172a; padding:8px; height:34px;"></td>
+                        <td style="border:1px solid #0f172a; padding:8px;"></td>
+                        <td style="border:1px solid #0f172a; padding:8px;"></td>
+                        <td style="border:1px solid #0f172a; padding:8px;"></td>
+                    </tr>
+                @endforeach
+            </table>
+        </div>
 
     {{-- CASE 3: 6 ТАМИРЧИНТАЙ БОЛ (Pools + Bracket) --}}
     @else
@@ -161,15 +187,13 @@
             {{-- POOL A --}}
             <div style="flex:1;">
                 <div style="background:#f8fafc; padding:10px; font-weight:bold; border:1px solid #cbd5e1; margin-bottom:15px; border-left:6px solid #ef4444;">
-                    Pool A - Тойргоор (Round Robin)
+                    Pool A - Тойргоор
                 </div>
-    
                 @foreach($matchesA as $m)
                     <div style="margin-bottom: 14px;">
                         <div style="font-size: 10px; font-weight: bold; color: #94a3b8; text-transform: uppercase; margin-bottom: 3px;">
                             {{ $m['l'] }}
                         </div>
-    
                         <table style="width: 100%; border-collapse: collapse; border: 1px solid #475569; background:#fff;">
                             <tr>
                                 <td style="height: 44px; padding: 0;">
@@ -185,7 +209,6 @@
                                 </td>
                                 <td style="width: 50px; background: #f1f5f9; border-left: 1px solid #475569;"></td>
                             </tr>
-    
                             <tr>
                                 <td style="height: 44px; padding: 0; border-top: 1px solid #e2e8f0;">
                                     <div style="width: 6px; height: 100%; background: #3b82f6; float: left;"></div>
@@ -204,13 +227,11 @@
                     </div>
                 @endforeach
             </div>
-    
             {{-- POOL B --}}
             <div style="flex:1;">
                 <div style="background:#f8fafc; padding:10px; font-weight:bold; border:1px solid #cbd5e1; margin-bottom:15px; border-left:6px solid #3b82f6;">
-                    Pool B - Тойргоор (Round Robin)
+                    Pool B - Тойргоор
                 </div>
-    
                 @foreach($matchesB as $m)
                     <div style="margin-bottom: 14px;">
                         <div style="font-size: 10px; font-weight: bold; color: #94a3b8; text-transform: uppercase; margin-bottom: 3px;">
@@ -252,15 +273,11 @@
                 @endforeach
             </div>
         </div>
-    
         <div style="text-align:center; margin-top: 10px; font-weight:bold; font-size: 13px; color:#64748b;">
             * 6 тамирчныг 3,3-аар нь 2 хэсэгт хувааж тойргоор барилдуулна (Pool A / Pool B).
         </div>
-    
-        {{-- BRACKET (хоосон хайрцаг - гараар бөглөх) --}}
         <div style="display:flex; align-items:flex-start; justify-content:center; gap: 80px; margin-top: 35px; position:relative;">
             <div style="width: 360px;">
-                <!-- MATCH 7 -->
                 <div style="margin-bottom: 35px; position:relative;">
                     <div style="font-size: 10px; font-weight: bold; color: #94a3b8; text-transform: uppercase; margin-bottom: 3px;">Match 7 (Semi)</div>
 
@@ -280,19 +297,12 @@
                             <td style="width: 60px; background: #f1f5f9; border-left: 1px solid #111827;"></td>
                         </tr>
                     </table>
-
-                    <!-- CONNECTOR: Match 7 -> Final TOP (зураг дээрх шиг) -->
-                    <!-- 1) баруун тийш гарна -->
                     <div style="position:absolute; right:-60px; top:50%; width:60px; border-top:1px solid #94a3b8;"></div>
-                    <!-- 2) доош бууна (final-ийн дээд мөр хүртэл) -->
                     <div style="position:absolute; right:-60px; top:50%; height:60px; border-right:1px solid #94a3b8;"></div>
                     
-                    <!-- 3) final руу орох -->
                     <div style="position:absolute; right:-80px; top:calc(50% + 60px); width:20px; border-top:1px solid #94a3b8;"></div>
                     
                 </div>
-
-                <!-- MATCH 8 -->
                 <div style="position:relative;">
                     <div style="font-size: 10px; font-weight: bold; color: #94a3b8; text-transform: uppercase; margin-bottom: 3px;">Match 8 (Semi)</div>
 
@@ -312,18 +322,11 @@
                             <td style="width: 60px; background: #f1f5f9; border-left: 1px solid #111827;"></td>
                         </tr>
                     </table>
-
-                    <!-- CONNECTOR: Match 8 -> Final BOTTOM (зураг дээрх шиг) -->
-                    <!-- 1) баруун тийш гарна -->
                     <div style="position:absolute; right:-60px; top:50%; width:60px; border-top:1px solid #94a3b8;"></div>
-                    <!-- 2) дээш гарна (final-ийн доод мөр хүртэл) -->
                     <div style="position:absolute; right:-60px; top:calc(50% - 60px); height:60px; border-right:1px solid #94a3b8;"></div>
-                    <!-- 3) final руу орох -->
                     <div style="position:absolute; right:-80px; top:calc(50% - 60px); width:20px; border-top:1px solid #94a3b8;"></div>
                 </div>
             </div>
-
-            <!-- RIGHT COLUMN (FINAL) -->
             <div style="width: 360px; margin-top: 60px;">
                 <div style="font-size: 10px; font-weight: bold; color: #0f172a; text-transform: uppercase; margin-bottom: 6px; text-align:center;">
                     Match 9 (FINAL)
@@ -347,8 +350,65 @@
                 </table>
             </div>
         </div>
-    @endif
+        {{-- POOL A: Оролцогчид / Оноо --}}
+        <div style="margin-top: 18px;">
+            <div style="font-weight: bold; margin-bottom: 8px; color:#0f172a;">
+                Pool A — Оролцогчид / Оноо
+            </div>
 
+            <table style="width: 100%; border-collapse: collapse; border: 1px solid #0f172a; font-size: 12px;">
+                <tr style="background:#f1f5f9;">
+                    <th style="border:1px solid #0f172a; padding:8px; width:40px;">#</th>
+                    <th style="border:1px solid #0f172a; padding:8px; text-align:left;">Тамирчин / Академи</th>
+                    <th style="border:1px solid #0f172a; padding:8px; width:60px;">W</th>
+                    <th style="border:1px solid #0f172a; padding:8px; width:60px;">L</th>
+                    <th style="border:1px solid #0f172a; padding:8px; width:70px;">Pts</th>
+                </tr>
+
+                @foreach($poolA as $idx => $a)
+                    <tr>
+                        <td style="border:1px solid #0f172a; padding:8px; font-weight:bold; text-align:center;">{{ $idx + 1 }}</td>
+                        <td style="border:1px solid #0f172a; padding:8px; text-align:left;">
+                            {{ $a['lastname'] }} <strong>{{ $a['firstname'] }}</strong>
+                            <div style="font-size: 11px; color:#64748b;">{{ $a['academy'] }}</div>
+                        </td>
+                        <td style="border:1px solid #0f172a; padding:8px; height:34px;"></td>
+                        <td style="border:1px solid #0f172a; padding:8px;"></td>
+                        <td style="border:1px solid #0f172a; padding:8px;"></td>
+                    </tr>
+                @endforeach
+            </table>
+        </div>
+        {{-- POOL B: Оролцогчид / Оноо --}}
+        <div style="margin-top: 18px;">
+            <div style="font-weight: bold; margin-bottom: 8px; color:#0f172a;">
+                Pool B — Оролцогчид / Оноо
+            </div>
+
+            <table style="width: 100%; border-collapse: collapse; border: 1px solid #0f172a; font-size: 12px;">
+                <tr style="background:#f1f5f9;">
+                    <th style="border:1px solid #0f172a; padding:8px; width:40px;">#</th>
+                    <th style="border:1px solid #0f172a; padding:8px; text-align:left;">Тамирчин / Академи</th>
+                    <th style="border:1px solid #0f172a; padding:8px; width:60px;">W</th>
+                    <th style="border:1px solid #0f172a; padding:8px; width:60px;">L</th>
+                    <th style="border:1px solid #0f172a; padding:8px; width:70px;">Pts</th>
+                </tr>
+
+                @foreach($poolB as $idx => $a)
+                    <tr>
+                        <td style="border:1px solid #0f172a; padding:8px; font-weight:bold; text-align:center;">{{ $idx + 1 }}</td>
+                        <td style="border:1px solid #0f172a; padding:8px; text-align:left;">
+                            {{ $a['lastname'] }} <strong>{{ $a['firstname'] }}</strong>
+                            <div style="font-size: 11px; color:#64748b;">{{ $a['academy'] }}</div>
+                        </td>
+                        <td style="border:1px solid #0f172a; padding:8px; height:34px;"></td>
+                        <td style="border:1px solid #0f172a; padding:8px;"></td>
+                        <td style="border:1px solid #0f172a; padding:8px;"></td>
+                    </tr>
+                @endforeach
+            </table>
+        </div>
+    @endif
 
     <div style="margin-top: 50px;">
         <table style="width: 100%; border-collapse: collapse; border: 1px solid #000; text-align: center;">
