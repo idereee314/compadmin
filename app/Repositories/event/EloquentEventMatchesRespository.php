@@ -236,31 +236,40 @@ class EloquentEventMatchesRespository implements EventMatchesRespository {
 			$match->regOne->member_id ?? 0,
 		]);
 
-		$match->regOne->abb_full = $token[0]->token ?? null;
-		$match->regOne->abb = $token[0]->abbrevation ?? null;
+		$regOne = $match->regOne;
+		if ($regOne) {
+			$regOne->abb_full = $token[0]->token ?? null;
+			$regOne->abb = $token[0]->abbrevation ?? null;
+		}
 
 		$token = DB::select('SELECT A.* FROM uq_country_abbrevation A inner join uq_country uc ON a.abbrevation = uc.abbreviation LEFT JOIN uq_member  B on uc.id = b.country_id  WHERE B.id = ?', [
 			$match->regTwo->member_id ?? 0,
 		]);
 
-		$match->regTwo->abb_full = $token[0]->token ?? null;
-		$match->regTwo->abb = $token[0]->abbrevation ?? null;
-		
-		$match->bracket->round = TournamentEliminationStrategyFactory::determineRound(
-			$count,
-			$match->order_no,
-			$match->is_double_loser
-		);
-		$match->bracket->is_double_loser = $match->is_double_loser;
+		$regTwo = $match->regTwo;
+		if ($regTwo) {
+			$regTwo->abb_full = $token[0]->token ?? null;
+			$regTwo->abb = $token[0]->abbrevation ?? null;
+		}
+
+		$bracket = $match->bracket;
+		if ($bracket) {
+			$bracket->round = TournamentEliminationStrategyFactory::determineRound(
+				$count,
+				$match->order_no,
+				$match->is_double_loser
+			);
+			$bracket->is_double_loser = $match->is_double_loser;
+		}
 
 		// Return combined data
 		return [
 			'registrations' => collect([
-				$match->regOne ?? null,
-				$match->regTwo ?? null,
+				$regOne ?? null,
+				$regTwo ?? null,
 				$match->regWin ?? null
 			])->filter(),
-			'bracket' => $match->bracket
+			'bracket' => $bracket
 		];
 	}
 
