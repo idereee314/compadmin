@@ -143,8 +143,6 @@ class EloquentEventMatchesRespository implements EventMatchesRespository {
 		if($input['is_double_loser'] ?? false){
 			$eventMatche->is_double_loser = true;
 			$eventMatche->reg_win_id = null;
-		} else{
-			$eventMatche->is_double_loser = false;
 		}
 		$eventMatche->status = 'C';
 		if($eventMatche->end_time == null){
@@ -183,32 +181,27 @@ class EloquentEventMatchesRespository implements EventMatchesRespository {
 		$losser = $currentMatch->reg_one_id == $winner ? $currentMatch->reg_two_id : $currentMatch->reg_one_id;
 		if($eventMatches->count() > 0) {
 			foreach ($eventMatches as $eventMatch) {
-				// $bracket = new EventBrackets();
-				// $bracket->event_id = $currentMatch->event_id;
-				// $bracket->entry_id = $braketData->entry_id;
-				// $bracket->entry_age_id = $braketData->entry_age_id;
-				// $bracket->entry_belt_id = $braketData->entry_belt_id;
-				// $bracket->entry_weight_id = $braketData->entry_weight_id;
+				// Send the LOSER only when the destination is a losers bracket match
+				// AND the source is a winners bracket match (loser drops down).
+				// When the source is itself a losers bracket match, the WINNER advances
+				// and the loser is eliminated.
+				$shouldSendLoser = ($eventMatch->order_no == 9998 || $eventMatch->is_double_loser)
+					&& !$currentMatch->is_double_loser;
 
-				if($eventMatch ->order_no == 9998 || $eventMatch -> is_double_loser){
+				if($shouldSendLoser){
 					if ($eventMatch->previes_mate_id1 == $id) {
 						$eventMatch->reg_one_id = $losser;
-						// $bracket->reg_one_id = $losser;
 					} else {
 						$eventMatch->reg_two_id = $losser;
-						// $bracket->reg_two_id = $losser;
 					}
 				} else{
 					if ($eventMatch->previes_mate_id1 == $id) {
 						$eventMatch->reg_one_id = $winner;
-						// $bracket->reg_one_id = $winner;
 					} else {
 						$eventMatch->reg_two_id = $winner;
-						// $bracket->reg_two_id = $winner;
 					}
 				}
 				$eventMatch->save();
-				// $bracket->save();
 			}
 		}
 	}
