@@ -201,20 +201,80 @@ class EloquentEventConfigDaysRepository implements EventConfigDaysRepository {
 				}
 				Log::info('Match Collection: ', array_column($matchCollection, 'bracket_id'));
 
-				$brackets = EventMatches::select('id', 'reg_one_id', 'reg_two_id', 'reg_win_id',  'status', 'end_time', 'order_no')
-					->whereIn('bracket_id', array_column($matchCollection, 'bracket_id'))
+				$bracketIds = array_column($matchCollection, 'bracket_id');
+
+				if (empty($bracketIds)) {
+					$mate['event_matches'] = collect();
+					continue;
+				}
+
+				// Fetch all matches with bracket_id and is_double_loser for ordering logic
+				$allMatches = EventMatches::select('id', 'bracket_id', 'reg_one_id', 'reg_two_id', 'reg_win_id', 'status', 'end_time', 'order_no', 'is_double_loser')
+					->whereIn('bracket_id', $bracketIds)
 					->where('event_id', $eventId)
-					->orderBy('end_time', 'asc')
 					->orderBy('order_no', 'asc')
 					->orderBy('id', 'asc')
 					->with([
-						'regOne:id,member_id', // Include regOne relationship
-						'regTwo:id,member_id', // Include regTwo relationship
-						'regOne.member:id,firstname,lastname', // Include member relationship for regOne
-						'regTwo.member:id,firstname,lastname',  // Include member relationship for regTwo
-						'regWin.member:id,firstname,lastname'  // Include member relationship for regTwo
-					]);
-				$mate['event_matches'] = $brackets->get();
+						'regOne:id,member_id',
+						'regTwo:id,member_id',
+						'regOne.member:id,firstname,lastname',
+						'regTwo.member:id,firstname,lastname',
+						'regWin.member:id,firstname,lastname'
+					])
+					->get();
+
+				// Group matches by bracket in assignment order
+				$matchesByBracket = [];
+				foreach ($bracketIds as $bracketId) {
+					$bracketMatches = $allMatches->where('bracket_id', $bracketId)->values();
+					if ($bracketMatches->isNotEmpty()) {
+						$matchesByBracket[] = $bracketMatches;
+					}
+				}
+
+				// Build ordered queue: brackets sequential, with 2-match break before medal matches
+				$queue = collect();
+				$totalBrackets = count($matchesByBracket);
+
+				for ($b = 0; $b < $totalBrackets; $b++) {
+					$bracketMatches = $matchesByBracket[$b];
+					$isLast = ($b === $totalBrackets - 1);
+
+					// Separate regular (non-medal) and medal matches (Gold/Bronze: order_no >= 9996)
+					$regular = $bracketMatches->filter(fn($m) => $m->order_no < 9996)->values();
+					$medal = $bracketMatches->filter(fn($m) => $m->order_no >= 9996)
+						->sortBy('order_no')->values();
+
+					// Add regular matches
+					$queue = $queue->merge($regular);
+
+					// Medal match break logic (skip for last bracket on the mat)
+					if ($medal->isNotEmpty() && !$isLast) {
+						// Count losers bracket matches that provide a rest break
+						// between the last winners bracket match (SF) and medal matches
+						$lastWinnerOrderNo = $regular->filter(fn($m) => !$m->is_double_loser)->max('order_no') ?? 0;
+						$breakCount = $regular->filter(fn($m) => $m->order_no > $lastWinnerOrderNo)->count();
+
+						if ($breakCount < 2) {
+							// Borrow first matches from the next bracket as a rest break
+							$needed = 2 - $breakCount;
+							$nextRegular = $matchesByBracket[$b + 1]
+								->filter(fn($m) => $m->order_no < 9996)->values();
+							$borrowed = $nextRegular->take($needed);
+							$queue = $queue->merge($borrowed);
+
+							// Remove borrowed matches from next bracket so they aren't added twice
+							$borrowedIds = $borrowed->pluck('id')->toArray();
+							$matchesByBracket[$b + 1] = $matchesByBracket[$b + 1]
+								->reject(fn($m) => in_array($m->id, $borrowedIds))->values();
+						}
+					}
+
+					// Add medal matches
+					$queue = $queue->merge($medal);
+				}
+
+				$mate['event_matches'] = $queue;
 			}
 		}
 
