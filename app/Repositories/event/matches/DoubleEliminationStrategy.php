@@ -157,12 +157,20 @@ class DoubleEliminationStrategy implements TournamentEliminationStrategy {
                 ->toArray();
         }
 
-        for ($i = 0; $i < count($participantRegistrations); $i += 2) {
-            if (isset($participantRegistrations[$i + 1])) {
+        // Use standard bracket seeding order:
+        // 8 players → (1v8, 4v5, 2v7, 3v6)
+        // 16 players → (1v16, 8v9, 4v13, 5v12, 2v15, 7v10, 3v14, 6v11)
+        $seedOrder = $this->calculateSeedOrder(count($participantRegistrations));
+
+        for ($i = 0; $i < count($seedOrder); $i += 2) {
+            $seedA = $seedOrder[$i];
+            $seedB = $seedOrder[$i + 1];
+
+            if (isset($participantRegistrations[$seedA]) && isset($participantRegistrations[$seedB])) {
                 $matches[] = [
                     'event_id' => $eventId,
-                    'reg_one_id' => $participantRegistrations[$i],
-                    'reg_two_id' => $participantRegistrations[$i + 1],
+                    'reg_one_id' => $participantRegistrations[$seedA],
+                    'reg_two_id' => $participantRegistrations[$seedB],
                     'previes_mate_id1' => null,
                     'previes_mate_id2' => null,
                     'order_no' => $matchOrder++,
@@ -173,6 +181,36 @@ class DoubleEliminationStrategy implements TournamentEliminationStrategy {
         }
 
         return $matches;
+    }
+
+    /**
+     * Calculate standard bracket seeding order (0-indexed).
+     *
+     * For 8 participants returns [0,7, 3,4, 1,6, 2,5]
+     *   → Match 1: #1 vs #8, Match 2: #4 vs #5,
+     *     Match 3: #2 vs #7, Match 4: #3 vs #6
+     *
+     * Top half feeds SF-A, bottom half feeds SF-B.
+     */
+    private function calculateSeedOrder($participantCount)
+    {
+        if ($participantCount < 2) {
+            return [];
+        }
+
+        $bracket = [1];
+        while (count($bracket) < $participantCount) {
+            $newBracket = [];
+            $sum = count($bracket) * 2 + 1;
+            foreach ($bracket as $seed) {
+                $newBracket[] = $seed;
+                $newBracket[] = $sum - $seed;
+            }
+            $bracket = $newBracket;
+        }
+
+        // Convert from 1-indexed seeds to 0-indexed array positions
+        return array_map(function ($seed) { return $seed - 1; }, $bracket);
     }
 
     public function processMatchResult($matchId, $winnerId, $matchData)
@@ -384,23 +422,24 @@ class DoubleEliminationStrategy implements TournamentEliminationStrategy {
                     }
                 }
 
-                // Reverse losers bracket winners for cross-seeding: the SF loser
-                // from the top half faces the L1 winner from the bottom half and
-                // vice-versa.  This avoids immediate rematches.
-                $prevLosersWinnersCrossed = array_reverse($prevLosersWinners);
+                // Cross-seed by reversing the winners bracket losers:
+                // Bottom-half SF loser faces top-half L1 winner, and vice-versa.
+                // For 8 players this produces:
+                //   Match 9:  Loser SF-B  vs  Winner M7  (bottom SF vs top L1)
+                //   Match 10: Loser SF-A  vs  Winner M8  (top SF vs bottom L1)
+                $prevWinnersLosersCrossed = array_reverse($prevWinnersLosers);
 
                 foreach ($losersMatchIndices as $position => $idx) {
                     $refs = [];
                     
-                    // p1: Loser from previous round's winners bracket
-                    if (isset($prevWinnersLosers[$position])) {
-                        $winnersLosersIdx = $prevWinnersLosers[$position];
-                        $refs['p1'] = ['round' => $roundNumber - 1, 'index' => $winnersLosersIdx];
+                    // p1: Loser from previous round's winners bracket (cross-seeded)
+                    if (isset($prevWinnersLosersCrossed[$position])) {
+                        $refs['p1'] = ['round' => $roundNumber - 1, 'index' => $prevWinnersLosersCrossed[$position]];
                     }
                     
-                    // p2: Winner from previous losers bracket round (cross-seeded)
-                    if (isset($prevLosersWinnersCrossed[$position])) {
-                        $refs['p2'] = ['round' => $roundNumber - 1, 'index' => $prevLosersWinnersCrossed[$position]];
+                    // p2: Winner from previous losers bracket round
+                    if (isset($prevLosersWinners[$position])) {
+                        $refs['p2'] = ['round' => $roundNumber - 1, 'index' => $prevLosersWinners[$position]];
                     }
 
                     if (!empty($refs)) {
