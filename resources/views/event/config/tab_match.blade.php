@@ -230,13 +230,13 @@
 
 
         function handleMatchesData(data){
-            const durationShort = {};
             const result = [];
             data.forEach(day => {
+                // Build bracket_id → default duration mapping from bracket entries
+                const bracketDurations = {};
                 day.mates.forEach(mat => {
-                    mat.matches.forEach(match => {
-                        const key = `${match.entry_id}-${match.entry_age_id}-${match.entry_belt_id}-${match.entry_weight_id}`;
-                        durationShort[key] = match.entry?.duration ?? 0;
+                    mat.matches.forEach(bracket => {
+                        bracketDurations[bracket.id] = bracket.entry?.duration ?? 0;
                     });
                 });
                 result.push({
@@ -248,7 +248,7 @@
                         mate_id: mat.id,
                         event_matches: mat.event_matches.map(match => ({
                             ...match,
-                            duration: durationShort[`${match.entry_id}-${match.entry_age_id}-${match.entry_belt_id}-${match.entry_weight_id}`] || 0
+                            duration: bracketDurations[match.bracket_id] || 0
                         }))
                     }))
                 });
