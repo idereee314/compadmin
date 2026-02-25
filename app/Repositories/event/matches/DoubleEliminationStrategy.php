@@ -157,20 +157,12 @@ class DoubleEliminationStrategy implements TournamentEliminationStrategy {
                 ->toArray();
         }
 
-        // Use standard bracket seeding order:
-        // 8 players → (1v8, 4v5, 2v7, 3v6)
-        // 16 players → (1v16, 8v9, 4v13, 5v12, 2v15, 7v10, 3v14, 6v11)
-        $seedOrder = $this->calculateSeedOrder(count($participantRegistrations));
-
-        for ($i = 0; $i < count($seedOrder); $i += 2) {
-            $seedA = $seedOrder[$i];
-            $seedB = $seedOrder[$i + 1];
-
-            if (isset($participantRegistrations[$seedA]) && isset($participantRegistrations[$seedB])) {
+        for ($i = 0; $i < count($participantRegistrations); $i += 2) {
+            if (isset($participantRegistrations[$i + 1])) {
                 $matches[] = [
                     'event_id' => $eventId,
-                    'reg_one_id' => $participantRegistrations[$seedA],
-                    'reg_two_id' => $participantRegistrations[$seedB],
+                    'reg_one_id' => $participantRegistrations[$i],
+                    'reg_two_id' => $participantRegistrations[$i + 1],
                     'previes_mate_id1' => null,
                     'previes_mate_id2' => null,
                     'order_no' => $matchOrder++,
@@ -181,36 +173,6 @@ class DoubleEliminationStrategy implements TournamentEliminationStrategy {
         }
 
         return $matches;
-    }
-
-    /**
-     * Calculate standard bracket seeding order (0-indexed).
-     *
-     * For 8 participants returns [0,7, 3,4, 1,6, 2,5]
-     *   → Match 1: #1 vs #8, Match 2: #4 vs #5,
-     *     Match 3: #2 vs #7, Match 4: #3 vs #6
-     *
-     * Top half feeds SF-A, bottom half feeds SF-B.
-     */
-    private function calculateSeedOrder($participantCount)
-    {
-        if ($participantCount < 2) {
-            return [];
-        }
-
-        $bracket = [1];
-        while (count($bracket) < $participantCount) {
-            $newBracket = [];
-            $sum = count($bracket) * 2 + 1;
-            foreach ($bracket as $seed) {
-                $newBracket[] = $seed;
-                $newBracket[] = $sum - $seed;
-            }
-            $bracket = $newBracket;
-        }
-
-        // Convert from 1-indexed seeds to 0-indexed array positions
-        return array_map(function ($seed) { return $seed - 1; }, $bracket);
     }
 
     public function processMatchResult($matchId, $winnerId, $matchData)
