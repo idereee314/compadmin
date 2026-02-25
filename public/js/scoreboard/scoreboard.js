@@ -655,7 +655,14 @@
         // Timer variables
         const timerDisplay = document.getElementById('timerDisplay');
         const playPauseBtn = document.getElementById('playPauseBtn');
-        let timerSeconds = parseInt(timerDisplay.dataset.duration || '5', 10) * 60;
+        
+        // Parse the starting time from what PHP rendered on screen
+        const _initText = timerDisplay.childNodes[0].textContent.trim();
+        const _initMatch = _initText.match(/(\d+):(\d+)/);
+        let timerSeconds = _initMatch
+            ? parseInt(_initMatch[1], 10) * 60 + parseInt(_initMatch[2], 10)
+            : (typeof matchDuration !== 'undefined' ? matchDuration : 5) * 60;
+
         let timerInterval = null;
         let isRunning = false;
         let bellPlayed = false; // Track if bell has been played
