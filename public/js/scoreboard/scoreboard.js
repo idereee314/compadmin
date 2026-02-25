@@ -660,6 +660,9 @@
         const playPauseBtn = document.getElementById('playPauseBtn');
         let bellPlayed = false; // Track if bell has been played
 
+        // Sync the display with the actual timerSeconds on load
+        updateTimerDisplay();
+
         // Audio context for sounds
         const audioContext = new (window.AudioContext || window.webkitAudioContext)();
 
