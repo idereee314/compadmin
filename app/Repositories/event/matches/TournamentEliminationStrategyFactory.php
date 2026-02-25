@@ -50,7 +50,7 @@ class TournamentEliminationStrategyFactory implements TournamentEliminationFacto
         $className = $this->strategies[$type];
         
         try {
-            return new $className();
+            return new $className($type);
         } catch (\Exception $e) {
             Log::error('Failed to instantiate tournament strategy', [
                 'type' => $type,

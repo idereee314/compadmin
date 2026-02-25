@@ -11,6 +11,11 @@ use Carbon\Carbon;
  * Loser is eliminated from tournament
  */
 class SingleEliminationStrategy implements TournamentEliminationStrategy {
+    
+    public function __construct($eliminationType = 'single')
+    {
+        // Type accepted for factory compatibility
+    }
 
     /**
      * Generate bracket structure for single elimination

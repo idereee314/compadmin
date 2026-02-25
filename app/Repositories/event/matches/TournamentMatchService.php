@@ -187,14 +187,8 @@ class TournamentMatchService {
                     // Ensure required metadata is present
                     $matchData['status'] = $matchData['status'] ?? 'P';
 
-                    // Only add medal codes to winners bracket matches in final round
-                    // Bronze matches are already set by strategy (order_no 9997, 9996)
-                    if ($roundNumber === $totalRounds && (!isset($matchData['is_double_loser']) || !$matchData['is_double_loser'])) {
-                        // This is a winners bracket match in final round (Gold)
-                        if ($idx === 0) {
-                            $matchData['order_no'] = 9999; // Gold (final winners match)
-                        }
-                    }
+                    // Gold (9999) and Bronze (9997/9996/9998) order_no values
+                    // are set directly by the strategy in generateRoundMatches
 
                     $roundMatches[$roundNumber][] = $matchData;
                 }

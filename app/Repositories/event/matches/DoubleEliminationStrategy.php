@@ -12,6 +12,17 @@ class DoubleEliminationStrategy implements TournamentEliminationStrategy {
     const LOSERS_BRACKET = 'losers';
 
     /**
+     * Whether this is the "1 bronze" variant (single bronze match)
+     * vs the default "2 bronze" variant (two separate bronze matches)
+     */
+    private $singleBronze = false;
+
+    public function __construct($eliminationType = 'double')
+    {
+        $this->singleBronze = ($eliminationType === 'double_single_bronze');
+    }
+
+    /**
      * Generate bracket structure for double elimination with repechage
      */
     public function generateBracket($eventId, $participants, $config)
@@ -85,12 +96,14 @@ class DoubleEliminationStrategy implements TournamentEliminationStrategy {
         $winnersBracketMatches = floor($matchesInFirstRound / pow(2, $roundNumber - 1));
 
         // Winners bracket matches (identical to single elimination)
+        // When only 1 W match remains, it's the Gold (final) match
         for ($i = 0; $i < $winnersBracketMatches; $i++) {
+            $isGoldMatch = ($winnersBracketMatches === 1);
             $matches[] = [
                 'event_id' => $eventId,
                 'reg_one_id' => null,
                 'reg_two_id' => null,
-                'order_no' => $roundNumber * 100 + $i + 1,
+                'order_no' => $isGoldMatch ? 9999 : ($roundNumber * 100 + $i + 1),
                 'status' => 'P',
                 'is_double_loser' => 0,  // Winners bracket
             ];
@@ -120,15 +133,22 @@ class DoubleEliminationStrategy implements TournamentEliminationStrategy {
             $lnMatches = ceil(($currentWLosers + $prevLosersMatches) / 2);
             
             if ($lnMatches > 0) {
-                // Check if this is the final losers bracket round (will become bronze matches)
-                // Final losers round always has exactly 2 matches
-                $isFinalLosersRound = ($lnMatches === 2);
-                
+                // "2 bronze": Final losers round with 2 matches becomes bronze (order_no 9997, 9996)
+                // "1 bronze": Those 2 matches are L semi-finals; a single bronze match follows in the next round
+                $isFinalLosersRound = !$this->singleBronze && ($lnMatches === 2);
+
+                // "1 bronze": The extra round has 0 W matches and 1 L match — this is the single bronze match
+                $isBronzeMatch = $this->singleBronze && $winnersBracketMatches === 0 && $lnMatches === 1;
+
                 for ($i = 0; $i < $lnMatches; $i++) {
-                    // If final L round with 2 matches, mark as bronze (order_no 9997, 9996)
-                    // Non-final losers rounds get 2000 offset so they sort after all winners bracket matches
-                    $orderNo = $isFinalLosersRound ? (9997 - $i) : (2000 + ($roundNumber * 100) + $i + 1);
-                    
+                    if ($isFinalLosersRound) {
+                        $orderNo = 9997 - $i;  // 2 bronze matches: 9997, 9996
+                    } elseif ($isBronzeMatch) {
+                        $orderNo = 9998;  // Single bronze match
+                    } else {
+                        $orderNo = 2000 + ($roundNumber * 100) + $i + 1;
+                    }
+
                     $matches[] = [
                         'event_id' => $eventId,
                         'reg_one_id' => null,
@@ -260,7 +280,15 @@ class DoubleEliminationStrategy implements TournamentEliminationStrategy {
         // Double elimination winners bracket = same as single elimination rounds
         // For 8: ceil(log2(8)) = 3 rounds
         // Losers bracket runs parallel (L1 in round 2, L2 in round 3, etc.)
-        return ceil(log($participantCount, 2));
+        $rounds = ceil(log($participantCount, 2));
+
+        // "1 bronze" variant: add an extra round for the single bronze match
+        // (winners of final losers bracket matches fight for bronze)
+        if ($this->singleBronze) {
+            $rounds += 1;
+        }
+
+        return $rounds;
     }
 
     private function calculateBracketPositions($participantCount)
@@ -384,28 +412,43 @@ class DoubleEliminationStrategy implements TournamentEliminationStrategy {
                     }
                 }
 
-                // Cross-seed by reversing the winners bracket losers:
-                // Bottom-half SF loser faces top-half L1 winner, and vice-versa.
-                // For 8 players this produces:
-                //   Match 9:  Loser SF-B  vs  Winner M7  (bottom SF vs top L1)
-                //   Match 10: Loser SF-A  vs  Winner M8  (top SF vs bottom L1)
-                $prevWinnersLosersCrossed = array_reverse($prevWinnersLosers);
-
-                foreach ($losersMatchIndices as $position => $idx) {
+                // "1 bronze" extra round: single bronze match fed by two previous L bracket winners
+                if ($this->singleBronze && empty($winnersMatchIndices) && count($losersMatchIndices) === 1) {
+                    $bronzeIdx = $losersMatchIndices[0];
                     $refs = [];
-                    
-                    // p1: Loser from previous round's winners bracket (cross-seeded)
-                    if (isset($prevWinnersLosersCrossed[$position])) {
-                        $refs['p1'] = ['round' => $roundNumber - 1, 'index' => $prevWinnersLosersCrossed[$position]];
+                    if (isset($prevLosersWinners[0])) {
+                        $refs['p1'] = ['round' => $roundNumber - 1, 'index' => $prevLosersWinners[0]];
                     }
-                    
-                    // p2: Winner from previous losers bracket round
-                    if (isset($prevLosersWinners[$position])) {
-                        $refs['p2'] = ['round' => $roundNumber - 1, 'index' => $prevLosersWinners[$position]];
+                    if (isset($prevLosersWinners[1])) {
+                        $refs['p2'] = ['round' => $roundNumber - 1, 'index' => $prevLosersWinners[1]];
                     }
-
                     if (!empty($refs)) {
-                        $current[$idx]['prev_refs'] = $refs;
+                        $current[$bronzeIdx]['prev_refs'] = $refs;
+                    }
+                } else {
+                    // Cross-seed by reversing the winners bracket losers:
+                    // Bottom-half SF loser faces top-half L1 winner, and vice-versa.
+                    // For 8 players this produces:
+                    //   Match 9:  Loser SF-B  vs  Winner M7  (bottom SF vs top L1)
+                    //   Match 10: Loser SF-A  vs  Winner M8  (top SF vs bottom L1)
+                    $prevWinnersLosersCrossed = array_reverse($prevWinnersLosers);
+
+                    foreach ($losersMatchIndices as $position => $idx) {
+                        $refs = [];
+
+                        // p1: Loser from previous round's winners bracket (cross-seeded)
+                        if (isset($prevWinnersLosersCrossed[$position])) {
+                            $refs['p1'] = ['round' => $roundNumber - 1, 'index' => $prevWinnersLosersCrossed[$position]];
+                        }
+
+                        // p2: Winner from previous losers bracket round
+                        if (isset($prevLosersWinners[$position])) {
+                            $refs['p2'] = ['round' => $roundNumber - 1, 'index' => $prevLosersWinners[$position]];
+                        }
+
+                        if (!empty($refs)) {
+                            $current[$idx]['prev_refs'] = $refs;
+                        }
                     }
                 }
             }
