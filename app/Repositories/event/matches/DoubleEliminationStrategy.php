@@ -374,7 +374,7 @@ class DoubleEliminationStrategy implements TournamentEliminationStrategy {
                 // L2+: Losers from W(n) paired with winners from previous L(n-1)
                 $prevWinnersLosers = [];
                 $prevLosersWinners = [];
-                
+
                 foreach ($previous as $pIdx => $pMatch) {
                     if (isset($pMatch['is_double_loser']) && $pMatch['is_double_loser'] == 1) {
                         $prevLosersWinners[] = $pIdx;  // Winners from losers bracket
@@ -382,6 +382,11 @@ class DoubleEliminationStrategy implements TournamentEliminationStrategy {
                         $prevWinnersLosers[] = $pIdx;   // Losers from winners bracket
                     }
                 }
+
+                // Reverse losers bracket winners for cross-seeding: the SF loser
+                // from the top half faces the L1 winner from the bottom half and
+                // vice-versa.  This avoids immediate rematches.
+                $prevLosersWinnersCrossed = array_reverse($prevLosersWinners);
 
                 foreach ($losersMatchIndices as $position => $idx) {
                     $refs = [];
@@ -392,9 +397,9 @@ class DoubleEliminationStrategy implements TournamentEliminationStrategy {
                         $refs['p1'] = ['round' => $roundNumber - 1, 'index' => $winnersLosersIdx];
                     }
                     
-                    // p2: Winner from previous losers bracket round
-                    if (isset($prevLosersWinners[$position])) {
-                        $refs['p2'] = ['round' => $roundNumber - 1, 'index' => $prevLosersWinners[$position]];
+                    // p2: Winner from previous losers bracket round (cross-seeded)
+                    if (isset($prevLosersWinnersCrossed[$position])) {
+                        $refs['p2'] = ['round' => $roundNumber - 1, 'index' => $prevLosersWinnersCrossed[$position]];
                     }
 
                     if (!empty($refs)) {
