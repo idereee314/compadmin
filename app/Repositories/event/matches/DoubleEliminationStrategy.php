@@ -126,7 +126,8 @@ class DoubleEliminationStrategy implements TournamentEliminationStrategy {
                 
                 for ($i = 0; $i < $lnMatches; $i++) {
                     // If final L round with 2 matches, mark as bronze (order_no 9997, 9996)
-                    $orderNo = $isFinalLosersRound ? (9997 - $i) : (($roundNumber * 100) + $i + 1);
+                    // Non-final losers rounds get 2000 offset so they sort after all winners bracket matches
+                    $orderNo = $isFinalLosersRound ? (9997 - $i) : (2000 + ($roundNumber * 100) + $i + 1);
                     
                     $matches[] = [
                         'event_id' => $eventId,
