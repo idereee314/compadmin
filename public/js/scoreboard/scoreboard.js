@@ -653,15 +653,12 @@
         }
 
         // Timer variables
-        let timerSeconds = (typeof matchDuration !== 'undefined' ? matchDuration : 5) * 60;
-        let timerInterval = null;
-        let isRunning = false;
         const timerDisplay = document.getElementById('timerDisplay');
         const playPauseBtn = document.getElementById('playPauseBtn');
+        let timerSeconds = parseInt(timerDisplay.dataset.duration || '5', 10) * 60;
+        let timerInterval = null;
+        let isRunning = false;
         let bellPlayed = false; // Track if bell has been played
-
-        // Sync the display with the actual timerSeconds on load
-        updateTimerDisplay();
 
         // Audio context for sounds
         const audioContext = new (window.AudioContext || window.webkitAudioContext)();

@@ -211,7 +211,7 @@
                     </span>
                 </div>
             </div>
-            <div class="timer" id="timerDisplay">
+            <div class="timer" id="timerDisplay" data-duration="{{ $bracket->entry->duration ?? 5 }}">
                 {{ sprintf('%02d:%02d', floor(($bracket->entry->duration ?? 5)), 0) }}
                 <div class="timer-controls" id="timerControls">
                     <table class="timer-control-table">
