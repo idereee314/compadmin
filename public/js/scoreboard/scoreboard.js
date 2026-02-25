@@ -653,7 +653,7 @@
         }
 
         // Timer variables
-        let timerSeconds = 300; // 5 minutes in seconds
+        let timerSeconds = (typeof matchDuration !== 'undefined' ? matchDuration : 5) * 60;
         let timerInterval = null;
         let isRunning = false;
         const timerDisplay = document.getElementById('timerDisplay');
