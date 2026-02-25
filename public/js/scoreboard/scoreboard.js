@@ -59,7 +59,10 @@
 
         function announceDraw(result) {
             hideEndGame();
-            
+
+            setWinnerMethod(result);
+            setWinnerId('');
+
             const topBanner = document.getElementById('drawBannerTop');
             const bottomBanner = document.getElementById('drawBannerBottom');
             

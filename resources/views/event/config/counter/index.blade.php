@@ -395,7 +395,14 @@
         console.log('Saving match result with winner reg ID:', regWinId);
         postData = {
             '_token': '{{ csrf_token() }}',
-            'reg_win_id': regWinId
+            'reg_win_id': regWinId || null,
+            'win_method': winnerMethod,
+            'red_score': redScore,
+            'blue_score': blueScore,
+            'red_advantage': redAdvantage,
+            'blue_advantage': blueAdvantage,
+            'red_penalty': redPenalty,
+            'blue_penalty': bluePenalty
         };
         fetch("{{ route('event.config.match.winner', ['match_id' => $matchId]) }}", {
             method: 'POST',

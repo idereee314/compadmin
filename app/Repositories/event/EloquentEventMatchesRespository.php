@@ -91,13 +91,39 @@ class EloquentEventMatchesRespository implements EventMatchesRespository {
 	{
 		$eventMatche = $this->find($id);
 		$bracketMat = $this->findMateBracket($eventMatche->bracket_id);
-		if($input['reg_win_id'] != null){
+		
+		$winMethod = $input['win_method'] ?? null;
+		$isDraw = in_array($winMethod, ['DRAW', 'DOUBLE WO/DQ', 'DOUBLE NO SHOW']);
+
+		// Save scores, advantages, penalties
+		$eventMatche->red_score     = (int) ($input['red_score'] ?? 0);
+		$eventMatche->blue_score    = (int) ($input['blue_score'] ?? 0);
+		$eventMatche->red_advantage = (int) ($input['red_advantage'] ?? 0);
+		$eventMatche->blue_advantage= (int) ($input['blue_advantage'] ?? 0);
+		$eventMatche->red_penalty   = (int) ($input['red_penalty'] ?? 0);
+		$eventMatche->blue_penalty  = (int) ($input['blue_penalty'] ?? 0);
+		$eventMatche->win_method    = $winMethod;
+
+		// Calculate match points
+		$matchPoints = $this->calculateMatchPoints($winMethod, $eventMatche->reg_one_id, $input['reg_win_id'] ?? null);
+		$eventMatche->red_match_points  = $matchPoints['red'];
+		$eventMatche->blue_match_points = $matchPoints['blue'];
+
+		if($isDraw){
+			$eventMatche->reg_win_id = null;
+			$eventMatche->status = 'C';
+			$eventMatche->end_time = Carbon::now('GMT+8');
+			$eventMatche->save();
+		} elseif(!empty($input['reg_win_id'])){
 			$eventMatche->reg_win_id = $input['reg_win_id'];
 			$eventMatche->status = 'C';
 			$eventMatche->end_time = Carbon::now('GMT+8');
 			$eventMatche->save();
 			$this->updateNextReg($id, $eventMatche, $bracketMat);
+		} else {
+			$eventMatche->save();
 		}
+
 		$eventBracket = EventBrackets::where('event_id', $bracketMat->event_id)
 			->where('entry_id', $bracketMat->entry_id)
 			->where('entry_age_id', $bracketMat->entry_age_id)
@@ -114,11 +140,51 @@ class EloquentEventMatchesRespository implements EventMatchesRespository {
 			})
 			->first();
 		if($eventBracket){
-			$eventBracket->reg_winner_id = $input['reg_win_id'];
+			$eventBracket->reg_winner_id = $input['reg_win_id'] ?? null;
 			$eventBracket->save();
 		}
 		return $eventMatche;
 
+	}
+
+	/**
+	 * Calculate match points for both players based on win method.
+	 * SUBMISSION win: winner +50, loser 0
+	 * DISQUALIFICATION win: winner 0, loser (DQ'd) -50
+	 * DRAW / DOUBLE NO SHOW: both 0
+	 * DOUBLE WO/DQ: both -50
+	 * Other wins (POINTS, DECISION, WALKOVER, NO SHOW): both 0
+	 */
+	private function calculateMatchPoints($winMethod, $regOneId, $regWinId)
+	{
+		$redPoints = 0;
+		$bluePoints = 0;
+
+		if ($winMethod === 'DOUBLE WO/DQ') {
+			$redPoints = -50;
+			$bluePoints = -50;
+		} elseif (in_array($winMethod, ['DRAW', 'DOUBLE NO SHOW'])) {
+			$redPoints = 0;
+			$bluePoints = 0;
+		} elseif ($winMethod === 'SUBMISSION' && $regWinId) {
+			// Winner gets +50
+			if ($regWinId == $regOneId) {
+				$redPoints = 50;
+			} else {
+				$bluePoints = 50;
+			}
+		} elseif ($winMethod === 'DISQUALIFICATION' && $regWinId) {
+			// Loser (the DQ'd player) gets -50
+			if ($regWinId == $regOneId) {
+				// Red won, blue was DQ'd
+				$bluePoints = -50;
+			} else {
+				// Blue won, red was DQ'd
+				$redPoints = -50;
+			}
+		}
+
+		return ['red' => $redPoints, 'blue' => $bluePoints];
 	}
 
 	// public function setDoubleLoser($id, $input)
@@ -137,6 +203,22 @@ class EloquentEventMatchesRespository implements EventMatchesRespository {
 	{
 		$eventMatche = $this->find($id);
 		$bracketMat = $this->findMateBracket($eventMatche->bracket_id);
+
+		// Save scores if provided
+		if(isset($input['red_score'])){
+			$eventMatche->red_score     = (int) ($input['red_score'] ?? 0);
+			$eventMatche->blue_score    = (int) ($input['blue_score'] ?? 0);
+			$eventMatche->red_advantage = (int) ($input['red_advantage'] ?? 0);
+			$eventMatche->blue_advantage= (int) ($input['blue_advantage'] ?? 0);
+			$eventMatche->red_penalty   = (int) ($input['red_penalty'] ?? 0);
+			$eventMatche->blue_penalty  = (int) ($input['blue_penalty'] ?? 0);
+			$eventMatche->win_method    = $input['win_method'] ?? null;
+
+			$matchPoints = $this->calculateMatchPoints($eventMatche->win_method, $eventMatche->reg_one_id, $input['reg_win_id'] ?? null);
+			$eventMatche->red_match_points  = $matchPoints['red'];
+			$eventMatche->blue_match_points = $matchPoints['blue'];
+		}
+
 		if($input['reg_win_id'] != null){
 			$eventMatche->reg_win_id = $input['reg_win_id'];
 		}
@@ -166,7 +248,7 @@ class EloquentEventMatchesRespository implements EventMatchesRespository {
 			})
 			->first();
 		if($eventBracket){
-			$eventBracket->reg_winner_id = $input['reg_win_id'];
+			$eventBracket->reg_winner_id = $input['reg_win_id'] ?? null;
 			$eventBracket->save();
 		}
 		return $eventMatche;
