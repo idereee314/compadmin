@@ -228,7 +228,7 @@ class EloquentEventMatchesRespository implements EventMatchesRespository {
 			return collect(); // or throw exception / return empty if not found
 		}
 		$count = EventMatches::where('event_id', $match->event_id)->where('bracket_id', $match->bracket_id)
-			->where('order_no', 100, '<')
+			->where('order_no', '<', 100)
 			->count();
 
 		$token = DB::select('SELECT A.* FROM uq_country_abbrevation A inner join uq_country uc ON a.abbrevation = uc.abbreviation LEFT JOIN uq_member  B on uc.id = b.country_id  WHERE B.id = ?', [

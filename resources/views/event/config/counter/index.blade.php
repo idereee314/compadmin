@@ -202,13 +202,7 @@
                     <span class="marquee-content">{{ $bracket->entry->name }} / {{ $bracket->age->name }} / {{ $bracket->belt->name }}  / {{ $bracket->weight->weight }}KG</span>
                 </div>
                 <div class="match-stage" id="matchStage">
-                    <span class="marquee-content">
-                        @if($bracket->is_double_loser)
-                             {{ $bracket->round }}
-                        @else
-                             {{ $bracket->round }}
-                        @endif
-                    </span>
+                    <span class="marquee-content">{{ $bracket->round }}</span>
                 </div>
             </div>
             <div class="timer" id="timerDisplay" data-duration="{{ $bracket->entry->duration ?? 5 }}">
