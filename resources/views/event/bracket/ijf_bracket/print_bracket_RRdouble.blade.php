@@ -24,6 +24,16 @@
 
     $count = count($all_athletes);
 @endphp
+@php
+  $systemLabel = match(true){
+    $count <= 1 => 'NO COMPETITION',
+    $count == 2 => 'ONE FINAL CONTEST',
+    $count == 3 => 'ROUND ROBIN (1 POOL)',
+    $count == 4 => 'ELIMINATION (2 POOLS OF 2)',
+    $count == 5 => 'POOLS (3 + 2)',
+    default      => 'STANDARD BRACKET + REPECHAGE',
+  };
+@endphp
 
 <div style="width:{{ $width }}; margin:0 auto; background-color: white; border: 1px solid #ccc; padding: 40px; font-family: sans-serif; color: #333;">
 
@@ -31,11 +41,11 @@
         <div>
             <h2 style="margin:0; font-size: 22px;">{{ @$eventConfig->event->name }}</h2>
             <div style="font-size: 14px; color: #444; margin-top: 5px; font-weight: bold;">
-                {{ @$entry->name }} | {{ @$age->name }} | {{ @$belt->name ?? '-' }} | {{ @$weight->weight }}кг | {{ Config::get("enums.gender_code")[@$entry->gender_code] }} | {{ date_format(date_create(@$eventConfig->event->event_date), 'Y-m-d') }}
+                {{ @$entry->name }} | {{ @$age->name }} | {{ @$weight->weight }}кг | {{ Config::get("enums.gender_code")[@$entry->gender_code] }} | {{ date_format(date_create(@$eventConfig->event->event_date), 'Y-m-d') }}
             </div>
         </div>
         <div style="text-align: right; font-size: 12px; font-weight: bold; color: #e11d48; text-transform: uppercase;">
-            {{ $count }} ТАМИРЧИНТАЙ ОНООЛТ ({{ $count <= 4 ? 'BEST OF THREE' : 'ROUND ROBIN' }})
+            {{ $count }} ТАМИРЧИНТАЙ ОНООЛТ ({{ $systemLabel }})
         </div>
     </div>
 
@@ -83,22 +93,25 @@
         </div>
 
     {{-- CASE 2: 3-5 ТАМИРЧИНТАЙ БОЛ (Single Pool Round Robin) --}}
-    @elseif($count > 2 && $count <= 5)
-    @php
-        // Round robin: бүх хослол (n*(n-1)/2)
-        $matches = [];
-        $k = 1;
-        for ($i = 0; $i < $count - 1; $i++) {
-            for ($j = $i + 1; $j < $count; $j++) {
-                $matches[] = [
-                    'r' => $all_athletes[$i],
-                    'b' => $all_athletes[$j],
-                    'l' => 'Match ' . $k,
+    @elseif($count > 2 && $count <= 3)
+        @php
+            if ($count == 3) {
+                $matches = [
+                    ['r' => $all_athletes[0], 'b' => $all_athletes[1], 'l' => 'Match 1'],
+                    ['r' => $all_athletes[0], 'b' => $all_athletes[2], 'l' => 'Match 2'],
+                    ['r' => $all_athletes[1], 'b' => $all_athletes[2], 'l' => 'Match 3'],
                 ];
-                $k++;
+            } else {
+                $matches = [
+                    ['r' => $all_athletes[0], 'b' => $all_athletes[1], 'l' => 'Match 1'],
+                    ['r' => $all_athletes[2], 'b' => $all_athletes[3], 'l' => 'Match 2'],
+                    ['r' => $all_athletes[0], 'b' => $all_athletes[2], 'l' => 'Match 3'],
+                    ['r' => $all_athletes[1], 'b' => $all_athletes[3], 'l' => 'Match 4'],
+                    ['r' => $all_athletes[0], 'b' => $all_athletes[3], 'l' => 'Match 5'],
+                    ['r' => $all_athletes[1], 'b' => $all_athletes[2], 'l' => 'Match 6'],
+                ];
             }
-        }
-    @endphp
+        @endphp
         
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px;">
             @foreach($matches as $m)

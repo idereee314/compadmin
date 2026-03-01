@@ -132,7 +132,6 @@
             <div style="font-size: {{ $cfg['sub_font'] }}; color: #444; margin-top: 5px; font-weight: bold;">
                 {{ @$entry->name }} |
                 {{ @$age->name }} |
-                {{ @$belt->name ?? '-' }} |
                 {{ @$weight->weight }}кг |
                 {{ Config::get("enums.gender_code")[@$entry->gender_code] ?? '' }} |
                 {{ !empty(@$eventConfig->event->event_date) ? date_format(date_create(@$eventConfig->event->event_date), 'Y-m-d') : '' }}
@@ -221,8 +220,6 @@
 
     {{-- ========================= REPECHAGE ========================= --}}
     <div class="repechage-header">ТОРГУУЛИЙН БАРИЛДААН / REPECHAGE</div>
-
-    @if($bracketSize === 8)
         <table width="100%" style="margin-top: 20px; border-collapse: collapse; table-layout: fixed;">
             <thead>
                 <tr>
@@ -256,163 +253,6 @@
                 </td>
             </tr>
         </table>
-    @elseif($bracketSize === 16)
-        <table width="100%" style="margin-top: 20px; border-collapse: collapse; table-layout: fixed;">
-            <thead>
-                <tr>
-                    <th class="rep-col-title">R1-д хожигдсон</th>
-                    <th class="rep-col-title">vs QF-д хожигдсон</th>
-                    <th class="rep-col-title">Дагах хагас шигшээ</th>
-                    <th class="rep-col-title" style="background: #fff7ed; color: #c2410c;">Хүрэл медаль</th>
-                </tr>
-            </thead>
-            <tr>
-                <td width="25%" valign="top">
-                    @for($i=0; $i<4; $i++)
-                        <div class="rep-wrapper" style="margin-top: 25px;">
-                            <table class="match-box-sm">
-                                <tr><td class="cell-sm"><div class="indicator-bar-sm red-bg">L</div></td></tr>
-                                <tr><td class="cell-sm" style="border-top: 1px solid #f1f5f9;"><div class="indicator-bar-sm blue-bg">L</div></td></tr>
-                            </table>
-                            <div class="rep-line {{ $i % 2 == 0 ? 'r-down' : 'r-up' }}"></div>
-                        </div>
-                    @endfor
-                </td>
-
-                <td width="25%" valign="top">
-                    @for($i=0; $i<4; $i++)
-                        <div class="rep-wrapper" style="margin-top: 25px;">
-                            <table class="match-box-sm">
-                                <tr><td class="cell-sm"><div class="indicator-bar-sm red-bg">QF-L</div></td></tr>
-                                <tr><td class="cell-sm" style="border-top: 1px solid #f1f5f9;"><div class="indicator-bar-sm blue-bg">W</div></td></tr>
-                            </table>
-                            <div class="rep-line {{ $i % 2 == 0 ? 'r-down' : 'r-up' }}"></div>
-                        </div>
-                    @endfor
-                </td>
-
-                <td width="25%" valign="top">
-                    @for($i=0; $i<2; $i++)
-                        <div class="rep-wrapper" style="margin-top: 85px; margin-bottom: 110px;">
-                            <table class="match-box-sm">
-                                <tr><td class="cell-sm"><div class="indicator-bar-sm red-bg">W</div></td></tr>
-                                <tr><td class="cell-sm" style="border-top: 1px solid #f1f5f9;"><div class="indicator-bar-sm blue-bg">W</div></td></tr>
-                            </table>
-                            <div class="rep-line-straight"></div>
-                        </div>
-                    @endfor
-                </td>
-
-                <td width="25%" valign="top">
-                    @for($i=0; $i<2; $i++)
-                        <div class="rep-wrapper" style="margin-top: 85px; margin-bottom: 110px;">
-                            <table class="match-box-sm" style="border: 1.5px solid #d97706; background: #fffbeb;">
-                                <tr><td class="cell-sm"><div class="indicator-bar-sm red-bg">SF-L</div></td></tr>
-                                <tr><td class="cell-sm" style="border-top: 1px solid #f1f5f9;"><div class="indicator-bar-sm blue-bg">RP-W</div></td></tr>
-                            </table>
-                            <div style="margin-left: 8px; font-size: 16px;">🥉</div>
-                        </div>
-                    @endfor
-                </td>
-            </tr>
-        </table>
-
-    @else {{-- ========================= 32 COMPETITORS REPECHAGE ========================= --}}
-        {{-- 32 дээр Sportdata шиг: 8 -> 4 -> 4 -> 2 -> 2 хүрэл (2 bronze matches) --}}
-        <table width="100%" style="margin-top: 20px; border-collapse: collapse; table-layout: fixed;">
-            <thead>
-                <tr>
-                    <th class="rep-col-title">R1-д хожигдсон</th>
-                    <th class="rep-col-title">vs R2-д хожигдсон</th>
-                    <th class="rep-col-title">Дараагийн шат</th>
-                    <th class="rep-col-title">vs QF-д хожигдсон</th>
-                    <th class="rep-col-title">Дагах хагас шигшээ</th>
-                    <th class="rep-col-title" style="background: #fff7ed; color: #c2410c;">Хүрэл медаль</th>
-                </tr>
-            </thead>
-
-            <tr>
-                {{-- COL 1: R1 losers (8 blocks) --}}
-                <td width="16.66%" valign="top">
-                    @for($i=0; $i<8; $i++)
-                        <div class="rep-wrapper rep32" style="margin-top: 18px;">
-                            <table class="match-box-sm">
-                                <tr><td class="cell-sm"><div class="indicator-bar-sm red-bg">L</div></td></tr>
-                                <tr><td class="cell-sm" style="border-top: 1px solid #f1f5f9;"><div class="indicator-bar-sm blue-bg">L</div></td></tr>
-                            </table>
-                            <div class="rep-line {{ $i % 2 == 0 ? 'r-down' : 'r-up' }}" style="height: 52px;"></div>
-                        </div>
-                    @endfor
-                </td>
-
-                {{-- COL 2: vs R2 losers (8 blocks) --}}
-                <td width="16.66%" valign="top">
-                    @for($i=0; $i<8; $i++)
-                        <div class="rep-wrapper rep32" style="margin-top: 18px;">
-                            <table class="match-box-sm">
-                                <tr><td class="cell-sm"><div class="indicator-bar-sm red-bg">R2-L</div></td></tr>
-                                <tr><td class="cell-sm" style="border-top: 1px solid #f1f5f9;"><div class="indicator-bar-sm blue-bg">W</div></td></tr>
-                            </table>
-                            <div class="rep-line {{ $i % 2 == 0 ? 'r-down' : 'r-up' }}" style="height: 52px;"></div>
-                        </div>
-                    @endfor
-                </td>
-
-                {{-- COL 3: next stage (4 blocks) --}}
-                <td width="16.66%" valign="top">
-                    @for($i=0; $i<4; $i++)
-                        <div class="rep-wrapper rep32" style="margin-top: 62px; margin-bottom: 74px;">
-                            <table class="match-box-sm">
-                                <tr><td class="cell-sm"><div class="indicator-bar-sm red-bg">W</div></td></tr>
-                                <tr><td class="cell-sm" style="border-top: 1px solid #f1f5f9;"><div class="indicator-bar-sm blue-bg">W</div></td></tr>
-                            </table>
-                            <div class="rep-line-straight"></div>
-                        </div>
-                    @endfor
-                </td>
-
-                {{-- COL 4: vs QF losers (4 blocks) --}}
-                <td width="16.66%" valign="top">
-                    @for($i=0; $i<4; $i++)
-                        <div class="rep-wrapper rep32" style="margin-top: 62px; margin-bottom: 74px;">
-                            <table class="match-box-sm">
-                                <tr><td class="cell-sm"><div class="indicator-bar-sm red-bg">QF-L</div></td></tr>
-                                <tr><td class="cell-sm" style="border-top: 1px solid #f1f5f9;"><div class="indicator-bar-sm blue-bg">W</div></td></tr>
-                            </table>
-                            <div class="rep-line {{ $i % 2 == 0 ? 'r-down' : 'r-up' }}" style="height: 64px;"></div>
-                        </div>
-                    @endfor
-                </td>
-
-                {{-- COL 5: follow semi (2 blocks) --}}
-                <td width="16.66%" valign="top">
-                    @for($i=0; $i<2; $i++)
-                        <div class="rep-wrapper rep32" style="margin-top: 140px; margin-bottom: 150px;">
-                            <table class="match-box-sm">
-                                <tr><td class="cell-sm"><div class="indicator-bar-sm red-bg">W</div></td></tr>
-                                <tr><td class="cell-sm" style="border-top: 1px solid #f1f5f9;"><div class="indicator-bar-sm blue-bg">W</div></td></tr>
-                            </table>
-                            <div class="rep-line-straight"></div>
-                        </div>
-                    @endfor
-                </td>
-
-                {{-- COL 6: bronze (2 blocks) --}}
-                <td width="16.66%" valign="top">
-                    @for($i=0; $i<2; $i++)
-                        <div class="rep-wrapper rep32" style="margin-top: 140px; margin-bottom: 150px;">
-                            <table class="match-box-sm" style="border: 1.5px solid #d97706; background: #fffbeb;">
-                                <tr><td class="cell-sm"><div class="indicator-bar-sm red-bg">SF-L</div></td></tr>
-                                <tr><td class="cell-sm" style="border-top: 1px solid #f1f5f9;"><div class="indicator-bar-sm blue-bg">RP-W</div></td></tr>
-                            </table>
-                            <div style="margin-left: 8px; font-size: 16px;">🥉</div>
-                        </div>
-                    @endfor
-                </td>
-            </tr>
-        </table>
-    @endif
-
     {{-- ========================= SIGNATURE ========================= --}}
     <div style="margin-top: 80px; font-size: 12px; border-top: 1px solid #eee; padding-top: 20px;">
         Ерөнхий шүүгч: ........................................... / ............................. / Огноо: {{ date('Y-m-d') }}
