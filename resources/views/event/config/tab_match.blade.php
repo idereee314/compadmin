@@ -156,7 +156,7 @@
                                 ${handleUserNames(bracket)}
                             </td>
                             <td>
-                                ${bracket?.reg_win?.member?.firstname ?? 'TBD'} ${bracket?.reg_win?.member?.lastname ?? ''}
+                                ${getWinnerDisplay(bracket)}
                             </td>
                             <td>
                                 ${formatToHHmm(starDate)} - ${formatToHHmm(endDate)}
@@ -202,6 +202,16 @@
                 container.appendChild(dayDiv);
             });
         }
+        function getWinnerDisplay(bracket) {
+            if (bracket?.reg_win?.member) {
+                return `${bracket.reg_win.member.firstname} ${bracket.reg_win.member.lastname ?? ''}`;
+            }
+            if (bracket.status === 'C') {
+                return '<span class="text-danger">NO WINNER</span>';
+            }
+            return 'TBD';
+        }
+        
         function isItBYE(bracket){
             if ((!bracket?.reg_two_id || !bracket?.reg_one_id) && bracket.status === 'C') {
                 return true;
