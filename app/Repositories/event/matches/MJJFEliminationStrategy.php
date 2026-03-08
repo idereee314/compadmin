@@ -255,14 +255,17 @@ class MJJFEliminationStrategy implements TournamentEliminationStrategy {
                     }
                 }
             } elseif ($roundNumber === $finalRound && !empty($losersMatchIndices)) {
-                // Bronze matches: p1 = SF loser (from W bracket), p2 = Repechage winner (from L bracket)
-                // Bronze1: SF1 loser vs Rep1 winner
-                // Bronze2: SF2 loser vs Rep2 winner
+                // Bronze matches: cross-seeded (same as DoubleEliminationStrategy)
+                // p1 = SF loser (REVERSED), p2 = Repechage winner (sequential)
+                // Bronze1: SF2 loser vs Rep1 winner (bottom SF vs top repechage)
+                // Bronze2: SF1 loser vs Rep2 winner (top SF vs bottom repechage)
+                $prevWinnersCrossed = array_reverse($prevWinnersIndices);
+
                 foreach ($losersMatchIndices as $position => $idx) {
                     $refs = [];
-                    // SF match (winners bracket) — loser goes to bronze via $shouldSendLoser
-                    if (isset($prevWinnersIndices[$position])) {
-                        $refs['p1'] = ['round' => $roundNumber - 1, 'index' => $prevWinnersIndices[$position]];
+                   // SF match (winners bracket, cross-seeded) — loser goes to bronze via $shouldSendLoser
+                    if (isset($prevWinnersCrossed[$position])) {
+                        $refs['p1'] = ['round' => $roundNumber - 1, 'index' => $prevWinnersCrossed[$position]];
                     }
                     // Repechage match (losers bracket) — winner goes to bronze
                     if (isset($prevLosersIndices[$position])) {
