@@ -152,9 +152,9 @@
     {{-- CASE 3: 6 ТАМИРЧИНТАЙ БОЛ (Pools + Bracket) --}}
     @else
         @php
-            // 6 тамирчныг 3,3-аар нь Pool A / Pool B болгон хуваана
-            $poolA = array_values(array_slice($all_athletes, 0, 3));
-            $poolB = array_values(array_slice($all_athletes, 3, 3));
+            // Snake seeding: Pool A = Seed 1, Seed 4, Seed 5 / Pool B = Seed 2, Seed 3, Seed 6
+            $poolA = [$all_athletes[0], $all_athletes[3], $all_athletes[4]];
+            $poolB = [$all_athletes[1], $all_athletes[2], $all_athletes[5]];
     
             // Pool A: Match 1,3,5
             $matchesA = [

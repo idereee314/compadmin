@@ -27,10 +27,10 @@
 
     /**
      * 2. ХЭСЭГТ ХУВААХ (POOL SPLITTING)
-     * Эхний 3-ыг Pool 1, удаах 3-ыг Pool 2 болгоно.
+     * Snake seeding: Pool 1 = Seed 1, Seed 4, Seed 5 / Pool 2 = Seed 2, Seed 3, Seed 6
      */
-    $p1 = array_values(array_slice($all_athletes, 0, 3));
-    $p2 = array_values(array_slice($all_athletes, 3, 3));
+    $p1 = [$all_athletes[0], $all_athletes[3], $all_athletes[4]];
+    $p2 = [$all_athletes[1], $all_athletes[2], $all_athletes[5]];
 
     // Pool 1-ийн оноолт (Match 1, 3, 5)
     $matches1 = [
