@@ -167,7 +167,21 @@ class TournamentEliminationStrategyFactory implements TournamentEliminationFacto
             return 'ХАГАС ШИГШЭЭ (SF)';
         }
 
+        // Best-of-3 format (2 players): 2 preliminary match slots → bracketSize = 4
+        // Match 1 (order_no 1) and Match 2 (order_no 3) — order_no 9999 already caught above
+        if ($bracketSize == 4) {
+            return 'ТУЛААН';
+        }
+
+        // Round-robin format: 3 players (3 matches → bracketSize 6)
+        //                     4 players (6 matches → bracketSize 12, handled below)
+        //                     5 players (10 matches → bracketSize 20)
+        if ($bracketSize == 6 || $bracketSize == 20) {
+            return 'БҮЛГИЙН ТОГЛОЛТ';
+        }
+
         // Pool format: 6 pool matches in round 1 → bracketSize = 12
+        // Also covers 4-player round-robin (6 matches, order_no 1-6 < 100 → 'БҮЛГИЙН ТОГЛОЛТ')
         // Round 1 (order_no 1-6): Pool round-robin
         // Round 2 (order_no 201-202): Semi-finals
         if ($bracketSize == 12) {

@@ -36,6 +36,22 @@ class DoubleEliminationStrategy implements TournamentEliminationStrategy {
         return $participantCount === 6;
     }
 
+     /**
+     * 3–5 players: pure round-robin (every player meets every other player once)
+     */
+    private function isRoundRobinFormat($participantCount)
+    {
+        return $participantCount >= 3 && $participantCount <= 5;
+    }
+
+    /**
+     * 2 players: best-of-3 (up to 3 matches; match 3 is the Gold/Final if needed)
+     */
+    private function isBestOf3Format($participantCount)
+    {
+        return $participantCount === 2;
+    }
+
     /**
      * Generate bracket structure for double elimination with repechage
      */
@@ -99,6 +115,20 @@ class DoubleEliminationStrategy implements TournamentEliminationStrategy {
     {
         $matches = [];
         $participantCount = count($participantRegistrations);
+
+        // 2 players: best-of-3
+        if ($this->isBestOf3Format($participantCount)) {
+            return $roundNumber === 1
+                ? $this->generateBestOf3Matches($eventId, $participantRegistrations)
+                : [];
+        }
+
+        // 3–5 players: full round-robin, all matches in round 1
+        if ($this->isRoundRobinFormat($participantCount)) {
+            return $roundNumber === 1
+                ? $this->generateRoundRobinMatches($eventId, $participantRegistrations)
+                : [];
+        }
 
         // For 6 players, use pool-based format
         if ($this->isPoolFormat($participantCount)) {
@@ -214,6 +244,146 @@ class DoubleEliminationStrategy implements TournamentEliminationStrategy {
         }
 
         return $matches;
+    }
+
+    /**
+     * Generate matches for best-of-3 format (2 players)
+     *
+     * Up to 3 matches between the same two players:
+     *   Match 1 (order_no 1)  — always played
+     *   Match 2 (order_no 3)  — always played; slot 2 reserved for 1-match break
+     *   Match 3 (order_no 9999, Gold) — played only if tied 1-1 after matches 1 & 2;
+     *     scheduled last to provide at least 2-match break after match 2
+     *
+     * There is only 1 bronze medalist across all double-elimination variants;
+     * for 2 players there is no bronze match — only Gold (1st) and Silver (2nd).
+     */
+    private function generateBestOf3Matches($eventId, $players)
+    {
+        [$p1, $p2] = [$players[0], $players[1]];
+
+        return [
+            // Match 1
+            [
+                'event_id'        => $eventId,
+                'reg_one_id'      => $p1,
+                'reg_two_id'      => $p2,
+                'previes_mate_id1' => null,
+                'previes_mate_id2' => null,
+                'order_no'        => 1,
+                'status'          => 'P',
+                'is_double_loser' => 0,
+            ],
+            // Match 2 — slot 2 left for other brackets (= 1-match break)
+            [
+                'event_id'        => $eventId,
+                'reg_one_id'      => $p1,
+                'reg_two_id'      => $p2,
+                'previes_mate_id1' => null,
+                'previes_mate_id2' => null,
+                'order_no'        => 3,
+                'status'          => 'P',
+                'is_double_loser' => 0,
+            ],
+            // Match 3 (Gold/Final, conditional on 1-1 tie) — scheduled last,
+            // providing 2+ match break from match 2
+            [
+                'event_id'        => $eventId,
+                'reg_one_id'      => $p1,
+                'reg_two_id'      => $p2,
+                'previes_mate_id1' => null,
+                'previes_mate_id2' => null,
+                'order_no'        => 9999,
+                'status'          => 'P',
+                'is_double_loser' => 0,
+            ],
+        ];
+    }
+
+    /**
+     * Generate matches for round-robin format (3–5 players)
+     *
+     * Every player meets every other player exactly once: n*(n-1)/2 matches total.
+     * Matches are ordered to maximise rest breaks (greedy: always pick the pair
+     * where both players have been idle the longest). General break time applies.
+     * Only 1 bronze medalist — medals are determined by final standings, not
+     * by a separate play-off match.
+     */
+    private function generateRoundRobinMatches($eventId, $players)
+    {
+        $orderedPairs = $this->scheduleRoundRobinWithBreaks($players);
+        $matches = [];
+
+        foreach ($orderedPairs as $i => [$p1, $p2]) {
+            $matches[] = [
+                'event_id'        => $eventId,
+                'reg_one_id'      => $p1,
+                'reg_two_id'      => $p2,
+                'previes_mate_id1' => null,
+                'previes_mate_id2' => null,
+                'order_no'        => $i + 1,
+                'status'          => 'P',
+                'is_double_loser' => 0,
+            ];
+        }
+
+        return $matches;
+    }
+
+    /**
+     * Order all round-robin pairs to maximise per-player rest breaks.
+     *
+     * Greedy algorithm: at each slot, pick the unscheduled pair where the
+     * minimum idle time for either player is greatest. Ties are broken by the
+     * first available pair in enumeration order.
+     */
+    private function scheduleRoundRobinWithBreaks(array $players): array
+    {
+        // Build list of all unordered pairs
+        $allPairs = [];
+        $n = count($players);
+        for ($i = 0; $i < $n; $i++) {
+            for ($j = $i + 1; $j < $n; $j++) {
+                $allPairs[] = [$players[$i], $players[$j]];
+            }
+        }
+
+        $lastSlot = [];   // player → last slot they played (0 = never)
+        $ordered  = [];
+        $slot     = 1;
+        $remaining = $allPairs;
+
+        while (!empty($remaining)) {
+            $bestIdx     = 0;
+            $bestMinWait = -1;
+
+            foreach ($remaining as $idx => [$p1, $p2]) {
+                $wait = min(
+                    $slot - ($lastSlot[$p1] ?? 0),
+                    $slot - ($lastSlot[$p2] ?? 0)
+                );
+                if ($wait > $bestMinWait) {
+                    $bestMinWait = $wait;
+                    $bestIdx     = $idx;
+                }
+            }
+
+            [$p1, $p2] = $remaining[$bestIdx];
+            $ordered[]      = [$p1, $p2];
+            $lastSlot[$p1]  = $slot;
+            $lastSlot[$p2]  = $slot;
+
+            $newRemaining = [];
+            foreach ($remaining as $idx => $pair) {
+                if ($idx !== $bestIdx) {
+                    $newRemaining[] = $pair;
+                }
+            }
+            $remaining = $newRemaining;
+            $slot++;
+        }
+
+        return $ordered;
     }
 
     /**
@@ -412,6 +582,16 @@ class DoubleEliminationStrategy implements TournamentEliminationStrategy {
     {
         if ($participantCount <= 1) {
             return 0;
+        }
+
+        // 2 players: best-of-3 — all 3 match slots live in 1 round
+        if ($this->isBestOf3Format($participantCount)) {
+            return 1;
+        }
+
+        // 3–5 players: round-robin — all n*(n-1)/2 matches in 1 round
+        if ($this->isRoundRobinFormat($participantCount)) {
+            return 1;
         }
 
         // Pool format (6 players): 3 rounds (Pool RR, Semi-finals, Final+Bronze)
