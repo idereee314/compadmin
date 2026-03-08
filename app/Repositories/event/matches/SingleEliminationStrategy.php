@@ -119,6 +119,9 @@ class SingleEliminationStrategy implements TournamentEliminationStrategy {
                 ->toArray();
         }
 
+        // Apply tournament seeding for 8+ player power-of-2 brackets
+        $participantRegistrations = MatchScheduler::seedParticipants($participantRegistrations);
+
         for ($i = 0; $i < count($participantRegistrations); $i += 2) {
             if (isset($participantRegistrations[$i + 1])) {
                 $matches[] = [

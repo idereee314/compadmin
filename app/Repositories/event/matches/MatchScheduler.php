@@ -247,4 +247,81 @@ class MatchScheduler
 
         return $matches;
     }
+
+    /**
+     * Generate standard tournament seeded order for a given bracket size.
+     *
+     * Returns an array of 1-based seed positions in match order.
+     * When paired sequentially (indices 0&1, 2&3, etc.), these produce
+     * the standard seeded matchups:
+     *   8 players:  1v8, 4v5, 2v7, 3v6
+     *   16 players: 1v16, 8v9, 4v13, 5v12, 2v15, 7v10, 3v14, 6v11
+     *   32 players: 1v32, 16v17, 9v24, 8v25, 4v29, 13v20, 12v21, 5v28,
+     *               2v31, 15v18, 10v23, 7v26, 3v30, 14v19, 11v22, 6v27
+     *
+     * @param int $bracketSize Must be a power of 2 (8, 16, or 32)
+     * @return array 1-based seed positions
+     */
+    public static function generateSeededOrder(int $bracketSize): array
+    {
+        if ($bracketSize < 2) {
+            return [1];
+        }
+        if ($bracketSize === 2) {
+            return [1, 2];
+        }
+
+        $half = self::generateSeededOrder(intdiv($bracketSize, 2));
+        $result = [];
+        foreach ($half as $s) {
+            $result[] = $s;
+            $result[] = $bracketSize + 1 - $s;
+        }
+
+        // Apply mirror correction for 32-player brackets.
+        // Swaps the second pair within each group of 4 entries at odd
+        // group positions so that the bracket mirrors correctly:
+        //   e.g. [8,25, 9,24] becomes [9,24, 8,25]
+        if ($bracketSize === 32) {
+            for ($i = 0; $i < count($result); $i += 4) {
+                if (intdiv($i, 4) % 2 === 1) {
+                    $tmp0 = $result[$i];
+                    $tmp1 = $result[$i + 1];
+                    $result[$i]     = $result[$i + 2];
+                    $result[$i + 1] = $result[$i + 3];
+                    $result[$i + 2] = $tmp0;
+                    $result[$i + 3] = $tmp1;
+                }
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Reorder participants according to standard tournament seeding.
+     *
+     * Applies seeding for power-of-2 bracket sizes of 8 or more.
+     * For other sizes, returns participants in their original order.
+     *
+     * @param array $participants Participant IDs in seed order (index 0 = seed 1)
+     * @return array Reordered participants for bracket pairing
+     */
+    public static function seedParticipants(array $participants): array
+    {
+        $count = count($participants);
+
+        // Only seed for power-of-2 sizes of 8+
+        if ($count < 8 || ($count & ($count - 1)) !== 0) {
+            return $participants;
+        }
+
+        $seedOrder = self::generateSeededOrder($count);
+        $seeded = [];
+        foreach ($seedOrder as $seed) {
+            $seeded[] = $participants[$seed - 1];
+        }
+
+        return $seeded;
+    }
 }
