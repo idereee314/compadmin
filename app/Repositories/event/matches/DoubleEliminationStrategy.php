@@ -223,9 +223,11 @@ class DoubleEliminationStrategy implements TournamentEliminationStrategy {
      * Round 2: Cross-pool semi-finals (2 matches)
      *   Match 7: 1st Pool1 vs 2nd Pool2
      *   Match 8: 1st Pool2 vs 2nd Pool1
-     * Round 3: Final + Bronze (2 matches)
-     *   Match 9: Winner M7 vs Winner M8 (Gold)
-     *   Match 10: Loser M7 vs Loser M8 (Bronze)
+     * Round 3 ('double' — 2 bronze medals):
+     *   Match 9: Winner M7 vs Winner M8 (Gold) — both SF losers get bronze automatically
+     * Round 3 ('double_single_bronze' — 1 bronze medal):
+     *   Bronze first: Loser M7 vs Loser M8
+     *   Gold last:    Winner M7 vs Winner M8
      */
     private function generatePoolFormatRoundMatches($eventId, $roundNumber, $participantRegistrations)
     {
@@ -298,7 +300,22 @@ class DoubleEliminationStrategy implements TournamentEliminationStrategy {
         }
 
         if ($roundNumber === 3) {
-            // Match 9: Final (Gold) - Winner M7 vs Winner M8
+            // 'double_single_bronze': Bronze match first, then Gold — so Gold runs last.
+            // 'double' (2 bronze): both SF losers automatically receive bronze medals;
+            //   no play-off match is required, only the Gold match is generated.
+            if ($this->singleBronze) {
+                // Bronze match (Loser M7 vs Loser M8) — played before Gold
+                $matches[] = [
+                    'event_id' => $eventId,
+                    'reg_one_id' => null,
+                    'reg_two_id' => null,
+                    'order_no' => 9998,
+                    'status' => 'P',
+                    'is_double_loser' => 1,
+                ];
+            }
+
+            // Gold match (Winner M7 vs Winner M8) — always last
             $matches[] = [
                 'event_id' => $eventId,
                 'reg_one_id' => null,
@@ -306,16 +323,6 @@ class DoubleEliminationStrategy implements TournamentEliminationStrategy {
                 'order_no' => 9999,
                 'status' => 'P',
                 'is_double_loser' => 0,
-            ];
-
-            // Match 10: Bronze - Loser M7 vs Loser M8
-            $matches[] = [
-                'event_id' => $eventId,
-                'reg_one_id' => null,
-                'reg_two_id' => null,
-                'order_no' => 9998,
-                'status' => 'P',
-                'is_double_loser' => 1,
             ];
 
             return $matches;
