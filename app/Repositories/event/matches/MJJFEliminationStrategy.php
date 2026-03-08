@@ -235,19 +235,20 @@ class MJJFEliminationStrategy implements TournamentEliminationStrategy {
             }
 
             if ($roundNumber === $sfRound && !empty($losersMatchIndices)) {
-                // Repechage round: 2 matches fed by 4 QF losers (cross-seeded)
+                // Repechage round: 2 matches fed by 4 QF losers (same-half pairing)
                 // QF match order: [QF1, QF2, QF3, QF4]
-                // Rep1: QF loser 1 vs QF loser 4 (cross-seed)
-                // Rep2: QF loser 2 vs QF loser 3
-                $prevWinnersCrossed = array_reverse($prevWinnersIndices);
-
+                // Rep1: QF1 loser vs QF2 loser (top half)
+                // Rep2: QF3 loser vs QF4 loser (bottom half)
                 foreach ($losersMatchIndices as $position => $idx) {
+                    $p1Index = $prevWinnersIndices[$position * 2] ?? null;
+                    $p2Index = $prevWinnersIndices[$position * 2 + 1] ?? null;
+
                     $refs = [];
-                    if (isset($prevWinnersIndices[$position])) {
-                        $refs['p1'] = ['round' => $roundNumber - 1, 'index' => $prevWinnersIndices[$position]];
+                    if ($p1Index !== null && isset($previous[$p1Index])) {
+                        $refs['p1'] = ['round' => $roundNumber - 1, 'index' => $p1Index];
                     }
-                    if (isset($prevWinnersCrossed[$position])) {
-                        $refs['p2'] = ['round' => $roundNumber - 1, 'index' => $prevWinnersCrossed[$position]];
+                    if ($p2Index !== null && isset($previous[$p2Index])) {
+                        $refs['p2'] = ['round' => $roundNumber - 1, 'index' => $p2Index];
                     }
                     if (!empty($refs)) {
                         $current[$idx]['prev_refs'] = $refs;
