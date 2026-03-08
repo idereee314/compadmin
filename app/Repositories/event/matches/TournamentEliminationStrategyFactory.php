@@ -30,6 +30,8 @@ class TournamentEliminationStrategyFactory implements TournamentEliminationFacto
             'single' => SingleEliminationStrategy::class,
             'double_single_bronze' => DoubleEliminationStrategy::class,
             'double' => DoubleEliminationStrategy::class,
+            'mjjf' => MJJFEliminationStrategy::class,
+            'ijf' => MJJFEliminationStrategy::class,
             // 'round_robin' => RoundRobinStrategy::class,
         ];
     }
