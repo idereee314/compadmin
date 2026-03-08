@@ -446,27 +446,37 @@ class DoubleEliminationSmallBracketTest extends TestCase
         $this->assertEquals('ШИГШЭЭ', TournamentEliminationStrategyFactory::determineRound(2, 9999));
     }
 
-    public function test_determine_round_3_player_rr_labelled_бүлгийн()
+    public function test_determine_round_3_player_rr_labelled_тойргийн()
     {
-        // 3 matches in round 1 → bracketSize = 6
-        $this->assertEquals('БҮЛГИЙН ТОГЛОЛТ', TournamentEliminationStrategyFactory::determineRound(3, 1));
-        $this->assertEquals('БҮЛГИЙН ТОГЛОЛТ', TournamentEliminationStrategyFactory::determineRound(3, 2));
-        $this->assertEquals('БҮЛГИЙН ТОГЛОЛТ', TournamentEliminationStrategyFactory::determineRound(3, 3));
+        // 3 matches in round 1 → bracketSize = 6 → ТОЙРГИЙН ТОГЛОЛТ
+        $this->assertEquals('ТОЙРГИЙН ТОГЛОЛТ', TournamentEliminationStrategyFactory::determineRound(3, 1));
+        $this->assertEquals('ТОЙРГИЙН ТОГЛОЛТ', TournamentEliminationStrategyFactory::determineRound(3, 2));
+        $this->assertEquals('ТОЙРГИЙН ТОГЛОЛТ', TournamentEliminationStrategyFactory::determineRound(3, 3));
     }
 
-    public function test_determine_round_4_player_rr_labelled_бүлгийн()
+    public function test_determine_round_4_player_rr_labelled_тойргийн()
     {
-        // 6 matches in round 1 → bracketSize = 12 (same bucket as 6-player pool)
-        // order_no < 100 → 'БҮЛГИЙН ТОГЛОЛТ' (handled by existing pool logic)
+        // 4-player RR: 6 prelim matches = 6 total → bracketSize=12 with totalBracketMatches=6
+        // → ТОЙРГИЙН ТОГЛОЛТ (pure round-robin, no SF/Final overhead)
+        $this->assertEquals('ТОЙРГИЙН ТОГЛОЛТ', TournamentEliminationStrategyFactory::determineRound(6, 1, false, 6));
+        $this->assertEquals('ТОЙРГИЙН ТОГЛОЛТ', TournamentEliminationStrategyFactory::determineRound(6, 6, false, 6));
+    }
+
+    public function test_determine_round_6_player_pool_still_бүлгийн_for_pool_matches()
+    {
+        // 6-player pool: 6 prelim matches but 9-10 total → bracketSize=12 with totalBracketMatches>6
+        // → БҮЛГИЙН ТОГЛОЛТ (pool group play, not pure round-robin)
+        $this->assertEquals('БҮЛГИЙН ТОГЛОЛТ', TournamentEliminationStrategyFactory::determineRound(6, 1, false, 9));
+        $this->assertEquals('БҮЛГИЙН ТОГЛОЛТ', TournamentEliminationStrategyFactory::determineRound(6, 6, false, 9));
+        // Without total count (legacy call): pool format fallback
         $this->assertEquals('БҮЛГИЙН ТОГЛОЛТ', TournamentEliminationStrategyFactory::determineRound(6, 1));
-        $this->assertEquals('БҮЛГИЙН ТОГЛОЛТ', TournamentEliminationStrategyFactory::determineRound(6, 6));
     }
 
-    public function test_determine_round_5_player_rr_labelled_бүлгийн()
+    public function test_determine_round_5_player_rr_labelled_тойргийн()
     {
-        // 10 matches in round 1 → bracketSize = 20
-        $this->assertEquals('БҮЛГИЙН ТОГЛОЛТ', TournamentEliminationStrategyFactory::determineRound(10, 1));
-        $this->assertEquals('БҮЛГИЙН ТОГЛОЛТ', TournamentEliminationStrategyFactory::determineRound(10, 10));
+        // 10 matches in round 1 → bracketSize = 20 → ТОЙРГИЙН ТОГЛОЛТ
+        $this->assertEquals('ТОЙРГИЙН ТОГЛОЛТ', TournamentEliminationStrategyFactory::determineRound(10, 1));
+        $this->assertEquals('ТОЙРГИЙН ТОГЛОЛТ', TournamentEliminationStrategyFactory::determineRound(10, 10));
     }
 
     // =========================================================================

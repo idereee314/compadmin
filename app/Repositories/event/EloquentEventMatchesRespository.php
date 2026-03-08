@@ -461,6 +461,9 @@ class EloquentEventMatchesRespository implements EventMatchesRespository {
 		$count = EventMatches::where('event_id', $match->event_id)->where('bracket_id', $match->bracket_id)
 			->where('order_no', '<', 100)
 			->count();
+		$totalBracketMatches = EventMatches::where('event_id', $match->event_id)
+			->where('bracket_id', $match->bracket_id)
+			->count();
 
 		$token = DB::select('SELECT A.* FROM uq_country_abbrevation A inner join uq_country uc ON a.abbrevation = uc.abbreviation LEFT JOIN uq_member  B on uc.id = b.country_id  WHERE B.id = ?', [
 			$match->regOne->member_id ?? 0,
@@ -499,7 +502,8 @@ class EloquentEventMatchesRespository implements EventMatchesRespository {
 			$bracket->round = TournamentEliminationStrategyFactory::determineRound(
 				$count,
 				$match->order_no,
-				$match->is_double_loser
+				$match->is_double_loser,
+				$totalBracketMatches
 			);
 			$bracket->is_double_loser = $match->is_double_loser;
 		}

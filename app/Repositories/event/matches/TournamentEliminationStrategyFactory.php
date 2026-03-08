@@ -150,10 +150,12 @@ class TournamentEliminationStrategyFactory implements TournamentEliminationFacto
         return $info;
     }
 
-    public static function determineRound($totalMatches, $matchOrder, $isDoubleLoser = false)
+    public static function determineRound($totalMatches, $matchOrder, $isDoubleLoser = false, $totalBracketMatches = null)
     {
-        // $totalMatches = count of first-round matches (order_no < 100)
-        // Bracket size = first-round matches * 2
+        // $totalMatches        = count of first-round matches (order_no < 100)
+        // $totalBracketMatches = total match count for the bracket (all order_nos)
+        //   Used to distinguish 4-player round-robin (6 total = 6 prelim) from
+        //   6-player pool format (9-10 total > 6 prelim) when bracketSize == 12.
         $bracketSize = (int) ($totalMatches ?? 0) * 2;
 
         // Special match types — check first regardless of bracket type
@@ -176,17 +178,21 @@ class TournamentEliminationStrategyFactory implements TournamentEliminationFacto
         }
 
         // Round-robin format: 3 players (3 matches → bracketSize 6)
-        //                     4 players (6 matches → bracketSize 12, handled below)
+        //                     4 players (6 matches → bracketSize 12, see below)
         //                     5 players (10 matches → bracketSize 20)
         if ($bracketSize == 6 || $bracketSize == 20) {
-            return 'БҮЛГИЙН ТОГЛОЛТ';
+            return 'ТОЙРГИЙН ТОГЛОЛТ';
         }
 
-        // Pool format: 6 pool matches in round 1 → bracketSize = 12
-        // Also covers 4-player round-robin (6 matches, order_no 1-6 < 100 → 'БҮЛГИЙН ТОГЛОЛТ')
-        // Round 1 (order_no 1-6): Pool round-robin
-        // Round 2 (order_no 201-202): Semi-finals
+        // bracketSize 12 covers TWO formats:
+        //   6-player pool (6 prelim pool matches + 2 SF + 1-2 final/bronze = 9-10 total)
+        //   4-player round-robin (6 matches total, no SF/Final overhead)
+        // When $totalBracketMatches is provided and equals the prelim count (≤ 6),
+        // the bracket is a pure round-robin → label as ТОЙРГИЙН ТОГЛОЛТ.
         if ($bracketSize == 12) {
+            if ($totalBracketMatches !== null && $totalBracketMatches <= 6) {
+                return 'ТОЙРГИЙН ТОГЛОЛТ';
+            }
             if ($matchOrder < 100) {
                 return 'БҮЛГИЙН ТОГЛОЛТ';
             }
