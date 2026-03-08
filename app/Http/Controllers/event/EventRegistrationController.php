@@ -1044,10 +1044,19 @@ class EventRegistrationController extends Controller
         
         $members = $this->eventRegistration->getBracketGenerationFromEvent($eventId, $entryId, $entryAgeId, $entryBeltId, $entryWeightId);
         
+        $eventConfig = $this->eventConfig->findByEventId($eventId);
+        $entry = $this->eventEntries->find($entryId);
+        $age = $this->configAge->find($entryAgeId);
+        $weight = $this->configWeight->find($entryWeightId);
+
         $total = count($members);
 
         $data['total'] = $total;
         $data['members'] = $members;
+        $data['eventConfig'] = $eventConfig;
+        $data['entry'] = $entry;
+        $data['age'] = $age;
+        $data['weight'] = $weight;
         $data['eventId'] = $eventId;
         $data['entryId'] = $entryId;
         $data['entryAgeId'] = $entryAgeId;
