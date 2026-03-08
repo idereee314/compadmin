@@ -35,7 +35,7 @@
             </div>
         </div>
         <div style="text-align: right; font-size: 12px; font-weight: bold; color: #e11d48; text-transform: uppercase;">
-            {{ $count }} ТАМИРЧИНТАЙ ОНООЛТ ({{ $count <= 4 ? 'BEST OF THREE' : 'ROUND ROBIN' }})
+            {{ $count }} ТАМИРЧИНТАЙ ОНООЛТ ({{ $count <= 2 ? 'BEST OF THREE' : 'ROUND ROBIN' }})
         </div>
     </div>
 
@@ -91,7 +91,8 @@
                     ['r' => $all_athletes[0], 'b' => $all_athletes[2], 'l' => 'Match 2'],
                     ['r' => $all_athletes[1], 'b' => $all_athletes[2], 'l' => 'Match 3'],
                 ];
-            } else {
+            } elseif ($count == 4) {
+                // 4 players: C(4,2) = 6 matches
                 $matches = [
                     ['r' => $all_athletes[0], 'b' => $all_athletes[1], 'l' => 'Match 1'],
                     ['r' => $all_athletes[2], 'b' => $all_athletes[3], 'l' => 'Match 2'],
@@ -99,6 +100,20 @@
                     ['r' => $all_athletes[1], 'b' => $all_athletes[3], 'l' => 'Match 4'],
                     ['r' => $all_athletes[0], 'b' => $all_athletes[3], 'l' => 'Match 5'],
                     ['r' => $all_athletes[1], 'b' => $all_athletes[2], 'l' => 'Match 6'],
+                ];
+            } else {
+                // 5 players: C(5,2) = 10 matches — every player vs every other player
+                $matches = [
+                    ['r' => $all_athletes[0], 'b' => $all_athletes[1], 'l' => 'Match 1'],
+                    ['r' => $all_athletes[2], 'b' => $all_athletes[3], 'l' => 'Match 2'],
+                    ['r' => $all_athletes[0], 'b' => $all_athletes[4], 'l' => 'Match 3'],
+                    ['r' => $all_athletes[1], 'b' => $all_athletes[2], 'l' => 'Match 4'],
+                    ['r' => $all_athletes[3], 'b' => $all_athletes[4], 'l' => 'Match 5'],
+                    ['r' => $all_athletes[0], 'b' => $all_athletes[2], 'l' => 'Match 6'],
+                    ['r' => $all_athletes[1], 'b' => $all_athletes[4], 'l' => 'Match 7'],
+                    ['r' => $all_athletes[0], 'b' => $all_athletes[3], 'l' => 'Match 8'],
+                    ['r' => $all_athletes[2], 'b' => $all_athletes[4], 'l' => 'Match 9'],
+                    ['r' => $all_athletes[1], 'b' => $all_athletes[3], 'l' => 'Match 10'],
                 ];
             }
         @endphp

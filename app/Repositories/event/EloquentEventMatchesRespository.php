@@ -540,6 +540,8 @@ class EloquentEventMatchesRespository implements EventMatchesRespository {
 			->get()->flatMap(function ($row) {
 				return [$row->reg_one_id, $row->reg_two_id];
 			})
+			->filter()   // Remove null BYE slots (present in odd-count brackets, e.g. 5-player)
+			->values()   // Re-index to sequential array so count() is accurate
 			->toArray();
 		Log::info('Participants for match generation: ', [
 			'participants' => $participants,
