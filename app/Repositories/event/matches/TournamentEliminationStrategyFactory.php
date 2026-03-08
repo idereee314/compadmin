@@ -155,9 +155,6 @@ class TournamentEliminationStrategyFactory implements TournamentEliminationFacto
         // $totalMatches = count of first-round matches (order_no < 100)
         // Bracket size = first-round matches * 2
         $bracketSize = (int) ($totalMatches ?? 0) * 2;
-        if (!in_array($bracketSize, [8, 16, 32], true)) {
-            $bracketSize = 8;
-        }
 
         // Special match types — check first regardless of bracket type
         if ($matchOrder >= 9999) {
@@ -168,6 +165,24 @@ class TournamentEliminationStrategyFactory implements TournamentEliminationFacto
         }
         if ($matchOrder > 9990) {
             return 'ХАГАС ШИГШЭЭ (SF)';
+        }
+
+        // Pool format: 6 pool matches in round 1 → bracketSize = 12
+        // Round 1 (order_no 1-6): Pool round-robin
+        // Round 2 (order_no 201-202): Semi-finals
+        if ($bracketSize == 12) {
+            if ($matchOrder < 100) {
+                return 'БҮЛГИЙН ТОГЛОЛТ';
+            }
+            $round = (int) ($matchOrder / 100);
+            if ($round === 2) {
+                return 'ХАГАС ШИГШЭЭ (SF)';
+            }
+            return 'ШИГШЭЭ';
+        }
+
+        if (!in_array($bracketSize, [8, 16, 32], true)) {
+            $bracketSize = 8;
         }
 
         // Round name arrays by bracket size

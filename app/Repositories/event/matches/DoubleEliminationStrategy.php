@@ -17,9 +17,23 @@ class DoubleEliminationStrategy implements TournamentEliminationStrategy {
      */
     private $singleBronze = false;
 
+    /**
+     * Whether pool format is active (6 players → 2 pools of 3)
+     */
+    private $poolFormat = false;
+
     public function __construct($eliminationType = 'double')
     {
         $this->singleBronze = ($eliminationType === 'double_single_bronze');
+    }
+
+    /**
+     * Check if the participant count requires pool-based format
+     * 6 players: 2 pools of 3 with round-robin, then cross-pool semi-finals
+     */
+    private function isPoolFormat($participantCount)
+    {
+        return $participantCount === 6;
     }
 
     /**
@@ -84,6 +98,13 @@ class DoubleEliminationStrategy implements TournamentEliminationStrategy {
     public function generateRoundMatches($eventId, $roundNumber, $participantRegistrations = [])
     {
         $matches = [];
+        $participantCount = count($participantRegistrations);
+
+        // For 6 players, use pool-based format
+        if ($this->isPoolFormat($participantCount)) {
+            $this->poolFormat = true;
+            return $this->generatePoolFormatRoundMatches($eventId, $roundNumber, $participantRegistrations);
+        }
 
         // Round 1: Winners bracket only, same as single elimination
         if ($roundNumber === 1) {
@@ -195,6 +216,114 @@ class DoubleEliminationStrategy implements TournamentEliminationStrategy {
         return $matches;
     }
 
+    /**
+     * Generate matches for pool-based format (6 players)
+     *
+     * Round 1: 2 pools of 3, round-robin within each pool (6 matches total)
+     * Round 2: Cross-pool semi-finals (2 matches)
+     *   Match 7: 1st Pool1 vs 2nd Pool2
+     *   Match 8: 1st Pool2 vs 2nd Pool1
+     * Round 3: Final + Bronze (2 matches)
+     *   Match 9: Winner M7 vs Winner M8 (Gold)
+     *   Match 10: Loser M7 vs Loser M8 (Bronze)
+     */
+    private function generatePoolFormatRoundMatches($eventId, $roundNumber, $participantRegistrations)
+    {
+        $matches = [];
+
+        if ($roundNumber === 1) {
+            // Split into 2 pools of 3
+            $pool1 = array_slice($participantRegistrations, 0, 3);
+            $pool2 = array_slice($participantRegistrations, 3, 3);
+
+            $matchOrder = 1;
+
+            // Pool 1 round-robin: 3 matches
+            for ($i = 0; $i < count($pool1); $i++) {
+                for ($j = $i + 1; $j < count($pool1); $j++) {
+                    $matches[] = [
+                        'event_id' => $eventId,
+                        'reg_one_id' => $pool1[$i],
+                        'reg_two_id' => $pool1[$j],
+                        'previes_mate_id1' => null,
+                        'previes_mate_id2' => null,
+                        'order_no' => $matchOrder++,
+                        'status' => 'P',
+                        'is_double_loser' => 0,
+                    ];
+                }
+            }
+
+            // Pool 2 round-robin: 3 matches
+            for ($i = 0; $i < count($pool2); $i++) {
+                for ($j = $i + 1; $j < count($pool2); $j++) {
+                    $matches[] = [
+                        'event_id' => $eventId,
+                        'reg_one_id' => $pool2[$i],
+                        'reg_two_id' => $pool2[$j],
+                        'previes_mate_id1' => null,
+                        'previes_mate_id2' => null,
+                        'order_no' => $matchOrder++,
+                        'status' => 'P',
+                        'is_double_loser' => 0,
+                    ];
+                }
+            }
+
+            return $matches;
+        }
+
+        if ($roundNumber === 2) {
+            // Semi-finals: cross-pool matches
+            // Match 7: 1st Pool1 vs 2nd Pool2
+            $matches[] = [
+                'event_id' => $eventId,
+                'reg_one_id' => null,
+                'reg_two_id' => null,
+                'order_no' => 201,
+                'status' => 'P',
+                'is_double_loser' => 0,
+            ];
+            // Match 8: 1st Pool2 vs 2nd Pool1
+            $matches[] = [
+                'event_id' => $eventId,
+                'reg_one_id' => null,
+                'reg_two_id' => null,
+                'order_no' => 202,
+                'status' => 'P',
+                'is_double_loser' => 0,
+            ];
+
+            return $matches;
+        }
+
+        if ($roundNumber === 3) {
+            // Match 9: Final (Gold) - Winner M7 vs Winner M8
+            $matches[] = [
+                'event_id' => $eventId,
+                'reg_one_id' => null,
+                'reg_two_id' => null,
+                'order_no' => 9999,
+                'status' => 'P',
+                'is_double_loser' => 0,
+            ];
+
+            // Match 10: Bronze - Loser M7 vs Loser M8
+            $matches[] = [
+                'event_id' => $eventId,
+                'reg_one_id' => null,
+                'reg_two_id' => null,
+                'order_no' => 9998,
+                'status' => 'P',
+                'is_double_loser' => 1,
+            ];
+
+            return $matches;
+        }
+
+        return $matches;
+    }
+
     public function processMatchResult($matchId, $winnerId, $matchData)
     {
         $match = EventMatches::find($matchId);
@@ -277,6 +406,12 @@ class DoubleEliminationStrategy implements TournamentEliminationStrategy {
         if ($participantCount <= 1) {
             return 0;
         }
+
+        // Pool format (6 players): 3 rounds (Pool RR, Semi-finals, Final+Bronze)
+        if ($this->isPoolFormat($participantCount)) {
+            return 3;
+        }
+
         // Double elimination winners bracket = same as single elimination rounds
         // For 8: ceil(log2(8)) = 3 rounds
         // Losers bracket runs parallel (L1 in round 2, L2 in round 3, etc.)
@@ -328,9 +463,15 @@ class DoubleEliminationStrategy implements TournamentEliminationStrategy {
      */
     public function computePreviousReferences($roundMatchesData)
     {
+        // Pool format: only final round (round 3) links to semi-finals (round 2)
+        // Pool matches (round 1) and semi-finals (round 2) have no prev_refs
+        if ($this->poolFormat) {
+            return $this->computePoolFormatPreviousReferences($roundMatchesData);
+        }
+
         $roundNumbers = array_keys($roundMatchesData);
         sort($roundNumbers);
-        
+
         foreach ($roundNumbers as $roundNumber) {
             if ($roundNumber <= 1) {
                 continue;
@@ -455,6 +596,43 @@ class DoubleEliminationStrategy implements TournamentEliminationStrategy {
 
             unset($current);
         }
+
+        return $roundMatchesData;
+    }
+
+    /**
+     * Compute previous-match references for pool format (6 players)
+     *
+     * Pool matches (round 1) have no prev_refs - all players are known upfront.
+     * Semi-finals (round 2) have no prev_refs - players come from pool standings.
+     * Final and bronze (round 3) link to the two semi-final matches:
+     *   Gold (9999): winners of both semi-finals
+     *   Bronze (9998): losers of both semi-finals
+     */
+    private function computePoolFormatPreviousReferences($roundMatchesData)
+    {
+        if (!isset($roundMatchesData[3]) || !isset($roundMatchesData[2])) {
+            return $roundMatchesData;
+        }
+
+        $current = &$roundMatchesData[3];
+
+        // Both final (Gold) and bronze link to the 2 semi-final matches in round 2
+        foreach ($current as $idx => &$match) {
+            $refs = [];
+            if (isset($roundMatchesData[2][0])) {
+                $refs['p1'] = ['round' => 2, 'index' => 0];
+            }
+            if (isset($roundMatchesData[2][1])) {
+                $refs['p2'] = ['round' => 2, 'index' => 1];
+            }
+
+            if (!empty($refs)) {
+                $match['prev_refs'] = $refs;
+            }
+        }
+        unset($match);
+        unset($current);
 
         return $roundMatchesData;
     }
