@@ -57,12 +57,12 @@ class DoubleEliminationPoolFormatTest extends TestCase
         $participants = [101, 102, 103, 104, 105, 106];
         $matches = $this->strategy->generateRoundMatches(1, 1, $participants);
 
-        // Pool 1 pairs (101v102, 101v103, 102v103) are interleaved with Pool 2
-        // for break scheduling. Verify all Pool 1 pairs exist regardless of position.
+        // Snake seeding: Pool A = Seed1(101), Seed4(104), Seed5(105)
+        // Pool A pairs are interleaved with Pool B for break scheduling.
         $pairs = array_map(fn($m) => [$m['reg_one_id'], $m['reg_two_id']], $matches);
-        $this->assertContains([101, 102], $pairs, 'Pool1 pair 101v102 missing');
-        $this->assertContains([101, 103], $pairs, 'Pool1 pair 101v103 missing');
-        $this->assertContains([102, 103], $pairs, 'Pool1 pair 102v103 missing');
+        $this->assertContains([101, 104], $pairs, 'PoolA pair 101v104 missing');
+        $this->assertContains([101, 105], $pairs, 'PoolA pair 101v105 missing');
+        $this->assertContains([104, 105], $pairs, 'PoolA pair 104v105 missing');
     }
 
     public function test_pool_format_round1_pool2_pairings()
@@ -70,12 +70,12 @@ class DoubleEliminationPoolFormatTest extends TestCase
         $participants = [101, 102, 103, 104, 105, 106];
         $matches = $this->strategy->generateRoundMatches(1, 1, $participants);
 
-        // Pool 2 pairs (104v105, 104v106, 105v106) are interleaved with Pool 1
-        // for break scheduling. Verify all Pool 2 pairs exist regardless of position.
+        // Snake seeding: Pool B = Seed2(102), Seed3(103), Seed6(106)
+        // Pool B pairs are interleaved with Pool A for break scheduling.
         $pairs = array_map(fn($m) => [$m['reg_one_id'], $m['reg_two_id']], $matches);
-        $this->assertContains([104, 105], $pairs, 'Pool2 pair 104v105 missing');
-        $this->assertContains([104, 106], $pairs, 'Pool2 pair 104v106 missing');
-        $this->assertContains([105, 106], $pairs, 'Pool2 pair 105v106 missing');
+         $this->assertContains([102, 103], $pairs, 'PoolB pair 102v103 missing');
+        $this->assertContains([102, 106], $pairs, 'PoolB pair 102v106 missing');
+        $this->assertContains([103, 106], $pairs, 'PoolB pair 103v106 missing');
     }
 
     public function test_pool_format_round1_interleaved_for_breaks()

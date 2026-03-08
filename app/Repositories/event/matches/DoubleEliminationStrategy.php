@@ -424,9 +424,19 @@ class DoubleEliminationStrategy implements TournamentEliminationStrategy {
         $matches = [];
 
         if ($roundNumber === 1) {
-            // Split into 2 pools of 3
-            $pool1 = array_slice($participantRegistrations, 0, 3);
-            $pool2 = array_slice($participantRegistrations, 3, 3);
+            // Split into 2 pools of 3 using snake seeding:
+            //   Pool A: Seed 1, Seed 4, Seed 5
+            //   Pool B: Seed 2, Seed 3, Seed 6
+            $pool1 = [
+                $participantRegistrations[0],  // Seed 1
+                $participantRegistrations[3],  // Seed 4
+                $participantRegistrations[4],  // Seed 5
+            ];
+            $pool2 = [
+                $participantRegistrations[1],  // Seed 2
+                $participantRegistrations[2],  // Seed 3
+                $participantRegistrations[5],  // Seed 6
+            ];
 
             // Collect all within-pool pairs from both pools
             $allPoolPairs = [];
