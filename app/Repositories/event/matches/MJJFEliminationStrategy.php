@@ -83,17 +83,10 @@ class MJJFEliminationStrategy implements TournamentEliminationStrategy {
         $finalRound = $totalRounds;
 
         if ($roundNumber === $finalRound) {
-            // Final round: Gold match + 2 Bronze matches
-            // Gold: SF winners
-            $matches[] = [
-                'event_id' => $eventId,
-                'reg_one_id' => null,
-                'reg_two_id' => null,
-                'order_no' => 9999,
-                'status' => 'P',
-                'is_double_loser' => 0,
-            ];
-            // 2 Bronze matches: each SF loser vs a Repechage winner
+            // Final round: 2 Bronze matches first, then Gold match last.
+            // Bronze matches: each SF loser vs a Repechage winner.
+            // Ordered so cross-seeded bronze is played first, giving both
+            // bronze players a chance at rest before the final.
             for ($i = 0; $i < 2; $i++) {
                 $matches[] = [
                     'event_id' => $eventId,
@@ -102,6 +95,41 @@ class MJJFEliminationStrategy implements TournamentEliminationStrategy {
                     'order_no' => 9997 - $i,  // 9997, 9996
                     'status' => 'P',
                     'is_double_loser' => 1,
+                ];
+            }
+            // Gold: SF winners — always played last
+            $matches[] = [
+                'event_id' => $eventId,
+                'reg_one_id' => null,
+                'reg_two_id' => null,
+                'order_no' => 9999,
+                'status' => 'P',
+                'is_double_loser' => 0,
+            ];
+        } else if ($roundNumber === $sfRound) {
+            // SF round: Repechage matches FIRST, then SF matches.
+            // Playing repechage before SF gives repechage winners more rest
+            // before their bronze match (at least 2 match break).
+            // Repechage: 4 QF losers → 2 matches (same-half pairing)
+            for ($i = 0; $i < 2; $i++) {
+                $matches[] = [
+                    'event_id' => $eventId,
+                    'reg_one_id' => null,
+                    'reg_two_id' => null,
+                    'order_no' => 2000 + $roundNumber * 100 + $i + 1,
+                    'status' => 'P',
+                    'is_double_loser' => 1,
+                ];
+            }
+            // SF matches after repechage
+            for ($i = 0; $i < $winnersBracketMatches; $i++) {
+                $matches[] = [
+                    'event_id' => $eventId,
+                    'reg_one_id' => null,
+                    'reg_two_id' => null,
+                    'order_no' => $roundNumber * 100 + $i + 1,
+                    'status' => 'P',
+                    'is_double_loser' => 0,
                 ];
             }
         } else {
@@ -114,21 +142,6 @@ class MJJFEliminationStrategy implements TournamentEliminationStrategy {
                     'order_no' => $roundNumber * 100 + $i + 1,
                     'status' => 'P',
                     'is_double_loser' => 0,
-                ];
-            }
-        }
-
-        // Repechage matches: only in SF round, from QF losers
-        // 4 QF losers → 2 repechage matches (cross-seeded)
-        if ($roundNumber === $sfRound) {
-            for ($i = 0; $i < 2; $i++) {
-                $matches[] = [
-                    'event_id' => $eventId,
-                    'reg_one_id' => null,
-                    'reg_two_id' => null,
-                    'order_no' => 2000 + $roundNumber * 100 + $i + 1,
-                    'status' => 'P',
-                    'is_double_loser' => 1,
                 ];
             }
         }

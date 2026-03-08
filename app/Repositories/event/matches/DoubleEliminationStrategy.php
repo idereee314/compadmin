@@ -350,6 +350,20 @@ class DoubleEliminationStrategy implements TournamentEliminationStrategy {
             }
         }
 
+        return $this->schedulePairsWithBreaks($allPairs);
+    }
+
+    /**
+     * Schedule an arbitrary list of player pairs to maximise rest breaks.
+     *
+     * Greedy algorithm: at each slot, pick the unscheduled pair where the
+     * minimum idle time for either player is greatest. Ties are broken by the
+     * first available pair in enumeration order.
+     *
+     * This is the shared core used by both round-robin and pool-format scheduling.
+     */
+    private function schedulePairsWithBreaks(array $allPairs): array
+    {
         $lastSlot = [];   // player → last slot they played (0 = never)
         $ordered  = [];
         $slot     = 1;
@@ -411,38 +425,31 @@ class DoubleEliminationStrategy implements TournamentEliminationStrategy {
             $pool1 = array_slice($participantRegistrations, 0, 3);
             $pool2 = array_slice($participantRegistrations, 3, 3);
 
-            $matchOrder = 1;
-
-            // Pool 1 round-robin: 3 matches
-            for ($i = 0; $i < count($pool1); $i++) {
-                for ($j = $i + 1; $j < count($pool1); $j++) {
-                    $matches[] = [
-                        'event_id' => $eventId,
-                        'reg_one_id' => $pool1[$i],
-                        'reg_two_id' => $pool1[$j],
-                        'previes_mate_id1' => null,
-                        'previes_mate_id2' => null,
-                        'order_no' => $matchOrder++,
-                        'status' => 'P',
-                        'is_double_loser' => 0,
-                    ];
+            // Collect all within-pool pairs from both pools
+            $allPoolPairs = [];
+            foreach ([$pool1, $pool2] as $pool) {
+                for ($i = 0; $i < count($pool); $i++) {
+                    for ($j = $i + 1; $j < count($pool); $j++) {
+                        $allPoolPairs[] = [$pool[$i], $pool[$j]];
+                    }
                 }
             }
 
-            // Pool 2 round-robin: 3 matches
-            for ($i = 0; $i < count($pool2); $i++) {
-                for ($j = $i + 1; $j < count($pool2); $j++) {
-                    $matches[] = [
-                        'event_id' => $eventId,
-                        'reg_one_id' => $pool2[$i],
-                        'reg_two_id' => $pool2[$j],
-                        'previes_mate_id1' => null,
-                        'previes_mate_id2' => null,
-                        'order_no' => $matchOrder++,
-                        'status' => 'P',
-                        'is_double_loser' => 0,
-                    ];
-                }
+            // Apply greedy break scheduling across both pools to interleave
+            // matches and give every player at least 1 match rest between fights
+            $orderedPairs = $this->schedulePairsWithBreaks($allPoolPairs);
+
+            foreach ($orderedPairs as $i => [$p1, $p2]) {
+                $matches[] = [
+                    'event_id' => $eventId,
+                    'reg_one_id' => $p1,
+                    'reg_two_id' => $p2,
+                    'previes_mate_id1' => null,
+                    'previes_mate_id2' => null,
+                    'order_no' => $i + 1,
+                    'status' => 'P',
+                    'is_double_loser' => 0,
+                ];
             }
 
             return $matches;

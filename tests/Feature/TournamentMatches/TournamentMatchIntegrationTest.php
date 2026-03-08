@@ -22,25 +22,33 @@ class TournamentMatchIntegrationTest extends TestCase
     }
 
     /**
+     * Create a mock bracket object with the given id.
+     */
+    private function makeBracket(int $id): object
+    {
+        $bracket = new \stdClass();
+        $bracket->id = $id;
+        return $bracket;
+    }
+
+    /**
      * Test complete single elimination tournament flow
      */
     public function test_single_elimination_tournament_flow()
     {
-        // Create test participants
         $participants = [1, 2, 3, 4];
 
-        // Initialize tournament
         $result = $this->service->initializeTournament(
             eventId: 1,
-            eliminationType: 'single_elimination',
+            eliminationType: 'single',
             participants: $participants,
+            matchBracket: $this->makeBracket(1),
             config: ['event_id' => 1]
         );
 
-        // Verify initialization - all rounds are generated at once
         $this->assertTrue($result['success']);
         $this->assertEquals(1, $result['event_id']);
-        $this->assertEquals('single_elimination', $result['elimination_type']);
+        $this->assertEquals('single', $result['elimination_type']);
         $this->assertEquals(2, $result['total_rounds']);
         // 4 participants = 2 matches round 1 + 1 match round 2 = 3 total matches
         $this->assertEquals(3, $result['total_matches']);
@@ -56,36 +64,15 @@ class TournamentMatchIntegrationTest extends TestCase
 
         $result = $this->service->initializeTournament(
             eventId: 2,
-            eliminationType: 'double_elimination',
+            eliminationType: 'double',
             participants: $participants,
+            matchBracket: $this->makeBracket(2),
             config: ['event_id' => 2]
         );
 
         $this->assertTrue($result['success']);
         $this->assertEquals(2, $result['event_id']);
-        $this->assertEquals('double_elimination', $result['elimination_type']);
-    }
-
-    /**
-     * Test round robin tournament initialization
-     */
-    public function test_round_robin_tournament_initialization()
-    {
-        $participants = [1, 2, 3, 4];
-
-        $result = $this->service->initializeTournament(
-            eventId: 3,
-            eliminationType: 'round_robin',
-            participants: $participants,
-            config: ['event_id' => 3]
-        );
-
-        $this->assertTrue($result['success']);
-        $this->assertEquals(3, $result['event_id']);
-        $this->assertEquals('round_robin', $result['elimination_type']);
-        // Round robin with 4 participants: 4*3/2 = 6 matches
-        $this->assertEquals(6, $result['total_matches']);
-        $this->assertEquals(4, $result['bracket_positions']);
+        $this->assertEquals('double', $result['elimination_type']);
     }
 
     /**
@@ -97,8 +84,9 @@ class TournamentMatchIntegrationTest extends TestCase
 
         $result = $this->service->initializeTournament(
             eventId: 4,
-            eliminationType: 'single_elimination',
+            eliminationType: 'single',
             participants: $participants,
+            matchBracket: $this->makeBracket(4),
             config: ['event_id' => 4]
         );
 
@@ -117,8 +105,9 @@ class TournamentMatchIntegrationTest extends TestCase
 
         $result = $this->service->initializeTournament(
             eventId: 5,
-            eliminationType: 'single_elimination',
+            eliminationType: 'single',
             participants: $participants,
+            matchBracket: $this->makeBracket(5),
             config: ['event_id' => 5]
         );
 
@@ -133,8 +122,9 @@ class TournamentMatchIntegrationTest extends TestCase
         $matches = EventMatches::where('event_id', $eventId)->get();
         foreach ($matches as $match) {
             $this->assertEquals($eventId, $match->event_id);
-            $this->assertEquals('pending', $match->status);
-        }    }
+            $this->assertEquals('P', $match->status);
+        }
+    }
 
     /**
      * Test tournament with minimum participants
@@ -145,8 +135,9 @@ class TournamentMatchIntegrationTest extends TestCase
 
         $result = $this->service->initializeTournament(
             eventId: 6,
-            eliminationType: 'single_elimination',
+            eliminationType: 'single',
             participants: $participants,
+            matchBracket: $this->makeBracket(6),
             config: ['event_id' => 6]
         );
 
@@ -164,8 +155,9 @@ class TournamentMatchIntegrationTest extends TestCase
 
         $result = $this->service->initializeTournament(
             eventId: 7,
-            eliminationType: 'single_elimination',
+            eliminationType: 'single',
             participants: $participants,
+            matchBracket: $this->makeBracket(7),
             config: ['event_id' => 7]
         );
 
@@ -183,10 +175,12 @@ class TournamentMatchIntegrationTest extends TestCase
         $types = $this->service->getAvailableEliminationTypes();
 
         $this->assertIsArray($types);
-        $this->assertCount(3, $types);
-        $this->assertContains('single_elimination', $types);
-        $this->assertContains('double_elimination', $types);
-        $this->assertContains('round_robin', $types);
+        $this->assertCount(5, $types);
+        $this->assertContains('single', $types);
+        $this->assertContains('double', $types);
+        $this->assertContains('double_single_bronze', $types);
+        $this->assertContains('mjjf', $types);
+        $this->assertContains('ijf', $types);
     }
 
     /**
@@ -197,8 +191,9 @@ class TournamentMatchIntegrationTest extends TestCase
         // Single elimination requires at least 2 participants
         $result = $this->service->initializeTournament(
             eventId: 8,
-            eliminationType: 'single_elimination',
+            eliminationType: 'single',
             participants: [1],
+            matchBracket: $this->makeBracket(8),
             config: ['event_id' => 8]
         );
 
@@ -214,8 +209,9 @@ class TournamentMatchIntegrationTest extends TestCase
 
         $result = $this->service->initializeTournament(
             eventId: 9,
-            eliminationType: 'single_elimination',
+            eliminationType: 'single',
             participants: $participants,
+            matchBracket: $this->makeBracket(9),
             config: ['event_id' => 9]
         );
 

@@ -57,15 +57,12 @@ class DoubleEliminationPoolFormatTest extends TestCase
         $participants = [101, 102, 103, 104, 105, 106];
         $matches = $this->strategy->generateRoundMatches(1, 1, $participants);
 
-        // Pool 1 (101, 102, 103): 101v102, 101v103, 102v103
-        $this->assertEquals(101, $matches[0]['reg_one_id']);
-        $this->assertEquals(102, $matches[0]['reg_two_id']);
-
-        $this->assertEquals(101, $matches[1]['reg_one_id']);
-        $this->assertEquals(103, $matches[1]['reg_two_id']);
-
-        $this->assertEquals(102, $matches[2]['reg_one_id']);
-        $this->assertEquals(103, $matches[2]['reg_two_id']);
+        // Pool 1 pairs (101v102, 101v103, 102v103) are interleaved with Pool 2
+        // for break scheduling. Verify all Pool 1 pairs exist regardless of position.
+        $pairs = array_map(fn($m) => [$m['reg_one_id'], $m['reg_two_id']], $matches);
+        $this->assertContains([101, 102], $pairs, 'Pool1 pair 101v102 missing');
+        $this->assertContains([101, 103], $pairs, 'Pool1 pair 101v103 missing');
+        $this->assertContains([102, 103], $pairs, 'Pool1 pair 102v103 missing');
     }
 
     public function test_pool_format_round1_pool2_pairings()
@@ -73,15 +70,34 @@ class DoubleEliminationPoolFormatTest extends TestCase
         $participants = [101, 102, 103, 104, 105, 106];
         $matches = $this->strategy->generateRoundMatches(1, 1, $participants);
 
-        // Pool 2 (104, 105, 106): 104v105, 104v106, 105v106
-        $this->assertEquals(104, $matches[3]['reg_one_id']);
-        $this->assertEquals(105, $matches[3]['reg_two_id']);
+        // Pool 2 pairs (104v105, 104v106, 105v106) are interleaved with Pool 1
+        // for break scheduling. Verify all Pool 2 pairs exist regardless of position.
+        $pairs = array_map(fn($m) => [$m['reg_one_id'], $m['reg_two_id']], $matches);
+        $this->assertContains([104, 105], $pairs, 'Pool2 pair 104v105 missing');
+        $this->assertContains([104, 106], $pairs, 'Pool2 pair 104v106 missing');
+        $this->assertContains([105, 106], $pairs, 'Pool2 pair 105v106 missing');
+    }
 
-        $this->assertEquals(104, $matches[4]['reg_one_id']);
-        $this->assertEquals(106, $matches[4]['reg_two_id']);
+    public function test_pool_format_round1_interleaved_for_breaks()
+    {
+        $participants = [101, 102, 103, 104, 105, 106];
+        $matches = $this->strategy->generateRoundMatches(1, 1, $participants);
 
-        $this->assertEquals(105, $matches[5]['reg_one_id']);
-        $this->assertEquals(106, $matches[5]['reg_two_id']);
+        // Greedy scheduling interleaves Pool 1 and Pool 2 matches so
+        // every player gets at least 1 match break between fights.
+        foreach ($participants as $p) {
+            $slots = [];
+            foreach ($matches as $i => $m) {
+                if ($m['reg_one_id'] === $p || $m['reg_two_id'] === $p) {
+                    $slots[] = $i + 1;
+                }
+            }
+            // Each player plays exactly 2 pool matches
+            $this->assertCount(2, $slots, "Player $p should appear in exactly 2 matches");
+            // At least 1 match break between consecutive fights
+            $this->assertGreaterThanOrEqual(2, $slots[1] - $slots[0],
+                "Player $p needs ≥1 match break between fights (gap={$slots[1]}-{$slots[0]})");
+        }
     }
 
     public function test_pool_format_round1_order_numbers_are_sequential()
