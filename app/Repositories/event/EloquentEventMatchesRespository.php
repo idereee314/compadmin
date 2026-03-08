@@ -109,11 +109,14 @@ class EloquentEventMatchesRespository implements EventMatchesRespository {
 		$eventMatche->red_match_points  = $matchPoints['red'];
 		$eventMatche->blue_match_points = $matchPoints['blue'];
 
+		$byeMatchIds = [];
 		if($isDraw){
 			$eventMatche->reg_win_id = null;
 			$eventMatche->status = 'C';
 			$eventMatche->end_time = Carbon::now('GMT+8');
 			$eventMatche->save();
+			// No winner advances — check if opponents in next matches get BYE
+			$byeMatchIds = $this->handleDrawBye($id, $eventMatche, $bracketMat);
 		} elseif(!empty($input['reg_win_id'])){
 			$eventMatche->reg_win_id = $input['reg_win_id'];
 			$eventMatche->status = 'C';
@@ -143,6 +146,8 @@ class EloquentEventMatchesRespository implements EventMatchesRespository {
 			$eventBracket->reg_winner_id = $input['reg_win_id'] ?? null;
 			$eventBracket->save();
 		}
+
+		$eventMatche->bye_match_ids = $byeMatchIds;
 		return $eventMatche;
 
 	}
@@ -284,8 +289,110 @@ class EloquentEventMatchesRespository implements EventMatchesRespository {
 					}
 				}
 				$eventMatch->save();
+
+				// After filling one slot, check if the other slot is a BYE
+				$this->checkAndHandleBye($eventMatch, $braketData);
 			}
 		}
+	}
+
+	/**
+	 * Handle BYE advancement after a draw result.
+	 * When no winner advances, the opponent in the next match gets a BYE (auto-win).
+	 * Returns array of auto-completed BYE match IDs for NEXT button skipping.
+	 */
+	private function handleDrawBye($matchId, $currentMatch, $braketData)
+	{
+		$byeMatchIds = [];
+		$nextMatches = EventMatches::where('previes_mate_id1', $matchId)
+			->orWhere('previes_mate_id2', $matchId)->get();
+
+		foreach ($nextMatches as $nextMatch) {
+			// The slot fed by this draw match stays null (no one advances).
+			// Check if the other slot already has a player → BYE win.
+			$byeIds = $this->checkAndHandleBye($nextMatch, $braketData);
+			$byeMatchIds = array_merge($byeMatchIds, $byeIds);
+		}
+
+		return $byeMatchIds;
+	}
+
+	/**
+	 * Check if a match has a BYE condition and auto-complete it.
+	 * BYE = one slot has a real player, the other slot's feeder match is Complete with no winner.
+	 * Returns array of auto-completed match IDs (including cascaded BYEs).
+	 */
+	private function checkAndHandleBye($match, $braketData)
+	{
+		$byeMatchIds = [];
+
+		// Skip if match is already completed
+		if ($match->status === 'C') {
+			return $byeMatchIds;
+		}
+
+		$slotOneBye = $this->isSlotBye($match->reg_one_id, $match->previes_mate_id1);
+		$slotTwoBye = $this->isSlotBye($match->reg_two_id, $match->previes_mate_id2);
+
+		if ($slotOneBye && $slotTwoBye) {
+			// Both slots are BYE — complete as double BYE (no winner), cascade further
+			$match->status = 'C';
+			$match->win_method = 'DOUBLE BYE';
+			$match->end_time = Carbon::now('GMT+8');
+			$match->save();
+			$byeMatchIds[] = $match->id;
+
+			// Cascade: this match also produces no winner, so check next matches
+			$cascaded = $this->handleDrawBye($match->id, $match, $braketData);
+			$byeMatchIds = array_merge($byeMatchIds, $cascaded);
+
+		} elseif ($slotOneBye && $match->reg_two_id) {
+			// Slot one is BYE, slot two has a real player → player two wins by BYE
+			$match->reg_win_id = $match->reg_two_id;
+			$match->status = 'C';
+			$match->win_method = 'BYE';
+			$match->end_time = Carbon::now('GMT+8');
+			$match->save();
+			$byeMatchIds[] = $match->id;
+
+			// Advance the BYE winner to next matches
+			$this->updateNextReg($match->id, $match, $braketData);
+
+		} elseif ($slotTwoBye && $match->reg_one_id) {
+			// Slot two is BYE, slot one has a real player → player one wins by BYE
+			$match->reg_win_id = $match->reg_one_id;
+			$match->status = 'C';
+			$match->win_method = 'BYE';
+			$match->end_time = Carbon::now('GMT+8');
+			$match->save();
+			$byeMatchIds[] = $match->id;
+
+			// Advance the BYE winner to next matches
+			$this->updateNextReg($match->id, $match, $braketData);
+		}
+
+		return $byeMatchIds;
+	}
+
+	/**
+	 * Check if a match slot is a BYE (no player, feeder match complete with no winner).
+	 */
+	private function isSlotBye($regId, $feederMatchId)
+	{
+		// If the slot already has a player, it's not a BYE
+		if ($regId) {
+			return false;
+		}
+		// If there's no feeder match (first round), it's not a BYE
+		if (!$feederMatchId) {
+			return false;
+		}
+		// Check if the feeder match is complete with no winner
+		$feederMatch = EventMatches::find($feederMatchId);
+		if ($feederMatch && $feederMatch->status === 'C' && !$feederMatch->reg_win_id) {
+			return true;
+		}
+		return false;
 	}
 
 	public function getMatchesByEventId($id)
@@ -333,6 +440,18 @@ class EloquentEventMatchesRespository implements EventMatchesRespository {
 			$regTwo->abb = $token[0]->abbrevation ?? null;
 		}
 
+		// Check BYE status for each slot
+		$regOneBye = false;
+		$regTwoBye = false;
+		if (!$regOne && $match->previes_mate_id1) {
+			$feeder = EventMatches::find($match->previes_mate_id1);
+			$regOneBye = $feeder && $feeder->status === 'C' && !$feeder->reg_win_id;
+		}
+		if (!$regTwo && $match->previes_mate_id2) {
+			$feeder = EventMatches::find($match->previes_mate_id2);
+			$regTwoBye = $feeder && $feeder->status === 'C' && !$feeder->reg_win_id;
+		}
+
 		$bracket = $match->bracket;
 		if ($bracket) {
 			$bracket->round = TournamentEliminationStrategyFactory::determineRound(
@@ -343,14 +462,15 @@ class EloquentEventMatchesRespository implements EventMatchesRespository {
 			$bracket->is_double_loser = $match->is_double_loser;
 		}
 
-		// Return combined data
+		// Return combined data — preserve null positions for BYE display
 		return [
-			'registrations' => collect([
-				$regOne ?? null,
-				$regTwo ?? null,
-				$match->regWin ?? null
-			])->filter(),
-			'bracket' => $bracket
+			'registrations' => [
+				$regOne,   // index 0: red player (null if BYE)
+				$regTwo,   // index 1: blue player (null if BYE)
+				$match->regWin ?? null,  // index 2: winner
+			],
+			'bracket' => $bracket,
+			'is_bye' => [$regOneBye, $regTwoBye],
 		];
 	}
 

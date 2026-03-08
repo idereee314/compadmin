@@ -61,12 +61,12 @@ class EventMatchController extends Controller
 
     public function edit_winner(Request $request, $match_id)
     {
-        $this->mathes->updateWinner($match_id, $request);
-        $match = $this->mathes->find($match_id);
+        $result = $this->mathes->updateWinner($match_id, $request);
         return  response()->json([
                 'status' => 'success',
                 'msg'    => trans('messages.success_update'),
-            ]);;
+            'bye_match_ids' => $result->bye_match_ids ?? [],
+            ]);
     }
 
     public function store(Request $request, $event_id){
