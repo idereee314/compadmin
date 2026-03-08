@@ -123,6 +123,7 @@ class EloquentEventMatchesRespository implements EventMatchesRespository {
 			$eventMatche->end_time = Carbon::now('GMT+8');
 			$eventMatche->save();
 			$this->updateNextReg($id, $eventMatche, $bracketMat);
+			$this->cancelBestOf3DeciderIfUnnecessary($eventMatche);
 		} else {
 			$eventMatche->save();
 		}
@@ -237,6 +238,7 @@ class EloquentEventMatchesRespository implements EventMatchesRespository {
 		}
 		$eventMatche->save();
 		$this->updateNextReg($id, $eventMatche, $bracketMat);
+		$this->cancelBestOf3DeciderIfUnnecessary($eventMatche);
 		$eventBracket = EventBrackets::where('event_id', $eventMatche->event_id)
 			->where('entry_id', $bracketMat->entry_id)
 			->where('entry_age_id', $bracketMat->entry_age_id)
@@ -258,6 +260,46 @@ class EloquentEventMatchesRespository implements EventMatchesRespository {
 		}
 		return $eventMatche;
 
+	}
+
+	/**
+	 * Best-of-3 clean-up: when Match 2 (order_no=3) completes and one player
+	 * has already won Match 1 (order_no=1) as well, the decider match
+	 * (order_no=9999) is no longer needed and is deleted from the bracket.
+	 *
+	 * Detection: a best-of-3 bracket has exactly 2 preliminary matches
+	 * (order_no < 100), with order_nos 1 and 3. This distinguishes it from
+	 * pool format (6 preliminary matches) and round-robin formats.
+	 */
+	private function cancelBestOf3DeciderIfUnnecessary($match)
+	{
+		// Only act when Match 2 (order_no=3) finishes with a real winner
+		if ((int) $match->order_no !== 3 || !$match->reg_win_id) {
+			return;
+		}
+
+		// Confirm this is a best-of-3 bracket (exactly 2 preliminary matches)
+		$prelimCount = EventMatches::where('bracket_id', $match->bracket_id)
+			->where('order_no', '<', 100)
+			->count();
+		if ($prelimCount !== 2) {
+			return;
+		}
+
+		// Match 1 must also be complete
+		$match1 = EventMatches::where('bracket_id', $match->bracket_id)
+			->where('order_no', 1)
+			->first();
+		if (!$match1 || $match1->status !== 'C' || !$match1->reg_win_id) {
+			return;
+		}
+
+		// Same player won both Match 1 and Match 2 → 2-0, decider unnecessary
+		if ((int) $match1->reg_win_id === (int) $match->reg_win_id) {
+			EventMatches::where('bracket_id', $match->bracket_id)
+				->where('order_no', 9999)
+				->delete();
+		}
 	}
 
 	private function updateNextReg($id, $currentMatch, $braketData)

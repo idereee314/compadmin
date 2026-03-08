@@ -263,30 +263,32 @@ class DoubleEliminationStrategy implements TournamentEliminationStrategy {
         [$p1, $p2] = [$players[0], $players[1]];
 
         return [
-            // Match 1
+            // Match 1 — P1 from RED corner, P2 from BLUE corner
             [
                 'event_id'        => $eventId,
-                'reg_one_id'      => $p1,
-                'reg_two_id'      => $p2,
+                'reg_one_id'      => $p1,   // RED
+                'reg_two_id'      => $p2,   // BLUE
                 'previes_mate_id1' => null,
                 'previes_mate_id2' => null,
                 'order_no'        => 1,
                 'status'          => 'P',
                 'is_double_loser' => 0,
             ],
-            // Match 2 — slot 2 left for other brackets (= 1-match break)
+            // Match 2 — corners swapped: P1 from BLUE corner, P2 from RED corner
             [
                 'event_id'        => $eventId,
-                'reg_one_id'      => $p1,
-                'reg_two_id'      => $p2,
+                'reg_one_id'      => $p2,   // RED (was P2)
+                'reg_two_id'      => $p1,   // BLUE (was P1)
                 'previes_mate_id1' => null,
                 'previes_mate_id2' => null,
-                'order_no'        => 3,
+                'order_no'        => 3,     // Slot 2 left for 1-match break
                 'status'          => 'P',
                 'is_double_loser' => 0,
             ],
-            // Match 3 (Gold/Final, conditional on 1-1 tie) — scheduled last,
-            // providing 2+ match break from match 2
+            // Match 3 (Gold/Final, conditional on 1-1 tie) — corners random at mat time;
+            // operator uses SWITCH SIDES if the coin toss assigns different corners.
+            // Scheduled last (order_no 9999) providing 2+ match break from Match 2.
+            // Deleted automatically when one player wins Matches 1 & 2 (2-0).
             [
                 'event_id'        => $eventId,
                 'reg_one_id'      => $p1,

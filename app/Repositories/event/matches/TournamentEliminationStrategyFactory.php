@@ -168,8 +168,10 @@ class TournamentEliminationStrategyFactory implements TournamentEliminationFacto
         }
 
         // Best-of-3 format (2 players): 2 preliminary match slots → bracketSize = 4
-        // Match 1 (order_no 1) and Match 2 (order_no 3) — order_no 9999 already caught above
+        // order_no 9999 (Gold/Final) is already caught by the special-match check above.
         if ($bracketSize == 4) {
+            if ($matchOrder === 1) return 'ТУЛААН 1';
+            if ($matchOrder === 3) return 'ТУЛААН 2';
             return 'ТУЛААН';
         }
 

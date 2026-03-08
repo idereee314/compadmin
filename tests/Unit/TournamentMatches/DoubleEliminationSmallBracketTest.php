@@ -94,13 +94,29 @@ class DoubleEliminationSmallBracketTest extends TestCase
         $this->assertEquals(9999, $matches[2]['order_no']);
     }
 
-    public function test_best_of_3_all_matches_have_both_players_assigned()
+    public function test_best_of_3_match1_p1_is_red_p2_is_blue()
     {
         $matches = $this->double->generateRoundMatches(1, 1, [10, 20]);
-        foreach ($matches as $m) {
-            $this->assertEquals(10, $m['reg_one_id']);
-            $this->assertEquals(20, $m['reg_two_id']);
-        }
+        // Match 1: P1 (10) = RED (reg_one), P2 (20) = BLUE (reg_two)
+        $this->assertEquals(10, $matches[0]['reg_one_id']);
+        $this->assertEquals(20, $matches[0]['reg_two_id']);
+    }
+
+    public function test_best_of_3_match2_corners_swapped()
+    {
+        $matches = $this->double->generateRoundMatches(1, 1, [10, 20]);
+        // Match 2: corners swapped — P2 (20) = RED (reg_one), P1 (10) = BLUE (reg_two)
+        $this->assertEquals(20, $matches[1]['reg_one_id']);
+        $this->assertEquals(10, $matches[1]['reg_two_id']);
+    }
+
+    public function test_best_of_3_match3_has_players_assigned()
+    {
+        $matches = $this->double->generateRoundMatches(1, 1, [10, 20]);
+        // Match 3 (decider, conditional): players assigned; operator uses SWITCH SIDES
+        // for random corner assignment at the mat.
+        $this->assertNotNull($matches[2]['reg_one_id']);
+        $this->assertNotNull($matches[2]['reg_two_id']);
     }
 
     public function test_best_of_3_round2_returns_empty()
@@ -413,20 +429,20 @@ class DoubleEliminationSmallBracketTest extends TestCase
     // determineRound labels
     // =========================================================================
 
-    public function test_determine_round_best_of_3_match1_labelled_тулаан()
+    public function test_determine_round_best_of_3_match1_labelled_тулаан_1()
     {
         // bracketSize = 2 first-round matches * 2 = 4
-        $this->assertEquals('ТУЛААН', TournamentEliminationStrategyFactory::determineRound(2, 1));
+        $this->assertEquals('ТУЛААН 1', TournamentEliminationStrategyFactory::determineRound(2, 1));
     }
 
-    public function test_determine_round_best_of_3_match2_labelled_тулаан()
+    public function test_determine_round_best_of_3_match2_labelled_тулаан_2()
     {
-        $this->assertEquals('ТУЛААН', TournamentEliminationStrategyFactory::determineRound(2, 3));
+        $this->assertEquals('ТУЛААН 2', TournamentEliminationStrategyFactory::determineRound(2, 3));
     }
 
     public function test_determine_round_best_of_3_match3_gold_labelled_шигшээ()
     {
-        // order_no 9999 is caught by the global special-match check
+        // order_no 9999 is caught by the global special-match check → ШИГШЭЭ
         $this->assertEquals('ШИГШЭЭ', TournamentEliminationStrategyFactory::determineRound(2, 9999));
     }
 
