@@ -30,7 +30,6 @@ class DoubleEliminationPoolFormatTest extends TestCase
 
     public function test_calculate_total_rounds_for_7_plus_players_not_pool()
     {
-        // 7 and 8 players must NOT use pool format
         $this->assertEquals(3, $this->strategy->calculateTotalRounds(7));
         $this->assertEquals(3, $this->strategy->calculateTotalRounds(8));
     }
@@ -46,7 +45,6 @@ class DoubleEliminationPoolFormatTest extends TestCase
 
         $this->assertCount(6, $matches);
 
-        // All pool matches are winners-bracket, pending, same event
         foreach ($matches as $match) {
             $this->assertEquals(0, $match['is_double_loser']);
             $this->assertEquals('P', $match['status']);
@@ -119,7 +117,7 @@ class DoubleEliminationPoolFormatTest extends TestCase
     }
 
     // -------------------------------------------------------------------------
-    // Round 2 — semi-finals (both variants share the same logic)
+    // Round 2 — semi-finals (identical for both variants)
     // -------------------------------------------------------------------------
 
     public function test_pool_format_round2_generates_2_semifinals()
@@ -130,45 +128,79 @@ class DoubleEliminationPoolFormatTest extends TestCase
             $matches = $strat->generateRoundMatches(1, 2, $participants);
 
             $this->assertCount(2, $matches);
-
-            // Players are unknown until pool standings are resolved
             $this->assertNull($matches[0]['reg_one_id']);
             $this->assertNull($matches[0]['reg_two_id']);
             $this->assertNull($matches[1]['reg_one_id']);
             $this->assertNull($matches[1]['reg_two_id']);
 
-            // Both are winners-bracket
             $this->assertEquals(0, $matches[0]['is_double_loser']);
             $this->assertEquals(0, $matches[1]['is_double_loser']);
 
-            // Order numbers
             $this->assertEquals(201, $matches[0]['order_no']);
             $this->assertEquals(202, $matches[1]['order_no']);
         }
     }
 
     // -------------------------------------------------------------------------
-    // Round 3 — 'double' (2 bronze medals, no play-off needed)
+    // Round 3 — Bronze then Gold (identical structure for BOTH variants)
+    //
+    // 'double'              : SF losers fight; both competitors earn bronze
+    // 'double_single_bronze': SF losers fight; only the match winner earns bronze
+    // Medal assignment is application logic — match generation is the same.
     // -------------------------------------------------------------------------
 
-    public function test_double_pool_round3_generates_gold_only()
+    public function test_pool_format_round3_generates_bronze_then_gold_for_double()
     {
         $participants = [101, 102, 103, 104, 105, 106];
         $matches = $this->strategy->generateRoundMatches(1, 3, $participants);
 
-        // 'double': both SF losers receive bronze medals automatically — no match needed
-        $this->assertCount(1, $matches);
+        $this->assertCount(2, $matches);
 
-        $gold = $matches[0];
-        $this->assertEquals(9999, $gold['order_no']);
-        $this->assertEquals(0, $gold['is_double_loser']);
-        $this->assertNull($gold['reg_one_id']);
-        $this->assertNull($gold['reg_two_id']);
+        // Bronze first — SF losers must fight to earn their medals
+        $this->assertEquals(9998, $matches[0]['order_no']);
+        $this->assertEquals(1, $matches[0]['is_double_loser']);
+        $this->assertNull($matches[0]['reg_one_id']);
+        $this->assertNull($matches[0]['reg_two_id']);
+
+        // Gold last
+        $this->assertEquals(9999, $matches[1]['order_no']);
+        $this->assertEquals(0, $matches[1]['is_double_loser']);
+        $this->assertNull($matches[1]['reg_one_id']);
+        $this->assertNull($matches[1]['reg_two_id']);
     }
 
-    public function test_double_pool_total_match_count_is_9()
+    public function test_pool_format_round3_generates_bronze_then_gold_for_single_bronze()
     {
-        // 6 pool + 2 SF + 1 Gold = 9 (no bronze play-off)
+        $participants = [101, 102, 103, 104, 105, 106];
+        $matches = $this->singleBronzeStrategy->generateRoundMatches(1, 3, $participants);
+
+        $this->assertCount(2, $matches);
+
+        // Same structure as 'double' — only medal assignment differs (app logic)
+        $this->assertEquals(9998, $matches[0]['order_no']);
+        $this->assertEquals(1, $matches[0]['is_double_loser']);
+
+        $this->assertEquals(9999, $matches[1]['order_no']);
+        $this->assertEquals(0, $matches[1]['is_double_loser']);
+    }
+
+    public function test_pool_round3_gold_has_highest_order_no()
+    {
+        $participants = [101, 102, 103, 104, 105, 106];
+
+        foreach ([$this->strategy, $this->singleBronzeStrategy] as $strat) {
+            $matches = $strat->generateRoundMatches(1, 3, $participants);
+            $orderNos = array_column($matches, 'order_no');
+            $this->assertEquals(9999, max($orderNos), 'Gold must always have the highest order_no');
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // Total match counts — both variants: 10 (6 pool + 2 SF + 1 Bronze + 1 Gold)
+    // -------------------------------------------------------------------------
+
+    public function test_double_pool_total_match_count_is_10()
+    {
         $participants = [101, 102, 103, 104, 105, 106];
         $total = 0;
 
@@ -176,46 +208,11 @@ class DoubleEliminationPoolFormatTest extends TestCase
             $total += count($this->strategy->generateRoundMatches(1, $round, $participants));
         }
 
-        $this->assertEquals(9, $total);
-    }
-
-    // -------------------------------------------------------------------------
-    // Round 3 — 'double_single_bronze' (1 bronze medal, play-off required)
-    // -------------------------------------------------------------------------
-
-    public function test_single_bronze_pool_round3_generates_bronze_then_gold()
-    {
-        $participants = [101, 102, 103, 104, 105, 106];
-        $matches = $this->singleBronzeStrategy->generateRoundMatches(1, 3, $participants);
-
-        $this->assertCount(2, $matches);
-
-        // Bronze must come before Gold so Gold runs last
-        $bronze = $matches[0];
-        $this->assertEquals(9998, $bronze['order_no']);
-        $this->assertEquals(1, $bronze['is_double_loser']);
-        $this->assertNull($bronze['reg_one_id']);
-        $this->assertNull($bronze['reg_two_id']);
-
-        $gold = $matches[1];
-        $this->assertEquals(9999, $gold['order_no']);
-        $this->assertEquals(0, $gold['is_double_loser']);
-        $this->assertNull($gold['reg_one_id']);
-        $this->assertNull($gold['reg_two_id']);
-    }
-
-        public function test_single_bronze_pool_gold_has_highest_order_no_in_round3()
-    {
-        $participants = [101, 102, 103, 104, 105, 106];
-        $matches = $this->singleBronzeStrategy->generateRoundMatches(1, 3, $participants);
-
-        $orderNos = array_column($matches, 'order_no');
-        $this->assertEquals(9999, max($orderNos), 'Gold (9999) must be the highest order_no in the round');
+        $this->assertEquals(10, $total);
     }
 
     public function test_single_bronze_pool_total_match_count_is_10()
     {
-        // 6 pool + 2 SF + 1 Bronze + 1 Gold = 10
         $participants = [101, 102, 103, 104, 105, 106];
         $total = 0;
 
@@ -241,22 +238,24 @@ class DoubleEliminationPoolFormatTest extends TestCase
 
         $result = $this->strategy->computePreviousReferences($roundMatchesData);
 
-        // Round 1: no prev_refs (players known upfront)
+        // Round 1: no prev_refs
         foreach ($result[1] as $match) {
             $this->assertArrayNotHasKey('prev_refs', $match);
         }
 
-        // Round 2 (semi-finals): no prev_refs (filled from pool standings)
+        // Round 2: no prev_refs (filled from pool standings)
         foreach ($result[2] as $match) {
             $this->assertArrayNotHasKey('prev_refs', $match);
         }
 
-        // Round 3: Gold only, links to both semi-finals
-        $this->assertCount(1, $result[3]);
-        $gold = $result[3][0];
-        $this->assertArrayHasKey('prev_refs', $gold);
-        $this->assertEquals(['round' => 2, 'index' => 0], $gold['prev_refs']['p1']);
-        $this->assertEquals(['round' => 2, 'index' => 1], $gold['prev_refs']['p2']);
+        // Round 3: Bronze (idx=0) and Gold (idx=1) both link to both semi-finals
+        $this->assertCount(2, $result[3]);
+
+        foreach ($result[3] as $match) {
+            $this->assertArrayHasKey('prev_refs', $match);
+            $this->assertEquals(['round' => 2, 'index' => 0], $match['prev_refs']['p1']);
+            $this->assertEquals(['round' => 2, 'index' => 1], $match['prev_refs']['p2']);
+        }
     }
 
     public function test_pool_format_prev_refs_single_bronze_variant()
@@ -270,19 +269,14 @@ class DoubleEliminationPoolFormatTest extends TestCase
 
         $result = $this->singleBronzeStrategy->computePreviousReferences($roundMatchesData);
 
-        // Round 1: no prev_refs
         foreach ($result[1] as $match) {
             $this->assertArrayNotHasKey('prev_refs', $match);
         }
-
-        // Round 2: no prev_refs
         foreach ($result[2] as $match) {
             $this->assertArrayNotHasKey('prev_refs', $match);
         }
 
-        // Round 3: [Bronze(idx=0), Gold(idx=1)] — both link to both semi-finals
         $this->assertCount(2, $result[3]);
-
         foreach ($result[3] as $match) {
             $this->assertArrayHasKey('prev_refs', $match);
             $this->assertEquals(['round' => 2, 'index' => 0], $match['prev_refs']['p1']);
@@ -298,7 +292,6 @@ class DoubleEliminationPoolFormatTest extends TestCase
     {
         $participants = [101, 102, 103, 104, 105, 106, 107];
 
-        // Round 1: floor(7/2) = 3 standard head-to-head matches, not round-robin pools
         $matches = $this->strategy->generateRoundMatches(1, 1, $participants);
         $this->assertCount(3, $matches);
 
@@ -328,7 +321,7 @@ class DoubleEliminationPoolFormatTest extends TestCase
     // determineRound — pool bracket naming
     // -------------------------------------------------------------------------
 
-    public function test_determine_round_pool_matches_are_labelled_correctly()
+    public function test_determine_round_pool_matches_labelled_correctly()
     {
         // totalMatches = 6 (first-round pool matches) → bracketSize = 12
         $this->assertEquals('БҮЛГИЙН ТОГЛОЛТ', TournamentEliminationStrategyFactory::determineRound(6, 1));
@@ -342,12 +335,12 @@ class DoubleEliminationPoolFormatTest extends TestCase
         $this->assertEquals('ХАГАС ШИГШЭЭ (SF)', TournamentEliminationStrategyFactory::determineRound(6, 202));
     }
 
-    public function test_determine_round_gold_is_labelled_correctly()
+    public function test_determine_round_gold_labelled_correctly()
     {
         $this->assertEquals('ШИГШЭЭ', TournamentEliminationStrategyFactory::determineRound(6, 9999));
     }
 
-    public function test_determine_round_bronze_is_labelled_correctly()
+    public function test_determine_round_bronze_labelled_correctly()
     {
         $this->assertEquals('ХҮРЭЛ МЕДАЛЬ', TournamentEliminationStrategyFactory::determineRound(6, 9998));
     }
