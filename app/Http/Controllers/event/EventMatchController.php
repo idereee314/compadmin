@@ -133,8 +133,12 @@ class EventMatchController extends Controller
                 }
             }
 
-        } catch (Exception $e) {
-            Log:error('Error saving brackets: ' . $e->getMessage());
+        } catch (\Throwable $e) {
+            \Log::error('Error saving brackets: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+            ]);
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
         }
 
         return response()->json(['status' => 'success', 'message' => 'Brackets saved successfully.']);

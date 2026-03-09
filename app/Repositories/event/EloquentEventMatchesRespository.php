@@ -522,7 +522,6 @@ class EloquentEventMatchesRespository implements EventMatchesRespository {
 
 	public function generateMatches($event_id, $input, $day, $mat)
 	{
-		
 		$mateBracket = EventMateBracket::where('event_id', $event_id)
 			->where('entry_id', $input['entry_id'])
 			->where('entry_age_id', $input['entry_age_id'])
@@ -532,6 +531,14 @@ class EloquentEventMatchesRespository implements EventMatchesRespository {
 			->where('mat_id', $mat)
 			->first();
 		
+		if (!$mateBracket) {
+			Log::warning('generateMatches: mateBracket not found', compact('event_id', 'day', 'mat', 'input'));
+			return collect();
+		}
+
+		// Delete any existing matches for this bracket to avoid duplicates
+		EventMatches::where('bracket_id', $mateBracket->id)->delete();
+
 		$participants = EventBrackets::where('event_id', $event_id)
 			->where('entry_id', $input['entry_id'])
 			->where('entry_age_id', $input['entry_age_id'])
@@ -540,8 +547,8 @@ class EloquentEventMatchesRespository implements EventMatchesRespository {
 			->get()->flatMap(function ($row) {
 				return [$row->reg_one_id, $row->reg_two_id];
 			})
-			->filter()   // Remove null BYE slots (present in odd-count brackets, e.g. 5-player)
-			->values()   // Re-index to sequential array so count() is accurate
+			->filter()
+			->values()
 			->toArray();
 		Log::info('Participants for match generation: ', [
 			'participants' => $participants,
@@ -553,11 +560,22 @@ class EloquentEventMatchesRespository implements EventMatchesRespository {
 
 		$event = EventConfig::where('event_id', $event_id)
 			->first();
+
+		if (!$event || !$event->event_bracket_type_id) {
+			Log::warning('generateMatches: no bracket type configured for event', compact('event_id'));
+			return collect();
+		}
+
 		$bracketType = EventBracketType::find($event->event_bracket_type_id);
+
+		if (!$bracketType) {
+			Log::warning('generateMatches: bracket type not found', ['id' => $event->event_bracket_type_id]);
+			return collect();
+		}
 
 		Log::info('Generating matches for Event ID: '.$event_id, [
 			'bracketType' => $bracketType->code,
-			'mateBracket' => $mateBracket ? $mateBracket->toArray() : null,
+			'mateBracket' => $mateBracket->toArray(),
 		]);
 
 		$tournamentService = app()->make(TournamentMatchServiceAlias::class);

@@ -124,11 +124,24 @@ class EloquentEventConfigDaysRepository implements EventConfigDaysRepository {
 
 	public function resetMateBracker($event_id, $day_id, $mat_id)
 	{
+		// Get bracket IDs before deleting so we can clean up associated matches
+		$bracketIds = DB::table('uq_comp.uq_event_mate_brackets')
+			->where('event_id', $event_id)
+			->where('day_id', $day_id)
+			->where('mat_id', $mat_id)
+			->pluck('id');
+
+		if ($bracketIds->isNotEmpty()) {
+			DB::table('uq_comp.uq_event_matches')
+				->whereIn('bracket_id', $bracketIds)
+				->delete();
+		}
+
 		return DB::table('uq_comp.uq_event_mate_brackets')
-        ->where('event_id', $event_id)
-        ->where('day_id', $day_id)
-        ->where('mat_id', $mat_id)
-        ->delete();
+        	->where('event_id', $event_id)
+        	->where('day_id', $day_id)
+        	->where('mat_id', $mat_id)
+        	->delete();
 	}
 
 	public function dictData($event_id)
