@@ -7,7 +7,7 @@
     };
 @endphp
 
-@include('event.bracket._match_lookup')
+{{-- Match lookup variables ($matchByOrder, $loserMatchesList, etc.) provided by controller --}}
 
 <div style="width:{{ $width }}; margin:0 auto; background-color: white;border: black;border-width: 1px;padding: 20px;">
     <table width="100%" style="width:100%" border="0">

@@ -25,7 +25,7 @@
     $count = count($all_athletes);
 @endphp
 
-@include('event.bracket._match_lookup')
+{{-- Match lookup variables ($matchByOrder, $loserMatchesList, etc.) provided by controller --}}
 
 <div style="width:1100px; margin:0 auto; background-color: white; border: 1px solid #ccc; padding: 40px; font-family: sans-serif; color: #333;">
 

@@ -132,7 +132,7 @@
     };
 @endphp
 
-@include('event.bracket._match_lookup')
+{{-- Match lookup variables ($matchByOrder, $loserMatchesList, etc.) provided by controller --}}
 
 @php
     // Group loser matches by round for repechage display

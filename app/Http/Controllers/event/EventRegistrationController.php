@@ -1060,6 +1060,7 @@ class EventRegistrationController extends Controller
             } catch (\Throwable $e) {
                 $data['matchesData'] = [];
             }
+            $data = array_merge($data, $this->buildMatchLookup($data['matchesData']));
             $data['eventConfig'] = $eventConfig;
             $data['entry'] = $entry;
             $data['age'] = $age;
@@ -1092,9 +1093,9 @@ class EventRegistrationController extends Controller
     public function bracketPrint($eventId, $entryId, $entryAgeId, $entryBeltId, $entryWeightId)
     {
         $input = Input::all();
-        
+
         $members = $this->eventRegistration->getBracketGenerationFromEvent($eventId, $entryId, $entryAgeId, $entryBeltId, $entryWeightId);
-        
+
         $eventConfig =  $this->eventConfig->findByEventId($eventId);
         $entry = $this->eventEntries->find($entryId);
         $age = $this->configAge->find($entryAgeId);
@@ -1102,14 +1103,15 @@ class EventRegistrationController extends Controller
         $weight = $this->configWeight->find($entryWeightId);
 
         $total = count($members);
-        
+
         $data['total'] = $total;
         $data['members'] = $members;
         try {
             $data['matchesData'] = $this->eventRegistration->getMatchesForBracketDisplay($eventId, $entryId, $entryAgeId, $entryBeltId, $entryWeightId);
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $data['matchesData'] = [];
         }
+        $data = array_merge($data, $this->buildMatchLookup($data['matchesData']));
         $data['eventConfig'] = $eventConfig;
         $data['entry'] = $entry;
         $data['age'] = $age;
@@ -1125,6 +1127,65 @@ class EventRegistrationController extends Controller
         {
             return view("event.bracket.{$eventConfig->bracketType->print_code}", $data);
         }
+    }
+
+    /**
+     * Build match lookup arrays from matchesData for bracket display templates.
+     */
+    private function buildMatchLookup(array $matchesData): array
+    {
+        $matchByOrder = [];
+        $loserMatchByOrder = [];
+        $winnerMatchesList = [];
+        $loserMatchesList = [];
+
+        foreach ($matchesData as $m) {
+            if ($m->is_double_loser) {
+                $loserMatchByOrder[$m->order_no][] = $m;
+                $loserMatchesList[] = $m;
+            } else {
+                $matchByOrder[$m->order_no] = $m;
+                $winnerMatchesList[] = $m;
+            }
+        }
+
+        $fmtPlayer = function($lastname, $firstname, $academy = '') {
+            if (!empty($lastname)) {
+                return e($lastname) . ' <strong>' . e($firstname) . '</strong>';
+            }
+            return '';
+        };
+
+        $getScores = function($match) {
+            if (!$match || $match->status !== 'C') {
+                return ['red' => '', 'blue' => ''];
+            }
+            $r = '';
+            $b = '';
+            if ($match->red_score !== null || $match->blue_score !== null) {
+                $r = (int)$match->red_score;
+                $b = (int)$match->blue_score;
+                if ($match->red_advantage || $match->blue_advantage) {
+                    $r .= '(' . (int)$match->red_advantage . ')';
+                    $b .= '(' . (int)$match->blue_advantage . ')';
+                }
+            }
+            return ['red' => $r, 'blue' => $b];
+        };
+
+        $isWinner = function($regId, $match) {
+            return $match && $match->status === 'C' && $match->reg_win_id && $match->reg_win_id == $regId;
+        };
+
+        return [
+            'matchByOrder' => $matchByOrder,
+            'loserMatchByOrder' => $loserMatchByOrder,
+            'winnerMatchesList' => $winnerMatchesList,
+            'loserMatchesList' => $loserMatchesList,
+            'fmtPlayer' => $fmtPlayer,
+            'getScores' => $getScores,
+            'isWinner' => $isWinner,
+        ];
     }
 
     public function bracketEdit($eventId, $entryId, $entryAgeId, $entryBeltId, $entryWeightId)
