@@ -380,8 +380,13 @@
                     }
                 },
                 error: function(xhr, status, error) {
-                    console.error('Error:', error);
-                    toastr.error('An error occurred while saving.');
+                    var msg = 'An error occurred while saving.';
+                    try {
+                        var resp = JSON.parse(xhr.responseText);
+                        if (resp.message) msg = resp.message;
+                    } catch(e) {}
+                    console.error('Save error:', msg, xhr.responseText);
+                    toastr.error(msg);
                 },
             });
         });

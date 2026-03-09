@@ -110,24 +110,23 @@ class EventMatchController extends Controller
         try {
             $data = $request->validate([
                 'schedule' => 'required|array',
-                'schedule.*.day' => 'required|integer', // Validate day
+                'schedule.*.day' => 'required|integer',
                 'schedule.*.mats' => 'required|array',
-                'schedule.*.mats.*.mat' => 'required|integer', // Validate mat
-                'schedule.*.mats.*.brackets' => 'array', // Allow empty brackets arrays
-                'schedule.*.mats.*.brackets.entry_id.*' => 'integer', // Validate each bracket ID if present
-                'schedule.*.mats.*.brackets.entry_belt_id.*' => 'integer', // Validate each bracket ID if present
-                'schedule.*.mats.*.brackets.entry_age_id.*' => 'integer', // Validate each bracket ID if present
-                'schedule.*.mats.*.brackets.entry_weight_id.*' => 'integer', // Validate each bracket ID if present
+                'schedule.*.mats.*.mat' => 'required|integer',
+                'schedule.*.mats.*.brackets' => 'array',
+                'schedule.*.mats.*.brackets.*.entry_id' => 'required|integer',
+                'schedule.*.mats.*.brackets.*.entry_belt_id' => 'required|integer',
+                'schedule.*.mats.*.brackets.*.entry_age_id' => 'required|integer',
+                'schedule.*.mats.*.brackets.*.entry_weight_id' => 'required|integer',
             ]);
     
-
             foreach ($data['schedule'] as $day) {
                 foreach ($day['mats'] as $mat) {
                     $this->configDays->resetMateBracker($event_id, $day['day'], $mat['mat']);
                     if (isset($mat['brackets']) && !empty($mat['brackets'])) {
                         foreach ($mat['brackets'] as $bracket) {
                             $this->configDays->saveBracket($event_id, $day['day'], $mat['mat'], $bracket, 0);
-                            $this->mathes->generateMatches($event_id,  $bracket, $day['day'], $mat['mat']);
+                            $this->mathes->generateMatches($event_id, $bracket, $day['day'], $mat['mat']);
                         }
                     }
                 }
@@ -137,8 +136,13 @@ class EventMatchController extends Controller
             \Log::error('Error saving brackets: ' . $e->getMessage(), [
                 'file' => $e->getFile(),
                 'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
             ]);
-            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage(),
+                'file' => basename($e->getFile()) . ':' . $e->getLine(),
+            ], 500);
         }
 
         return response()->json(['status' => 'success', 'message' => 'Brackets saved successfully.']);
