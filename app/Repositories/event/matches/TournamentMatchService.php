@@ -102,6 +102,9 @@ class TournamentMatchService {
                     if (isset($matchData['reg_two_id'])) {
                         $match->reg_two_id = $matchData['reg_two_id'];
                     }
+                    if (isset($matchData['reg_win_id'])) {
+                        $match->reg_win_id = $matchData['reg_win_id'];
+                    }
                     // Default order (use pre-generated value if present)
                     if (isset($matchData['order_no'])) {
                         $match->order_no = $matchData['order_no'];
@@ -136,6 +139,9 @@ class TournamentMatchService {
                     $totalMatches++;
                 }
             }
+            // Auto-advance BYE winners to their next-round matches
+            $this->autoAdvanceByeWinners($savedRoundMatches);
+
             Log::info('Tournament initialized successfully', [
                 'roundMatchesData' => $roundMatchesData,
             ]);
@@ -159,6 +165,55 @@ class TournamentMatchService {
                 'error' => $e->getMessage(),
             ]);
             return ['success' => false, 'error' => $e->getMessage()];
+        }
+    }
+
+    /**
+     * Auto-advance BYE winners to their next-round matches.
+     *
+     * A BYE match has one player (reg_one_id) and no opponent (reg_two_id = null),
+     * with status 'C' and reg_win_id set. The winner is placed into the appropriate
+     * slot of the next-round winners bracket match via previes_mate_id1/previes_mate_id2.
+     *
+     * For losers bracket matches linked to a BYE feeder, the "loser" is null
+     * (no real opponent lost), so nothing is advanced there.
+     */
+    private function autoAdvanceByeWinners($savedRoundMatches)
+    {
+        foreach ($savedRoundMatches as $roundNumber => $matches) {
+            foreach ($matches as $match) {
+                if ($match->status !== 'C' || !$match->reg_win_id) {
+                    continue;
+                }
+
+                // Find next-round matches fed by this completed match
+                $nextMatches = EventMatches::where(function ($q) use ($match) {
+                    $q->where('previes_mate_id1', $match->id)
+                      ->orWhere('previes_mate_id2', $match->id);
+                })->get();
+
+                foreach ($nextMatches as $nextMatch) {
+                    $changed = false;
+
+                    // Winners bracket: advance the winner
+                    if (!$nextMatch->is_double_loser) {
+                        if ($nextMatch->previes_mate_id1 == $match->id && !$nextMatch->reg_one_id) {
+                            $nextMatch->reg_one_id = $match->reg_win_id;
+                            $changed = true;
+                        }
+                        if ($nextMatch->previes_mate_id2 == $match->id && !$nextMatch->reg_two_id) {
+                            $nextMatch->reg_two_id = $match->reg_win_id;
+                            $changed = true;
+                        }
+                    }
+                    // Losers bracket: would advance the loser, but BYE matches
+                    // have no loser (reg_two_id is null), so nothing to advance
+
+                    if ($changed) {
+                        $nextMatch->save();
+                    }
+                }
+            }
         }
     }
 

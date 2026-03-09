@@ -98,16 +98,16 @@ class DoubleEliminationStrategy implements TournamentEliminationStrategy {
     {
         if ($roundNumber === 2) {
             // L1: First losers bracket from W1 losers
-            return ceil($firstRoundMatches / 2);
+            return (int)ceil($firstRoundMatches / 2);
         }
-        
+
         if ($roundNumber >= 3) {
             // L2+: Combine W-losers with L-survivors
             $prevLMatches = $this->calculateLosersMatchesForRound($roundNumber - 1, $firstRoundMatches);
-            $currentWMatches = floor($firstRoundMatches / pow(2, $roundNumber - 1));
-            return ceil(($currentWMatches + $prevLMatches) / 2);
+            $currentWMatches = (int)floor($firstRoundMatches / pow(2, $roundNumber - 1));
+            return (int)ceil(($currentWMatches + $prevLMatches) / 2);
         }
-        
+
         return 0;
     }
 
@@ -143,8 +143,8 @@ class DoubleEliminationStrategy implements TournamentEliminationStrategy {
 
         // Rounds 2+: Winners bracket + Losers bracket
         // Winners bracket follows single elimination pattern
-        $matchesInFirstRound = count($participantRegistrations) >= 2 ? floor(count($participantRegistrations) / 2) : 1;
-        $winnersBracketMatches = floor($matchesInFirstRound / pow(2, $roundNumber - 1));
+        $matchesInFirstRound = count($participantRegistrations) >= 2 ? (int)ceil(count($participantRegistrations) / 2) : 1;
+        $winnersBracketMatches = (int)floor($matchesInFirstRound / pow(2, $roundNumber - 1));
 
         // Winners bracket matches (identical to single elimination)
         // When only 1 W match remains, it's the Gold (final) match
@@ -163,7 +163,7 @@ class DoubleEliminationStrategy implements TournamentEliminationStrategy {
         // Losers bracket matches (parallel to winners bracket, keeps halving)
         if ($roundNumber === 2) {
             // L1: First losers bracket round - losers from W1 paired together
-            $l1Matches = ceil($matchesInFirstRound / 2);
+            $l1Matches = (int)ceil($matchesInFirstRound / 2);
             for ($i = 0; $i < $l1Matches; $i++) {
                 $matches[] = [
                     'event_id' => $eventId,
@@ -181,7 +181,7 @@ class DoubleEliminationStrategy implements TournamentEliminationStrategy {
             // Current W-bracket losers (each match produces 1 loser)
             $currentWLosers = $winnersBracketMatches;
             // New L-bracket matches: (W-losers + L-survivors) / 2
-            $lnMatches = ceil(($currentWLosers + $prevLosersMatches) / 2);
+            $lnMatches = (int)ceil(($currentWLosers + $prevLosersMatches) / 2);
             
             if ($lnMatches > 0) {
                 // "2 bronze": Final losers round with 2 matches becomes bronze (order_no 9997, 9996)
@@ -241,6 +241,19 @@ class DoubleEliminationStrategy implements TournamentEliminationStrategy {
                     'previes_mate_id2' => null,
                     'order_no' => $matchOrder++,
                     'status' => 'P',
+                    'is_double_loser' => 0,
+                ];
+            } else {
+                // BYE match: odd player with no opponent, auto-completed
+                $matches[] = [
+                    'event_id' => $eventId,
+                    'reg_one_id' => $participantRegistrations[$i],
+                    'reg_two_id' => null,
+                    'reg_win_id' => $participantRegistrations[$i],
+                    'previes_mate_id1' => null,
+                    'previes_mate_id2' => null,
+                    'order_no' => $matchOrder++,
+                    'status' => 'C',
                     'is_double_loser' => 0,
                 ];
             }

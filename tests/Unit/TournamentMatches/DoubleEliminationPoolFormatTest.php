@@ -306,7 +306,7 @@ class DoubleEliminationPoolFormatTest extends TestCase
         $participants = [101, 102, 103, 104, 105, 106, 107];
 
         $matches = $this->strategy->generateRoundMatches(1, 1, $participants);
-        $this->assertCount(3, $matches);
+        $this->assertCount(4, $matches);
 
         $this->assertEquals(101, $matches[0]['reg_one_id']);
         $this->assertEquals(102, $matches[0]['reg_two_id']);
@@ -314,6 +314,52 @@ class DoubleEliminationPoolFormatTest extends TestCase
         $this->assertEquals(104, $matches[1]['reg_two_id']);
         $this->assertEquals(105, $matches[2]['reg_one_id']);
         $this->assertEquals(106, $matches[2]['reg_two_id']);
+
+        // 4th match is a BYE: player 107 auto-advances
+        $this->assertEquals(107, $matches[3]['reg_one_id']);
+        $this->assertNull($matches[3]['reg_two_id']);
+        $this->assertEquals('C', $matches[3]['status']);
+        $this->assertEquals(107, $matches[3]['reg_win_id']);
+    }
+
+    public function test_7_players_round2_has_correct_match_counts()
+    {
+        $participants = [101, 102, 103, 104, 105, 106, 107];
+
+        // Round 2: 2 winners bracket + 2 losers bracket = 4 matches
+        $matches = $this->strategy->generateRoundMatches(1, 2, $participants);
+        $winnersMatches = array_filter($matches, fn($m) => !$m['is_double_loser']);
+        $losersMatches = array_filter($matches, fn($m) => $m['is_double_loser']);
+        $this->assertCount(2, $winnersMatches);
+        $this->assertCount(2, $losersMatches);
+
+        // Round 3: 1 Gold + losers bracket
+        $matches = $this->strategy->generateRoundMatches(1, 3, $participants);
+        $goldMatch = array_filter($matches, fn($m) => $m['order_no'] === 9999);
+        $this->assertCount(1, $goldMatch);
+    }
+
+    public function test_7_players_prev_refs_link_bye_match()
+    {
+        $participants = [101, 102, 103, 104, 105, 106, 107];
+        $totalRounds = $this->strategy->calculateTotalRounds(count($participants));
+
+        // Generate all rounds
+        $roundMatches = [];
+        for ($r = 1; $r <= $totalRounds; $r++) {
+            $roundMatches[$r] = $this->strategy->generateRoundMatches(1, $r, $participants);
+        }
+
+        // Compute previous references
+        $result = $this->strategy->computePreviousReferences($roundMatches);
+
+        // Round 2 winners bracket match at position 1 (order_no=202) should link to
+        // round 1 match at index 2 (real match) and index 3 (BYE match)
+        $r2Winners = array_values(array_filter($result[2], fn($m) => !$m['is_double_loser']));
+        $this->assertCount(2, $r2Winners);
+        // Second winners match links to round 1 indices 2 and 3
+        $this->assertEquals(['round' => 1, 'index' => 2], $r2Winners[1]['prev_refs']['p1']);
+        $this->assertEquals(['round' => 1, 'index' => 3], $r2Winners[1]['prev_refs']['p2']);
     }
 
     public function test_8_players_uses_standard_bracket()

@@ -70,9 +70,9 @@ class SingleEliminationStrategy implements TournamentEliminationStrategy {
         // For subsequent rounds in all-rounds-at-once generation,
         // we create matches with empty participant IDs and link via previes_mate_id1/id2
         // Winners will be filled in as matches are completed
-        $matchesInFirstRound = count($participantRegistrations) >= 2 ? floor(count($participantRegistrations) / 2) : 1;
+        $matchesInFirstRound = count($participantRegistrations) >= 2 ? (int)ceil(count($participantRegistrations) / 2) : 1;
         $totalRounds = $this->calculateTotalRounds(count($participantRegistrations));
-        $winnersBracketMatches = floor($matchesInFirstRound / pow(2, $roundNumber - 1));
+        $winnersBracketMatches = (int)floor($matchesInFirstRound / pow(2, $roundNumber - 1));
         $isFinalRound = ($roundNumber === $totalRounds);
 
          for ($i = 0; $i < $winnersBracketMatches; $i++) {
@@ -132,6 +132,19 @@ class SingleEliminationStrategy implements TournamentEliminationStrategy {
                     'previes_mate_id2' => null,
                     'order_no' => $matchOrder++,
                     'status' => 'P',
+                    'is_double_loser' => 0,
+                ];
+            } else {
+                // BYE match: odd player with no opponent, auto-completed
+                $matches[] = [
+                    'event_id' => $eventId,
+                    'reg_one_id' => $participantRegistrations[$i],
+                    'reg_two_id' => null,
+                    'reg_win_id' => $participantRegistrations[$i],
+                    'previes_mate_id1' => null,
+                    'previes_mate_id2' => null,
+                    'order_no' => $matchOrder++,
+                    'status' => 'C',
                     'is_double_loser' => 0,
                 ];
             }
