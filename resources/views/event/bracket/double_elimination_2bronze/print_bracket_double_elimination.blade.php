@@ -198,8 +198,8 @@
                                     $md = $matchByOrder[$orderNo] ?? null;
                                     $sc = $md ? $getScores($md) : ['red' => '', 'blue' => ''];
                                 @endphp
-                                <td rowspan="{{ $step }}" valign="middle" style="position: relative;">
-                                    <div class="connector-container" style="padding: {{ $cfg['pad_y'] }}px 40px {{ $cfg['pad_y'] }}px 0;">
+                                <td rowspan="{{ $step }}" style="position: relative; vertical-align: middle;">
+                                    <div style="padding: {{ $cfg['pad_y'] }}px 40px {{ $cfg['pad_y'] }}px 0;">
                                         <table width="100%" border="0" class="match-box">
                                             <tr>
                                                 <td class="player-cell" @if($md && $isWinner($md->reg_one_id, $md)) style="background:#d4edda;" @endif>
@@ -243,15 +243,11 @@
                                                 </td>
                                             </tr>
                                         </table>
-
-                                        @if($r < $rounds_count - 1)
-                                            @php
-                                                $is_top   = ((($index / $step) % 2) == 0);
-                                                $v_height = $step * $cfg['v_height_mul'];
-                                            @endphp
-                                            <div class="line-logic {{ $is_top ? 'l-down' : 'l-up' }}" style="height: {{ $v_height }}px;"></div>
-                                        @endif
                                     </div>
+                                    @if($r < $rounds_count - 1)
+                                        @php $is_top = ((($index / $step) % 2) == 0); @endphp
+                                        <div class="line-td {{ $is_top ? 'lt-down' : 'lt-up' }}"></div>
+                                    @endif
                                 </td>
                             @endif
                         @endfor
@@ -624,12 +620,6 @@
     .p-name { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .p-academy { font-size: 9px; color: #666; font-weight: normal; margin-top: 2px; }
 
-    .connector-container {
-        position: relative;
-        display: flex;
-        align-items: center;
-    }
-
     .rep-wrapper {
         position: relative;
         display: flex;
@@ -637,15 +627,15 @@
         padding-right: 35px;
     }
 
-    /* Winner bracket connector */
-    .line-logic {
+    /* Winner bracket connector — positioned relative to <td> */
+    .line-td {
         position: absolute;
         right: 0;
         width: 40px;
         border-right: 1.5px solid #94a3b8;
         z-index: 1;
     }
-    .line-logic::before {
+    .line-td::before {
         content: '';
         position: absolute;
         top: 50%;
@@ -654,7 +644,7 @@
         height: 1.5px;
         background: #94a3b8;
     }
-    .line-logic::after {
+    .line-td::after {
         content: '';
         position: absolute;
         width: 15px;
@@ -663,11 +653,11 @@
         right: -15px;
     }
 
-    .l-down { top: 50%; border-top: 1.5px solid #94a3b8; }
-    .l-down::after { top: 100%; }
+    .lt-down { top: 50%; height: 25%; border-top: 1.5px solid #94a3b8; }
+    .lt-down::after { top: 100%; }
 
-    .l-up { bottom: 50%; border-bottom: 1.5px solid #94a3b8; }
-    .l-up::after { bottom: 100%; }
+    .lt-up { bottom: 50%; height: 25%; border-bottom: 1.5px solid #94a3b8; }
+    .lt-up::after { bottom: 100%; }
 
     /* Repechage connector */
     .rep-line {
