@@ -47,7 +47,7 @@
     ];
 @endphp
 
-@include('event.bracket._match_lookup')
+{{-- Match lookup variables ($matchByOrder, $loserMatchesList, etc.) provided by controller --}}
 
 @php
     $sf1 = $matchByOrder[201] ?? null; $sf1sc = $sf1 ? $getScores($sf1) : ['red'=>'','blue'=>''];
