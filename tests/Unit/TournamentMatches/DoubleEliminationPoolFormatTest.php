@@ -308,18 +308,24 @@ class DoubleEliminationPoolFormatTest extends TestCase
         $matches = $this->strategy->generateRoundMatches(1, 1, $participants);
         $this->assertCount(4, $matches);
 
+        // 8-man seeded bracket with 7 players: seed 1 gets BYE
+        // Match 1: seed 1 (101) vs BYE (seed 8 = null)
         $this->assertEquals(101, $matches[0]['reg_one_id']);
-        $this->assertEquals(102, $matches[0]['reg_two_id']);
-        $this->assertEquals(103, $matches[1]['reg_one_id']);
-        $this->assertEquals(104, $matches[1]['reg_two_id']);
-        $this->assertEquals(105, $matches[2]['reg_one_id']);
-        $this->assertEquals(106, $matches[2]['reg_two_id']);
+        $this->assertNull($matches[0]['reg_two_id']);
+        $this->assertEquals('C', $matches[0]['status']);
+        $this->assertEquals(101, $matches[0]['reg_win_id']);
 
-        // 4th match is a BYE: player 107 auto-advances
-        $this->assertEquals(107, $matches[3]['reg_one_id']);
-        $this->assertNull($matches[3]['reg_two_id']);
-        $this->assertEquals('C', $matches[3]['status']);
-        $this->assertEquals(107, $matches[3]['reg_win_id']);
+        // Match 2: seed 4 (104) vs seed 5 (105)
+        $this->assertEquals(104, $matches[1]['reg_one_id']);
+        $this->assertEquals(105, $matches[1]['reg_two_id']);
+
+        // Match 3: seed 2 (102) vs seed 7 (107)
+        $this->assertEquals(102, $matches[2]['reg_one_id']);
+        $this->assertEquals(107, $matches[2]['reg_two_id']);
+
+        // Match 4: seed 3 (103) vs seed 6 (106)
+        $this->assertEquals(103, $matches[3]['reg_one_id']);
+        $this->assertEquals(106, $matches[3]['reg_two_id']);
     }
 
     public function test_7_players_round2_has_correct_match_counts()

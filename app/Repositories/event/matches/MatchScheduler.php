@@ -301,25 +301,39 @@ class MatchScheduler
     /**
      * Reorder participants according to standard tournament seeding.
      *
-     * Applies seeding for power-of-2 bracket sizes of 8 or more.
-     * For other sizes, returns participants in their original order.
+     * For any participant count, pads to the next power of 2 with null entries
+     * (BYE positions) and applies standard seeded ordering. When paired
+     * sequentially (indices 0&1, 2&3, etc.), top seeds receive BYEs and
+     * matchups follow standard tournament bracket conventions.
      *
      * @param array $participants Participant IDs in seed order (index 0 = seed 1)
-     * @return array Reordered participants for bracket pairing
+     * @return array Reordered participants for bracket pairing (nulls = BYE positions)
      */
     public static function seedParticipants(array $participants): array
     {
         $count = count($participants);
 
-        // Only seed for power-of-2 sizes of 8+
-        if ($count < 8 || ($count & ($count - 1)) !== 0) {
+        if ($count < 2) {
             return $participants;
         }
 
-        $seedOrder = self::generateSeededOrder($count);
+        // Find the nearest power of 2 >= count
+        $bracketSize = 1;
+        while ($bracketSize < $count) {
+            $bracketSize *= 2;
+        }
+
+        // Pad with nulls for BYE positions
+        $padded = $participants;
+        while (count($padded) < $bracketSize) {
+            $padded[] = null;
+        }
+
+        // Apply seeded order
+        $seedOrder = self::generateSeededOrder($bracketSize);
         $seeded = [];
         foreach ($seedOrder as $seed) {
-            $seeded[] = $participants[$seed - 1];
+            $seeded[] = $padded[$seed - 1];
         }
 
         return $seeded;

@@ -143,7 +143,12 @@ class DoubleEliminationStrategy implements TournamentEliminationStrategy {
 
         // Rounds 2+: Winners bracket + Losers bracket
         // Winners bracket follows single elimination pattern
-        $matchesInFirstRound = count($participantRegistrations) >= 2 ? (int)ceil(count($participantRegistrations) / 2) : 1;
+         // Use bracket size (next power of 2) for correct round structure
+        $bracketSize = 1;
+        while ($bracketSize < count($participantRegistrations)) {
+            $bracketSize *= 2;
+        }
+        $matchesInFirstRound = (int)($bracketSize / 2);
         $winnersBracketMatches = (int)floor($matchesInFirstRound / pow(2, $roundNumber - 1));
 
         // Winners bracket matches (identical to single elimination)

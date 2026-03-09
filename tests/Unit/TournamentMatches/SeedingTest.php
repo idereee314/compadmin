@@ -242,18 +242,28 @@ class SeedingTest extends TestCase
         $this->assertEquals(325, $seeded[7]);
     }
 
-    public function test_seed_participants_skips_non_power_of_2()
+    public function test_seed_participants_pads_non_power_of_2()
     {
+        // 9 players → 16-man bracket, 7 BYEs distributed to top seeds
         $participants = [1, 2, 3, 4, 5, 6, 7, 8, 9];
         $result = MatchScheduler::seedParticipants($participants);
-        $this->assertEquals($participants, $result);
+        $this->assertCount(16, $result);
+
+        // First pair: seed 1 vs BYE (seed 16 = null)
+        $this->assertEquals(1, $result[0]);
+        $this->assertNull($result[1]);
+
+        // Real players and nulls correctly distributed
+        $realPlayers = array_filter($result, fn($v) => $v !== null);
+        $this->assertCount(9, $realPlayers);
     }
 
-    public function test_seed_participants_skips_small_brackets()
+    public function test_seed_participants_seeds_small_brackets()
     {
+        // 4 players → standard 4-man seeded bracket: 1v4, 2v3
         $participants = [1, 2, 3, 4];
         $result = MatchScheduler::seedParticipants($participants);
-        $this->assertEquals($participants, $result);
+        $this->assertEquals([1, 4, 2, 3], $result);
     }
 
     // -------------------------------------------------------------------------
@@ -354,32 +364,43 @@ class SeedingTest extends TestCase
     }
 
     /**
-     * Seeding should not affect small brackets (< 8 players)
+     * Seeding applies to small brackets (< 8 players)
      */
-    public function test_seeding_does_not_affect_small_brackets()
+    public function test_seeding_applies_to_small_brackets()
     {
         $strategy = new SingleEliminationStrategy();
         $participants = [10, 20, 30, 40];
         $matches = $strategy->generateRoundMatches(1, 1, $participants);
 
-        // Should remain sequential: 10v20, 30v40
+        // 4-man seeded bracket: seed 1(10) vs seed 4(40), seed 2(20) vs seed 3(30)
+        $this->assertCount(2, $matches);
         $this->assertEquals(10, $matches[0]['reg_one_id']);
-        $this->assertEquals(20, $matches[0]['reg_two_id']);
-        $this->assertEquals(30, $matches[1]['reg_one_id']);
-        $this->assertEquals(40, $matches[1]['reg_two_id']);
+        $this->assertEquals(40, $matches[0]['reg_two_id']);
+        $this->assertEquals(20, $matches[1]['reg_one_id']);
+        $this->assertEquals(30, $matches[1]['reg_two_id']);
     }
 
     /**
-     * Seeding should not affect non-power-of-2 brackets
+     * Non-power-of-2 brackets pad with BYEs and apply seeding
      */
-    public function test_seeding_does_not_affect_odd_count()
+    public function test_seeding_pads_odd_count()
     {
         $strategy = new SingleEliminationStrategy();
         $participants = range(1, 10);
         $matches = $strategy->generateRoundMatches(1, 1, $participants);
 
-        // Should remain sequential: 1v2, 3v4, ...
+        // 10 players → 16-man bracket → 8 first-round matches
+        $this->assertCount(8, $matches);
+
+        // Seed 1 vs BYE (seed 16 = null)
         $this->assertEquals(1, $matches[0]['reg_one_id']);
-        $this->assertEquals(2, $matches[0]['reg_two_id']);
+        $this->assertNull($matches[0]['reg_two_id']);
+        $this->assertEquals('C', $matches[0]['status']);
+
+        // 10 players in 16-man bracket: 6 BYEs (seeds 11-16), 2 real matches
+        $realMatches = array_filter($matches, fn($m) => $m['status'] === 'P');
+        $byeMatches = array_filter($matches, fn($m) => $m['status'] === 'C');
+        $this->assertCount(2, $realMatches);
+        $this->assertCount(6, $byeMatches);
     }
 }

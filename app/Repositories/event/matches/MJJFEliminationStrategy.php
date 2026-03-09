@@ -71,7 +71,12 @@ class MJJFEliminationStrategy implements TournamentEliminationStrategy {
             return $this->generateFirstRoundMatches($eventId, $participantRegistrations);
         }
 
-        $matchesInFirstRound = count($participantRegistrations) >= 2 ? (int)ceil(count($participantRegistrations) / 2) : 1;
+        // Use bracket size (next power of 2) for correct round structure
+        $bracketSize = 1;
+        while ($bracketSize < count($participantRegistrations)) {
+            $bracketSize *= 2;
+        }
+        $matchesInFirstRound = (int)($bracketSize / 2);
         $totalRounds = $this->calculateTotalRounds(count($participantRegistrations));
         $winnersBracketMatches = (int)floor($matchesInFirstRound / pow(2, $roundNumber - 1));
 
