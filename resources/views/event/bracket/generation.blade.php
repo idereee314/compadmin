@@ -8,13 +8,33 @@
         <div class="tournament-bracket tournament-bracket--rounded">
             @if (isset($round))
                 @php
+                    // Build round 1 source: prefer match data (seeded order) over bracket data (legacy order)
+                    $round1Sources = [];
+                    $useMatchData = false;
+                    foreach ($members as $mKey => $member) {
+                        $md = $matchByOrder[$mKey + 1] ?? null;
+                        if ($md && ($md->lastname_one || $md->lastname_two)) {
+                            $useMatchData = true;
+                        }
+                        $round1Sources[$mKey] = $md;
+                    }
+
                     // Build byeList: winners from first round who had a BYE opponent
                     $byeList = [];
                     foreach ($members as $key => $member) {
-                        if ($member->lastname_one != null && $member->lastname_two == null) {
-                            $byeList[$key] = ['lastname' => $member->lastname_one, 'firstname' => $member->firstname_one, 'academy' => $member->acname_one, 'reg_id' => $member->ro ?? null];
-                        } elseif ($member->lastname_one == null && $member->lastname_two != null) {
-                            $byeList[$key] = ['lastname' => $member->lastname_two, 'firstname' => $member->firstname_two, 'academy' => $member->acname_two, 'reg_id' => $member->rt ?? null];
+                        $src = ($useMatchData && isset($round1Sources[$key]) && $round1Sources[$key]) ? $round1Sources[$key] : null;
+                        $ln1 = $src ? $src->lastname_one : $member->lastname_one;
+                        $fn1 = $src ? $src->firstname_one : $member->firstname_one;
+                        $ac1 = $src ? ($src->acname_one ?? '') : $member->acname_one;
+                        $rid1 = $src ? ($src->reg_one_id ?? null) : ($member->ro ?? null);
+                        $ln2 = $src ? $src->lastname_two : $member->lastname_two;
+                        $fn2 = $src ? $src->firstname_two : $member->firstname_two;
+                        $ac2 = $src ? ($src->acname_two ?? '') : $member->acname_two;
+                        $rid2 = $src ? ($src->reg_two_id ?? null) : ($member->rt ?? null);
+                        if ($ln1 != null && $ln2 == null) {
+                            $byeList[$key] = ['lastname' => $ln1, 'firstname' => $fn1, 'academy' => $ac1, 'reg_id' => $rid1];
+                        } elseif ($ln1 == null && $ln2 != null) {
+                            $byeList[$key] = ['lastname' => $ln2, 'firstname' => $fn2, 'academy' => $ac2, 'reg_id' => $rid2];
                         } else {
                             $byeList[$key] = ['lastname' => null];
                         }
@@ -40,6 +60,13 @@
                                     @php
                                         $md = $matchByOrder[$mKey + 1] ?? null;
                                         $r1won = ($md && $md->status === 'C');
+                                        // Use match data for names when available (seeded order)
+                                        $ln1 = ($useMatchData && $md) ? $md->lastname_one : $member->lastname_one;
+                                        $fn1 = ($useMatchData && $md) ? $md->firstname_one : $member->firstname_one;
+                                        $ac1 = ($useMatchData && $md) ? ($md->acname_one ?? '') : $member->acname_one;
+                                        $ln2 = ($useMatchData && $md) ? $md->lastname_two : $member->lastname_two;
+                                        $fn2 = ($useMatchData && $md) ? $md->firstname_two : $member->firstname_two;
+                                        $ac2 = ($useMatchData && $md) ? ($md->acname_two ?? '') : $member->acname_two;
                                     @endphp
                                     <li class="tournament-bracket__item">
                                         <div class="tournament-bracket__match" tabindex="0">
@@ -48,11 +75,11 @@
                                                     <tr class="tournament-bracket__team {{ $r1won && $isWinner($md->reg_one_id, $md) ? 'tournament-bracket__team--winner' : '' }}">
                                                         <td class="tournament-bracket__country">
                                                             <abbr class="tournament-bracket__code"
-                                                                style="text-transform: capitalize !important">{{ $member->acname_one }}</abbr>
+                                                                style="text-transform: capitalize !important">{{ $ac1 }}</abbr>
                                                         </td>
                                                         <td class="tournament-bracket__country">
                                                             <abbr class="tournament-bracket__code">
-                                                                {!! $member->lastname_one != null ? e($member->lastname_one) . ' <strong>' . e($member->firstname_one) . '</strong>' : 'BYE' !!}
+                                                                {!! $ln1 != null ? e($ln1) . ' <strong>' . e($fn1) . '</strong>' : 'BYE' !!}
                                                             </abbr>
                                                         </td>
                                                         @if($r1won)
@@ -62,11 +89,11 @@
                                                     <tr class="tournament-bracket__team {{ $r1won && $isWinner($md->reg_two_id, $md) ? 'tournament-bracket__team--winner' : '' }}">
                                                         <td class="tournament-bracket__country">
                                                             <abbr class="tournament-bracket__code"
-                                                                style="text-transform: capitalize !important">{{ $member->acname_two }}</abbr>
+                                                                style="text-transform: capitalize !important">{{ $ac2 }}</abbr>
                                                         </td>
                                                         <td class="tournament-bracket__country">
                                                             <abbr class="tournament-bracket__code">
-                                                                {!! $member->lastname_two != null ? e($member->lastname_two) . ' <strong>' . e($member->firstname_two) . '</strong>' : 'BYE' !!}
+                                                                {!! $ln2 != null ? e($ln2) . ' <strong>' . e($fn2) . '</strong>' : 'BYE' !!}
                                                             </abbr>
                                                         </td>
                                                         @if($r1won)
