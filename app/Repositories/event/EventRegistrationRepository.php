@@ -17,4 +17,6 @@ interface EventRegistrationRepository
   public function delete($id);
   
   public function getDatatableList($searchData);
+
+  public function getMatchesForBracketDisplay($eventId, $entryId, $entryAgeId, $entryBeltId, $entryWeightId);
 }

@@ -1137,17 +1137,17 @@ public function getMatchesForBracketDisplay($eventId, $entryId, $entryAgeId, $en
 
             umw.firstname AS firstname_win, umw.lastname AS lastname_win,
             CASE WHEN aw.is_other = 1 THEN rw.academy_name ELSE aw.name END AS acname_win
-        FROM uq_event_matches m
-        INNER JOIN uq_event_mate_brackets mb ON m.bracket_id = mb.id
-        LEFT JOIN uq_event_registration r1 ON m.reg_one_id = r1.id
-        LEFT JOIN uq_member um1 ON r1.member_id = um1.id
-        LEFT JOIN uq_academy a1 ON r1.academy_id = a1.id
-        LEFT JOIN uq_event_registration r2 ON m.reg_two_id = r2.id
-        LEFT JOIN uq_member um2 ON r2.member_id = um2.id
-        LEFT JOIN uq_academy a2 ON r2.academy_id = a2.id
-        LEFT JOIN uq_event_registration rw ON m.reg_win_id = rw.id
-        LEFT JOIN uq_member umw ON rw.member_id = umw.id
-        LEFT JOIN uq_academy aw ON rw.academy_id = aw.id
+        FROM uq_comp.uq_event_matches m
+        INNER JOIN uq_comp.uq_event_mate_brackets mb ON m.bracket_id = mb.id
+        LEFT JOIN uq_comp.uq_event_registration r1 ON m.reg_one_id = r1.id
+        LEFT JOIN uq_comp.uq_member um1 ON r1.member_id = um1.id
+        LEFT JOIN uq_comp.uq_academy a1 ON r1.academy_id = a1.id
+        LEFT JOIN uq_comp.uq_event_registration r2 ON m.reg_two_id = r2.id
+        LEFT JOIN uq_comp.uq_member um2 ON r2.member_id = um2.id
+        LEFT JOIN uq_comp.uq_academy a2 ON r2.academy_id = a2.id
+        LEFT JOIN uq_comp.uq_event_registration rw ON m.reg_win_id = rw.id
+        LEFT JOIN uq_comp.uq_member umw ON rw.member_id = umw.id
+        LEFT JOIN uq_comp.uq_academy aw ON rw.academy_id = aw.id
         WHERE
             mb.event_id = :eventId AND
             mb.entry_id = :entryId AND
