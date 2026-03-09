@@ -890,18 +890,20 @@
         function checkOverflow() {
             const details = document.getElementById('matchDetails');
             const stage = document.getElementById('matchStage');
-            
+
             [details, stage].forEach(element => {
+                if (!element) return;
                 const content = element.querySelector('.marquee-content');
+                if (!content) return;
                 const parent = element;
-                
+
                 // Reset first
                 content.classList.remove('duplicate', 'animate');
                 const originalText = content.textContent.split('    ')[0]; // Get original text
                 content.textContent = originalText;
-                
-                // Check if overflow exists
-                if (parent.scrollWidth > parent.clientWidth) {
+
+                // Check if content width exceeds visible container width
+                if (content.scrollWidth > parent.clientWidth) {
                     const text = originalText;
                     content.setAttribute('data-text', text);
                     content.classList.add('duplicate');
@@ -911,5 +913,5 @@
             });
         }
 
-        // window.addEventListener('load', checkOverflow);
-        // window.addEventListener('resize', checkOverflow);
+        window.addEventListener('load', checkOverflow);
+        window.addEventListener('resize', checkOverflow);
