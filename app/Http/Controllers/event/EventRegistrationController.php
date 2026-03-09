@@ -1053,7 +1053,11 @@ class EventRegistrationController extends Controller
 
         $data['total'] = $total;
         $data['members'] = $members;
-        $data['matchesData'] = $this->eventRegistration->getMatchesForBracketDisplay($eventId, $entryId, $entryAgeId, $entryBeltId, $entryWeightId);
+         try {
+            $data['matchesData'] = $this->eventRegistration->getMatchesForBracketDisplay($eventId, $entryId, $entryAgeId, $entryBeltId, $entryWeightId);
+        } catch (\Exception $e) {
+            $data['matchesData'] = [];
+        }
         $data['eventConfig'] = $eventConfig;
         $data['entry'] = $entry;
         $data['age'] = $age;
@@ -1089,7 +1093,11 @@ class EventRegistrationController extends Controller
         
         $data['total'] = $total;
         $data['members'] = $members;
-        $data['matchesData'] = $this->eventRegistration->getMatchesForBracketDisplay($eventId, $entryId, $entryAgeId, $entryBeltId, $entryWeightId);
+        try {
+            $data['matchesData'] = $this->eventRegistration->getMatchesForBracketDisplay($eventId, $entryId, $entryAgeId, $entryBeltId, $entryWeightId);
+        } catch (\Exception $e) {
+            $data['matchesData'] = [];
+        }
         $data['eventConfig'] = $eventConfig;
         $data['entry'] = $entry;
         $data['age'] = $age;
