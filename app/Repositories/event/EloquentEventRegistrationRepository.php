@@ -1100,6 +1100,72 @@ class EloquentEventRegistrationRepository implements EventRegistrationRepository
     ]);
 }
 
+/**
+ * Get all matches from uq_event_matches for a given bracket group,
+ * with full player info for reg_one, reg_two, and reg_win.
+ * Returns matches ordered by is_double_loser ASC, order_no ASC, id ASC
+ * so winner bracket comes first, then losers bracket.
+ */
+public function getMatchesForBracketDisplay($eventId, $entryId, $entryAgeId, $entryBeltId, $entryWeightId)
+{
+    $query = "
+        SELECT
+            m.id            AS match_id,
+            m.order_no,
+            m.status,
+            m.is_double_loser,
+            m.reg_one_id,
+            m.reg_two_id,
+            m.reg_win_id,
+            m.previes_mate_id1,
+            m.previes_mate_id2,
+            m.red_score,
+            m.blue_score,
+            m.red_advantage,
+            m.blue_advantage,
+            m.red_penalty,
+            m.blue_penalty,
+            m.win_method,
+            m.red_match_points,
+            m.blue_match_points,
+
+            um1.firstname AS firstname_one, um1.lastname AS lastname_one,
+            CASE WHEN a1.is_other = 1 THEN r1.academy_name ELSE a1.name END AS acname_one,
+
+            um2.firstname AS firstname_two, um2.lastname AS lastname_two,
+            CASE WHEN a2.is_other = 1 THEN r2.academy_name ELSE a2.name END AS acname_two,
+
+            umw.firstname AS firstname_win, umw.lastname AS lastname_win,
+            CASE WHEN aw.is_other = 1 THEN rw.academy_name ELSE aw.name END AS acname_win
+        FROM uq_event_matches m
+        INNER JOIN uq_event_mate_brackets mb ON m.bracket_id = mb.id
+        LEFT JOIN uq_event_registration r1 ON m.reg_one_id = r1.id
+        LEFT JOIN uq_member um1 ON r1.member_id = um1.id
+        LEFT JOIN uq_academy a1 ON r1.academy_id = a1.id
+        LEFT JOIN uq_event_registration r2 ON m.reg_two_id = r2.id
+        LEFT JOIN uq_member um2 ON r2.member_id = um2.id
+        LEFT JOIN uq_academy a2 ON r2.academy_id = a2.id
+        LEFT JOIN uq_event_registration rw ON m.reg_win_id = rw.id
+        LEFT JOIN uq_member umw ON rw.member_id = umw.id
+        LEFT JOIN uq_academy aw ON rw.academy_id = aw.id
+        WHERE
+            mb.event_id = :eventId AND
+            mb.entry_id = :entryId AND
+            mb.entry_age_id = :entryAgeId AND
+            mb.entry_belt_id = :entryBeltId AND
+            mb.entry_weight_id = :entryWeightId
+        ORDER BY m.is_double_loser ASC, m.order_no ASC, m.id ASC
+    ";
+
+    return DB::select($query, [
+        'eventId' => $eventId,
+        'entryId' => $entryId,
+        'entryAgeId' => $entryAgeId,
+        'entryBeltId' => $entryBeltId,
+        'entryWeightId' => $entryWeightId
+    ]);
+}
+
 
 	public function getEventConfig($eventId)
 	{
