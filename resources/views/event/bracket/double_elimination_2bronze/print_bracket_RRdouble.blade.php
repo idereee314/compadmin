@@ -116,6 +116,7 @@
                     ['r' => $all_athletes[2], 'b' => $all_athletes[4], 'l' => 'Match 9', 'order' => 9],
                     ['r' => $all_athletes[1], 'b' => $all_athletes[3], 'l' => 'Match 10', 'order' => 10],
                 ];
+                $k++;
             }
         @endphp
 
