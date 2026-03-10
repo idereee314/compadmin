@@ -50,11 +50,14 @@ class RoundRobinStrategy implements TournamentEliminationStrategy {
 
     /**
      * Generate all matches for round robin
+     * 
+     * Matches are ordered using a greedy algorithm to maximise rest breaks:
+     * at each slot, pick the unscheduled pair where both players have been
+     * idle the longest. This ensures every player gets at least 1 match
+     * break between consecutive fights where mathematically possible.
      */
     public function generateRoundMatches($eventId, $roundNumber, $participantRegistrations = [])
     {
-        $matches = [];
-
         // For round robin, all matches are generated in the first call
         // Subsequent calls return empty since all pairings are already created
         if ($roundNumber !== 1) {
@@ -70,23 +73,78 @@ class RoundRobinStrategy implements TournamentEliminationStrategy {
                 ->toArray();
         }
 
-        // Generate all possible pairings
-        $matchOrder = 1;
-        
-        for ($i = 0; $i < count($participantRegistrations); $i++) {
-            for ($j = $i + 1; $j < count($participantRegistrations); $j++) {
-                $matches[] = [
-                    'event_id' => $eventId,
-                    'reg_one_id' => $participantRegistrations[$i],
-                    'reg_two_id' => $participantRegistrations[$j],
-                    'order_no' => $matchOrder++,
-                    'status' => 'P',
-                    'is_double_loser' => 0,
-                ];
-            }
+        // Generate all possible pairings then order with break scheduling
+        $orderedPairs = $this->scheduleRoundRobinWithBreaks($participantRegistrations);
+        $matches = [];
+
+        foreach ($orderedPairs as $i => [$p1, $p2]) {
+            $matches[] = [
+                'event_id' => $eventId,
+                'reg_one_id' => $p1,
+                'reg_two_id' => $p2,
+                'order_no' => $i + 1,
+                'status' => 'P',
+                'is_double_loser' => 0,
+            ];
         }
 
         return $matches;
+    }
+
+    /**
+     * Order all round-robin pairs to maximise per-player rest breaks.
+     *
+     * Greedy algorithm: at each slot, pick the unscheduled pair where the
+     * minimum idle time for either player is greatest. Ties are broken by the
+     * first available pair in enumeration order.
+     */
+    private function scheduleRoundRobinWithBreaks(array $players): array
+    {
+        // Build list of all unordered pairs
+        $allPairs = [];
+        $n = count($players);
+        for ($i = 0; $i < $n; $i++) {
+            for ($j = $i + 1; $j < $n; $j++) {
+                $allPairs[] = [$players[$i], $players[$j]];
+            }
+        }
+
+        $lastSlot = [];   // player → last slot they played (0 = never)
+        $ordered  = [];
+        $slot     = 1;
+        $remaining = $allPairs;
+
+        while (!empty($remaining)) {
+            $bestIdx     = 0;
+            $bestMinWait = -1;
+
+            foreach ($remaining as $idx => [$p1, $p2]) {
+                $wait = min(
+                    $slot - ($lastSlot[$p1] ?? 0),
+                    $slot - ($lastSlot[$p2] ?? 0)
+                );
+                if ($wait > $bestMinWait) {
+                    $bestMinWait = $wait;
+                    $bestIdx     = $idx;
+                }
+            }
+
+            [$p1, $p2] = $remaining[$bestIdx];
+            $ordered[]      = [$p1, $p2];
+            $lastSlot[$p1]  = $slot;
+            $lastSlot[$p2]  = $slot;
+
+            $newRemaining = [];
+            foreach ($remaining as $idx => $pair) {
+                if ($idx !== $bestIdx) {
+                    $newRemaining[] = $pair;
+                }
+            }
+            $remaining = $newRemaining;
+            $slot++;
+        }
+
+        return $ordered;
     }
 
     /**

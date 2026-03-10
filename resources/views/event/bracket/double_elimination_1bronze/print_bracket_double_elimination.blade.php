@@ -121,6 +121,47 @@
         $repNo++;
         return $repNo;
     };
+
+    // ---------------------------
+    // 6) Map (round_index, slot) → order_no for winner bracket
+    // ---------------------------
+    $getOrderNo = function(int $r, int $slot) use ($rounds_count) {
+        if ($r === $rounds_count - 1) return 9999; // Final
+        if ($r === 0) return $slot + 1; // First round: 1, 2, 3, ...
+        return ($r + 1) * 100 + $slot + 1; // Later rounds: 201, 202, ...
+    };
+@endphp
+
+{{-- Match lookup variables ($matchByOrder, $loserMatchesList, etc.) provided by controller --}}
+
+@php
+    // Prefer match data (seeded order) over bracket data for round 1
+    $useMatchData = false;
+    if (!empty($matchByOrder)) {
+        for ($chk = 0; $chk < $total_matches; $chk++) {
+            $md = $matchByOrder[$chk + 1] ?? null;
+            if ($md && ($md->lastname_one || $md->lastname_two)) {
+                $useMatchData = true;
+                break;
+            }
+        }
+    }
+@endphp
+
+@php
+    // Group loser matches by round for repechage display
+    $_loserRounds = [];
+    $_bronzeList = [];
+    foreach ($loserMatchesList as $_lm) {
+        if ($_lm->order_no >= 9990) {
+            $_bronzeList[] = $_lm;
+        } else {
+            $_rk = (int) floor($_lm->order_no / 100);
+            $_loserRounds[$_rk][] = $_lm;
+        }
+    }
+    ksort($_loserRounds);
+    $_lrv = array_values($_loserRounds);
 @endphp
 
 <div style="width:1600px; margin:0 auto; background-color: white; border: 1px solid #ccc; padding: 30px; font-family: 'Helvetica', 'Arial', sans-serif; position: relative; min-height: 1000px; color: #333;">
@@ -165,50 +206,73 @@
                             @endphp
 
                             @if($is_visible)
-                                <td rowspan="{{ $step }}" valign="middle" style="position: relative;">
-                                    <div class="connector-container" style="padding: {{ $cfg['pad_y'] }}px 40px {{ $cfg['pad_y'] }}px 0;">
+                                @php
+                                    $slot = (int) floor($index / $step);
+                                    $orderNo = $getOrderNo($r, $slot);
+                                    $md = $matchByOrder[$orderNo] ?? null;
+                                    $sc = $md ? $getScores($md) : ['red' => '', 'blue' => ''];
+                                @endphp
+                                <td rowspan="{{ $step }}" style="position: relative; vertical-align: middle;">
+                                    <div style="padding: {{ $cfg['pad_y'] }}px 40px {{ $cfg['pad_y'] }}px 0;">
                                         <table width="100%" border="0" class="match-box">
                                             <tr>
-                                                <td class="player-cell">
+                                                <td class="player-cell" @if($md && $isWinner($md->reg_one_id, $md)) style="background:#d4edda;" @endif>
                                                     <div class="indicator-bar {{ (($index / $step) % 2 == 0) ? 'red-bg' : 'blue-bg' }}">
-                                                        @if($r === 0)
+                                                        @if($md && $md->status === 'C')
+                                                            {{ $sc['red'] }}
+                                                        @elseif($r === 0)
                                                             {{ $m->seed_one ?? ($seedPairs[$index][0] ?? '') }}
                                                         @endif
                                                     </div>
                                                     <div class="player-info">
                                                         @if($r === 0)
-                                                            <div class="p-name">{!! $fmtName($m->lastname_one ?? null, $m->firstname_one ?? '') !!}</div>
-                                                            <div class="p-academy">{{ $m->acname_one ?? '' }}</div>
+                                                            @php
+                                                                $r1md = ($useMatchData && isset($matchByOrder[$index + 1])) ? $matchByOrder[$index + 1] : null;
+                                                                $r1ln1 = $r1md ? ($r1md->lastname_one ?? null) : ($m->lastname_one ?? null);
+                                                                $r1fn1 = $r1md ? ($r1md->firstname_one ?? '') : ($m->firstname_one ?? '');
+                                                                $r1ac1 = $r1md ? ($r1md->acname_one ?? '') : ($m->acname_one ?? '');
+                                                            @endphp
+                                                            <div class="p-name">{!! $fmtName($r1ln1, $r1fn1) !!}</div>
+                                                            <div class="p-academy">{{ $r1ac1 }}</div>
+                                                        @elseif($md)
+                                                            <div class="p-name">{!! $fmtPlayer($md->lastname_one, $md->firstname_one) !!}</div>
+                                                            <div class="p-academy">{{ $md->acname_one ?? '' }}</div>
                                                         @endif
                                                     </div>
                                                 </td>
                                             </tr>
 
                                             <tr>
-                                                <td class="player-cell" style="border-top: 1px solid #e2e8f0;">
+                                                <td class="player-cell" style="border-top: 1px solid #e2e8f0;{{ $md && $isWinner($md->reg_two_id, $md) ? ' background:#d4edda;' : '' }}">
                                                     <div class="indicator-bar {{ (($index / $step) % 2 == 0) ? 'blue-bg' : 'red-bg' }}">
-                                                        @if($r === 0)
+                                                        @if($md && $md->status === 'C')
+                                                            {{ $sc['blue'] }}
+                                                        @elseif($r === 0)
                                                             {{ $m->seed_two ?? ($seedPairs[$index][1] ?? '') }}
                                                         @endif
                                                     </div>
                                                     <div class="player-info">
                                                         @if($r === 0)
-                                                            <div class="p-name">{!! $fmtName($m->lastname_two ?? null, $m->firstname_two ?? '') !!}</div>
-                                                            <div class="p-academy">{{ $m->acname_two ?? '' }}</div>
+                                                            @php
+                                                                $r1ln2 = $r1md ? ($r1md->lastname_two ?? null) : ($m->lastname_two ?? null);
+                                                                $r1fn2 = $r1md ? ($r1md->firstname_two ?? '') : ($m->firstname_two ?? '');
+                                                                $r1ac2 = $r1md ? ($r1md->acname_two ?? '') : ($m->acname_two ?? '');
+                                                            @endphp
+                                                            <div class="p-name">{!! $fmtName($r1ln2, $r1fn2) !!}</div>
+                                                            <div class="p-academy">{{ $r1ac2 }}</div>
+                                                        @elseif($md)
+                                                            <div class="p-name">{!! $fmtPlayer($md->lastname_two, $md->firstname_two) !!}</div>
+                                                            <div class="p-academy">{{ $md->acname_two ?? '' }}</div>
                                                         @endif
                                                     </div>
                                                 </td>
                                             </tr>
                                         </table>
-
-                                        @if($r < $rounds_count - 1)
-                                            @php
-                                                $is_top   = ((($index / $step) % 2) == 0);
-                                                $v_height = $step * $cfg['v_height_mul'];
-                                            @endphp
-                                            <div class="line-logic {{ $is_top ? 'l-down' : 'l-up' }}" style="height: {{ $v_height }}px;"></div>
-                                        @endif
                                     </div>
+                                    @if($r < $rounds_count - 1)
+                                        @php $is_top = ((($index / $step) % 2) == 0); @endphp
+                                        <div class="line-td {{ $is_top ? 'lt-down' : 'lt-up' }}"></div>
+                                    @endif
                                 </td>
                             @endif
                         @endfor
@@ -233,18 +297,17 @@
         <tr>
             <td width="33.33%" valign="top">
                 @for($i=0; $i<2; $i++)
+                    @php $lm = $_lrv[0][$i] ?? null; $lsc = $lm ? $getScores($lm) : ['red'=>'','blue'=>'']; @endphp
                     <div class="rep-wrapper" style="margin-top: 30px;">
                         <table class="match-box-sm">
-                            <tr>
-                                <td class="cell-sm">
-                                    <div class="indicator-bar-sm red-bg">L</div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="cell-sm" style="border-top: 1px solid #f1f5f9;">
-                                    <div class="indicator-bar-sm blue-bg">L</div>
-                                </td>
-                            </tr>
+                            <tr><td class="cell-sm" @if($lm && $isWinner($lm->reg_one_id, $lm)) style="background:#d4edda;" @endif>
+                                <div class="indicator-bar-sm red-bg">{{ $lsc['red'] }}</div>
+                                <div class="player-info-sm">{!! $lm ? $fmtPlayer($lm->lastname_one, $lm->firstname_one) : '' !!}</div>
+                            </td></tr>
+                            <tr><td class="cell-sm" style="border-top: 1px solid #f1f5f9;{{ $lm && $isWinner($lm->reg_two_id, $lm) ? ' background:#d4edda;' : '' }}">
+                                <div class="indicator-bar-sm blue-bg">{{ $lsc['blue'] }}</div>
+                                <div class="player-info-sm">{!! $lm ? $fmtPlayer($lm->lastname_two, $lm->firstname_two) : '' !!}</div>
+                            </td></tr>
                         </table>
                         <div class="rep-line-straight"></div>
                     </div>
@@ -252,37 +315,34 @@
             </td>
             <td width="33.33%" valign="top">
                 @for($i=0; $i<2; $i++)
+                    @php $lm = $_lrv[1][$i] ?? null; $lsc = $lm ? $getScores($lm) : ['red'=>'','blue'=>'']; @endphp
                     <div class="rep-wrapper" style="margin-top: 30px;">
                         <table class="match-box-sm">
-                            <tr>
-                                <td class="cell-sm">
-                                    <div class="indicator-bar-sm red-bg">SF-L</div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="cell-sm" style="border-top: 1px solid #f1f5f9;">
-                                    <div class="indicator-bar-sm blue-bg">RP-W</div>
-                                </td>
-                            </tr>
+                            <tr><td class="cell-sm" @if($lm && $isWinner($lm->reg_one_id, $lm)) style="background:#d4edda;" @endif>
+                                <div class="indicator-bar-sm red-bg">{{ $lsc['red'] }}</div>
+                                <div class="player-info-sm">{!! $lm ? $fmtPlayer($lm->lastname_one, $lm->firstname_one) : '' !!}</div>
+                            </td></tr>
+                            <tr><td class="cell-sm" style="border-top: 1px solid #f1f5f9;{{ $lm && $isWinner($lm->reg_two_id, $lm) ? ' background:#d4edda;' : '' }}">
+                                <div class="indicator-bar-sm blue-bg">{{ $lsc['blue'] }}</div>
+                                <div class="player-info-sm">{!! $lm ? $fmtPlayer($lm->lastname_two, $lm->firstname_two) : '' !!}</div>
+                            </td></tr>
                         </table>
-
                         <div class="rep-line {{ $i % 2 == 0 ? 'r-down' : 'r-up' }}"></div>
                     </div>
                 @endfor
             </td>
             <td width="33.33%" valign="top">
+                @php $lm = $_bronzeList[0] ?? null; $lsc = $lm ? $getScores($lm) : ['red'=>'','blue'=>'']; @endphp
                 <div class="rep-wrapper" style="margin-top: 85px; margin-bottom: 110px;">
                     <table class="match-box-sm">
-                        <tr>
-                            <td class="cell-sm">
-                                <div class="indicator-bar-sm red-bg">W</div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="cell-sm" style="border-top: 1px solid #f1f5f9;">
-                                <div class="indicator-bar-sm blue-bg">W</div>
-                            </td>
-                        </tr>
+                        <tr><td class="cell-sm" @if($lm && $isWinner($lm->reg_one_id, $lm)) style="background:#d4edda;" @endif>
+                            <div class="indicator-bar-sm red-bg">{{ $lsc['red'] }}</div>
+                            <div class="player-info-sm">{!! $lm ? $fmtPlayer($lm->lastname_one, $lm->firstname_one) : '' !!}</div>
+                        </td></tr>
+                        <tr><td class="cell-sm" style="border-top: 1px solid #f1f5f9;{{ $lm && $isWinner($lm->reg_two_id, $lm) ? ' background:#d4edda;' : '' }}">
+                            <div class="indicator-bar-sm blue-bg">{{ $lsc['blue'] }}</div>
+                            <div class="player-info-sm">{!! $lm ? $fmtPlayer($lm->lastname_two, $lm->firstname_two) : '' !!}</div>
+                        </td></tr>
                     </table>
                     <div style="margin-left: 8px; font-size: 16px;">🥉</div>
                 </div>
@@ -303,10 +363,17 @@
         <tr>
             <td width="20%" valign="top">
                 @for($i=0; $i<4; $i++)
+                    @php $lm = $_lrv[0][$i] ?? null; $lsc = $lm ? $getScores($lm) : ['red'=>'','blue'=>'']; @endphp
                     <div class="rep-wrapper" style="margin-top: 25px;">
                         <table class="match-box-sm">
-                            <tr><td class="cell-sm"><div class="indicator-bar-sm red-bg">L</div></td></tr>
-                            <tr><td class="cell-sm" style="border-top: 1px solid #f1f5f9;"><div class="indicator-bar-sm blue-bg">L</div></td></tr>
+                            <tr><td class="cell-sm" @if($lm && $isWinner($lm->reg_one_id, $lm)) style="background:#d4edda;" @endif>
+                                <div class="indicator-bar-sm red-bg">{{ $lsc['red'] }}</div>
+                                <div class="player-info-sm">{!! $lm ? $fmtPlayer($lm->lastname_one, $lm->firstname_one) : '' !!}</div>
+                            </td></tr>
+                            <tr><td class="cell-sm" style="border-top: 1px solid #f1f5f9;{{ $lm && $isWinner($lm->reg_two_id, $lm) ? ' background:#d4edda;' : '' }}">
+                                <div class="indicator-bar-sm blue-bg">{{ $lsc['blue'] }}</div>
+                                <div class="player-info-sm">{!! $lm ? $fmtPlayer($lm->lastname_two, $lm->firstname_two) : '' !!}</div>
+                            </td></tr>
                         </table>
                         <div class="rep-line {{ $i % 2 == 0 ? 'r-down' : 'r-up' }}"></div>
                     </div>
@@ -314,10 +381,17 @@
             </td>
             <td width="20%" valign="top">
                 @for($i=0; $i<4; $i++)
+                    @php $lm = $_lrv[1][$i] ?? null; $lsc = $lm ? $getScores($lm) : ['red'=>'','blue'=>'']; @endphp
                     <div class="rep-wrapper" style="margin-top: 25px;">
                         <table class="match-box-sm">
-                            <tr><td class="cell-sm"><div class="indicator-bar-sm red-bg">QF-L</div></td></tr>
-                            <tr><td class="cell-sm" style="border-top: 1px solid #f1f5f9;"><div class="indicator-bar-sm blue-bg">W</div></td></tr>
+                            <tr><td class="cell-sm" @if($lm && $isWinner($lm->reg_one_id, $lm)) style="background:#d4edda;" @endif>
+                                <div class="indicator-bar-sm red-bg">{{ $lsc['red'] }}</div>
+                                <div class="player-info-sm">{!! $lm ? $fmtPlayer($lm->lastname_one, $lm->firstname_one) : '' !!}</div>
+                            </td></tr>
+                            <tr><td class="cell-sm" style="border-top: 1px solid #f1f5f9;{{ $lm && $isWinner($lm->reg_two_id, $lm) ? ' background:#d4edda;' : '' }}">
+                                <div class="indicator-bar-sm blue-bg">{{ $lsc['blue'] }}</div>
+                                <div class="player-info-sm">{!! $lm ? $fmtPlayer($lm->lastname_two, $lm->firstname_two) : '' !!}</div>
+                            </td></tr>
                         </table>
                         <div class="rep-line {{ $i % 2 == 0 ? 'r-down' : 'r-up' }}"></div>
                     </div>
@@ -325,10 +399,17 @@
             </td>
             <td width="20%" valign="top">
                 @for($i=0; $i<2; $i++)
+                    @php $lm = $_lrv[2][$i] ?? null; $lsc = $lm ? $getScores($lm) : ['red'=>'','blue'=>'']; @endphp
                     <div class="rep-wrapper" style="margin-top: 85px; margin-bottom: 110px;">
                         <table class="match-box-sm">
-                            <tr><td class="cell-sm"><div class="indicator-bar-sm red-bg">W</div></td></tr>
-                            <tr><td class="cell-sm" style="border-top: 1px solid #f1f5f9;"><div class="indicator-bar-sm blue-bg">W</div></td></tr>
+                            <tr><td class="cell-sm" @if($lm && $isWinner($lm->reg_one_id, $lm)) style="background:#d4edda;" @endif>
+                                <div class="indicator-bar-sm red-bg">{{ $lsc['red'] }}</div>
+                                <div class="player-info-sm">{!! $lm ? $fmtPlayer($lm->lastname_one, $lm->firstname_one) : '' !!}</div>
+                            </td></tr>
+                            <tr><td class="cell-sm" style="border-top: 1px solid #f1f5f9;{{ $lm && $isWinner($lm->reg_two_id, $lm) ? ' background:#d4edda;' : '' }}">
+                                <div class="indicator-bar-sm blue-bg">{{ $lsc['blue'] }}</div>
+                                <div class="player-info-sm">{!! $lm ? $fmtPlayer($lm->lastname_two, $lm->firstname_two) : '' !!}</div>
+                            </td></tr>
                         </table>
                         <div style=" position:absolute; right:0; top:50%; width:35px; height:1.5px; background:#94a3b8;"></div>
                     </div>
@@ -336,21 +417,35 @@
             </td>
             <td width="20%" valign="top">
                 @for($i=0; $i<2; $i++)
+                    @php $lm = $_lrv[3][$i] ?? null; $lsc = $lm ? $getScores($lm) : ['red'=>'','blue'=>'']; @endphp
                     <div class="rep-wrapper" style="margin-top: 85px; margin-bottom: 110px;">
                         <table class="match-box-sm">
-                            <tr><td class="cell-sm"><div class="indicator-bar-sm red-bg">SF-L</div></td></tr>
-                            <tr><td class="cell-sm" style="border-top: 1px solid #f1f5f9;"><div class="indicator-bar-sm blue-bg">RP-W</div></td></tr>
+                            <tr><td class="cell-sm" @if($lm && $isWinner($lm->reg_one_id, $lm)) style="background:#d4edda;" @endif>
+                                <div class="indicator-bar-sm red-bg">{{ $lsc['red'] }}</div>
+                                <div class="player-info-sm">{!! $lm ? $fmtPlayer($lm->lastname_one, $lm->firstname_one) : '' !!}</div>
+                            </td></tr>
+                            <tr><td class="cell-sm" style="border-top: 1px solid #f1f5f9;{{ $lm && $isWinner($lm->reg_two_id, $lm) ? ' background:#d4edda;' : '' }}">
+                                <div class="indicator-bar-sm blue-bg">{{ $lsc['blue'] }}</div>
+                                <div class="player-info-sm">{!! $lm ? $fmtPlayer($lm->lastname_two, $lm->firstname_two) : '' !!}</div>
+                            </td></tr>
                         </table>
                         <div class="rep-line {{ $i % 2 == 0 ? 'r-down' : 'r-up' }}"></div>
                     </div>
                 @endfor
             </td>
             <td width="20%" valign="top">
+                @php $lm = $_bronzeList[0] ?? null; $lsc = $lm ? $getScores($lm) : ['red'=>'','blue'=>'']; @endphp
                 <div style="position: relative; min-height: 420px;">
                     <div style="position:absolute; top:52%; transform: translateY(-60%); width: 100%; display:flex; align-items:center;">
                         <table class="match-box-sm">
-                            <tr><td class="cell-sm"><div class="indicator-bar-sm red-bg">W</div></td></tr>
-                            <tr><td class="cell-sm" style="border-top: 1px solid #f1f5f9;"><div class="indicator-bar-sm blue-bg">W</div></td></tr>
+                            <tr><td class="cell-sm" @if($lm && $isWinner($lm->reg_one_id, $lm)) style="background:#d4edda;" @endif>
+                                <div class="indicator-bar-sm red-bg">{{ $lsc['red'] }}</div>
+                                <div class="player-info-sm">{!! $lm ? $fmtPlayer($lm->lastname_one, $lm->firstname_one) : '' !!}</div>
+                            </td></tr>
+                            <tr><td class="cell-sm" style="border-top: 1px solid #f1f5f9;{{ $lm && $isWinner($lm->reg_two_id, $lm) ? ' background:#d4edda;' : '' }}">
+                                <div class="indicator-bar-sm blue-bg">{{ $lsc['blue'] }}</div>
+                                <div class="player-info-sm">{!! $lm ? $fmtPlayer($lm->lastname_two, $lm->firstname_two) : '' !!}</div>
+                            </td></tr>
                         </table>
                         <div style="margin-left: 8px; font-size: 16px;">🥉</div>
                     </div>
@@ -376,10 +471,17 @@
         {{-- COL 1: R1 losers (8 blocks) --}}
         <td width="14.28%" valign="top">
             @for($i=0; $i<8; $i++)
+                @php $lm = $_lrv[0][$i] ?? null; $lsc = $lm ? $getScores($lm) : ['red'=>'','blue'=>'']; @endphp
                 <div class="rep-wrapper rep32" style="margin-top: 18px;">
                     <table class="match-box-sm">
-                        <tr><td class="cell-sm"><div class="indicator-bar-sm red-bg">L</div></td></tr>
-                        <tr><td class="cell-sm" style="border-top: 1px solid #f1f5f9;"><div class="indicator-bar-sm blue-bg">L</div></td></tr>
+                        <tr><td class="cell-sm" @if($lm && $isWinner($lm->reg_one_id, $lm)) style="background:#d4edda;" @endif>
+                            <div class="indicator-bar-sm red-bg">{{ $lsc['red'] }}</div>
+                            <div class="player-info-sm">{!! $lm ? $fmtPlayer($lm->lastname_one, $lm->firstname_one) : '' !!}</div>
+                        </td></tr>
+                        <tr><td class="cell-sm" style="border-top: 1px solid #f1f5f9;{{ $lm && $isWinner($lm->reg_two_id, $lm) ? ' background:#d4edda;' : '' }}">
+                            <div class="indicator-bar-sm blue-bg">{{ $lsc['blue'] }}</div>
+                            <div class="player-info-sm">{!! $lm ? $fmtPlayer($lm->lastname_two, $lm->firstname_two) : '' !!}</div>
+                        </td></tr>
                     </table>
                     <div class="rep-line {{ $i % 2 == 0 ? 'r-down' : 'r-up' }}" style="height: 52px;"></div>
                 </div>
@@ -389,10 +491,17 @@
         {{-- COL 2: vs R2 losers (8 blocks) --}}
         <td width="14.28%" valign="top">
             @for($i=0; $i<8; $i++)
+                @php $lm = $_lrv[1][$i] ?? null; $lsc = $lm ? $getScores($lm) : ['red'=>'','blue'=>'']; @endphp
                 <div class="rep-wrapper rep32" style="margin-top: 18px;">
                     <table class="match-box-sm">
-                        <tr><td class="cell-sm"><div class="indicator-bar-sm red-bg">R2-L</div></td></tr>
-                        <tr><td class="cell-sm" style="border-top: 1px solid #f1f5f9;"><div class="indicator-bar-sm blue-bg">W</div></td></tr>
+                        <tr><td class="cell-sm" @if($lm && $isWinner($lm->reg_one_id, $lm)) style="background:#d4edda;" @endif>
+                            <div class="indicator-bar-sm red-bg">{{ $lsc['red'] }}</div>
+                            <div class="player-info-sm">{!! $lm ? $fmtPlayer($lm->lastname_one, $lm->firstname_one) : '' !!}</div>
+                        </td></tr>
+                        <tr><td class="cell-sm" style="border-top: 1px solid #f1f5f9;{{ $lm && $isWinner($lm->reg_two_id, $lm) ? ' background:#d4edda;' : '' }}">
+                            <div class="indicator-bar-sm blue-bg">{{ $lsc['blue'] }}</div>
+                            <div class="player-info-sm">{!! $lm ? $fmtPlayer($lm->lastname_two, $lm->firstname_two) : '' !!}</div>
+                        </td></tr>
                     </table>
                     <div class="rep-line {{ $i % 2 == 0 ? 'r-down' : 'r-up' }}" style="height: 52px;"></div>
                 </div>
@@ -402,10 +511,17 @@
         {{-- COL 3: next stage (4 blocks) --}}
         <td width="14.28%" valign="top">
             @for($i=0; $i<4; $i++)
+                @php $lm = $_lrv[2][$i] ?? null; $lsc = $lm ? $getScores($lm) : ['red'=>'','blue'=>'']; @endphp
                 <div class="rep-wrapper rep32" style="margin-top: 62px; margin-bottom: 110px;">
                     <table class="match-box-sm">
-                        <tr><td class="cell-sm"><div class="indicator-bar-sm red-bg">W</div></td></tr>
-                        <tr><td class="cell-sm" style="border-top: 1px solid #f1f5f9;"><div class="indicator-bar-sm blue-bg">W</div></td></tr>
+                        <tr><td class="cell-sm" @if($lm && $isWinner($lm->reg_one_id, $lm)) style="background:#d4edda;" @endif>
+                            <div class="indicator-bar-sm red-bg">{{ $lsc['red'] }}</div>
+                            <div class="player-info-sm">{!! $lm ? $fmtPlayer($lm->lastname_one, $lm->firstname_one) : '' !!}</div>
+                        </td></tr>
+                        <tr><td class="cell-sm" style="border-top: 1px solid #f1f5f9;{{ $lm && $isWinner($lm->reg_two_id, $lm) ? ' background:#d4edda;' : '' }}">
+                            <div class="indicator-bar-sm blue-bg">{{ $lsc['blue'] }}</div>
+                            <div class="player-info-sm">{!! $lm ? $fmtPlayer($lm->lastname_two, $lm->firstname_two) : '' !!}</div>
+                        </td></tr>
                     </table>
                     <div class="rep-line-straight"></div>
                 </div>
@@ -415,26 +531,38 @@
         {{-- COL 4: vs QF losers (4 blocks) --}}
         <td width="14.28%" valign="top">
             @for($i=0; $i<4; $i++)
+                @php $lm = $_lrv[3][$i] ?? null; $lsc = $lm ? $getScores($lm) : ['red'=>'','blue'=>'']; @endphp
                 <div class="rep-wrapper rep32" style="margin-top: 62px; margin-bottom: 110px;">
                     <table class="match-box-sm">
-                        <tr><td class="cell-sm"><div class="indicator-bar-sm red-bg">QF-L</div></td></tr>
-                        <tr><td class="cell-sm" style="border-top: 1px solid #f1f5f9;"><div class="indicator-bar-sm blue-bg">W</div></td></tr>
+                        <tr><td class="cell-sm" @if($lm && $isWinner($lm->reg_one_id, $lm)) style="background:#d4edda;" @endif>
+                            <div class="indicator-bar-sm red-bg">{{ $lsc['red'] }}</div>
+                            <div class="player-info-sm">{!! $lm ? $fmtPlayer($lm->lastname_one, $lm->firstname_one) : '' !!}</div>
+                        </td></tr>
+                        <tr><td class="cell-sm" style="border-top: 1px solid #f1f5f9;{{ $lm && $isWinner($lm->reg_two_id, $lm) ? ' background:#d4edda;' : '' }}">
+                            <div class="indicator-bar-sm blue-bg">{{ $lsc['blue'] }}</div>
+                            <div class="player-info-sm">{!! $lm ? $fmtPlayer($lm->lastname_two, $lm->firstname_two) : '' !!}</div>
+                        </td></tr>
                     </table>
                     <div class="rep-line {{ $i % 2 == 0 ? 'r-down' : 'r-up' }}" style="height: 64px;"></div>
                 </div>
             @endfor
         </td>
 
-        {{-- COL 5: follow semi (2 blocks) -> RP-W (2 тал) --}}
+        {{-- COL 5: follow semi (2 blocks) --}}
         <td width="14.28%" valign="top">
             @for($i=0; $i<2; $i++)
+                @php $lm = $_lrv[4][$i] ?? null; $lsc = $lm ? $getScores($lm) : ['red'=>'','blue'=>'']; @endphp
                 <div class="rep-wrapper rep32" style="margin-top: 140px; margin-bottom: 300px;">
                     <table class="match-box-sm">
-                        <tr><td class="cell-sm"><div class="indicator-bar-sm red-bg">W</div></td></tr>
-                        <tr><td class="cell-sm" style="border-top: 1px solid #f1f5f9;"><div class="indicator-bar-sm blue-bg">W</div></td></tr>
+                        <tr><td class="cell-sm" @if($lm && $isWinner($lm->reg_one_id, $lm)) style="background:#d4edda;" @endif>
+                            <div class="indicator-bar-sm red-bg">{{ $lsc['red'] }}</div>
+                            <div class="player-info-sm">{!! $lm ? $fmtPlayer($lm->lastname_one, $lm->firstname_one) : '' !!}</div>
+                        </td></tr>
+                        <tr><td class="cell-sm" style="border-top: 1px solid #f1f5f9;{{ $lm && $isWinner($lm->reg_two_id, $lm) ? ' background:#d4edda;' : '' }}">
+                            <div class="indicator-bar-sm blue-bg">{{ $lsc['blue'] }}</div>
+                            <div class="player-info-sm">{!! $lm ? $fmtPlayer($lm->lastname_two, $lm->firstname_two) : '' !!}</div>
+                        </td></tr>
                     </table>
-
-                    {{-- COL6 рүү нийлнэ --}}
                     <div class="rep-line-straight"></div>
                 </div>
             @endfor
@@ -443,13 +571,18 @@
         {{-- COL 6: SF-L vs RP-W (2 blocks) --}}
         <td width="14.28%" valign="top">
             @for($i=0; $i<2; $i++)
+                @php $lm = $_lrv[5][$i] ?? null; $lsc = $lm ? $getScores($lm) : ['red'=>'','blue'=>'']; @endphp
                 <div class="rep-wrapper rep32" style="margin-top: 140px; margin-bottom: 300px;">
                     <table class="match-box-sm">
-                        <tr><td class="cell-sm"><div class="indicator-bar-sm red-bg">SF-L</div></td></tr>
-                        <tr><td class="cell-sm" style="border-top: 1px solid #f1f5f9;"><div class="indicator-bar-sm blue-bg">RP-W</div></td></tr>
+                        <tr><td class="cell-sm" @if($lm && $isWinner($lm->reg_one_id, $lm)) style="background:#d4edda;" @endif>
+                            <div class="indicator-bar-sm red-bg">{{ $lsc['red'] }}</div>
+                            <div class="player-info-sm">{!! $lm ? $fmtPlayer($lm->lastname_one, $lm->firstname_one) : '' !!}</div>
+                        </td></tr>
+                        <tr><td class="cell-sm" style="border-top: 1px solid #f1f5f9;{{ $lm && $isWinner($lm->reg_two_id, $lm) ? ' background:#d4edda;' : '' }}">
+                            <div class="indicator-bar-sm blue-bg">{{ $lsc['blue'] }}</div>
+                            <div class="player-info-sm">{!! $lm ? $fmtPlayer($lm->lastname_two, $lm->firstname_two) : '' !!}</div>
+                        </td></tr>
                     </table>
-
-                    {{-- COL7 рүү нийлүүлнэ --}}
                     <div class="rep-line {{ $i % 2 == 0 ? 'r-down' : 'r-up' }}" style="height: 150px;"></div>
                 </div>
             @endfor
@@ -457,11 +590,18 @@
 
         {{-- COL 7: FINAL BRONZE (W vs W) -> 1 bronze --}}
         <td width="14.28%" valign="top">
+            @php $lm = $_bronzeList[0] ?? null; $lsc = $lm ? $getScores($lm) : ['red'=>'','blue'=>'']; @endphp
             <div style="position: relative; min-height: 720px;">
                 <div style="position:absolute; top:50%; transform: translateY(-50%); width:100%; display:flex; align-items:center; padding-right:35px;">
                     <table class="match-box-sm">
-                        <tr><td class="cell-sm"><div class="indicator-bar-sm red-bg">W</div></td></tr>
-                        <tr><td class="cell-sm" style="border-top: 1px solid #f1f5f9;"><div class="indicator-bar-sm blue-bg">W</div></td></tr>
+                        <tr><td class="cell-sm" @if($lm && $isWinner($lm->reg_one_id, $lm)) style="background:#d4edda;" @endif>
+                            <div class="indicator-bar-sm red-bg">{{ $lsc['red'] }}</div>
+                            <div class="player-info-sm">{!! $lm ? $fmtPlayer($lm->lastname_one, $lm->firstname_one) : '' !!}</div>
+                        </td></tr>
+                        <tr><td class="cell-sm" style="border-top: 1px solid #f1f5f9;{{ $lm && $isWinner($lm->reg_two_id, $lm) ? ' background:#d4edda;' : '' }}">
+                            <div class="indicator-bar-sm blue-bg">{{ $lsc['blue'] }}</div>
+                            <div class="player-info-sm">{!! $lm ? $fmtPlayer($lm->lastname_two, $lm->firstname_two) : '' !!}</div>
+                        </td></tr>
                     </table>
                     <div style="margin-left: 8px; font-size: 16px;">🥉</div>
                 </div>
@@ -553,14 +693,9 @@
     .blue-bg { background-color: #2563eb; }
 
     .player-info { padding-top: 8px; line-height: 1.2; }
+    .player-info-sm { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; padding-top: 8px; font-size: 9px; line-height: 1.2; }
     .p-name { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .p-academy { font-size: 9px; color: #666; font-weight: normal; margin-top: 2px; }
-
-    .connector-container {
-        position: relative;
-        display: flex;
-        align-items: center;
-    }
 
     .rep-wrapper {
         position: relative;
@@ -569,15 +704,15 @@
         padding-right: 35px;
     }
 
-    /* Winner bracket connector */
-    .line-logic {
+    /* Winner bracket connector — positioned relative to <td> */
+    .line-td {
         position: absolute;
         right: 0;
         width: 40px;
         border-right: 1.5px solid #94a3b8;
         z-index: 1;
     }
-    .line-logic::before {
+    .line-td::before {
         content: '';
         position: absolute;
         top: 50%;
@@ -586,7 +721,7 @@
         height: 1.5px;
         background: #94a3b8;
     }
-    .line-logic::after {
+    .line-td::after {
         content: '';
         position: absolute;
         width: 15px;
@@ -595,11 +730,11 @@
         right: -15px;
     }
 
-    .l-down { top: 50%; border-top: 1.5px solid #94a3b8; }
-    .l-down::after { top: 100%; }
+    .lt-down { top: 50%; height: 25%; border-top: 1.5px solid #94a3b8; }
+    .lt-down::after { top: 100%; }
 
-    .l-up { bottom: 50%; border-bottom: 1.5px solid #94a3b8; }
-    .l-up::after { bottom: 100%; }
+    .lt-up { bottom: 50%; height: 25%; border-bottom: 1.5px solid #94a3b8; }
+    .lt-up::after { bottom: 100%; }
 
     /* Repechage connector */
     .rep-line {

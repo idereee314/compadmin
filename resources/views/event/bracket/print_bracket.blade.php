@@ -21,44 +21,71 @@
             <th style="padding-bottom: 10px;" width="{{100/$round}}%">Тойрог {{ $i + 1 }}</th>
             @endfor
         </tr>
-        <?php 
+        <?php
             $k = 0;
+            // Prefer match data (seeded order) over bracket data (legacy order)
+            $useMatchData = false;
+            if (!empty($matchByOrder)) {
+                foreach ($members as $mKey => $member) {
+                    $md = $matchByOrder[$mKey + 1] ?? null;
+                    if ($md && ($md->lastname_one || $md->lastname_two)) {
+                        $useMatchData = true;
+                        break;
+                    }
+                }
+            }
             $byeList = array();
             foreach($members as $key => $member)
             {
-                if($member->lastname_one != null && $member->lastname_two == null)
+                $src = ($useMatchData && isset($matchByOrder[$key + 1])) ? $matchByOrder[$key + 1] : null;
+                $ln1 = $src ? $src->lastname_one : $member->lastname_one;
+                $fn1 = $src ? $src->firstname_one : $member->firstname_one;
+                $ac1 = $src ? ($src->acname_one ?? '') : $member->acname_one;
+                $ln2 = $src ? $src->lastname_two : $member->lastname_two;
+                $fn2 = $src ? $src->firstname_two : $member->firstname_two;
+                $ac2 = $src ? ($src->acname_two ?? '') : $member->acname_two;
+                if($ln1 != null && $ln2 == null)
                 {
-                    $byeList[$key] = array('lastname'=> $member->lastname_one, 'firstname'=> $member->firstname_one, 'academy'=> $member->acname_one);
+                    $byeList[$key] = array('lastname'=> $ln1, 'firstname'=> $fn1, 'academy'=> $ac1);
                 }
-                else if($member->lastname_one == null && $member->lastname_two != null)
+                else if($ln1 == null && $ln2 != null)
                 {
-                    $byeList[$key] = array('lastname'=> $member->lastname_two, 'firstname'=> $member->firstname_two, 'academy'=> $member->acname_two);
+                    $byeList[$key] = array('lastname'=> $ln2, 'firstname'=> $fn2, 'academy'=> $ac2);
                 }
                 else
                 {
                     $byeList[$key] = array('lastname'=> null);
                 }
-            } 
+            }
         ?>        
-        @foreach($members as $member)
+        @foreach($members as $mKey => $member)
         <tr>
             @for($i = 0; $i < $round; $i++)
                 @if($i == 0)
+                    @php
+                        $src = ($useMatchData && isset($matchByOrder[$mKey + 1])) ? $matchByOrder[$mKey + 1] : null;
+                        $ln1 = $src ? $src->lastname_one : $member->lastname_one;
+                        $fn1 = $src ? $src->firstname_one : $member->firstname_one;
+                        $ac1 = $src ? ($src->acname_one ?? '') : $member->acname_one;
+                        $ln2 = $src ? $src->lastname_two : $member->lastname_two;
+                        $fn2 = $src ? $src->firstname_two : $member->firstname_two;
+                        $ac2 = $src ? ($src->acname_two ?? '') : $member->acname_two;
+                    @endphp
                     <td>
                         <div class="connector">
                             <div class="linebox"></div>
                             <div class="linebox_two"></div>
-                            <table width="100%" style="width:100%;" id="table1" border="1">                            
+                            <table width="100%" style="width:100%;" id="table1" border="1">
                                 <tr>
                                     <td width="50%" align="center" style="font-size: 11px;">
-                                    {!! $member->lastname_one != null? $member->lastname_one.' <strong>'.$member->firstname_one.'</strong>': 'BYE'!!}<br>
-                                    {{$member->acname_one}}
+                                    {!! $ln1 != null? $ln1.' <strong>'.$fn1.'</strong>': 'BYE'!!}<br>
+                                    {{$ac1}}
                                     </td>
                                 </tr>
                                 <tr>
                                     <td width="50%" align="center" style="font-size: 11px;">
-                                    {!! $member->lastname_two != null? $member->lastname_two.' <strong>'.$member->firstname_two.'</strong>': 'BYE'!!}<br>
-                                    {{$member->acname_two}}
+                                    {!! $ln2 != null? $ln2.' <strong>'.$fn2.'</strong>': 'BYE'!!}<br>
+                                    {{$ac2}}
                                     </td>
                                 </tr>
                             </table>

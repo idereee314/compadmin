@@ -123,6 +123,20 @@
     };
 @endphp
 
+@php
+    // Prefer match data (seeded order) over bracket data for round 1
+    $useMatchData = false;
+    if (!empty($matchByOrder)) {
+        for ($chk = 0; $chk < $total_matches; $chk++) {
+            $md = $matchByOrder[$chk + 1] ?? null;
+            if ($md && ($md->lastname_one || $md->lastname_two)) {
+                $useMatchData = true;
+                break;
+            }
+        }
+    }
+@endphp
+
 <div style="width:{{ $width }}; margin:0 auto; background-color: white; border: 1px solid #ccc; padding: 30px; font-family: 'Helvetica', 'Arial', sans-serif; position: relative; min-height: 1000px; color: #333;">
 
     {{-- ========================= HEADER ========================= --}}
@@ -178,8 +192,14 @@
                                                     </div>
                                                     <div class="player-info">
                                                         @if($r === 0)
-                                                            <div class="p-name">{!! $fmtName($m->lastname_one ?? null, $m->firstname_one ?? '') !!}</div>
-                                                            <div class="p-academy">{{ $m->acname_one ?? '' }}</div>
+                                                            @php
+                                                                $r1md = ($useMatchData && isset($matchByOrder[$index + 1])) ? $matchByOrder[$index + 1] : null;
+                                                                $r1ln1 = $r1md ? ($r1md->lastname_one ?? null) : ($m->lastname_one ?? null);
+                                                                $r1fn1 = $r1md ? ($r1md->firstname_one ?? '') : ($m->firstname_one ?? '');
+                                                                $r1ac1 = $r1md ? ($r1md->acname_one ?? '') : ($m->acname_one ?? '');
+                                                            @endphp
+                                                            <div class="p-name">{!! $fmtName($r1ln1, $r1fn1) !!}</div>
+                                                            <div class="p-academy">{{ $r1ac1 }}</div>
                                                         @endif
                                                     </div>
                                                 </td>
@@ -194,8 +214,13 @@
                                                     </div>
                                                     <div class="player-info">
                                                         @if($r === 0)
-                                                            <div class="p-name">{!! $fmtName($m->lastname_two ?? null, $m->firstname_two ?? '') !!}</div>
-                                                            <div class="p-academy">{{ $m->acname_two ?? '' }}</div>
+                                                            @php
+                                                                $r1ln2 = $r1md ? ($r1md->lastname_two ?? null) : ($m->lastname_two ?? null);
+                                                                $r1fn2 = $r1md ? ($r1md->firstname_two ?? '') : ($m->firstname_two ?? '');
+                                                                $r1ac2 = $r1md ? ($r1md->acname_two ?? '') : ($m->acname_two ?? '');
+                                                            @endphp
+                                                            <div class="p-name">{!! $fmtName($r1ln2, $r1fn2) !!}</div>
+                                                            <div class="p-academy">{{ $r1ac2 }}</div>
                                                         @endif
                                                     </div>
                                                 </td>

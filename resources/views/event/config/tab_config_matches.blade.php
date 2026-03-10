@@ -27,6 +27,8 @@
 
         const matAssignments = {};
         const bracketLocations = {};
+        // Track which bracket keys are locked (have started matches)
+        const lockedBrackets = new Set();
 
         function renderBrackets(container, bracketData) {
             bracketData.forEach(bracket => {
@@ -41,21 +43,37 @@
 
                 // Add bracket details
                 const details = document.createElement('p');
-                details.innerHTML = `
-                    ${bracket?.entry?.fullname} /
-                    ${bracket?.age?.name}  /
-                    ${bracket?.belt?.name} /
-                    ${bracket?.weight?.weight} / ${bracket?.total}
-                `;
+                details.className = 'mb-0';
+                const isLocked = !!bracket?.is_complete;
+
+                if (isLocked) {
+                    lockedBrackets.add(bracketId);
+                    details.innerHTML = `
+                        <i class="la la-lock me-1"></i>
+                        ${bracket?.entry?.fullname} /
+                        ${bracket?.age?.name}  /
+                        ${bracket?.belt?.name} /
+                        ${bracket?.weight?.weight} / ${bracket?.total}
+                    `;
+                } else {
+                    details.innerHTML = `
+                        ${bracket?.entry?.fullname} /
+                        ${bracket?.age?.name}  /
+                        ${bracket?.belt?.name} /
+                        ${bracket?.weight?.weight} / ${bracket?.total}
+                    `;
+                }
                 treeNode.appendChild(details);
 
-                // Make the tree node 
-                //
-                treeNode.draggable = !bracket?.is_complete;
+                /// Locked brackets cannot be dragged
+                treeNode.draggable = !isLocked;
                 treeNode.dataset.id = bracketId;
-                if(bracket?.is_complete){
+                if (isLocked) {
                     treeNode.className += ' bg-secondary text-muted';
-                } 
+                    treeNode.style.opacity = '0.7';
+                    treeNode.style.cursor = 'not-allowed';
+                    treeNode.title = 'This bracket has started matches and cannot be moved';
+                }
 
                 // Append the tree node to the container
                 container.appendChild(treeNode);
@@ -96,7 +114,13 @@
         function setupDragAndDrop() {
             document.querySelectorAll('.tree-node').forEach(draggable => {
                 draggable.addEventListener('dragstart', e => {
-                    e.dataTransfer.setData('bracketKey', draggable.dataset.id);
+                    const bracketKey = draggable.dataset.id;
+                    // Prevent dragging locked brackets
+                    if (lockedBrackets.has(bracketKey)) {
+                        e.preventDefault();
+                        return;
+                    }
+                    e.dataTransfer.setData('bracketKey', bracketKey);
                     draggable.classList.add("dragging");
                     showControlAction();
                 });
@@ -111,9 +135,7 @@
                 if (key) {
                     const index = matAssignments[key].indexOf(bracketKey);
                     if (index > -1) {
-                        const refrence = matAssignments[key].splice(index, 1);
-                        delete refrence;
-                        console.log("Removed from matAssignments", matAssignments[key]);
+                        matAssignments[key].splice(index, 1);
                     }
                 }
                 delete bracketLocations[bracketKey];
@@ -134,8 +156,16 @@
                     zone.classList.remove('bg-light');
 
                     const bracketKey = e.dataTransfer.getData('bracketKey');
+                    if (!bracketKey) return;
+
                     const bracket = document.querySelector(`[data-id="${bracketKey}"]`);
                     if (!bracket) return;
+
+                    // Locked brackets cannot be moved at all
+                    if (lockedBrackets.has(bracketKey)) {
+                        return;
+                    }
+
                     const mapKey = `${zone.dataset.day}_${zone.dataset.mat}`;
 
                     zone.appendChild(bracket);
@@ -163,6 +193,9 @@
                     const [entry_id, entry_belt_id, entry_age_id, entry_weight_id] = bracketKey
                         .split('_').map(Number)
                     matAssignments[mapKey].push(bracketKey);
+
+                    // Update bracket location
+                    bracketLocations[bracketKey] = mapKey;
 
                     showControlAction();
                 });
@@ -215,8 +248,6 @@
             // Extract array data from bracketPool
             shortCute = extractArrayFromObject(custom_data['bracketPool']);
 
-            console.log(custom_data, shortCute);
-
             hideControlAction();
 
             const pool = document.getElementById('bracket-pool');
@@ -229,6 +260,7 @@
             const allAssigned = new Set();
             Object.keys(matAssignments).forEach(key => delete matAssignments[key]);
             Object.keys(bracketLocations).forEach(key => delete bracketLocations[key]);
+            lockedBrackets.clear();
 
             // Render schedule (days and mats)
             custom_data.schedule.forEach(day => {
@@ -266,9 +298,11 @@
                             return `${m.entry_id}_${m.entry_belt_id}_${m.entry_age_id}_${m.entry_weight_id}` === b
                         });
                         const pointer = shortCute[b]
-                        pointer.is_complete = bracket.is_complete;
+                        if (pointer) {
+                            pointer.is_complete = bracket ? bracket.is_complete : false;
+                        }
                         return pointer
-                    });
+                    }).filter(Boolean);
                     renderBrackets(drop, fromShortCut);
                     mat.brackets.forEach(bid => {
                         const keys =
@@ -380,8 +414,13 @@
                     }
                 },
                 error: function(xhr, status, error) {
-                    console.error('Error:', error);
-                    toastr.error('An error occurred while saving.');
+                    var msg = 'An error occurred while saving.';
+                    try {
+                        var resp = JSON.parse(xhr.responseText);
+                        if (resp.message) msg = resp.message;
+                    } catch(e) {}
+                    console.error('Save error:', msg, xhr.responseText);
+                    toastr.error(msg);
                 },
             });
         });
@@ -390,14 +429,13 @@
             if (originalAssignments) {
                 custom_data.schedule = JSON.parse(JSON.stringify(originalAssignments));
                 render();
-                console.log("⛔ Cancelled — reverted to last save.");
             }
         });
 
         render();
         originalAssignments = JSON.parse(JSON.stringify(custom_data.schedule));
 
-        
+
     $("#generate-btn").on('click', function() {
         var eventId = @json($eventConfig['event_id']);
         $.get('{!! route('event.config.match.index') !!}/' + eventId, function(data) {
@@ -432,12 +470,8 @@
                     rules: {},
                     messages: {},
                     submitHandler: function(form) {
-                        if(bracketLocations && Object.keys(bracketLocations).length > 0 && !confirm("Are you sure you want to generate matches? This will reset all existing matches and days entries.")) {
-                            return 0;
-                        }
-
                         Swal.fire({
-                            title: "Are you sure you want to generate matches? This will reset all existing matches and days entries.",
+                            title: "Are you sure you want to generate new mats? This will reset ALL existing matches, brackets, and day entries.",
                             icon: "warning",
                             showCancelButton: true,
                             confirmButtonText: "Тийм",

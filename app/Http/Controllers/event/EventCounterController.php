@@ -38,6 +38,7 @@ class EventCounterController extends Controller
         $matchData = $this->mathes->getMatchesByEventId($match_id);
         $data['registered'] = $matchData['registrations'];
         $data['bracket'] = $matchData['bracket'];
+        $data['isBye'] = $matchData['is_bye'] ?? [false, false];
         return view($this->view_path.'.index', $data);
     }
 
@@ -48,6 +49,7 @@ class EventCounterController extends Controller
         $matchData = $this->mathes->getMatchesByEventId($match_id);
         $data['registered'] = $matchData['registrations'];
         $data['bracket'] = $matchData['bracket'];
+        $data['isBye'] = $matchData['is_bye'] ?? [false, false];
         return view($this->view_path.'.index', $data);
     }
 

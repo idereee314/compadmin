@@ -10,6 +10,17 @@ class EventMatches extends Model
     protected $table = 'uq_event_matches';
     protected $primaryKey = 'id';
 
+    protected $casts = [
+        'red_score'        => 'integer',
+        'blue_score'       => 'integer',
+        'red_advantage'    => 'integer',
+        'blue_advantage'   => 'integer',
+        'red_penalty'      => 'integer',
+        'blue_penalty'     => 'integer',
+        'red_match_points' => 'integer',
+        'blue_match_points'=> 'integer',
+    ];
+
     public static function rules($id) {
 		return array(
             'bracket_id' => 'required|unique:uq_event_mate_brackets,event_id,'.$id.',id',

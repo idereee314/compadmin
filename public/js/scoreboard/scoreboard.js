@@ -59,7 +59,10 @@
 
         function announceDraw(result) {
             hideEndGame();
-            
+
+            setWinnerMethod(result);
+            setWinnerId('');
+
             const topBanner = document.getElementById('drawBannerTop');
             const bottomBanner = document.getElementById('drawBannerBottom');
             
@@ -653,11 +656,18 @@
         }
 
         // Timer variables
-        let timerSeconds = 300; // 5 minutes in seconds
-        let timerInterval = null;
-        let isRunning = false;
         const timerDisplay = document.getElementById('timerDisplay');
         const playPauseBtn = document.getElementById('playPauseBtn');
+        
+        // Parse the starting time from what PHP rendered on screen
+        const _initText = timerDisplay.childNodes[0].textContent.trim();
+        const _initMatch = _initText.match(/(\d+):(\d+)/);
+        let timerSeconds = _initMatch
+            ? parseInt(_initMatch[1], 10) * 60 + parseInt(_initMatch[2], 10)
+            : (typeof matchDuration !== 'undefined' ? matchDuration : 5) * 60;
+
+        let timerInterval = null;
+        let isRunning = false;
         let bellPlayed = false; // Track if bell has been played
 
         // Audio context for sounds
@@ -880,18 +890,20 @@
         function checkOverflow() {
             const details = document.getElementById('matchDetails');
             const stage = document.getElementById('matchStage');
-            
+
             [details, stage].forEach(element => {
+                if (!element) return;
                 const content = element.querySelector('.marquee-content');
+                if (!content) return;
                 const parent = element;
-                
+
                 // Reset first
                 content.classList.remove('duplicate', 'animate');
                 const originalText = content.textContent.split('    ')[0]; // Get original text
                 content.textContent = originalText;
-                
-                // Check if overflow exists
-                if (parent.scrollWidth > parent.clientWidth) {
+
+                // Check if content width exceeds visible container width
+                if (content.scrollWidth > parent.clientWidth) {
                     const text = originalText;
                     content.setAttribute('data-text', text);
                     content.classList.add('duplicate');
@@ -901,5 +913,5 @@
             });
         }
 
-        // window.addEventListener('load', checkOverflow);
-        // window.addEventListener('resize', checkOverflow);
+        window.addEventListener('load', checkOverflow);
+        window.addEventListener('resize', checkOverflow);

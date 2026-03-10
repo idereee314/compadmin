@@ -30,6 +30,8 @@ class TournamentEliminationStrategyFactory implements TournamentEliminationFacto
             'single' => SingleEliminationStrategy::class,
             'double_single_bronze' => DoubleEliminationStrategy::class,
             'double' => DoubleEliminationStrategy::class,
+            'mjjf' => MJJFEliminationStrategy::class,
+            'ijf' => MJJFEliminationStrategy::class,
             // 'round_robin' => RoundRobinStrategy::class,
         ];
     }
@@ -50,7 +52,7 @@ class TournamentEliminationStrategyFactory implements TournamentEliminationFacto
         $className = $this->strategies[$type];
         
         try {
-            return new $className();
+            return new $className($type);
         } catch (\Exception $e) {
             Log::error('Failed to instantiate tournament strategy', [
                 'type' => $type,
@@ -148,60 +150,91 @@ class TournamentEliminationStrategyFactory implements TournamentEliminationFacto
         return $info;
     }
 
-    public static function determineRound( $totalMatches, $matchOrder, $isDoubleLoser = false)
+    public static function determineRound($totalMatches, $matchOrder, $isDoubleLoser = false, $totalBracketMatches = null)
     {
-        $round = 1;
-        $matchesInRound = 1;
-        $bracketSize = (int) ($totalMatches ?? 0);
+        // $totalMatches        = count of first-round matches (order_no < 100)
+        // $totalBracketMatches = total match count for the bracket (all order_nos)
+        //   Used to distinguish 4-player round-robin (6 total = 6 prelim) from
+        //   6-player pool format (9-10 total > 6 prelim) when bracketSize == 12.
+        $bracketSize = (int) ($totalMatches ?? 0) * 2;
 
-        if (!in_array($bracketSize, [8,16,32], true)) {
-            $membersCount = is_countable($members ?? null) ? count($members) : 0;
-            $bracketSize  = ($membersCount >= 16) ? 32 : (($membersCount >= 8) ? 16 : 8);
+        // Special match types — check first regardless of bracket type
+        if ($matchOrder >= 9999) {
+            return 'ШИГШЭЭ';
+        }
+        if ($matchOrder >= 9996 && $matchOrder <= 9998) {
+            return 'ХҮРЭЛ МЕДАЛЬ';
+        }
+        if ($matchOrder > 9990) {
+            return 'ХАГАС ШИГШЭЭ (SF)';
+        }
+
+        // Best-of-3 format (2 players): 2 preliminary match slots → bracketSize = 4
+        // order_no 9999 (Gold/Final) is already caught by the special-match check above.
+        if ($bracketSize == 4) {
+            if ($matchOrder === 1) return 'ТУЛААН 1';
+            if ($matchOrder === 3) return 'ТУЛААН 2';
+            return 'ТУЛААН';
+        }
+
+        // Round-robin format: 3 players (3 matches → bracketSize 6)
+        //                     4 players (6 matches → bracketSize 12, see below)
+        //                     5 players (10 matches → bracketSize 20)
+        if ($bracketSize == 6 || $bracketSize == 20) {
+            return 'ТОЙРГИЙН ТОГЛОЛТ';
+        }
+
+        // bracketSize 12 covers TWO formats:
+        //   6-player pool (6 prelim pool matches + 2 SF + 1-2 final/bronze = 9-10 total)
+        //   4-player round-robin (6 matches total, no SF/Final overhead)
+        // When $totalBracketMatches is provided and equals the prelim count (≤ 6),
+        // the bracket is a pure round-robin → label as ТОЙРГИЙН ТОГЛОЛТ.
+        if ($bracketSize == 12) {
+            if ($totalBracketMatches !== null && $totalBracketMatches <= 6) {
+                return 'ТОЙРГИЙН ТОГЛОЛТ';
+            }
+            if ($matchOrder < 100) {
+                return 'БҮЛГИЙН ТОГЛОЛТ';
+            }
+            $round = (int) ($matchOrder / 100);
+            if ($round === 2) {
+                return 'ХАГАС ШИГШЭЭ (SF)';
+            }
+            return 'ШИГШЭЭ';
+        }
+
+        if (!in_array($bracketSize, [8, 16, 32], true)) {
+            $bracketSize = 8;
+        }
+
+        // Round name arrays by bracket size
+        if ($bracketSize == 32) {
+            $matchesName = ['1/16 ШИГШЭЭ', '1/8 ШИГШЭЭ', 'ШӨВГИЙН 8 (QF)', 'ХАГАС ШИГШЭЭ (SF)', 'ШИГШЭЭ'];
+        } elseif ($bracketSize == 16) {
+            $matchesName = ['1/8 ШИГШЭЭ', 'ШӨВГИЙН 8 (QF)', 'ХАГАС ШИГШЭЭ (SF)', 'ШИГШЭЭ'];
+        } else {
+            $matchesName = ['ШӨВГИЙН 8 (QF)', 'ХАГАС ШИГШЭЭ (SF)', 'ШИГШЭЭ'];
         }
 
         if ($isDoubleLoser) {
-            // Double elimination logic can be more complex; this is a simplified version
-            $matchesInRound = $matchOrder - 2000;
-            $round = (int) ($matchesInRound / 100) + 1;
+            // Losers/repechage bracket: order_no = 2000 + roundNumber*100 + i + 1
+            $offset = $matchOrder - 2000;
+            $round = ($offset < 100) ? 1 : (int) ($offset / 100);
+
             Log::debug('Determining round for double elimination', [
                 'totalMatches' => $totalMatches,
                 'matchOrder' => $matchOrder,
-                'matchesInRound' => $matchesInRound,
+                'offset' => $offset,
                 'round' => $round,
                 'bracketSize' => $bracketSize,
             ]);
-            if($matchOrder >= 9999){
-                return 'ШИГШЭЭ';
-            } elseif($matchOrder > 9990){
-                return 'ХАГАС ШИГШЭЭ (SF)';
-            } elseif($bracketSize== 32){
-                $matchesName = ['1/16 ШИГШЭЭ','1/8 ШИГШЭЭ','ШӨВГИЙН 8 (QF)','ХАГАС ШИГШЭЭ (SF)','ШИГШЭЭ'];
-                return $matchesName[$round-1] ?? 'ШИГШЭЭ';
-            } elseif($bracketSize== 16){
-                $matchesName = ['1/8 ШИГШЭЭ', 'ШӨВГИЙН 8 (QF)', 'ХАГАС ШИГШЭЭ (SF)', 'ШИГШЭЭ'];
-                return $matchesName[$round-1] ?? 'ШИГШЭЭ';
-            } elseif($bracketSize== 8){
-                $matchesName = ['ШӨВГИЙН 8 (QF)', 'ХАГАС ШИГШЭЭ (SF)', 'ШИГШЭЭ'];
-                return $matchesName[$round-1] ?? 'ШИГШЭЭ';
-            }
-        } else {
-            $round = (int) ($matchesInRound / 100) + 1;
-            if($matchOrder >= 9999){
-                return 'ШИГШЭЭ';
-            } elseif($matchOrder > 9990){
-                return 'ХАГАС ШИГШЭЭ (SF)';
-            } elseif($bracketSize== 32){
-                $matchesName = ['1/16 ШИГШЭЭ','1/8 ШИГШЭЭ','ШӨВГИЙН 8 (QF)','ХАГАС ШИГШЭЭ (SF)','ШИГШЭЭ'];
-                return $matchesName[$round-1] ?? 'ШИГШЭЭ';
-            } elseif($bracketSize== 16){
-                $matchesName = ['1/8 ШИГШЭЭ', 'ШӨВГИЙН 8 (QF)', 'ХАГАС ШИГШЭЭ (SF)', 'ШИГШЭЭ'];
-                return $matchesName[$round-1] ?? 'ШИГШЭЭ';
-            } elseif($bracketSize== 8){
-                $matchesName = ['ШӨВГИЙН 8 (QF)', 'ХАГАС ШИГШЭЭ (SF)', 'ШИГШЭЭ'];
-                return $matchesName[$round-1] ?? 'ШИГШЭЭ';
-            }
+            
+            return 'Нөхөн шигшээ';
         }
 
-        return $round;
+        // Winners bracket: first round order_no 1-99, round 2+ = roundNumber*100 + i + 1
+        $round = ($matchOrder < 100) ? 1 : (int) ($matchOrder / 100);
+
+        return $matchesName[$round - 1] ?? 'ШИГШЭЭ';
     }
 }

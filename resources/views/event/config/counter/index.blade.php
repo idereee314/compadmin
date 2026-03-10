@@ -41,27 +41,25 @@
     <div class="">
         <div class="row">
             <div class="player-info">
+                @if (!empty($registered[0]))
                 <div class="player-row-1">
-                    <img src="{{asset('assets/images/flags/4x3/' . ($registered[0]->abb )) .'.svg'}}" alt="Mongolia Flag" class="player-flag">
+                    <img src="{{asset('assets/images/flags/4x3/' . ($registered[0]->abb ?? 'un') .'.svg')}}" alt="Flag" class="player-flag">
                     <div class="player-name">
-                        @if (!empty($registered) && isset($registered[0]))
-                            {{$registered[0]->member->firstname ?? '-'}}
-                            {{$registered[0]->member->lastname }}
-                        @else
-                            TBD
-                        @endif
+                        {{$registered[0]->member->firstname ?? '-'}}
+                        {{$registered[0]->member->lastname ?? ''}}
                     </div>
                 </div>
                 <div class="player-row-2">
-                    <div class="country-code">{{$registered[1]->abb_full ?? '-'}}</div>
-                    <img src="{{asset('assets/images/logo/club/' . ($registered[0]->academy_id )) .'.jpg'}}" alt="Club Logo" class="club-logo"
+                    <div class="country-code">{{$registered[0]->abb_full ?? '-'}}</div>
+                    <img src="{{asset('assets/images/logo/club/' . ($registered[0]->academy_id ?? 0) .'.jpg')}}" alt="Club Logo" class="club-logo"
                     onerror="this.src='{{asset('assets/images/logo/club/0.png')}}'">
-                    <div class="club-name">
-                        @if (!empty($registered) && isset($registered[0]))
-                            {{$registered[0]->academy->name }}
-                        @endif
-                    </div>
+                    <div class="club-name">{{$registered[0]->academy->name ?? ''}}</div>
                 </div>
+                @else
+                <div class="player-row-1">
+                    <div class="player-name">{{ ($isBye[0] ?? false) ? 'BYE' : 'TBD' }}</div>
+                </div>
+                @endif
             </div>
             <div class="row-content">
                 <!-- First row content goes here -->
@@ -119,27 +117,25 @@
         </div>
         <div class="row">
             <div class="player-info">
+                @if (!empty($registered[1]))
                 <div class="player-row-1">
-                    <img src="{{asset('assets/images/flags/4x3/' . ($registered[1]->abb )) .'.svg'}}" alt="Mongolia Flag" class="player-flag">
+                    <img src="{{asset('assets/images/flags/4x3/' . ($registered[1]->abb ?? 'un') .'.svg')}}" alt="Flag" class="player-flag">
                     <div class="player-name">
-                        @if (!empty($registered) && isset($registered[1]))
-                            {{$registered[1]->member->firstname ?? '-'}}
-                            {{$registered[1]->member->lastname }}
-                        @else
-                            TBD
-                        @endif
+                        {{$registered[1]->member->firstname ?? '-'}}
+                        {{$registered[1]->member->lastname ?? ''}}
                     </div>
                 </div>
                 <div class="player-row-2">
                     <div class="country-code">{{$registered[1]->abb_full ?? '-'}}</div>
-                    <img src="{{asset('assets/images/logo/club/' . ($registered[1]->academy_id )) .'.jpg'}}" alt="Club Logo" class="club-logo"
+                    <img src="{{asset('assets/images/logo/club/' . ($registered[1]->academy_id ?? 0) .'.jpg')}}" alt="Club Logo" class="club-logo"
                     onerror="this.src='{{asset('assets/images/logo/club/0.png')}}'">
-                    <div class="club-name">
-                        @if (!empty($registered) && isset($registered[1]))
-                            {{$registered[1]->academy->name ?? '-'}}
-                        @endif
-                    </div>
+                    <div class="club-name">{{$registered[1]->academy->name ?? ''}}</div>
                 </div>
+                @else
+                <div class="player-row-1">
+                    <div class="player-name">{{ ($isBye[1] ?? false) ? 'BYE' : 'TBD' }}</div>
+                </div>
+                @endif
             </div>
             <div class="row-content">
                 <!-- Second row content goes here -->
@@ -202,17 +198,11 @@
                     <span class="marquee-content">{{ $bracket->entry->name }} / {{ $bracket->age->name }} / {{ $bracket->belt->name }}  / {{ $bracket->weight->weight }}KG</span>
                 </div>
                 <div class="match-stage" id="matchStage">
-                    <span class="marquee-content">
-                        @if($bracket->is_double_loser)
-                             {{ $bracket->round }}
-                        @else
-                             {{ $bracket->round }}
-                        @endif
-                    </span>
+                    <span class="marquee-content">{{ $bracket->round }}</span>
                 </div>
             </div>
-            <div class="timer" id="timerDisplay">
-                05:00
+            <div class="timer" id="timerDisplay" data-duration="{{ $bracket->entry->duration ?? 5 }}">
+                {{ sprintf('%02d:%02d', floor(($bracket->entry->duration ?? 5)), 0) }}
                 <div class="timer-controls" id="timerControls">
                     <table class="timer-control-table">
                         <tr>
@@ -260,14 +250,14 @@
                 <td colspan="4"><div class="end-game-header red-header">WON BY:</div></td>
             </tr>
             <tr>
-                <td colspan="2"><button class="end-game-button" onclick="event.stopPropagation(); announceWinner('red', 'POINTS' ); setWinnerId({{!empty($registered) && isset($registered[0]) ? $registered[0]->id : 'null'}})">POINTS</button></td>
-                <td colspan="2"><button class="end-game-button" onclick="event.stopPropagation(); announceWinner('red', 'SUBMISSION'); setWinnerId({{!empty($registered) && isset($registered[0]) ? $registered[0]->id : 'null'}})">SUBMISSION</button></td>
+                <td colspan="2"><button class="end-game-button" onclick="event.stopPropagation(); announceWinner('red', 'POINTS' ); setWinnerId({{ $registered[0]->id ?? 'null' }})">POINTS</button></td>
+                <td colspan="2"><button class="end-game-button" onclick="event.stopPropagation(); announceWinner('red', 'SUBMISSION'); setWinnerId({{ $registered[0]->id ?? 'null' }})">SUBMISSION</button></td>
             </tr>
             <tr>
-                <td><button class="end-game-button" onclick="event.stopPropagation(); announceWinner('red', 'DISQUALIFICATION'); setWinnerId({{!empty($registered) && isset($registered[0]) ? $registered[0]->id : 'null'}})">DISQUALIFICATION</button></td>
-                <td><button class="end-game-button" onclick="event.stopPropagation(); announceWinner('red', 'WALKOVER'); setWinnerId({{!empty($registered) && isset($registered[0]) ? $registered[0]->id : 'null'}})">WALKOVER</button></td>
-                <td><button class="end-game-button" onclick="event.stopPropagation(); announceWinner('red', 'NO SHOW'); setWinnerId({{!empty($registered) && isset($registered[0]) ? $registered[0]->id : 'null'}})">NO SHOW</button></td>
-                <td><button class="end-game-button" onclick="event.stopPropagation(); announceWinner('red', 'DECISION'); setWinnerId({{!empty($registered) && isset($registered[0]) ? $registered[0]->id : 'null'}})">DECISION</button></td>
+                <td><button class="end-game-button" onclick="event.stopPropagation(); announceWinner('red', 'DISQUALIFICATION'); setWinnerId({{ $registered[0]->id ?? 'null' }})">DISQUALIFICATION</button></td>
+                <td><button class="end-game-button" onclick="event.stopPropagation(); announceWinner('red', 'WALKOVER'); setWinnerId({{ $registered[0]->id ?? 'null' }})">WALKOVER</button></td>
+                <td><button class="end-game-button" onclick="event.stopPropagation(); announceWinner('red', 'NO SHOW'); setWinnerId({{ $registered[0]->id ?? 'null' }})">NO SHOW</button></td>
+                <td><button class="end-game-button" onclick="event.stopPropagation(); announceWinner('red', 'DECISION'); setWinnerId({{ $registered[0]->id ?? 'null' }})">DECISION</button></td>
             </tr>
         </table>
     </div>
@@ -279,14 +269,14 @@
                 <td colspan="4"><div class="end-game-header blue-header">WON BY:</div></td>
             </tr>
             <tr>
-                <td colspan="2"><button class="end-game-button" onclick="event.stopPropagation(); announceWinner('blue', 'POINTS' ); setWinnerId({{!empty($registered) && isset($registered[1]) ? $registered[1]->id : 'null'}})">POINTS</button></td>
-                <td colspan="2"><button class="end-game-button" onclick="event.stopPropagation(); announceWinner('blue', 'SUBMISSION'); setWinnerId({{!empty($registered) && isset($registered[1]) ? $registered[1]->id : 'null'}})">SUBMISSION</button></td>
+                <td colspan="2"><button class="end-game-button" onclick="event.stopPropagation(); announceWinner('blue', 'POINTS' ); setWinnerId({{ $registered[1]->id ?? 'null' }})">POINTS</button></td>
+                <td colspan="2"><button class="end-game-button" onclick="event.stopPropagation(); announceWinner('blue', 'SUBMISSION'); setWinnerId({{ $registered[1]->id ?? 'null' }})">SUBMISSION</button></td>
             </tr>
             <tr>
-                <td><button class="end-game-button" onclick="event.stopPropagation(); announceWinner('blue', 'DISQUALIFICATION'); setWinnerId({{!empty($registered) && isset($registered[1]) ? $registered[1]->id : 'null'}})">DISQUALIFICATION</button></td>
-                <td><button class="end-game-button" onclick="event.stopPropagation(); announceWinner('blue', 'WALKOVER'); setWinnerId({{!empty($registered) && isset($registered[1]) ? $registered[1]->id : 'null'}})">WALKOVER</button></td>
-                <td><button class="end-game-button" onclick="event.stopPropagation(); announceWinner('blue', 'NO SHOW'); setWinnerId({{!empty($registered) && isset($registered[1]) ? $registered[1]->id : 'null'}})">NO SHOW</button></td>
-                <td><button class="end-game-button" onclick="event.stopPropagation(); announceWinner('blue', 'DECISION'); setWinnerId({{!empty($registered) && isset($registered[1]) ? $registered[1]->id : 'null'}})">DECISION</button></td>
+                <td><button class="end-game-button" onclick="event.stopPropagation(); announceWinner('blue', 'DISQUALIFICATION'); setWinnerId({{ $registered[1]->id ?? 'null' }})">DISQUALIFICATION</button></td>
+                <td><button class="end-game-button" onclick="event.stopPropagation(); announceWinner('blue', 'WALKOVER'); setWinnerId({{ $registered[1]->id ?? 'null' }})">WALKOVER</button></td>
+                <td><button class="end-game-button" onclick="event.stopPropagation(); announceWinner('blue', 'NO SHOW'); setWinnerId({{ $registered[1]->id ?? 'null' }})">NO SHOW</button></td>
+                <td><button class="end-game-button" onclick="event.stopPropagation(); announceWinner('blue', 'DECISION'); setWinnerId({{ $registered[1]->id ?? 'null' }})">DECISION</button></td>
             </tr>
         </table>
     </div>
@@ -332,7 +322,8 @@
 <input id="reg_win_id" type="hidden" name="reg_win_id" value=""></input>
 
 
-<script src="{{ asset('js/scoreboard/scoreboard.js') }}"></script>
+<script>var matchDuration = {{ $bracket->entry->duration ?? 5 }};</script>
+<script src="{{ asset('js/scoreboard/scoreboard.js') }}?v={{ time() }}"></script>
 <!--begin::Global Config(global config for global JS scripts)-->
 <script>var KTAppSettings = { "breakpoints": { "sm": 576, "md": 768, "lg": 992, "xl": 1200, "xxl": 1200 }, "colors": { "theme": { "base": { "white": "#ffffff", "primary": "#6993FF", "secondary": "#E5EAEE", "success": "#1BC5BD", "info": "#8950FC", "warning": "#FFA800", "danger": "#F64E60", "light": "#F3F6F9", "dark": "#212121" }, "light": { "white": "#ffffff", "primary": "#E1E9FF", "secondary": "#ECF0F3", "success": "#C9F7F5", "info": "#EEE5FF", "warning": "#FFF4DE", "danger": "#FFE2E5", "light": "#F3F6F9", "dark": "#D6D6E0" }, "inverse": { "white": "#ffffff", "primary": "#ffffff", "secondary": "#212121", "success": "#ffffff", "info": "#ffffff", "warning": "#ffffff", "danger": "#ffffff", "light": "#464E5F", "dark": "#ffffff" } }, "gray": { "gray-100": "#F3F6F9", "gray-200": "#ECF0F3", "gray-300": "#E5EAEE", "gray-400": "#D6D6E0", "gray-500": "#B5B5C3", "gray-600": "#80808F", "gray-700": "#464E5F", "gray-800": "#1B283F", "gray-900": "#212121" } }, "font-family": "Poppins" };</script>
 <!--end::Global Config-->
@@ -350,23 +341,24 @@
 <script>
     const bracket = @json($bracket);
     const allData = @json($registered);
-    const winnerData = allData[2];
-    const regOne = allData[0];
-    console.log('Registered One:', bracket);
+    const winnerData = allData[2] ?? null;
+    const regOne = allData[0] ?? null;
+
+    // Track BYE match IDs that should be skipped by NEXT button
+    let byeMatchIds = [];
 
     const localStorageKey = `${bracket.event_id}_${bracket.day_id}_${bracket.mat_id}`;
     const localStorageData = JSON.parse(localStorage.getItem(localStorageKey));
-    console.log('Local Storage Data:', localStorageData);
     if (localStorageData) {
       const id = localStorageData.findIndex(x => x == {{ $matchId }});
       window.redirectToNextCounter = function() {
-        let nextMatchId;
-        if (id < localStorageData.length - 1) {
-          nextMatchId = localStorageData[id + 1];
-        } else {
-          nextMatchId = localStorageData[id];
+        // Find the next match that is NOT a BYE auto-completed match
+        let nextIdx = id + 1;
+        while (nextIdx < localStorageData.length && byeMatchIds.includes(localStorageData[nextIdx])) {
+          nextIdx++;
         }
-          window.location.href = "{{ route('event.config.match.edit_status', ['match_id' => ':matchId']) }}".replace(':matchId', nextMatchId);
+          const nextMatchId = nextIdx < localStorageData.length ? localStorageData[nextIdx] : localStorageData[id];
+        window.location.href = "{{ route('event.config.match.edit_status', ['match_id' => ':matchId']) }}".replace(':matchId', nextMatchId);
       }
       window.redirectToPrevCounter = function() {
         let prevMatchId;
@@ -387,10 +379,12 @@
     }
 
     
-    if(winnerData && winnerData.id) {
+    if(winnerData && winnerData.id && regOne) {
         const localStorageKey1 = `{{ $matchId }}-winner`;
         const localStorageData1 = JSON.parse(localStorage.getItem(localStorageKey1));
-        announceWinner(winnerData.id === regOne.id ? 'red' : 'blue', localStorageData1.method);
+        if (localStorageData1) {
+            announceWinner(winnerData.id === regOne.id ? 'red' : 'blue', localStorageData1.method);
+        }
     }
 
     function saveMatchResult() {
@@ -400,7 +394,14 @@
         console.log('Saving match result with winner reg ID:', regWinId);
         postData = {
             '_token': '{{ csrf_token() }}',
-            'reg_win_id': regWinId
+            'reg_win_id': regWinId || null,
+            'win_method': winnerMethod,
+            'red_score': redScore,
+            'blue_score': blueScore,
+            'red_advantage': redAdvantage,
+            'blue_advantage': blueAdvantage,
+            'red_penalty': redPenalty,
+            'blue_penalty': bluePenalty
         };
         fetch("{{ route('event.config.match.winner', ['match_id' => $matchId]) }}", {
             method: 'POST',
@@ -413,6 +414,10 @@
         .then(data => {
             toastr.success(data.msg);
             localStorage.setItem(`{{ $matchId }}-winner`, JSON.stringify({winner: regWinId, method: winnerMethod}));
+            // Capture BYE match IDs so NEXT button can skip them
+            if (data.bye_match_ids && data.bye_match_ids.length > 0) {
+                byeMatchIds = data.bye_match_ids;
+            }
         })
         .catch((error) => {
             console.error('Error:', error);

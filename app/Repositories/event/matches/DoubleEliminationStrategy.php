@@ -12,6 +12,47 @@ class DoubleEliminationStrategy implements TournamentEliminationStrategy {
     const LOSERS_BRACKET = 'losers';
 
     /**
+     * Whether this is the "1 bronze" variant (single bronze match)
+     * vs the default "2 bronze" variant (two separate bronze matches)
+     */
+    private $singleBronze = false;
+
+    /**
+     * Whether pool format is active (6 players → 2 pools of 3)
+     */
+    private $poolFormat = false;
+
+    public function __construct($eliminationType = 'double')
+    {
+        $this->singleBronze = ($eliminationType === 'double_single_bronze');
+    }
+
+    /**
+     * Check if the participant count requires pool-based format
+     * 6 players: 2 pools of 3 with round-robin, then cross-pool semi-finals
+     */
+    private function isPoolFormat($participantCount)
+    {
+        return $participantCount === 6;
+    }
+
+     /**
+     * 3–5 players: pure round-robin (every player meets every other player once)
+     */
+    private function isRoundRobinFormat($participantCount)
+    {
+        return $participantCount >= 3 && $participantCount <= 5;
+    }
+
+    /**
+     * 2 players: best-of-3 (up to 3 matches; match 3 is the Gold/Final if needed)
+     */
+    private function isBestOf3Format($participantCount)
+    {
+        return $participantCount === 2;
+    }
+
+    /**
      * Generate bracket structure for double elimination with repechage
      */
     public function generateBracket($eventId, $participants, $config)
@@ -57,22 +98,43 @@ class DoubleEliminationStrategy implements TournamentEliminationStrategy {
     {
         if ($roundNumber === 2) {
             // L1: First losers bracket from W1 losers
-            return ceil($firstRoundMatches / 2);
+            return (int)ceil($firstRoundMatches / 2);
         }
-        
+
         if ($roundNumber >= 3) {
             // L2+: Combine W-losers with L-survivors
             $prevLMatches = $this->calculateLosersMatchesForRound($roundNumber - 1, $firstRoundMatches);
-            $currentWMatches = floor($firstRoundMatches / pow(2, $roundNumber - 1));
-            return ceil(($currentWMatches + $prevLMatches) / 2);
+            $currentWMatches = (int)floor($firstRoundMatches / pow(2, $roundNumber - 1));
+            return (int)ceil(($currentWMatches + $prevLMatches) / 2);
         }
-        
+
         return 0;
     }
 
     public function generateRoundMatches($eventId, $roundNumber, $participantRegistrations = [])
     {
         $matches = [];
+        $participantCount = count($participantRegistrations);
+
+        // 2 players: best-of-3
+        if ($this->isBestOf3Format($participantCount)) {
+            return $roundNumber === 1
+                ? $this->generateBestOf3Matches($eventId, $participantRegistrations)
+                : [];
+        }
+
+        // 3–5 players: full round-robin, all matches in round 1
+        if ($this->isRoundRobinFormat($participantCount)) {
+            return $roundNumber === 1
+                ? $this->generateRoundRobinMatches($eventId, $participantRegistrations)
+                : [];
+        }
+
+        // For 6 players, use pool-based format
+        if ($this->isPoolFormat($participantCount)) {
+            $this->poolFormat = true;
+            return $this->generatePoolFormatRoundMatches($eventId, $roundNumber, $participantRegistrations);
+        }
 
         // Round 1: Winners bracket only, same as single elimination
         if ($roundNumber === 1) {
@@ -81,16 +143,23 @@ class DoubleEliminationStrategy implements TournamentEliminationStrategy {
 
         // Rounds 2+: Winners bracket + Losers bracket
         // Winners bracket follows single elimination pattern
-        $matchesInFirstRound = count($participantRegistrations) >= 2 ? floor(count($participantRegistrations) / 2) : 1;
-        $winnersBracketMatches = floor($matchesInFirstRound / pow(2, $roundNumber - 1));
+         // Use bracket size (next power of 2) for correct round structure
+        $bracketSize = 1;
+        while ($bracketSize < count($participantRegistrations)) {
+            $bracketSize *= 2;
+        }
+        $matchesInFirstRound = (int)($bracketSize / 2);
+        $winnersBracketMatches = (int)floor($matchesInFirstRound / pow(2, $roundNumber - 1));
 
         // Winners bracket matches (identical to single elimination)
+        // When only 1 W match remains, it's the Gold (final) match
         for ($i = 0; $i < $winnersBracketMatches; $i++) {
+            $isGoldMatch = ($winnersBracketMatches === 1);
             $matches[] = [
                 'event_id' => $eventId,
                 'reg_one_id' => null,
                 'reg_two_id' => null,
-                'order_no' => $roundNumber * 100 + $i + 1,
+                'order_no' => $isGoldMatch ? 9999 : ($roundNumber * 100 + $i + 1),
                 'status' => 'P',
                 'is_double_loser' => 0,  // Winners bracket
             ];
@@ -99,7 +168,7 @@ class DoubleEliminationStrategy implements TournamentEliminationStrategy {
         // Losers bracket matches (parallel to winners bracket, keeps halving)
         if ($roundNumber === 2) {
             // L1: First losers bracket round - losers from W1 paired together
-            $l1Matches = ceil($matchesInFirstRound / 2);
+            $l1Matches = (int)ceil($matchesInFirstRound / 2);
             for ($i = 0; $i < $l1Matches; $i++) {
                 $matches[] = [
                     'event_id' => $eventId,
@@ -117,17 +186,25 @@ class DoubleEliminationStrategy implements TournamentEliminationStrategy {
             // Current W-bracket losers (each match produces 1 loser)
             $currentWLosers = $winnersBracketMatches;
             // New L-bracket matches: (W-losers + L-survivors) / 2
-            $lnMatches = ceil(($currentWLosers + $prevLosersMatches) / 2);
+            $lnMatches = (int)ceil(($currentWLosers + $prevLosersMatches) / 2);
             
             if ($lnMatches > 0) {
-                // Check if this is the final losers bracket round (will become bronze matches)
-                // Final losers round always has exactly 2 matches
-                $isFinalLosersRound = ($lnMatches === 2);
-                
+                // "2 bronze": Final losers round with 2 matches becomes bronze (order_no 9997, 9996)
+                // "1 bronze": Those 2 matches are L semi-finals; a single bronze match follows in the next round
+                $isFinalLosersRound = !$this->singleBronze && ($lnMatches === 2);
+
+                // "1 bronze": The extra round has 0 W matches and 1 L match — this is the single bronze match
+                $isBronzeMatch = $this->singleBronze && $winnersBracketMatches === 0 && $lnMatches === 1;
+
                 for ($i = 0; $i < $lnMatches; $i++) {
-                    // If final L round with 2 matches, mark as bronze (order_no 9997, 9996)
-                    $orderNo = $isFinalLosersRound ? (9997 - $i) : (($roundNumber * 100) + $i + 1);
-                    
+                    if ($isFinalLosersRound) {
+                        $orderNo = 9997 - $i;  // 2 bronze matches: 9997, 9996
+                    } elseif ($isBronzeMatch) {
+                        $orderNo = 9998;  // Single bronze match
+                    } else {
+                        $orderNo = 2000 + ($roundNumber * 100) + $i + 1;
+                    }
+
                     $matches[] = [
                         'event_id' => $eventId,
                         'reg_one_id' => null,
@@ -156,6 +233,9 @@ class DoubleEliminationStrategy implements TournamentEliminationStrategy {
                 ->toArray();
         }
 
+        // Apply tournament seeding for 8+ player power-of-2 brackets
+        $participantRegistrations = MatchScheduler::seedParticipants($participantRegistrations);
+
         for ($i = 0; $i < count($participantRegistrations); $i += 2) {
             if (isset($participantRegistrations[$i + 1])) {
                 $matches[] = [
@@ -168,7 +248,294 @@ class DoubleEliminationStrategy implements TournamentEliminationStrategy {
                     'status' => 'P',
                     'is_double_loser' => 0,
                 ];
+            } else {
+                // BYE match: odd player with no opponent, auto-completed
+                $matches[] = [
+                    'event_id' => $eventId,
+                    'reg_one_id' => $participantRegistrations[$i],
+                    'reg_two_id' => null,
+                    'reg_win_id' => $participantRegistrations[$i],
+                    'previes_mate_id1' => null,
+                    'previes_mate_id2' => null,
+                    'order_no' => $matchOrder++,
+                    'status' => 'C',
+                    'is_double_loser' => 0,
+                ];
             }
+        }
+
+        return $matches;
+    }
+
+    /**
+     * Generate matches for best-of-3 format (2 players)
+     *
+     * Up to 3 matches between the same two players:
+     *   Match 1 (order_no 1)  — always played
+     *   Match 2 (order_no 3)  — always played; slot 2 reserved for 1-match break
+     *   Match 3 (order_no 9999, Gold) — played only if tied 1-1 after matches 1 & 2;
+     *     scheduled last to provide at least 2-match break after match 2
+     *
+     * There is only 1 bronze medalist across all double-elimination variants;
+     * for 2 players there is no bronze match — only Gold (1st) and Silver (2nd).
+     */
+    private function generateBestOf3Matches($eventId, $players)
+    {
+        [$p1, $p2] = [$players[0], $players[1]];
+
+        return [
+            // Match 1 — P1 from RED corner, P2 from BLUE corner
+            [
+                'event_id'        => $eventId,
+                'reg_one_id'      => $p1,   // RED
+                'reg_two_id'      => $p2,   // BLUE
+                'previes_mate_id1' => null,
+                'previes_mate_id2' => null,
+                'order_no'        => 1,
+                'status'          => 'P',
+                'is_double_loser' => 0,
+            ],
+            // Match 2 — corners swapped: P1 from BLUE corner, P2 from RED corner
+            [
+                'event_id'        => $eventId,
+                'reg_one_id'      => $p2,   // RED (was P2)
+                'reg_two_id'      => $p1,   // BLUE (was P1)
+                'previes_mate_id1' => null,
+                'previes_mate_id2' => null,
+                'order_no'        => 3,     // Slot 2 left for 1-match break
+                'status'          => 'P',
+                'is_double_loser' => 0,
+            ],
+            // Match 3 (Gold/Final, conditional on 1-1 tie) — corners random at mat time;
+            // operator uses SWITCH SIDES if the coin toss assigns different corners.
+            // Scheduled last (order_no 9999) providing 2+ match break from Match 2.
+            // Deleted automatically when one player wins Matches 1 & 2 (2-0).
+            [
+                'event_id'        => $eventId,
+                'reg_one_id'      => $p1,
+                'reg_two_id'      => $p2,
+                'previes_mate_id1' => null,
+                'previes_mate_id2' => null,
+                'order_no'        => 9999,
+                'status'          => 'P',
+                'is_double_loser' => 0,
+            ],
+        ];
+    }
+
+    /**
+     * Generate matches for round-robin format (3–5 players)
+     *
+     * Every player meets every other player exactly once: n*(n-1)/2 matches total.
+     * Matches are ordered to maximise rest breaks (greedy: always pick the pair
+     * where both players have been idle the longest). General break time applies.
+     * Only 1 bronze medalist — medals are determined by final standings, not
+     * by a separate play-off match.
+     */
+    private function generateRoundRobinMatches($eventId, $players)
+    {
+        $orderedPairs = $this->scheduleRoundRobinWithBreaks($players);
+        $matches = [];
+
+        foreach ($orderedPairs as $i => [$p1, $p2]) {
+            $matches[] = [
+                'event_id'        => $eventId,
+                'reg_one_id'      => $p1,
+                'reg_two_id'      => $p2,
+                'previes_mate_id1' => null,
+                'previes_mate_id2' => null,
+                'order_no'        => $i + 1,
+                'status'          => 'P',
+                'is_double_loser' => 0,
+            ];
+        }
+
+        return $matches;
+    }
+
+    /**
+     * Order all round-robin pairs to maximise per-player rest breaks.
+     *
+     * Greedy algorithm: at each slot, pick the unscheduled pair where the
+     * minimum idle time for either player is greatest. Ties are broken by the
+     * first available pair in enumeration order.
+     */
+    private function scheduleRoundRobinWithBreaks(array $players): array
+    {
+        // Build list of all unordered pairs
+        $allPairs = [];
+        $n = count($players);
+        for ($i = 0; $i < $n; $i++) {
+            for ($j = $i + 1; $j < $n; $j++) {
+                $allPairs[] = [$players[$i], $players[$j]];
+            }
+        }
+
+        return $this->schedulePairsWithBreaks($allPairs);
+    }
+
+    /**
+     * Schedule an arbitrary list of player pairs to maximise rest breaks.
+     *
+     * Greedy algorithm: at each slot, pick the unscheduled pair where the
+     * minimum idle time for either player is greatest. Ties are broken by the
+     * first available pair in enumeration order.
+     *
+     * This is the shared core used by both round-robin and pool-format scheduling.
+     */
+    private function schedulePairsWithBreaks(array $allPairs): array
+    {
+        $lastSlot = [];   // player → last slot they played (0 = never)
+        $ordered  = [];
+        $slot     = 1;
+        $remaining = $allPairs;
+
+        while (!empty($remaining)) {
+            $bestIdx     = 0;
+            $bestMinWait = -1;
+
+            foreach ($remaining as $idx => [$p1, $p2]) {
+                $wait = min(
+                    $slot - ($lastSlot[$p1] ?? 0),
+                    $slot - ($lastSlot[$p2] ?? 0)
+                );
+                if ($wait > $bestMinWait) {
+                    $bestMinWait = $wait;
+                    $bestIdx     = $idx;
+                }
+            }
+
+            [$p1, $p2] = $remaining[$bestIdx];
+            $ordered[]      = [$p1, $p2];
+            $lastSlot[$p1]  = $slot;
+            $lastSlot[$p2]  = $slot;
+
+            $newRemaining = [];
+            foreach ($remaining as $idx => $pair) {
+                if ($idx !== $bestIdx) {
+                    $newRemaining[] = $pair;
+                }
+            }
+            $remaining = $newRemaining;
+            $slot++;
+        }
+
+        return $ordered;
+    }
+
+    /**
+     * Generate matches for pool-based format (6 players)
+     *
+     * Round 1: 2 pools of 3, round-robin within each pool (6 matches total)
+     * Round 2: Cross-pool semi-finals (2 matches)
+     *   Match 7: 1st Pool1 vs 2nd Pool2
+     *   Match 8: 1st Pool2 vs 2nd Pool1
+     * Round 3 ('double' — 2 bronze medals):
+     *   Both SF losers automatically receive bronze — no extra match needed.
+     *   Match 9: Winner M7 vs Winner M8 (Gold only, order_no 9999)
+     * Round 3 ('double_single_bronze' — 1 bronze medal):
+     *   Bronze first (order_no 9998): Loser M7 vs Loser M8
+     *   Gold last   (order_no 9999): Winner M7 vs Winner M8
+     */
+    private function generatePoolFormatRoundMatches($eventId, $roundNumber, $participantRegistrations)
+    {
+        $matches = [];
+
+        if ($roundNumber === 1) {
+            // Split into 2 pools of 3 using snake seeding:
+            //   Pool A: Seed 1, Seed 4, Seed 5
+            //   Pool B: Seed 2, Seed 3, Seed 6
+            $pool1 = [
+                $participantRegistrations[0],  // Seed 1
+                $participantRegistrations[3],  // Seed 4
+                $participantRegistrations[4],  // Seed 5
+            ];
+            $pool2 = [
+                $participantRegistrations[1],  // Seed 2
+                $participantRegistrations[2],  // Seed 3
+                $participantRegistrations[5],  // Seed 6
+            ];
+
+            // Collect all within-pool pairs from both pools
+            $allPoolPairs = [];
+            foreach ([$pool1, $pool2] as $pool) {
+                for ($i = 0; $i < count($pool); $i++) {
+                    for ($j = $i + 1; $j < count($pool); $j++) {
+                        $allPoolPairs[] = [$pool[$i], $pool[$j]];
+                    }
+                }
+            }
+
+            // Apply greedy break scheduling across both pools to interleave
+            // matches and give every player at least 1 match rest between fights
+            $orderedPairs = $this->schedulePairsWithBreaks($allPoolPairs);
+
+            foreach ($orderedPairs as $i => [$p1, $p2]) {
+                $matches[] = [
+                    'event_id' => $eventId,
+                    'reg_one_id' => $p1,
+                    'reg_two_id' => $p2,
+                    'previes_mate_id1' => null,
+                    'previes_mate_id2' => null,
+                    'order_no' => $i + 1,
+                    'status' => 'P',
+                    'is_double_loser' => 0,
+                ];
+            }
+
+            return $matches;
+        }
+
+        if ($roundNumber === 2) {
+            // Semi-finals: cross-pool matches
+            // Match 7: 1st Pool1 vs 2nd Pool2
+            $matches[] = [
+                'event_id' => $eventId,
+                'reg_one_id' => null,
+                'reg_two_id' => null,
+                'order_no' => 201,
+                'status' => 'P',
+                'is_double_loser' => 0,
+            ];
+            // Match 8: 1st Pool2 vs 2nd Pool1
+            $matches[] = [
+                'event_id' => $eventId,
+                'reg_one_id' => null,
+                'reg_two_id' => null,
+                'order_no' => 202,
+                'status' => 'P',
+                'is_double_loser' => 0,
+            ];
+
+            return $matches;
+        }
+
+        if ($roundNumber === 3) {
+           // 'double_single_bronze': need a play-off between SF losers to award the single bronze.
+            // 'double' (2 bronze): both SF losers automatically receive bronze — no match needed.
+            if ($this->singleBronze) {
+                // Bronze match first: Loser M7 vs Loser M8
+                $matches[] = [
+                    'event_id' => $eventId,
+                    'reg_one_id' => null,
+                    'reg_two_id' => null,
+                    'order_no' => 9998,
+                    'status' => 'P',
+                    'is_double_loser' => 1,
+                ];
+            }
+
+            // Gold match (always last)
+            $matches[] = [
+                'event_id' => $eventId,
+                'reg_one_id' => null,
+                'reg_two_id' => null,
+                'order_no' => 9999,
+                'status' => 'P',
+                'is_double_loser' => 0,
+            ];
+
+            return $matches;
         }
 
         return $matches;
@@ -256,10 +623,34 @@ class DoubleEliminationStrategy implements TournamentEliminationStrategy {
         if ($participantCount <= 1) {
             return 0;
         }
+
+        // 2 players: best-of-3 — all 3 match slots live in 1 round
+        if ($this->isBestOf3Format($participantCount)) {
+            return 1;
+        }
+
+        // 3–5 players: round-robin — all n*(n-1)/2 matches in 1 round
+        if ($this->isRoundRobinFormat($participantCount)) {
+            return 1;
+        }
+
+        // Pool format (6 players): 3 rounds (Pool RR, Semi-finals, Final+Bronze)
+        if ($this->isPoolFormat($participantCount)) {
+            return 3;
+        }
+
         // Double elimination winners bracket = same as single elimination rounds
         // For 8: ceil(log2(8)) = 3 rounds
         // Losers bracket runs parallel (L1 in round 2, L2 in round 3, etc.)
-        return ceil(log($participantCount, 2));
+        $rounds = ceil(log($participantCount, 2));
+
+        // "1 bronze" variant: add an extra round for the single bronze match
+        // (winners of final losers bracket matches fight for bronze)
+        if ($this->singleBronze) {
+            $rounds += 1;
+        }
+
+        return $rounds;
     }
 
     private function calculateBracketPositions($participantCount)
@@ -299,9 +690,15 @@ class DoubleEliminationStrategy implements TournamentEliminationStrategy {
      */
     public function computePreviousReferences($roundMatchesData)
     {
+        // Pool format: only final round (round 3) links to semi-finals (round 2)
+        // Pool matches (round 1) and semi-finals (round 2) have no prev_refs
+        if ($this->poolFormat) {
+            return $this->computePoolFormatPreviousReferences($roundMatchesData);
+        }
+
         $roundNumbers = array_keys($roundMatchesData);
         sort($roundNumbers);
-        
+
         foreach ($roundNumbers as $roundNumber) {
             if ($roundNumber <= 1) {
                 continue;
@@ -374,7 +771,7 @@ class DoubleEliminationStrategy implements TournamentEliminationStrategy {
                 // L2+: Losers from W(n) paired with winners from previous L(n-1)
                 $prevWinnersLosers = [];
                 $prevLosersWinners = [];
-                
+
                 foreach ($previous as $pIdx => $pMatch) {
                     if (isset($pMatch['is_double_loser']) && $pMatch['is_double_loser'] == 1) {
                         $prevLosersWinners[] = $pIdx;  // Winners from losers bracket
@@ -383,28 +780,86 @@ class DoubleEliminationStrategy implements TournamentEliminationStrategy {
                     }
                 }
 
-                foreach ($losersMatchIndices as $position => $idx) {
+                // "1 bronze" extra round: single bronze match fed by two previous L bracket winners
+                if ($this->singleBronze && empty($winnersMatchIndices) && count($losersMatchIndices) === 1) {
+                    $bronzeIdx = $losersMatchIndices[0];
                     $refs = [];
-                    
-                    // p1: Loser from previous round's winners bracket
-                    if (isset($prevWinnersLosers[$position])) {
-                        $winnersLosersIdx = $prevWinnersLosers[$position];
-                        $refs['p1'] = ['round' => $roundNumber - 1, 'index' => $winnersLosersIdx];
+                    if (isset($prevLosersWinners[0])) {
+                        $refs['p1'] = ['round' => $roundNumber - 1, 'index' => $prevLosersWinners[0]];
                     }
-                    
-                    // p2: Winner from previous losers bracket round
-                    if (isset($prevLosersWinners[$position])) {
-                        $refs['p2'] = ['round' => $roundNumber - 1, 'index' => $prevLosersWinners[$position]];
+                    if (isset($prevLosersWinners[1])) {
+                        $refs['p2'] = ['round' => $roundNumber - 1, 'index' => $prevLosersWinners[1]];
                     }
-
                     if (!empty($refs)) {
-                        $current[$idx]['prev_refs'] = $refs;
+                        $current[$bronzeIdx]['prev_refs'] = $refs;
+                    }
+                } else {
+                    // Cross-seed by reversing the winners bracket losers:
+                    // Bottom-half SF loser faces top-half L1 winner, and vice-versa.
+                    // For 8 players this produces:
+                    //   Match 9:  Loser SF-B  vs  Winner M7  (bottom SF vs top L1)
+                    //   Match 10: Loser SF-A  vs  Winner M8  (top SF vs bottom L1)
+                    $prevWinnersLosersCrossed = array_reverse($prevWinnersLosers);
+
+                    foreach ($losersMatchIndices as $position => $idx) {
+                        $refs = [];
+
+                        // p1: Loser from previous round's winners bracket (cross-seeded)
+                        if (isset($prevWinnersLosersCrossed[$position])) {
+                            $refs['p1'] = ['round' => $roundNumber - 1, 'index' => $prevWinnersLosersCrossed[$position]];
+                        }
+
+                        // p2: Winner from previous losers bracket round
+                        if (isset($prevLosersWinners[$position])) {
+                            $refs['p2'] = ['round' => $roundNumber - 1, 'index' => $prevLosersWinners[$position]];
+                        }
+
+                        if (!empty($refs)) {
+                            $current[$idx]['prev_refs'] = $refs;
+                        }
                     }
                 }
             }
 
             unset($current);
         }
+
+        return $roundMatchesData;
+    }
+
+    /**
+     * Compute previous-match references for pool format (6 players)
+     *
+     * Pool matches (round 1) have no prev_refs - all players are known upfront.
+     * Semi-finals (round 2) have no prev_refs - players come from pool standings.
+     * Final and bronze (round 3) link to the two semi-final matches:
+     *   Gold (9999): winners of both semi-finals
+     *   Bronze (9998): losers of both semi-finals
+     */
+    private function computePoolFormatPreviousReferences($roundMatchesData)
+    {
+        if (!isset($roundMatchesData[3]) || !isset($roundMatchesData[2])) {
+            return $roundMatchesData;
+        }
+
+        $current = &$roundMatchesData[3];
+
+        // Both final (Gold) and bronze link to the 2 semi-final matches in round 2
+        foreach ($current as $idx => &$match) {
+            $refs = [];
+            if (isset($roundMatchesData[2][0])) {
+                $refs['p1'] = ['round' => 2, 'index' => 0];
+            }
+            if (isset($roundMatchesData[2][1])) {
+                $refs['p2'] = ['round' => 2, 'index' => 1];
+            }
+
+            if (!empty($refs)) {
+                $match['prev_refs'] = $refs;
+            }
+        }
+        unset($match);
+        unset($current);
 
         return $roundMatchesData;
     }

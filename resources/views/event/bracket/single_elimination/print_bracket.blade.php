@@ -1,3 +1,14 @@
+@php
+    // Map (round_index, slot) → order_no for single elimination
+    $getOrderNo = function(int $ri, int $slot) use ($round) {
+        if ($ri === $round - 1) return 9999; // Final
+        if ($ri === 0) return $slot + 1;     // First round: 1, 2, 3, ...
+        return ($ri + 1) * 100 + $slot + 1;  // Later rounds: 201, 202, ...
+    };
+@endphp
+
+{{-- Match lookup variables ($matchByOrder, $loserMatchesList, etc.) provided by controller --}}
+
 <div style="width:{{ $width }}; margin:0 auto; background-color: white;border: black;border-width: 1px;padding: 20px;">
     <table width="100%" style="width:100%" border="0">
         <tr>
@@ -9,7 +20,7 @@
             </td>
         </tr>
     </table>
-    <table width="100%" style="width:100%" border="0">        
+    <table width="100%" style="width:100%" border="0">
         <tr>
             <td width="50%" align="center"></td>
             <td width="50%" align="right"></td>
@@ -21,44 +32,72 @@
             <th style="padding-bottom: 10px;" width="{{100/$round}}%">Тойрог {{ $i + 1 }}</th>
             @endfor
         </tr>
-        <?php 
+        <?php
             $k = 0;
+            // Prefer match data (seeded order) over bracket data (legacy order)
+            $useMatchData = false;
+            if (!empty($matchByOrder)) {
+                foreach ($members as $mKey => $member) {
+                    $md = $matchByOrder[$mKey + 1] ?? null;
+                    if ($md && ($md->lastname_one || $md->lastname_two)) {
+                        $useMatchData = true;
+                        break;
+                    }
+                }
+            }
             $byeList = array();
             foreach($members as $key => $member)
             {
-                if($member->lastname_one != null && $member->lastname_two == null)
+                $src = ($useMatchData && isset($matchByOrder[$key + 1])) ? $matchByOrder[$key + 1] : null;
+                $ln1 = $src ? $src->lastname_one : $member->lastname_one;
+                $fn1 = $src ? $src->firstname_one : $member->firstname_one;
+                $ac1 = $src ? ($src->acname_one ?? '') : $member->acname_one;
+                $ln2 = $src ? $src->lastname_two : $member->lastname_two;
+                $fn2 = $src ? $src->firstname_two : $member->firstname_two;
+                $ac2 = $src ? ($src->acname_two ?? '') : $member->acname_two;
+                if($ln1 != null && $ln2 == null)
                 {
-                    $byeList[$key] = array('lastname'=> $member->lastname_one, 'firstname'=> $member->firstname_one, 'academy'=> $member->acname_one);
+                    $byeList[$key] = array('lastname'=> $ln1, 'firstname'=> $fn1, 'academy'=> $ac1);
                 }
-                else if($member->lastname_one == null && $member->lastname_two != null)
+                else if($ln1 == null && $ln2 != null)
                 {
-                    $byeList[$key] = array('lastname'=> $member->lastname_two, 'firstname'=> $member->firstname_two, 'academy'=> $member->acname_two);
+                    $byeList[$key] = array('lastname'=> $ln2, 'firstname'=> $fn2, 'academy'=> $ac2);
                 }
                 else
                 {
                     $byeList[$key] = array('lastname'=> null);
                 }
-            } 
-        ?>        
-        @foreach($members as $member)
+            }
+        ?>
+        @foreach($members as $mKey => $member)
         <tr>
             @for($i = 0; $i < $round; $i++)
                 @if($i == 0)
+                    @php
+                        $md0 = $matchByOrder[$getOrderNo(0, $k)] ?? null;
+                        // Use match data for names when available (seeded order)
+                        $ln1 = ($useMatchData && $md0) ? $md0->lastname_one : $member->lastname_one;
+                        $fn1 = ($useMatchData && $md0) ? $md0->firstname_one : $member->firstname_one;
+                        $ac1 = ($useMatchData && $md0) ? ($md0->acname_one ?? '') : $member->acname_one;
+                        $ln2 = ($useMatchData && $md0) ? $md0->lastname_two : $member->lastname_two;
+                        $fn2 = ($useMatchData && $md0) ? $md0->firstname_two : $member->firstname_two;
+                        $ac2 = ($useMatchData && $md0) ? ($md0->acname_two ?? '') : $member->acname_two;
+                    @endphp
                     <td>
                         <div class="connector">
                             <div class="linebox"></div>
                             <div class="linebox_two"></div>
-                            <table width="100%" style="width:100%;" id="table1" border="1">                            
+                            <table width="100%" style="width:100%;" id="table1" border="1">
                                 <tr>
-                                    <td width="50%" align="center" style="font-size: 11px;">
-                                    {!! $member->lastname_one != null? $member->lastname_one.' <strong>'.$member->firstname_one.'</strong>': 'BYE'!!}<br>
-                                    {{$member->acname_one}}
+                                    <td width="50%" align="center" style="font-size: 11px;{{ $md0 && $isWinner($md0->reg_one_id, $md0) ? ' background:#d4edda;' : '' }}">
+                                    {!! $ln1 != null? $ln1.' <strong>'.$fn1.'</strong>': 'BYE'!!}<br>
+                                    {{$ac1}}
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td width="50%" align="center" style="font-size: 11px;">
-                                    {!! $member->lastname_two != null? $member->lastname_two.' <strong>'.$member->firstname_two.'</strong>': 'BYE'!!}<br>
-                                    {{$member->acname_two}}
+                                    <td width="50%" align="center" style="font-size: 11px;{{ $md0 && $isWinner($md0->reg_two_id, $md0) ? ' background:#d4edda;' : '' }}">
+                                    {!! $ln2 != null? $ln2.' <strong>'.$fn2.'</strong>': 'BYE'!!}<br>
+                                    {{$ac2}}
                                     </td>
                                 </tr>
                             </table>
@@ -66,32 +105,38 @@
                     </td>
                 @else
                     @if($k % pow(2, $i) == 0)
+                    @php
+                        $slotSe = (int) floor($k / pow(2, $i));
+                        $orderNoSe = $getOrderNo($i, $slotSe);
+                        $mdSe = $matchByOrder[$orderNoSe] ?? null;
+                    @endphp
                     <td rowspan="{{ pow(2, $i) }}">
                         <div class="connector">
                             <div class="linebox"></div>
                             <div class="linebox_two"></div>
                             <table width="100%" style="width:100%;" id="table1" border="1">
-                            @if($i == 1)
                                 <tr>
-                                    <td width="50%" align="center" style="font-size: 11px;">
-                                        {!! @$byeList[$k]['lastname'] != null? @$byeList[$k]['lastname'].' <strong>'.@$byeList[$k]['firstname'].'</strong>': ''!!}<br>
-                                        {{@$byeList[$k]['academy']}}
+                                    <td width="50%" align="center" style="font-size: 11px;{{ $mdSe && $isWinner($mdSe->reg_one_id, $mdSe) ? ' background:#d4edda;' : '' }}">
+                                        @if($mdSe && !empty($mdSe->lastname_one))
+                                            {!! $mdSe->lastname_one.' <strong>'.$mdSe->firstname_one.'</strong>' !!}<br>
+                                            {{ $mdSe->acname_one ?? '' }}
+                                        @elseif($i == 1)
+                                            {!! @$byeList[$k]['lastname'] != null? @$byeList[$k]['lastname'].' <strong>'.@$byeList[$k]['firstname'].'</strong>': ''!!}<br>
+                                            {{@$byeList[$k]['academy']}}
+                                        @endif
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td width="50%" align="center" style="font-size: 11px;">
-                                        {!! @$byeList[$k + 1]['lastname'] != null? @$byeList[$k + 1]['lastname'].' <strong>'.@$byeList[$k + 1]['firstname'].'</strong>': ''!!}<br>
-                                        {{@$byeList[$k + 1]['academy']}}
-                                    </td> 
+                                    <td width="50%" align="center" style="font-size: 11px;{{ $mdSe && $isWinner($mdSe->reg_two_id, $mdSe) ? ' background:#d4edda;' : '' }}">
+                                        @if($mdSe && !empty($mdSe->lastname_two))
+                                            {!! $mdSe->lastname_two.' <strong>'.$mdSe->firstname_two.'</strong>' !!}<br>
+                                            {{ $mdSe->acname_two ?? '' }}
+                                        @elseif($i == 1)
+                                            {!! @$byeList[$k + 1]['lastname'] != null? @$byeList[$k + 1]['lastname'].' <strong>'.@$byeList[$k + 1]['firstname'].'</strong>': ''!!}<br>
+                                            {{@$byeList[$k + 1]['academy']}}
+                                        @endif
+                                    </td>
                                 </tr>
-                            @else
-                            <tr>
-                                <td width="50%" align="center" style="font-size: 11px;"></td>
-                            </tr>
-                            <tr>
-                                <td width="50%" align="center" style="font-size: 11px;"></td>
-                            </tr>
-                            @endif
                             </table>
                         </div>
                     </td>
