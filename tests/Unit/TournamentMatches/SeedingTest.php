@@ -403,4 +403,136 @@ class SeedingTest extends TestCase
         $this->assertCount(2, $realMatches);
         $this->assertCount(6, $byeMatches);
     }
+
+    // -------------------------------------------------------------------------
+    // BYE placement — verify seed 1 always gets BYE at top position
+    // -------------------------------------------------------------------------
+
+    /**
+     * 7-man bracket: Seed 1 vs BYE must be first match (top of bracket)
+     */
+    public function test_7_man_bracket_seed1_bye_at_top()
+    {
+        $participants = range(1, 7);
+        $seeded = MatchScheduler::seedParticipants($participants);
+
+        // 7 → 8-man bracket, 1 BYE
+        $this->assertCount(8, $seeded);
+
+        // First pair (top of bracket): Seed 1 vs BYE
+        $this->assertEquals(1, $seeded[0]);
+        $this->assertNull($seeded[1]);
+
+        // Verify via strategy: first match is Seed 1 vs BYE (auto-completed)
+        $strategy = new SingleEliminationStrategy();
+        $matches = $strategy->generateRoundMatches(1, 1, $participants);
+        $this->assertCount(4, $matches);
+        $this->assertEquals(1, $matches[0]['reg_one_id']);
+        $this->assertNull($matches[0]['reg_two_id']);
+        $this->assertEquals('C', $matches[0]['status']);
+    }
+
+    /**
+     * 5-man bracket: Seed 1, 2, 3 all get BYEs; Seed 1 BYE at top
+     */
+    public function test_5_man_bracket_bye_placement()
+    {
+        $participants = range(1, 5);
+        $seeded = MatchScheduler::seedParticipants($participants);
+
+        // 5 → 8-man bracket, 3 BYEs
+        $this->assertCount(8, $seeded);
+
+        // First pair: Seed 1 vs BYE (top)
+        $this->assertEquals(1, $seeded[0]);
+        $this->assertNull($seeded[1]);
+
+        $strategy = new SingleEliminationStrategy();
+        $matches = $strategy->generateRoundMatches(1, 1, $participants);
+        $this->assertCount(4, $matches);
+
+        // 3 BYE matches, 1 real match
+        $byeMatches = array_filter($matches, fn($m) => $m['status'] === 'C');
+        $realMatches = array_filter($matches, fn($m) => $m['status'] === 'P');
+        $this->assertCount(3, $byeMatches);
+        $this->assertCount(1, $realMatches);
+
+        // First match: Seed 1 BYE at top
+        $this->assertEquals(1, $matches[0]['reg_one_id']);
+        $this->assertNull($matches[0]['reg_two_id']);
+    }
+
+    /**
+     * 3-man bracket: Seed 1 gets BYE at top
+     */
+    public function test_3_man_bracket_bye_placement()
+    {
+        $participants = range(1, 3);
+        $seeded = MatchScheduler::seedParticipants($participants);
+
+        // 3 → 4-man bracket
+        $this->assertCount(4, $seeded);
+        $this->assertEquals(1, $seeded[0]);
+        $this->assertNull($seeded[1]);
+
+        $strategy = new SingleEliminationStrategy();
+        $matches = $strategy->generateRoundMatches(1, 1, $participants);
+        $this->assertCount(2, $matches);
+        $this->assertEquals(1, $matches[0]['reg_one_id']);
+        $this->assertNull($matches[0]['reg_two_id']);
+        $this->assertEquals('C', $matches[0]['status']);
+        // Second match: real match (Seed 2 vs Seed 3)
+        $this->assertEquals(2, $matches[1]['reg_one_id']);
+        $this->assertEquals(3, $matches[1]['reg_two_id']);
+        $this->assertEquals('P', $matches[1]['status']);
+    }
+
+    /**
+     * 6-man bracket: Seed 1 and 2 get BYEs; verify placement
+     */
+    public function test_6_man_bracket_bye_placement()
+    {
+        $participants = range(1, 6);
+        $seeded = MatchScheduler::seedParticipants($participants);
+
+        // 6 → 8-man bracket, 2 BYEs
+        $this->assertCount(8, $seeded);
+
+        // First pair: Seed 1 vs BYE (top)
+        $this->assertEquals(1, $seeded[0]);
+        $this->assertNull($seeded[1]);
+
+        $strategy = new SingleEliminationStrategy();
+        $matches = $strategy->generateRoundMatches(1, 1, $participants);
+        $this->assertCount(4, $matches);
+
+        // 2 BYE matches, 2 real matches
+        $byeMatches = array_filter($matches, fn($m) => $m['status'] === 'C');
+        $realMatches = array_filter($matches, fn($m) => $m['status'] === 'P');
+        $this->assertCount(2, $byeMatches);
+        $this->assertCount(2, $realMatches);
+    }
+
+    /**
+     * BYE placement for all non-power-of-2 sizes from 3 to 31:
+     * Seed 1 must always be in the first match and get a BYE
+     */
+    public function test_seed1_always_gets_bye_at_top_for_non_power_of_2()
+    {
+        $strategy = new SingleEliminationStrategy();
+        $nonPow2 = [3, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31];
+
+        foreach ($nonPow2 as $count) {
+            $participants = range(1, $count);
+            $matches = $strategy->generateRoundMatches(1, 1, $participants);
+
+            // First match: Seed 1 always at top with BYE
+            $this->assertEquals(1, $matches[0]['reg_one_id'],
+                "For $count players, first match should have seed 1 as reg_one");
+            $this->assertNull($matches[0]['reg_two_id'],
+                "For $count players, first match should be a BYE (reg_two=null)");
+            $this->assertEquals('C', $matches[0]['status'],
+                "For $count players, first match (BYE) should be auto-completed");
+        }
+    }
 }
