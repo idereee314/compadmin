@@ -2,31 +2,31 @@
 
 namespace event;
 
-use Illuminate\Database\Eloquent\Model;
 use DB;
-use Log;
-
+use Illuminate\Database\Eloquent\Model;
 
 class EventDays extends Model
 {
     protected $table = 'uq_event_days';
+
     protected $primaryKey = 'id';
 
-    public static function rules($id) {
-		return array(
+    public static function rules($id)
+    {
+        return [
             'event_id' => 'required|unique:uq_event_config,event_id,'.$id.',id',
             'start_date' => 'required',
-		);
-	}
+            ];
+    }
 
     public function getMatByEventId($event_id)
     {
 
         $script = DB::table('uq_event_days')
-        ->select('uq_event_days.id as day_id')
-        ->where('uq_event_days.event_id', $event_id)
-        ->orderBy('uq_event_days.start_date', 'asc')
-        ->selectRaw('ROW_NUMBER() OVER (ORDER BY uq_event_days.start_date ASC) as day');
+            ->select('uq_event_days.id as day_id')
+            ->where('uq_event_days.event_id', $event_id)
+            ->orderBy('uq_event_days.start_date', 'asc')
+            ->selectRaw('ROW_NUMBER() OVER (ORDER BY uq_event_days.start_date ASC) as day');
 
         // Fetch all days for the given event_id
         $days = $script->get();
@@ -46,14 +46,17 @@ class EventDays extends Model
             foreach ($mats as $mat) {
                 // Fetch brackets for the current mat
                 $brackets = DB::table('uq_event_mate_brackets')
-                    ->select('id as bracket_id','entry_id','entry_belt_id','entry_age_id','entry_weight_id')
+                    ->select('id as bracket_id', 'entry_id', 'entry_belt_id', 'entry_age_id', 'entry_weight_id')
                     ->where('mat_id', $mat->mat_id)
                     ->where('day_id', $day->day_id)
                     ->where('event_id', $event_id)
                     ->get();
                 $bracketsArray = json_decode(json_encode($brackets), true);
 
-                foreach ($bracketsArray as $ba) {
+                foreach ($bracketsArray as &$ba) {
+                    // A bracket "has started" if any of its matches have
+                    // been completed (status = 'C') with both participants
+                    // present. Once started, the bracket is locked to its mat.
                     $match = DB::table('uq_event_matches')
                         ->select('id')
                         ->where('event_id', $event_id)
@@ -62,8 +65,9 @@ class EventDays extends Model
                         ->whereNotNull('reg_two_id')
                         ->where('status', '=', 'C')
                         ->first();
-                    $ba['is_complete'] = !empty($match);
+                    $ba['is_complete'] = ! empty($match);
                 }
+                unset($ba);
 
                 // Build the mat structure
                 $matsWithBrackets[] = [
