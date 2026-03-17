@@ -57,7 +57,8 @@
                         </div>
                     </div>
 
-                    @include('event.config.tab_match')
+                    {{-- HTML only: search box + match container --}}
+                    @include('event.config.tab_match_html')
                 </div>
             </div>
             <!--end::Entry-->
@@ -70,5 +71,7 @@
     <!--end::Wrapper-->
 <!--end::Main-->
 @section('javascript')
+{{-- JS runs here, after plugins.bundle.js (jQuery + selectpicker) are loaded --}}
+@include('event.config.tab_match_js')
 @endsection
 @stop
