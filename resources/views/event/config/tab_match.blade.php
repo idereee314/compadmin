@@ -454,7 +454,7 @@
             };
 
             $.ajax({
-                url: '{{ route('event.config.search.matches', ['event_id' => $eventConfig['event_id']]) }}',
+                url: '{{ ($disableEdit ?? false) ? route('event.public.schedule.matches', ['eventId' => $eventConfig['event_id']]) : route('event.config.search.matches', ['event_id' => $eventConfig['event_id']]) }}',
                 method: 'GET',
                 data: params,
                 success: function(response) {
