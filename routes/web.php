@@ -245,6 +245,10 @@ Route::group([
 Route::get('/event/{eventId}/bracket', 'event\EventRegistrationController@treeBracket')->name('event.bracket');
 Route::get('/event/{eventId}/bracket/show', 'event\EventRegistrationController@showBracket')->name('event.show.bracket');
 
+//match schedule (public)
+Route::get('/event/{eventId}/match-schedule', 'event\EventMatchController@publicSchedule')->name('event.public.schedule');
+Route::get('/event/{eventId}/match-schedule/matches', 'event\EventMatchController@publicGetMatchByGroup')->name('event.public.schedule.matches');
+
 //result
 Route::get('/event/{eventId}/results', 'event\EventRegistrationController@results')->name('event.results');
 Route::get('/event/{eventId}/toplist', 'event\EventRegistrationController@toplist')->name('event.toplist');

@@ -225,4 +225,30 @@ class EventMatchController extends Controller
     {
         return $this->configDays->getMatchByGroup($request, $eventId);
     }
+
+
+    public function publicSchedule($eventId)
+    {
+        $event = $this->event->find($eventId);
+        if (! $event) {
+            abort(404);
+        }
+
+        $eventConfig = $this->eventConfig->findByEvent($eventId);
+        if (! $eventConfig) {
+            abort(404);
+        }
+
+        $data['event'] = $event;
+        $data['eventConfig'] = $eventConfig;
+        $data['configViewDict'] = $this->eventDays->dictData($eventId);
+        $data['disableEdit'] = true;
+
+        return view('event.schedule.index', $data);
+    }
+
+    public function publicGetMatchByGroup(Request $request, $eventId)
+    {
+        return $this->configDays->getMatchByGroup($request, $eventId);
+    }
 }
