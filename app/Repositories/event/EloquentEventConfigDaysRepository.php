@@ -271,17 +271,23 @@ class EloquentEventConfigDaysRepository implements EventConfigDaysRepository
                 }
 
                 // Fetch all matches with bracket_id and is_double_loser for ordering logic
-                $allMatches = EventMatches::select('id', 'bracket_id', 'reg_one_id', 'reg_two_id', 'reg_win_id', 'status', 'end_time', 'order_no', 'is_double_loser')
+                $allMatches = EventMatches::select('id', 'bracket_id', 'reg_one_id', 'reg_two_id', 'reg_win_id', 'status', 'end_time', 'order_no', 'is_double_loser', 'win_method')
                     ->whereIn('bracket_id', $bracketIds)
                     ->where('event_id', $eventId)
                     ->orderBy('order_no', 'asc')
                     ->orderBy('id', 'asc')
                     ->with([
-                        'regOne:id,member_id',
-                        'regTwo:id,member_id',
+                        'regOne:id,member_id,academy_id,entry_id,entry_age_id,entry_belt_id,entry_weight_id',
+                        'regTwo:id,member_id,academy_id',
                         'regOne.member:id,firstname,lastname',
                         'regTwo.member:id,firstname,lastname',
                         'regWin.member:id,firstname,lastname',
+                        'regOne.academy:id,name',
+                        'regTwo.academy:id,name',
+                        'regOne.entry:id,name',
+                        'regOne.age:id,start_age,end_age',
+                        'regOne.belt:id,name',
+                        'regOne.weight:id,weight',
                     ])
                     ->get();
 
