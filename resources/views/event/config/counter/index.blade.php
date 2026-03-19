@@ -195,7 +195,7 @@
         <div class="timer-section" id="timerSection">
             <div class="match-info">
                 <div class="match-details" id="matchDetails">
-                    <span class="marquee-content">{{ $bracket->entry->name }} / {{ $bracket->age->name }} / {{ $bracket->belt->name }}  / {{ $bracket->weight->weight }}KG</span>
+                    <span class="marquee-content">{{ $bracket->entry->name }} / {{ config('enums.gender_code')[$bracket->entry->gender_code] ?? '' }} / {{ $bracket->belt->name }}  / {{ $bracket->weight->weight }}KG</span>
                 </div>
                 <div class="match-stage" id="matchStage">
                     <span class="marquee-content">{{ $bracket->round }}</span>
