@@ -38,8 +38,11 @@
         }
 
         function getMatchInfo(bracket) {
+            const genderMap = @json(config('enums.gender_code'));
             const entry = bracket.reg_one?.entry?.name ?? '';
             const age = bracket.reg_one?.age ?? null;
+            const genderCode = bracket.reg_one?.entry?.gender_code ?? null;
+            const gender = genderCode ? (genderMap[genderCode] || '') : '';
             const belt = bracket.reg_one?.belt?.name ?? '';
             const weight = bracket.reg_one?.weight?.weight ?? '';
 
@@ -54,7 +57,8 @@
                 }
             }
 
-            const parts = [entry, ageName, belt, weight ? '-' + weight + 'KG' : ''].filter(p => p);
+            const entryWithAge = ageName ? `${entry} (${ageName})` : entry;
+            const parts = [entryWithAge, gender, belt, weight ? '-' + weight + 'KG' : ''].filter(p => p);
             return parts.join(' / ');
         }
 
