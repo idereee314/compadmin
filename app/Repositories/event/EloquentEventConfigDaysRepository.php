@@ -284,7 +284,7 @@ class EloquentEventConfigDaysRepository implements EventConfigDaysRepository
                         'regWin.member:id,firstname,lastname',
                         'regOne.academy:id,name',
                         'regTwo.academy:id,name',
-                        'regOne.entry:id,name',
+                        'regOne.entry:id,name,gender_code',
                         'regOne.age:id,start_age,end_age',
                         'regOne.belt:id,name',
                         'regOne.weight:id,weight',

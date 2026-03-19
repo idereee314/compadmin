@@ -448,7 +448,7 @@ class EloquentEventMatchesRespository implements EventMatchesRespository {
 			'regTwo.academy:id,name',
 			'regWin:id,member_id,academy_id',
 			'bracket',
-			'bracket.entry:id,name,duration',
+			'bracket.entry:id,name,duration,gender_code',
 			'bracket.age:id,start_age,end_age',
 			'bracket.age:id,start_age,end_age',
 			'bracket.belt:id,name',
