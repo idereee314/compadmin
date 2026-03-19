@@ -249,6 +249,8 @@ Route::get('/event/{eventId}/bracket/show', 'event\EventRegistrationController@s
 Route::get('/event/{eventId}/match-schedule', 'event\EventMatchController@publicSchedule')->name('event.public.schedule');
 Route::get('/event/{eventId}/match-schedule/matches', 'event\EventMatchController@publicGetMatchByGroup')->name('event.public.schedule.matches');
 
+Route::get('/event/{eventId}/schedule/manager', 'event\EventMatchController@scheduleManager')->name('event.schedule.manager');
+
 //result
 Route::get('/event/{eventId}/results', 'event\EventRegistrationController@results')->name('event.results');
 Route::get('/event/{eventId}/toplist', 'event\EventRegistrationController@toplist')->name('event.toplist');

@@ -45,7 +45,7 @@ class EloquentEventConfigRepository implements EventConfigRepository {
 	}
 
 	public function create($input)
-	{
+	{		
 		$dates = explode("/", @$input['reg_date']);
 		$eventConfig = new EventConfig;
 		$eventConfig->event_id = $input['event_id'];
@@ -62,6 +62,7 @@ class EloquentEventConfigRepository implements EventConfigRepository {
 		$eventConfig->event_result_type_id = @$input['event_result_type']; 
 		$eventConfig->event_category_id = @$input['event_category_id'];
 		$eventConfig->event_bracket_type_id = @$input['event_bracket_type_id'];
+		$eventConfig->start_time = @$input['start_time'];
 
 		$eventConfig->save();
 		return $eventConfig;
@@ -78,7 +79,7 @@ class EloquentEventConfigRepository implements EventConfigRepository {
 		$eventConfig->is_active = @$input['is_active'] ? $input['is_active'] : false;
 		$eventConfig->payment_final_date = @$input['reg_payment_date'];
 		$eventConfig->update_final_date = @$input['reg_update_date'];
-		// $eventConfig->start_time = @$input['start_time'];
+		$eventConfig->start_time = @$input['start_time'];
 		$eventConfig->sport_id = @$input['sport_id'];
 		$eventConfig->is_team = @$input['is_team'] ? $input['is_team'] : false;
 		$eventConfig->point_type_id = @$input['event_category_id'];

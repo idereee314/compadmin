@@ -15,6 +15,11 @@ class EloquentEventConfigDaysRepository implements EventConfigDaysRepository
         return EventDays::find($id);
     }
 
+    public function getDaysByEventId($event_id)
+    {
+        return EventDays::where('event_id', $event_id)->get();
+    }
+
     public function create($input)
     {
         $eventDays = new EventDays;

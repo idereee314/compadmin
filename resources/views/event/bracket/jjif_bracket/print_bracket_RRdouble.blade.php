@@ -91,48 +91,63 @@
         // Round robin: бүх хослол (n*(n-1)/2)
         $matches = [];
         $k = 1;
+
         for ($i = 0; $i < $count - 1; $i++) {
             for ($j = $i + 1; $j < $count; $j++) {
                 $matches[] = [
                     'r' => $all_athletes[$i],
                     'b' => $all_athletes[$j],
                     'l' => 'Match ' . $k,
+                    'order' => $k,
                 ];
                 $k++;
             }
-        @endphp
+        }
+    @endphp
 
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px;">
-            @foreach($matches as $rm)
-                @php $md = $matchByOrder[$loop->iteration] ?? null; $sc = $md ? $getScores($md) : ['red'=>'','blue'=>'']; @endphp
-                <div style="margin-bottom: 10px;">
-                    <div style="font-size: 10px; font-weight: bold; color: #94a3b8; text-transform: uppercase; margin-bottom: 3px;">{{ $rm['l'] }}</div>
-                    <table style="width: 100%; border-collapse: collapse; border: 1px solid #475569;">
-                        <tr>
-                            <td style="height: 44px; padding: 0; position: relative;{{ $md && $isWinner($md->reg_one_id, $md) ? ' background:#d4edda;' : '' }}">
-                                <div style="width: 6px; height: 100%; background: #ef4444; float: left;"></div>
-                                <div style="padding: 4px 10px; line-height: 1.2;">
-                                    {{ $rm['r']['lastname'] }} <strong>{{ $rm['r']['firstname'] }}</strong>
-                                    <div style="font-size: 10px; color: #64748b;">{{ $rm['r']['academy'] }}</div>
-                                </div>
-                            </td>
-                            <td style="width: 50px; background: #f1f5f9; border-left: 1px solid #475569; text-align:center; font-weight:bold;">{{ $sc['red'] }}</td>
-                        </tr>
-                        <tr>
-                            <td style="height: 44px; padding: 0; border-top: 1px solid #e2e8f0;{{ $md && $isWinner($md->reg_two_id, $md) ? ' background:#d4edda;' : '' }}">
-                                <div style="width: 6px; height: 100%; background: #3b82f6; float: left;"></div>
-                                <div style="padding: 4px 10px; line-height: 1.2;">
-                                    {{ $rm['b']['lastname'] }} <strong>{{ $rm['b']['firstname'] }}</strong>
-                                    <div style="font-size: 10px; color: #64748b;">{{ $rm['b']['academy'] }}</div>
-                                </div>
-                            </td>
-                            <td style="width: 50px; background: #f1f5f9; border-left: 1px solid #475569; text-align:center; font-weight:bold;">{{ $sc['blue'] }}</td>
-                        </tr>
-                    </table>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px;">
+        @foreach($matches as $rm)
+            @php
+                $md = $matchByOrder[$rm['order']] ?? null;
+                $sc = $md ? $getScores($md) : ['red'=>'','blue'=>''];
+            @endphp
+            <div style="margin-bottom: 10px;">
+                <div style="font-size: 10px; font-weight: bold; color: #94a3b8; text-transform: uppercase; margin-bottom: 3px;">
+                    {{ $rm['l'] }}
                 </div>
-            @endforeach
-        </div>
-        <div style="text-align: center; margin-top: 30px; font-weight: bold; font-size: 13px;">* Бүх тамирчид хоорондоо тойргоор барилдаж ялагчийг тодруулна.</div>
+                <table style="width: 100%; border-collapse: collapse; border: 1px solid #475569;">
+                    <tr>
+                        <td style="height: 44px; padding: 0; position: relative;{{ $md && $isWinner($md->reg_one_id, $md) ? ' background:#d4edda;' : '' }}">
+                            <div style="width: 6px; height: 100%; background: #ef4444; float: left;"></div>
+                            <div style="padding: 4px 10px; line-height: 1.2;">
+                                {{ $rm['r']['lastname'] }} <strong>{{ $rm['r']['firstname'] }}</strong>
+                                <div style="font-size: 10px; color: #64748b;">{{ $rm['r']['academy'] }}</div>
+                            </div>
+                        </td>
+                        <td style="width: 50px; background: #f1f5f9; border-left: 1px solid #475569; text-align:center; font-weight:bold;">
+                            {{ $sc['red'] }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="height: 44px; padding: 0; border-top: 1px solid #e2e8f0;{{ $md && $isWinner($md->reg_two_id, $md) ? ' background:#d4edda;' : '' }}">
+                            <div style="width: 6px; height: 100%; background: #3b82f6; float: left;"></div>
+                            <div style="padding: 4px 10px; line-height: 1.2;">
+                                {{ $rm['b']['lastname'] }} <strong>{{ $rm['b']['firstname'] }}</strong>
+                                <div style="font-size: 10px; color: #64748b;">{{ $rm['b']['academy'] }}</div>
+                            </div>
+                        </td>
+                        <td style="width: 50px; background: #f1f5f9; border-left: 1px solid #475569; text-align:center; font-weight:bold;">
+                            {{ $sc['blue'] }}
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        @endforeach
+    </div>
+
+    <div style="text-align: center; margin-top: 30px; font-weight: bold; font-size: 13px;">
+        * Бүх тамирчид хоорондоо тойргоор барилдаж ялагчийг тодруулна.
+    </div>
 
     {{-- CASE 3: 6 ТАМИРЧИНТАЙ БОЛ (Pools + Bracket) --}}
     @else

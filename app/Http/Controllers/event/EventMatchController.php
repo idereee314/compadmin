@@ -7,6 +7,8 @@ use event\EloquentEventConfigDaysRepository as ConfigDays;
 use event\EloquentEventMatchesRespository as Mathes;
 use event\EventConfigDaysRepository as EventDays;
 use event\EventConfigRepository as EventConfig;
+use reference\EventEntriesRepository as EventEntries;
+use event\EventRepository as Event;
 use Illuminate\Http\Request;
 use Input;
 
@@ -14,7 +16,7 @@ class EventMatchController extends Controller
 {
     public $restful = true;
 
-    public function __construct(ConfigDays $configDays, Event $event, Mathes $mathes, EventConfig $eventConfig, EventDays $eventDays)
+    public function __construct(ConfigDays $configDays, Event $event, Mathes $mathes, EventConfig $eventConfig, EventDays $eventDays, EventEntries $eventEntries)
     {
         $this->view_path = 'event.config.match';
         $this->configDays = $configDays;
@@ -22,6 +24,7 @@ class EventMatchController extends Controller
         $this->mathes = $mathes;
         $this->eventConfig = $eventConfig;
         $this->eventDays = $eventDays;
+        $this->eventEntries = $eventEntries;
     }
 
     public function show($eventId)
@@ -250,5 +253,23 @@ class EventMatchController extends Controller
     public function publicGetMatchByGroup(Request $request, $eventId)
     {
         return $this->configDays->getMatchByGroup($request, $eventId);
+    }
+
+    public function scheduleManager($eventId)
+    {
+        $input = Input::all();
+        
+        $eventConfig = $this->eventConfig->findByEvent($eventId);
+        
+        $entries = $this->eventEntries->getEntryByEventId($eventId);
+
+        $data['event'] = $this->event->find($eventId);
+        $data['eventConfig'] = $eventConfig;
+        $data['days'] = $this->eventDays->getDaysByEventId($eventId);
+        $data['entries'] = $entries;
+        $data['configViewDict'] = $this->eventDays->dictData($eventId);
+        $data['view_path'] = $this->view_path;
+
+        return view('event.schedule.schedule_manager', $data);
     }
 }
