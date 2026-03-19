@@ -38,23 +38,14 @@
         }
 
         function getMatchInfo(bracket) {
+            const genderMap = @json(config('enums.gender_code'));
             const entry = bracket.reg_one?.entry?.name ?? '';
-            const age = bracket.reg_one?.age ?? null;
+            const genderCode = bracket.reg_one?.entry?.gender_code ?? null;
+            const gender = genderCode ? (genderMap[genderCode] || '') : '';
             const belt = bracket.reg_one?.belt?.name ?? '';
             const weight = bracket.reg_one?.weight?.weight ?? '';
 
-            let ageName = '';
-            if (age) {
-                if (age.start_age == null) {
-                    ageName = '-' + age.end_age;
-                } else if (age.end_age == null) {
-                    ageName = age.start_age + '+';
-                } else {
-                    ageName = age.start_age + '-' + age.end_age;
-                }
-            }
-
-            const parts = [entry, ageName, belt, weight ? '-' + weight + 'KG' : ''].filter(p => p);
+            const parts = [entry, gender, belt, weight ? '-' + weight + 'KG' : ''].filter(p => p);
             return parts.join(' / ');
         }
 
