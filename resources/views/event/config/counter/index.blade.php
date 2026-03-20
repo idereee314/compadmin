@@ -3,7 +3,7 @@
     window.close();
   </script>
   {{-- Prevent further rendering --}}
-  @php exit; @endphp
+  @return
 @endif
 
 <html lang="{{ app()->getLocale() }}">
@@ -21,39 +21,41 @@
 		<link rel="stylesheet" href="{{ asset('/assets/plugins/global/plugins.bundle.css') }}" media="screen" />
 		<link rel="stylesheet" href="{{ asset('/assets/plugins/custom/prismjs/prismjs.bundle.css') }}" media="screen" />
 		<link rel="stylesheet" href="{{ asset('/assets/css/style.bundle.css') }}" media="screen" />
-		<link rel="stylesheet" href="{{ asset('/assets/css/style.bundle.css') }}" media="screen" />
-        <link rel="stylesheet" href="{{asset('css/scoreboard/scoreboard.css')}}">
+        <link rel="stylesheet" href="{{ asset('css/scoreboard/scoreboard.css') }}">
 
 		<!--end::Global Theme Styles-->
 		
 		<!--begin::Layout Themes(used by all pages)-->
 		@yield('css')
 		<!--end::Layout Themes-->
-		<link rel="shortcut icon" href="{{asset('assets/images/logo/uniq_logo.ico')}}" />
+		<link rel="shortcut icon" href="{{ asset('assets/images/logo/uniq_logo.ico') }}" />
 		<title>Тэмцээний Удирдлагын Систем</title>
 	</head>
 
 <body>
 
-<form id="winnerForm" action="{{ route('event.config.match.winner', ['match_id' => $matchId]) }}" method="POST"  style="display:none;">
-
+<form id="winnerForm" action="{{ route('event.config.match.winner', ['match_id' => $matchId]) }}" method="POST" style="display:none;">
+    @csrf
+    <input id="reg_win_id" type="hidden" name="reg_win_id" value="">
+    <input id="reg_win_method" type="hidden" name="reg_win_method" value="">
 </form>
+
     <div class="">
         <div class="row">
             <div class="player-info">
                 @if (!empty($registered[0]))
                 <div class="player-row-1">
-                    <img src="{{asset('assets/images/flags/4x3/' . ($registered[0]->abb ?? 'un') .'.svg')}}" alt="Flag" class="player-flag">
+                    <img src="{{ asset('assets/images/flags/4x3/' . ($registered[0]->abb ?? 'un') . '.svg') }}" alt="Flag" class="player-flag">
                     <div class="player-name">
-                        {{$registered[0]->member->firstname ?? '-'}}
-                        {{$registered[0]->member->lastname ?? ''}}
+                        {{ $registered[0]->member->firstname ?? '-' }}
+                        {{ $registered[0]->member->lastname ?? '' }}
                     </div>
                 </div>
                 <div class="player-row-2">
-                    <div class="country-code">{{$registered[0]->abb_full ?? '-'}}</div>
-                    <img src="{{asset('assets/images/logo/club/' . ($registered[0]->academy_id ?? 0) .'.jpg')}}" alt="Club Logo" class="club-logo"
-                    onerror="this.src='{{asset('assets/images/logo/club/0.png')}}'">
-                    <div class="club-name">{{$registered[0]->academy->name ?? ''}}</div>
+                    <div class="country-code">{{ $registered[0]->abb_full ?? '-' }}</div>
+                    <img src="{{ asset('assets/images/logo/club/' . ($registered[0]->academy_id ?? 0) . '.jpg') }}" alt="Club Logo" class="club-logo"
+                    onerror="this.src='{{ asset('assets/images/logo/club/0.png') }}'">
+                    <div class="club-name">{{ $registered[0]->academy->name ?? '' }}</div>
                 </div>
                 @else
                 <div class="player-row-1">
@@ -119,17 +121,17 @@
             <div class="player-info">
                 @if (!empty($registered[1]))
                 <div class="player-row-1">
-                    <img src="{{asset('assets/images/flags/4x3/' . ($registered[1]->abb ?? 'un') .'.svg')}}" alt="Flag" class="player-flag">
+                    <img src="{{ asset('assets/images/flags/4x3/' . ($registered[1]->abb ?? 'un') . '.svg') }}" alt="Flag" class="player-flag">
                     <div class="player-name">
-                        {{$registered[1]->member->firstname ?? '-'}}
-                        {{$registered[1]->member->lastname ?? ''}}
+                        {{ $registered[1]->member->firstname ?? '-' }}
+                        {{ $registered[1]->member->lastname ?? '' }}
                     </div>
                 </div>
                 <div class="player-row-2">
-                    <div class="country-code">{{$registered[1]->abb_full ?? '-'}}</div>
-                    <img src="{{asset('assets/images/logo/club/' . ($registered[1]->academy_id ?? 0) .'.jpg')}}" alt="Club Logo" class="club-logo"
-                    onerror="this.src='{{asset('assets/images/logo/club/0.png')}}'">
-                    <div class="club-name">{{$registered[1]->academy->name ?? ''}}</div>
+                    <div class="country-code">{{ $registered[1]->abb_full ?? '-' }}</div>
+                    <img src="{{ asset('assets/images/logo/club/' . ($registered[1]->academy_id ?? 0) . '.jpg') }}" alt="Club Logo" class="club-logo"
+                    onerror="this.src='{{ asset('assets/images/logo/club/0.png') }}'">
+                    <div class="club-name">{{ $registered[1]->academy->name ?? '' }}</div>
                 </div>
                 @else
                 <div class="player-row-1">
@@ -222,8 +224,8 @@
                         <td><button class="control-button" onclick="event.stopPropagation(); switchSides()">SWITCH SIDES</button></td>
                     </tr>
                     <tr>
-                        <td><button class="control-button" onclick="event.stopPropagation()">BACK TO BRACKET</button></td>
-                        <td><button class="control-button" onclick="event.stopPropagation()">BACK TO FIGHTORDER</button></td>
+                        <td><button class="control-button" onclick="event.stopPropagation(); confirmBeforeNavigate(goToBracket)">BACK TO BRACKET</button></td>
+                        <td><button class="control-button" onclick="event.stopPropagation(); confirmBeforeNavigate(goToFightOrder)">BACK TO FIGHTORDER</button></td>
                         <td><button class="control-button" onclick="event.stopPropagation(); showEndGame()">END GAME</button></td>
                     </tr>
                 </table>
@@ -240,6 +242,9 @@
                 <td><button class="end-game-button" onclick="event.stopPropagation(); announceDraw('DOUBLE WO/DQ')">DOUBLE WO/DQ</button></td>
                 <td><button class="end-game-button" onclick="event.stopPropagation(); announceDraw('DOUBLE NO SHOW')">DOUBLE NO SHOW</button></td>
             </tr>
+            <tr>
+                <td colspan="3"><button class="end-game-button cancel-button" onclick="event.stopPropagation(); cancelEndGame()" style="background: #dc3545; width: 100%; margin-top: 6px;">Болих</button></td>
+            </tr>
         </table>
     </div>
 
@@ -250,7 +255,7 @@
                 <td colspan="4"><div class="end-game-header red-header">WON BY:</div></td>
             </tr>
             <tr>
-                <td colspan="2"><button class="end-game-button" onclick="event.stopPropagation(); announceWinner('red', 'POINTS' ); setWinnerId({{ $registered[0]->id ?? 'null' }})">POINTS</button></td>
+                <td colspan="2"><button class="end-game-button" onclick="event.stopPropagation(); announceWinner('red', 'POINTS'); setWinnerId({{ $registered[0]->id ?? 'null' }})">POINTS</button></td>
                 <td colspan="2"><button class="end-game-button" onclick="event.stopPropagation(); announceWinner('red', 'SUBMISSION'); setWinnerId({{ $registered[0]->id ?? 'null' }})">SUBMISSION</button></td>
             </tr>
             <tr>
@@ -258,6 +263,9 @@
                 <td><button class="end-game-button" onclick="event.stopPropagation(); announceWinner('red', 'WALKOVER'); setWinnerId({{ $registered[0]->id ?? 'null' }})">WALKOVER</button></td>
                 <td><button class="end-game-button" onclick="event.stopPropagation(); announceWinner('red', 'NO SHOW'); setWinnerId({{ $registered[0]->id ?? 'null' }})">NO SHOW</button></td>
                 <td><button class="end-game-button" onclick="event.stopPropagation(); announceWinner('red', 'DECISION'); setWinnerId({{ $registered[0]->id ?? 'null' }})">DECISION</button></td>
+            </tr>
+            <tr>
+                <td colspan="4"><button class="end-game-button cancel-button" onclick="event.stopPropagation(); cancelEndGame()" style="background: #dc3545; width: 100%; margin-top: 6px;">Болих</button></td>
             </tr>
         </table>
     </div>
@@ -269,7 +277,7 @@
                 <td colspan="4"><div class="end-game-header blue-header">WON BY:</div></td>
             </tr>
             <tr>
-                <td colspan="2"><button class="end-game-button" onclick="event.stopPropagation(); announceWinner('blue', 'POINTS' ); setWinnerId({{ $registered[1]->id ?? 'null' }})">POINTS</button></td>
+                <td colspan="2"><button class="end-game-button" onclick="event.stopPropagation(); announceWinner('blue', 'POINTS'); setWinnerId({{ $registered[1]->id ?? 'null' }})">POINTS</button></td>
                 <td colspan="2"><button class="end-game-button" onclick="event.stopPropagation(); announceWinner('blue', 'SUBMISSION'); setWinnerId({{ $registered[1]->id ?? 'null' }})">SUBMISSION</button></td>
             </tr>
             <tr>
@@ -277,6 +285,9 @@
                 <td><button class="end-game-button" onclick="event.stopPropagation(); announceWinner('blue', 'WALKOVER'); setWinnerId({{ $registered[1]->id ?? 'null' }})">WALKOVER</button></td>
                 <td><button class="end-game-button" onclick="event.stopPropagation(); announceWinner('blue', 'NO SHOW'); setWinnerId({{ $registered[1]->id ?? 'null' }})">NO SHOW</button></td>
                 <td><button class="end-game-button" onclick="event.stopPropagation(); announceWinner('blue', 'DECISION'); setWinnerId({{ $registered[1]->id ?? 'null' }})">DECISION</button></td>
+            </tr>
+            <tr>
+                <td colspan="4"><button class="end-game-button cancel-button" onclick="event.stopPropagation(); cancelEndGame()" style="background: #dc3545; width: 100%; margin-top: 6px;">Болих</button></td>
             </tr>
         </table>
     </div>
@@ -298,17 +309,17 @@
                     <table class="post-result-table" style="width: 100%;">
                         <tr>
                             <td style="padding-bottom: 6px;">
-                                <button class="post-result-button save-button" onclick="event.stopPropagation(); saveMatchResult()" style="width: 100%;">SAVE</button>
+                                <button id="saveBtn" class="post-result-button save-button" onclick="event.stopPropagation(); saveMatchResult()" style="width: 100%;">SAVE</button>
                             </td>
                         </tr>
                         <tr>
                             <td style="padding: 0;">
                                 <table class="post-result-table">
                                     <tr>
-                                        <td><button class="post-result-button" onclick="event.stopPropagation(); goBack()">BACK</button></td>
-                                        <td><button class="post-result-button" onclick="event.stopPropagation()">FIGHTORDER</button></td>
-                                        <td><button class="post-result-button" onclick="event.stopPropagation()">BRACKET</button></td>
-                                        <td><button class="post-result-button" onclick="event.stopPropagation(); redirectToNextCounter()">NEXT</button></td>
+                                        <td><button class="post-result-button" onclick="event.stopPropagation(); confirmBeforeNavigate(goBack)">BACK</button></td>
+                                        <td><button class="post-result-button" onclick="event.stopPropagation(); confirmBeforeNavigate(goToFightOrder)">FIGHTORDER</button></td>
+                                        <td><button class="post-result-button" onclick="event.stopPropagation(); confirmBeforeNavigate(goToBracket)">BRACKET</button></td>
+                                        <td><button class="post-result-button" onclick="event.stopPropagation(); confirmBeforeNavigate(redirectToNextCounter)">NEXT</button></td>
                                     </tr>
                                 </table>
                             </td>
@@ -319,30 +330,35 @@
         </table>
     </div>
 
-<input id="reg_win_id" type="hidden" name="reg_win_id" value=""></input>
-
-
 <script>var matchDuration = {{ $bracket->entry->duration ?? 5 }};</script>
 <script src="{{ asset('js/scoreboard/scoreboard.js') }}?v={{ time() }}"></script>
 <!--begin::Global Config(global config for global JS scripts)-->
 <script>var KTAppSettings = { "breakpoints": { "sm": 576, "md": 768, "lg": 992, "xl": 1200, "xxl": 1200 }, "colors": { "theme": { "base": { "white": "#ffffff", "primary": "#6993FF", "secondary": "#E5EAEE", "success": "#1BC5BD", "info": "#8950FC", "warning": "#FFA800", "danger": "#F64E60", "light": "#F3F6F9", "dark": "#212121" }, "light": { "white": "#ffffff", "primary": "#E1E9FF", "secondary": "#ECF0F3", "success": "#C9F7F5", "info": "#EEE5FF", "warning": "#FFF4DE", "danger": "#FFE2E5", "light": "#F3F6F9", "dark": "#D6D6E0" }, "inverse": { "white": "#ffffff", "primary": "#ffffff", "secondary": "#212121", "success": "#ffffff", "info": "#ffffff", "warning": "#ffffff", "danger": "#ffffff", "light": "#464E5F", "dark": "#ffffff" } }, "gray": { "gray-100": "#F3F6F9", "gray-200": "#ECF0F3", "gray-300": "#E5EAEE", "gray-400": "#D6D6E0", "gray-500": "#B5B5C3", "gray-600": "#80808F", "gray-700": "#464E5F", "gray-800": "#1B283F", "gray-900": "#212121" } }, "font-family": "Poppins" };</script>
 <!--end::Global Config-->
 <!--begin::Global Theme Bundle(used by all pages)-->
-<script src="{{asset('assets/plugins/global/plugins.bundle.js')}}"></script>
-<script src="{{asset('assets/plugins/custom/prismjs/prismjs.bundle.js')}}"></script>
-<script src="{{asset('assets/js/scripts.bundle.js')}}"></script>
+<script src="{{ asset('assets/plugins/global/plugins.bundle.js') }}"></script>
+<script src="{{ asset('assets/plugins/custom/prismjs/prismjs.bundle.js') }}"></script>
+<script src="{{ asset('assets/js/scripts.bundle.js') }}"></script>
 <script src="{{ asset('assets/js/plugins/custom/datatables/datatables.bundle.js') }}"></script>
-<script src="{{asset('assets/js/smart.js')}}"></script>
+<script src="{{ asset('assets/js/smart.js') }}"></script>
 
-<script src="{{asset('assets/js/plugins/custom/blockui/jquery.blockUI.js')}}"> </script>
-<script src="{{asset('assets/js/plugins/custom/jquery-confirm/jquery-confirm.min.js') }}"></script>
-<script src="{{asset('assets/js/plugins/custom/jquery-validation/dist/jquery.validate.js') }}"></script>
+<script src="{{ asset('assets/js/plugins/custom/blockui/jquery.blockUI.js') }}"></script>
+<script src="{{ asset('assets/js/plugins/custom/jquery-confirm/jquery-confirm.min.js') }}"></script>
+<script src="{{ asset('assets/js/plugins/custom/jquery-validation/dist/jquery.validate.js') }}"></script>
 
 <script>
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     const bracket = @json($bracket);
     const allData = @json($registered);
     const winnerData = allData[2] ?? null;
     const regOne = allData[0] ?? null;
+
+    // ============================================================
+    // Save state tracking — SAVE дарсан эсэхийг хянах
+    // ============================================================
+    let isMatchSaved = false;
+    // Ялагч/draw сонгосон эсэх (announceWinner эсвэл announceDraw дуудагдсан)
+    let isResultChosen = false;
 
     // Track BYE match IDs that should be skipped by NEXT button
     let byeMatchIds = [];
@@ -350,50 +366,154 @@
     const localStorageKey = `${bracket.event_id}_${bracket.day_id}_${bracket.mat_id}`;
     const localStorageData = JSON.parse(localStorage.getItem(localStorageKey));
     if (localStorageData) {
-      const id = localStorageData.findIndex(x => x == {{ $matchId }});
-      window.redirectToNextCounter = function() {
-        // Find the next match that is NOT a BYE auto-completed match
-        let nextIdx = id + 1;
-        while (nextIdx < localStorageData.length && byeMatchIds.includes(localStorageData[nextIdx])) {
-          nextIdx++;
+        const id = localStorageData.findIndex(x => x == {{ $matchId }});
+        window.redirectToNextCounter = function() {
+            // Find the next match that is NOT a BYE auto-completed match
+            let nextIdx = id + 1;
+            while (nextIdx < localStorageData.length && byeMatchIds.includes(localStorageData[nextIdx])) {
+                nextIdx++;
+            }
+            const nextMatchId = nextIdx < localStorageData.length ? localStorageData[nextIdx] : localStorageData[id];
+            window.location.href = "{{ route('event.config.match.edit_status', ['match_id' => ':matchId']) }}".replace(':matchId', nextMatchId);
         }
-          const nextMatchId = nextIdx < localStorageData.length ? localStorageData[nextIdx] : localStorageData[id];
-        window.location.href = "{{ route('event.config.match.edit_status', ['match_id' => ':matchId']) }}".replace(':matchId', nextMatchId);
-      }
-      window.redirectToPrevCounter = function() {
-        let prevMatchId;
-        if (id > 0) {
-          prevMatchId = localStorageData[id - 1];
-        } else {
-          prevMatchId = localStorageData[id];
+        window.redirectToPrevCounter = function() {
+            let prevMatchId;
+            if (id > 0) {
+                prevMatchId = localStorageData[id - 1];
+            } else {
+                prevMatchId = localStorageData[id];
+            }
+            window.location.href = "{{ route('event.config.match.edit_status', ['match_id' => ':matchId']) }}".replace(':matchId', prevMatchId);
         }
-          window.location.href = "{{ route('event.config.match.edit_status', ['match_id' => ':matchId']) }}".replace(':matchId', prevMatchId);
-      }
     } else {
-      window.redirectToNextCounter = function() {
-        window.location.href = "{{ route('event.config.counter.next', ['match_id' => $matchId]) }}";
-      }
-      window.redirectToPrevCounter = function() {
-        window.location.href = "{{ route('event.config.counter.prev', ['match_id' => $matchId]) }}";
-      }
+        window.redirectToNextCounter = function() {
+            window.location.href = "{{ route('event.config.counter.next', ['match_id' => $matchId]) }}";
+        }
+        window.redirectToPrevCounter = function() {
+            window.location.href = "{{ route('event.config.counter.prev', ['match_id' => $matchId]) }}";
+        }
     }
 
-    
-    if(winnerData && winnerData.id && regOne) {
+    // ============================================================
+    // confirmBeforeNavigate — SAVE дараагүй бол энгийн toastr анхааруулга
+    // ============================================================
+    function confirmBeforeNavigate(navigateFn) {
+        // Хэрэв ялагч/draw сонгоогүй бол шууд navigate (хадгалах зүйл алга)
+        if (!isResultChosen) {
+            navigateFn();
+            return;
+        }
+
+        // Ялагч/draw сонгосон ч SAVE аль хэдийн дарсан бол шууд navigate
+        if (isMatchSaved) {
+            navigateFn();
+            return;
+        }
+
+        // SAVE дараагүй байна — энгийн toastr анхааруулга
+        toastr.warning('Эхлээд SAVE дарж үр дүнг хадгална уу!');
+    }
+
+    // Set winner ID into hidden form field
+    function setWinnerId(regId) {
+        document.getElementById('reg_win_id').value = regId || '';
+        isResultChosen = true;
+    }
+
+    // Set winner method into hidden form field
+    function setWinnerMethod(method) {
+        document.getElementById('reg_win_method').value = method || '';
+        isResultChosen = true;
+    }
+
+    // ============================================================
+    // announceWinner / announceDraw wrapper — isResultChosen тохируулах
+    // ============================================================
+    // Анхаар: announceWinner, announceDraw функцүүд scoreboard.js-д
+    // тодорхойлогдсон байгаа. Тэдгээрийг дуудах үед isResultChosen-г
+    // тохируулах шаардлагатай. setWinnerId болон setWinnerMethod дотор
+    // аль хэдийн isResultChosen = true хийж байгаа тул announceDraw-д
+    // тусад нь тохируулна.
+    //
+    // Хэрэв announceDraw scoreboard.js-д байгаа бол доорх wrapper-ийг
+    // ашиглана:
+    const _originalAnnounceDraw = typeof announceDraw === 'function' ? announceDraw : null;
+    if (_originalAnnounceDraw) {
+        window.announceDraw = function(method) {
+            isResultChosen = true;
+            setWinnerMethod(method);
+            _originalAnnounceDraw(method);
+        };
+    }
+
+    // Navigation helper functions
+    function goBack() {
+        if (typeof redirectToPrevCounter === 'function') {
+            redirectToPrevCounter();
+        } else {
+            window.history.back();
+        }
+    }
+
+    function goToBracket() {
+        // TODO: Bracket route-оо энд тохируулна уу
+        window.history.back();
+    }
+
+    function goToFightOrder() {
+        // TODO: Fight order route-оо энд тохируулна уу
+        window.history.back();
+    }
+
+    // Restore winner state if match was previously decided
+    if (winnerData && winnerData.id && regOne) {
         const localStorageKey1 = `{{ $matchId }}-winner`;
         const localStorageData1 = JSON.parse(localStorage.getItem(localStorageKey1));
         if (localStorageData1) {
+            // Өмнө нь хадгалсан тоглолт — saved гэж тэмдэглэх
+            isMatchSaved = true;
+            isResultChosen = true;
             announceWinner(winnerData.id === regOne.id ? 'red' : 'blue', localStorageData1.method);
+            // SAVE товчийг ✔ тэмдэгтэй болгох
+            markSaveButtonDone();
         }
     }
 
+    // ============================================================
+    // markSaveButtonDone — SAVE товчийг ✔ тэмдэгтэй болгох
+    // ============================================================
+    function markSaveButtonDone() {
+        const saveBtn = document.getElementById('saveBtn');
+        if (saveBtn) {
+            saveBtn.innerHTML = '✔ SAVED';
+            saveBtn.style.background = '#28a745';
+            saveBtn.style.color = '#fff';
+            saveBtn.style.pointerEvents = 'none';
+            saveBtn.style.opacity = '0.85';
+        }
+    }
+
+    // ============================================================
+    // saveMatchResult — хадгалах (callback-гүй хувилбар)
+    // ============================================================
     function saveMatchResult() {
-        const form = document.getElementById('winnerForm');
-        const regWinId = form.querySelector('input[name="reg_win_id"]').value;
-        const winnerMethod = form.querySelector('input[name="reg_win_method"]').value;
-        console.log('Saving match result with winner reg ID:', regWinId);
-        postData = {
-            '_token': '{{ csrf_token() }}',
+        saveMatchResultThen(null);
+    }
+
+    // ============================================================
+    // saveMatchResultThen — хадгалаад дараа нь callback дуудах
+    // ============================================================
+    function saveMatchResultThen(onSuccessCallback) {
+        const regWinId = document.getElementById('reg_win_id').value;
+        const winnerMethod = document.getElementById('reg_win_method').value;
+
+        if (!regWinId && !winnerMethod) {
+            toastr.warning('Ялагч эсвэл үр дүн сонгоогүй байна.');
+            return;
+        }
+
+        const postData = {
+            '_token': csrfToken,
             'reg_win_id': regWinId || null,
             'win_method': winnerMethod,
             'red_score': redScore,
@@ -403,24 +523,42 @@
             'red_penalty': redPenalty,
             'blue_penalty': bluePenalty
         };
+
         fetch("{{ route('event.config.match.winner', ['match_id' => $matchId]) }}", {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                'X-CSRF-TOKEN': csrfToken
             },
             body: JSON.stringify(postData)
-        })        .then(response => response.json())
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Server error: ' + response.status);
+            }
+            return response.json();
+        })
         .then(data => {
-            toastr.success(data.msg);
+            // Амжилттай хадгалагдлаа
+            isMatchSaved = true;
+            toastr.success(data.msg || 'Амжилттай хадгалагдлаа.');
             localStorage.setItem(`{{ $matchId }}-winner`, JSON.stringify({winner: regWinId, method: winnerMethod}));
+
+            // SAVE товчийг ✔ тэмдэгтэй болгох
+            markSaveButtonDone();
+
             // Capture BYE match IDs so NEXT button can skip them
             if (data.bye_match_ids && data.bye_match_ids.length > 0) {
                 byeMatchIds = data.bye_match_ids;
             }
+            // Хэрэв callback байвал дуудах (жишээ нь navigate хийх)
+            if (typeof onSuccessCallback === 'function') {
+                onSuccessCallback();
+            }
         })
         .catch((error) => {
             console.error('Error:', error);
+            toastr.error('Хадгалахад алдаа гарлаа. Дахин оролдоно уу.');
         });
     }
 </script>

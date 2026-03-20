@@ -142,6 +142,11 @@ class TournamentMatchService {
             // Auto-advance BYE winners to their next-round matches
             $this->autoAdvanceByeWinners($savedRoundMatches);
 
+            // Reorder all matches for this bracket so order_no reflects
+            // the actual play sequence, respecting round dependencies and
+            // maximising rest breaks for players.
+            $this->reorderMatchesForBracket($matchBracket->id);
+
             Log::info('Tournament initialized successfully', [
                 'roundMatchesData' => $roundMatchesData,
             ]);
@@ -214,6 +219,203 @@ class TournamentMatchService {
                     }
                 }
             }
+        }
+    }
+
+    /**
+     * Reorder all matches within a single bracket so that display_order
+     * reflects the actual play sequence on the mat.
+     *
+     * IMPORTANT: This does NOT change order_no. The original order_no
+     * values (1-4, 201-202, 2201-2202, 9996-9999) are preserved because
+     * determineRound() and other logic depend on them to identify which
+     * round/bracket a match belongs to. Instead, a new `display_order`
+     * field is set on each match, representing the 1-based play sequence.
+     *
+     * The algorithm:
+     *   1. Fetch all matches for the bracket, ordered by current order_no.
+     *   2. Build a dependency graph from previes_mate_id1 / previes_mate_id2.
+     *   3. Separate matches into layers:
+     *      a) "BYE" matches: already completed (status='C'), unlock dependents
+     *      b) "ready" matches: all dependencies satisfied
+     *      c) "medal" matches: order_no >= 9996 (bronze, gold — always last)
+     *   4. Use a greedy scheduler that picks the next playable match with
+     *      the best rest break for its players (same algorithm as MatchScheduler).
+     *   5. Assign sequential display_order (1, 2, 3 …) to non-medal matches.
+     *      Medal matches get display_order after all regular matches.
+     *
+     * This ensures that:
+     *   - Winners and losers bracket matches are interleaved optimally
+     *   - Players get maximum rest between consecutive fights
+     *   - Round dependencies are always respected
+     *   - Medal/final matches are played last
+     *   - order_no is preserved for determineRound() compatibility
+     */
+    protected function reorderMatchesForBracket($bracketId)
+    {
+        $allMatches = EventMatches::where('bracket_id', $bracketId)
+            ->orderBy('order_no', 'asc')
+            ->get();
+
+        if ($allMatches->count() <= 1) {
+            if ($allMatches->count() === 1) {
+                $match = $allMatches->first();
+                $match->display_order = 1;
+                $match->save();
+            }
+            return;
+        }
+
+        // Index matches by ID for quick lookup
+        $matchById = [];
+        foreach ($allMatches as $match) {
+            $matchById[$match->id] = $match;
+        }
+
+        // Separate medal matches (order_no >= 9996) — these are always played last
+        $medalMatches = [];
+        $regularMatches = [];
+        foreach ($allMatches as $match) {
+            if ($match->order_no >= 9996) {
+                $medalMatches[] = $match;
+            } else {
+                $regularMatches[] = $match;
+            }
+        }
+
+        // Build dependency sets: matchId => [feeder match IDs that must finish first]
+        $dependencies = [];
+        foreach ($regularMatches as $match) {
+            $deps = [];
+            if ($match->previes_mate_id1 && isset($matchById[$match->previes_mate_id1])) {
+                $deps[] = $match->previes_mate_id1;
+            }
+            if ($match->previes_mate_id2 && isset($matchById[$match->previes_mate_id2])) {
+                $deps[] = $match->previes_mate_id2;
+            }
+            $dependencies[$match->id] = $deps;
+        }
+
+        // Track scheduling state
+        $scheduled = [];    // ordered list of match objects (play sequence)
+        $doneIds = [];      // set of match IDs that are "done"
+        $lastSlot = [];     // playerID => last slot played (for rest-break calc)
+
+        // Pre-mark already-completed (BYE) matches as done
+        // They don't occupy a play slot but unlock their dependents
+        $byeMatchIds = [];
+        foreach ($regularMatches as $match) {
+            if ($match->status === 'C') {
+                $byeMatchIds[$match->id] = true;
+                if ($match->reg_one_id) {
+                    $lastSlot[$match->reg_one_id] = 0;
+                }
+            }
+        }
+
+        // Greedy scheduling loop
+        $slot = 1;
+        $maxIterations = count($regularMatches) * count($regularMatches) + 10;
+        $iteration = 0;
+
+        while (count($scheduled) + count($byeMatchIds) < count($regularMatches)) {
+            if (++$iteration > $maxIterations) {
+                Log::warning('reorderMatchesForBracket: max iterations reached', [
+                    'bracket_id' => $bracketId,
+                    'scheduled' => count($scheduled),
+                    'total' => count($regularMatches),
+                ]);
+                break;
+            }
+
+            // Find all "ready" matches: not yet done, all dependencies satisfied
+            $candidates = [];
+            foreach ($regularMatches as $match) {
+                if (isset($doneIds[$match->id]) || isset($byeMatchIds[$match->id])) {
+                    continue;
+                }
+                $ready = true;
+                foreach ($dependencies[$match->id] as $depId) {
+                    if (!isset($doneIds[$depId]) && !isset($byeMatchIds[$depId])) {
+                        $ready = false;
+                        break;
+                    }
+                }
+                if ($ready) {
+                    $candidates[] = $match;
+                }
+            }
+
+            if (empty($candidates)) {
+                // Fallback: force-schedule remaining (shouldn't happen normally)
+                foreach ($regularMatches as $match) {
+                    if (!isset($doneIds[$match->id]) && !isset($byeMatchIds[$match->id])) {
+                        $candidates[] = $match;
+                    }
+                }
+                if (empty($candidates)) {
+                    break;
+                }
+            }
+
+            // Pick the candidate with best minimum rest for its players
+            $bestMatch = null;
+            $bestMinWait = -1;
+
+            foreach ($candidates as $match) {
+                $p1 = $match->reg_one_id;
+                $p2 = $match->reg_two_id;
+
+                if ($p1 === null && $p2 === null) {
+                    // Unknown players (later round) — defer in favour of known-player matches
+                    $minWait = PHP_INT_MAX - 1;
+                } else {
+                    $wait1 = ($p1 !== null) ? ($slot - ($lastSlot[$p1] ?? 0)) : PHP_INT_MAX;
+                    $wait2 = ($p2 !== null) ? ($slot - ($lastSlot[$p2] ?? 0)) : PHP_INT_MAX;
+                    $minWait = min($wait1, $wait2);
+                }
+
+                if ($minWait > $bestMinWait) {
+                    $bestMinWait = $minWait;
+                    $bestMatch = $match;
+                }
+            }
+
+            $scheduled[] = $bestMatch;
+            $doneIds[$bestMatch->id] = true;
+
+            if ($bestMatch->reg_one_id) {
+                $lastSlot[$bestMatch->reg_one_id] = $slot;
+            }
+            if ($bestMatch->reg_two_id) {
+                $lastSlot[$bestMatch->reg_two_id] = $slot;
+            }
+            $slot++;
+        }
+
+        // Assign sequential display_order to scheduled regular matches
+        $displayOrder = 1;
+        foreach ($scheduled as $match) {
+            $match->display_order = $displayOrder++;
+            $match->save();
+        }
+
+        // BYE matches get display_order = 0 (not played, but still in bracket)
+        foreach ($regularMatches as $match) {
+            if (isset($byeMatchIds[$match->id])) {
+                $match->display_order = 0;
+                $match->save();
+            }
+        }
+
+        // Medal matches: maintain their relative order (9996 < 9997 < 9998 < 9999)
+        // and assign display_order after all regular matches
+        usort($medalMatches, function ($a, $b) {
+            return $a->order_no <=> $b->order_no;
+        });
+        foreach ($medalMatches as $match) {
+            $match->display_order = $displayOrder++;
+            $match->save();
         }
     }
 

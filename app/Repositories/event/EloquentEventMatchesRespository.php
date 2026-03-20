@@ -41,8 +41,8 @@ class EloquentEventMatchesRespository implements EventMatchesRespository {
 	public function create($input)
 	{
 		$eventMatches = new EventMatches();
-		$eventBracket = findBracket($input['bracket_id']);
-		if (!$eventBracket) {
+		$eventBracket = $this->findBracket($input['bracket_id']);
+		if ($eventBracket) {
 			$eventMatches->event_id = $eventBracket['event_id'];
 			$eventMatches->bracket_id = $eventBracket['bracket_id'];
 			$eventMatches->reg_one_id = $eventBracket['reg_one_id'];
@@ -582,4 +582,32 @@ class EloquentEventMatchesRespository implements EventMatchesRespository {
 		return $tournamentService->initializeTournament($event_id, $bracketType->code, $participants, $mateBracket);
 	}
 
+	public function getPrevMatches($match_id, $request)
+	{
+	    $currentMatch = $this->find($match_id);
+	    if (!$currentMatch) return null;
+	
+	    $prev = EventMatches::where('event_id', $currentMatch->event_id)
+	        ->where('bracket_id', $currentMatch->bracket_id)
+	        ->where('display_order', '<', $currentMatch->display_order)
+	        ->where('display_order', '>', 0)
+	        ->orderBy('display_order', 'desc')
+	        ->first();
+	
+	    return $prev ? $prev->id : null;
+	}
+	
+	public function getNextMatches($match_id, $request)
+	{
+	    $currentMatch = $this->find($match_id);
+	    if (!$currentMatch) return null;
+	
+	    $next = EventMatches::where('event_id', $currentMatch->event_id)
+	        ->where('bracket_id', $currentMatch->bracket_id)
+	        ->where('display_order', '>', $currentMatch->display_order)
+	        ->orderBy('display_order', 'asc')
+	        ->first();
+	
+	    return $next ? $next->id : null;
+	}
 }

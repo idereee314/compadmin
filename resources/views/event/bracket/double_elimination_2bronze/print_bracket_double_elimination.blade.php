@@ -164,7 +164,7 @@
     $_lrv = array_values($_loserRounds);
 @endphp
 
-<div style="width:{{ $width }}; margin:0 auto; background-color: white; border: 1px solid #ccc; padding: 30px; font-family: 'Helvetica', 'Arial', sans-serif; position: relative; min-height: 1000px; color: #333;">
+<div style="width: 1100px; margin: 0 auto; background-color: white; border: 1px solid #ccc; padding: 30px; font-family: 'Helvetica', 'Arial', sans-serif; position: relative; min-height: 1000px; color: #333;">
 
     {{-- ========================= HEADER ========================= --}}
     <div style="border-bottom: 2px solid {{ $cfg['header_color'] }}; margin-bottom: 25px; padding-bottom: 10px; display: flex; justify-content: space-between; align-items: flex-end;">

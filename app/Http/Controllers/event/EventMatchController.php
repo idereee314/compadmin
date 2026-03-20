@@ -192,7 +192,7 @@ class EventMatchController extends Controller
             }
 
         } catch (\Throwable $e) {
-            \Log::error('Error saving brackets: '.$e->getMessage(), [
+            \Log::error('Оноолт хадгалхад алдаа гарлаа: '.$e->getMessage(), [
                 'file' => $e->getFile(),
                 'line' => $e->getLine(),
                 'trace' => $e->getTraceAsString(),
@@ -205,7 +205,7 @@ class EventMatchController extends Controller
             ], 500);
         }
 
-        return response()->json(['status' => 'success', 'message' => 'Brackets saved successfully.']);
+        return response()->json(['status' => 'success', 'message' => 'Оноолт амжиллттай хадгалагдлаа.']);
     }
 
     public function getMatchesFromEventDays(Request $request, $event_id)

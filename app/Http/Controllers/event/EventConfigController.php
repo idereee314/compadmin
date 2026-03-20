@@ -218,7 +218,7 @@ class EventConfigController extends Controller
     {
         $input = Input::all();
         $validator = Validator::make($input, EventConfigModel::rules($id));
-
+        
         if ($validator->fails())
 		{
         	$response = array(
@@ -228,9 +228,14 @@ class EventConfigController extends Controller
             );
         } else {
 			try {
-                // if (!empty($input['start_time'])) {
-                //     $input['start_time'] = Carbon\Carbon::createFromFormat('h:i A', $input['start_time'])->format('H:i:s');
-                // }
+                if (!empty($input['start_time'])) {
+                    try {
+                        $input['start_time'] = Carbon\Carbon::parse($input['start_time'])->format('H:i:s');
+                    } catch (\Exception $e) {
+                        $input['start_time'] = null;
+                    }
+                }
+                
                 $event = $this->eventConfig->update($id, $input);
             
 				$response = array(

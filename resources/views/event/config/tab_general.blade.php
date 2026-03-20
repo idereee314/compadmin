@@ -107,7 +107,7 @@
             <label class="col-md-3 col-form-label text-left">{{trans('display.start_time')}}</label>
             <div class="col-md-9 col-lg-6">
                 <div class="input-group" id="kt_start_time">
-                    <input type="" name="start_time" id="start_time" data-toggle="timepicker" data-target="#start_time" class="form-control timepicker-input" readonly="readonly" value="{{ $eventConfig->start_time ? \Carbon\Carbon::parse($eventConfig->start_time)->timezone('Asia/Ulaanbaatar')->format('H:i:s') : null }}">
+                    <input type="text" name="start_time" id="start_time" data-toggle="timepicker" data-target="#start_time" class="form-control" readonly="readonly" value="{{ $eventConfig->start_time }}">
                     <div class="input-group-append">
                         <span class="input-group-text">
                             <i class="la la-calendar-check-o"></i>
@@ -263,14 +263,14 @@ $(document).ready(function () {
     $('#reg_payment_date, #reg_update_date').datetimepicker(dateTimePickerOptions);
 
     $('#start_time').timepicker({
-        timeFormat: 'h:mm',
+        timeFormat: 'HH:mm',
         interval: 60,
-        defaultTime: false,
+        defaultTime: '{{ $eventConfig->start_time ? \Carbon\Carbon::parse($eventConfig->start_time)->timezone("Asia/Ulaanbaatar")->format("H:i") : "" }}',
         dynamic: true,
         dropdown: true,
         scrollbar: true
     });
-
+    
     $('#update-event-config-form select[id=org_types]').select2();
 
     $('#is_athlete_limit').on('change', function () {

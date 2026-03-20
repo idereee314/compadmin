@@ -28,9 +28,25 @@
             document.getElementById('endGameRed').classList.add('visible');
             document.getElementById('endGameBlue').classList.add('visible');
             
+            // Stop the main timer
+            pauseTimer();
+
+            // Stop stalling timers if active
+            stopStalling('red');
+            stopStalling('blue');
+            stallingButton.classList.remove('visible');
+
+            // Stop medical timers if running
+            if (medicalState.red.running) toggleMedicalPlay('red');
+            if (medicalState.blue.running) toggleMedicalPlay('blue');
+
             // Hide timer controls and control buttons
             document.getElementById('timerControls').style.display = 'none';
             document.getElementById('controlButtons').style.display = 'none';
+
+            // Hide action buttons
+            document.getElementById('actionButtons1').classList.remove('visible');
+            document.getElementById('actionButtons2').classList.remove('visible');
         }
 
         function hideEndGame() {
@@ -40,8 +56,19 @@
             document.getElementById('endGameBlue').classList.remove('visible');
         }
 
+        function cancelEndGame() {
+            hideEndGame();
+
+            // Restore timer controls and control buttons
+            document.getElementById('timerControls').style.display = '';
+            document.getElementById('controlButtons').style.display = '';
+        }
+
         function announceWinner(player, method) {
             hideEndGame();
+
+            // Ensure timer is stopped
+            pauseTimer();
             
             const banner = document.getElementById('winnerBanner');
             banner.textContent = `WINNER BY ${method}`;
@@ -59,6 +86,9 @@
 
         function announceDraw(result) {
             hideEndGame();
+
+            // Ensure timer is stopped
+            pauseTimer();
 
             setWinnerMethod(result);
             setWinnerId('');
@@ -746,6 +776,9 @@
         // Start timer
         function playTimer() {
             if (timerSeconds <= 0) return;
+
+            // Don't allow starting timer if end game result is already shown
+            if (endGameVisible) return;
             
             isRunning = true;
             timerDisplay.classList.remove('paused');
@@ -811,6 +844,9 @@
         const stallingButton = document.getElementById('stallingButton');
 
         row1.addEventListener('click', function(e) {
+            // Don't show action buttons if end game is visible
+            if (endGameVisible) return;
+
             // Check if click is on the buttons container or its children
             if (actionButtons1.contains(e.target)) {
                 return; // Do nothing if clicking on buttons
@@ -832,6 +868,9 @@
         const actionButtons2 = document.getElementById('actionButtons2');
 
         row2.addEventListener('click', function(e) {
+            // Don't show action buttons if end game is visible
+            if (endGameVisible) return;
+
             // Check if click is on the buttons container or its children
             if (actionButtons2.contains(e.target)) {
                 return; // Do nothing if clicking on buttons

@@ -100,16 +100,10 @@ return array(
 		'3' => array('title' => "Нас",'code' => 'entry_config_age','name' => "tab_config_age", 'icon' => "fa-hourglass-half",'number' => 'tab1-4'),
 		'4' => array('title' => "Жин",'code' => 'entry_config_weight','name' => "tab_config_weight", 'icon' => "fa-weight",'number' => 'tab1-5'),
 		'5' => array('title' => "Төлбөр",'code' => 'event_entries_fee','name' => "tab_entries_fee", 'icon' => "fa-money-bill",'number' => 'tab1-6'),
-		'6' => array('title' => "Хэрэглэгч",'code' => 'event_event_user','name' => "tab_event_user", 'icon' => "fa-user-check",'number' => 'tab1-7'),
-		'7' => array('title' => "Багийн үр дүнгийн онооны тохиргоо",'code' => 'toplist_point','name' => "tab_config_toplist_point", 'icon' => "flaticon2-analytics",'number' => 'tab1-8'),
-		// '8' => array('title' => "Тамирчны Rank-ны онооны тохиргоо",'code' => 'athlete_rank_point','name' => "tab_config_athlete_rank_point", 'icon' => "flaticon2-medal",'number' => 'tab1-9'),
-
-		// '8' => array('title' => "Дэвжээний тохиргоо",'code' => 'mat_settings','name' => "tab_mat_settings", 'icon' => "flaticon2-analytics",'number' => 'tab1-9'),
-		
-		
-		// '7' => array('title' => "Хуваарь",'code' => 'event_schedule','name' => "tab_event_schedule", 'icon' => "flaticon2-analytics",'number' => 'tab1-8'),
-		'9' => array('title' => "Mat",'code' => 'toplist_point','name' => "tab_config_matches", 'icon' => "flaticon2-analytics",'number' => 'tab1-9'),
-		'10' => array('title' => "Хуваарь",'code' => 'toplist_point','name' => "tab_match", 'icon' => "flaticon2-analytics",'number' => 'tab1-10'),
+		'6' => array('title' => "Хэрэглэгч",'code' => 'event_user','name' => "tab_event_user", 'icon' => "fa-user-check",'number' => 'tab1-7'),
+		'7' => array('title' => "Багийн үр дүнгийн оноо",'code' => 'toplist_point','name' => "tab_config_toplist_point", 'icon' => "flaticon2-analytics",'number' => 'tab1-8'),
+		'8' => array('title' => "Дэвжээ",'code' => 'event_mats','name' => "tab_config_matches", 'icon' => "flaticon2-analytics",'number' => 'tab1-9'),
+		'9' => array('title' => "Хуваарь",'code' => 'event_schedule','name' => "tab_config_schedule", 'icon' => "flaticon2-analytics",'number' => 'tab1-10'),
 
     ],
 	'event_config_index' => [

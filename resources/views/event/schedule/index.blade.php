@@ -9,7 +9,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $event->name ?? 'Тэмцээний хуваарь' }}</title>
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,600;9..40,700&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg:          #0b0c14;
@@ -28,26 +28,79 @@
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; min-height: 100vh; }
 
-        /* HEADER */
-        .s-header {
+        /* ===== EVENT BANNER ===== */
+        .s-banner {
+            position: relative;
+            background: linear-gradient(135deg, #0d0e18 0%, #14151f 50%, #1a1020 100%);
+            border-bottom: 1px solid var(--border);
+            padding: 28px 34px 24px;
+            overflow: hidden;
+        }
+        .s-banner::before {
+            content: '';
+            position: absolute;
+            top: -60%; right: -10%;
+            width: 500px; height: 500px;
+            background: radial-gradient(circle, rgba(240,96,32,0.08) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .s-banner::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent), transparent 60%);
+        }
+        .s-banner-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 14px;
+            position: relative;
+            z-index: 2;
+        }
+        .s-banner-tag {
+            display: inline-block;
+            background: var(--accent);
+            color: #fff;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            padding: 5px 14px 4px;
+            border-radius: 4px;
+        }
+        .s-banner-title {
+            position: relative;
+            z-index: 2;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 48px;
+            letter-spacing: 3px;
+            line-height: 1;
+            color: #fff;
+        }
+        .s-banner-title .accent {
+            color: var(--accent);
+        }
+    
+
+        /* ===== STICKY NAV BAR ===== */
+        .s-nav {
             position: sticky; top: 0; z-index: 300;
             background: var(--surface);
             border-bottom: 1px solid var(--border);
             display: flex; align-items: center; justify-content: space-between;
-            height: 60px; padding: 0 28px;
+            height: 48px; padding: 0 28px;
         }
+        .s-nav-left { display: flex; align-items: center; gap: 14px; }
         .s-logo { display: flex; align-items: center; gap: 14px; }
-        .s-logo img { height: 38px; width: auto; display: block; }
+        .s-logo img { height: 32px; width: auto; display: block; }
         .s-logo-label {
             font-family: 'Bebas Neue', sans-serif;
-            font-size: 15px; letter-spacing: 3px; color: var(--soft); font-weight: 300;
-            border-left: 1px solid var(--border); padding-left: 14px;
+            font-size: 14px; letter-spacing: 3px; color: var(--soft); font-weight: 300;
         }
-        .s-event-title {
-            font-size: 13px; font-weight: 500; color: var(--soft);
-            max-width: 340px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-        }
-        .s-header-right { display: flex; align-items: center; gap: 14px; }
+        .s-nav-right { display: flex; align-items: center; gap: 14px; }
 
         .tv-toggle-btn {
             display: flex; align-items: center; gap: 7px;
@@ -73,10 +126,10 @@
         @keyframes blink { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.3;transform:scale(1.4)} }
 
         /* LAYOUT */
-        .s-layout { display: grid; grid-template-columns: 248px 1fr; min-height: calc(100vh - 60px); }
+        .s-layout { display: grid; grid-template-columns: 248px 1fr; min-height: calc(100vh - 48px - 130px); }
         .s-sidebar {
             background: var(--surface); border-right: 1px solid var(--border);
-            position: sticky; top: 60px; height: calc(100vh - 60px); overflow-y: auto; padding: 24px 0 32px;
+            position: sticky; top: 48px; height: calc(100vh - 48px); overflow-y: auto; padding: 24px 0 32px;
         }
         .s-sidebar::-webkit-scrollbar { width: 3px; }
         .s-sidebar::-webkit-scrollbar-thumb { background: var(--muted); border-radius: 3px; }
@@ -147,8 +200,9 @@
         .s-empty-icon { font-size: 34px; opacity: .35; }
 
         /* TV MODE */
+        body.tv-mode .s-banner   { display: none; }
         body.tv-mode .s-sidebar  { display: none; }
-        body.tv-mode .s-layout   { grid-template-columns: 1fr; }
+        body.tv-mode .s-layout   { grid-template-columns: 1fr; min-height: calc(100vh - 48px); }
         body.tv-mode .s-filters  { display: none; }
         body.tv-mode .s-main     { padding: 20px; }
         body.tv-mode .tv-day-block { margin-bottom: 28px; }
@@ -195,18 +249,32 @@
             .s-layout { grid-template-columns: 1fr; }
             .s-sidebar { position: static; height: auto; border-right: none; border-bottom: 1px solid var(--border); padding: 12px 0; }
             .s-main { padding: 18px 14px; }
+            .s-banner { padding: 20px 18px 18px; }
+            .s-banner-title { font-size: 32px; }
             body.tv-mode .tv-mat-grid { grid-template-columns: 1fr 1fr; }
         }
     </style>
 </head>
 <body>
 
-<header class="s-header">
-    
-        <span class="s-logo-label">UniQ </span>
-    
-    <div class="s-event-title">{{ $event->name ?? '' }}</div>
-    <div class="s-header-right">
+<!-- ===== EVENT BANNER ===== -->
+<div class="s-banner">
+    <div class="s-banner-top">
+        <span class="s-banner-tag">{{ $event->config->sport->name }}</span>
+    </div>
+    <div class="s-banner-title">
+        {{ $event->name }}
+    </div>
+</div>
+
+<!-- ===== STICKY NAV BAR ===== -->
+<nav class="s-nav">
+    <div class="s-nav-left">
+        <div class="s-logo">
+            <span class="s-logo-label">UniQ</span>
+        </div>
+    </div>
+    <div class="s-nav-right">
         <div class="tv-refresh-ring" id="tv-refresh-ring">
             <svg class="ring-svg" width="22" height="22" viewBox="0 0 22 22">
                 <circle class="ring-track" cx="11" cy="11" r="8"/>
@@ -223,7 +291,7 @@
         </button>
         <div class="s-live"><div class="s-live-dot"></div>LIVE</div>
     </div>
-</header>
+</nav>
 
 <div class="s-layout">
     <aside class="s-sidebar">

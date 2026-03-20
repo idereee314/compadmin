@@ -17,7 +17,6 @@ use \HTML;
 use Image;
 use Log;
 
-
 class EventCounterController extends Controller
 {
     public $restful = true;
