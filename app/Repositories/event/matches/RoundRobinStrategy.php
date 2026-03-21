@@ -178,8 +178,8 @@ class RoundRobinStrategy implements TournamentEliminationStrategy {
      */
     private function updateStandings($bracketId, $winnerId, $participantOneId, $participantTwoId)
     {
-        $winPoints = 3;
-        $lossPoints = 0;
+        $winPoints = $matchData['win_points'] ?? 3;
+        $lossPoints = $matchData['loss_points'] ?? 0;
 
         Log::info('Standings updated', [
             'bracket_id' => $bracketId,
