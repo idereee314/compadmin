@@ -455,7 +455,6 @@ return [
     "membership_academy_list" => "Академийн гишүүнчлэлийн жагсаалт",
     "is_membership" => "Гишүүнчлэлтэй эсэх",
 
-    //others 
     "weight_is_finish" => "Дууссан эсэх",
     "weight_award_cermony" => "Шагнал гардуулсан эсэх",
 ];
